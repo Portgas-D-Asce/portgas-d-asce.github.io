@@ -84,12 +84,12 @@
     </div>
 
 
-    <h1>Category: misc</h1>
+    <h1> c++</h1>
 
 <ul>
   
     <li>
-      <a href="/misc/2016/05/20/super-long-article.html">Some articles are just so long they deserve a really long title to see if things will break well</a>
+      <a href="/junk/2016/05/20/this-post-demonstrates-post-content-styles.html">This post demonstrates post content styles</a>
     </li>
   
     <li>
@@ -97,6 +97,7 @@
     </li>
   
 </ul>
+
 
     <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
         <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
