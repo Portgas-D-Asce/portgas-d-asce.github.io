@@ -1,6 +1,6 @@
 <div id="header">
-    <div class="fontsz36 font-bold"> xxxxxxxxxx </div>
-    <div class="fontsz20 font-bold"> yyyyyyyyyyy</div>
+    <div class="fontsz36 font-bold"> {{ include.title ｜ "暂无标题"}} </div>
+    <div class="fontsz20 font-bold"> {{ include.description | "暂无描述" }}</div>
 </div>
 
 <style>
@@ -8,7 +8,7 @@
     height: 35.8vh;
     padding-top: 26vh;
     background-size: 100vw;
-    background: url("/assets/image/articles.jpg") no-repeat right top;
+    background: url(/assets/image/articles.jpg) no-repeat right top;
     margin: 0 auto;
     text-align: center;
     color: white;
