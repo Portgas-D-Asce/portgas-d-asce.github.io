@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post1
 title: "Some articles are just so long they deserve a really long title to see if things will break well"
 categories: misc
 ---

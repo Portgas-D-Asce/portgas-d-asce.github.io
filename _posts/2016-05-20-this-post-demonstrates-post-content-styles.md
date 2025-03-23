@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post1
 title: "This post demonstrates post content styles"
 categories: junk
 author:
