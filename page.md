@@ -1,5 +1,5 @@
 ---
-layout: post1
+layout: post
 title: this is a demo
 permalink: /page/
 ---

@@ -1,6 +1,7 @@
 ---
 layout: base
 ---
+<!--
 <article class="post">
 
   <header class="post-header">
@@ -12,3 +13,26 @@ layout: base
   </div>
 
 </article>
+-->
+
+
+
+{%- include header.html -%}
+
+<h1> {{ page.url }} </h1>
+
+<h1> {{ layout.author }} </h1>
+<div id="article">
+    {%- include copyright.html -%}
+    {{ content }}
+    {%- include comment.html -%}
+</div>
+
+{%- include footer.html -%}
+
+<style>
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+</style>

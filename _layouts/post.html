@@ -1,8 +1,8 @@
 ---
-layout: base1
+layout: base
 author: "pk is a devil"
 ---
-<!--<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
@@ -43,24 +43,3 @@ author: "pk is a devil"
 
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
--->
-
-{%- include header1.html -%}
-
-<h1> {{ page.url }} </h1>
-
-<h1> {{ layout.author }} </h1>
-<div id="article">
-    {%- include copyright1.html -%}
-    {{ content }}
-    {%- include comment1.html -%}
-</div>
-
-{%- include footer1.html -%}
-
-<style>
-#article {
-    margin: 0 auto;
-    width: 61.8vw;
-}
-</style>
