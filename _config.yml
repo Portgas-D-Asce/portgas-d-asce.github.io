@@ -28,11 +28,11 @@ plugins:
 jekyll-archives:
   enabled: [tags, categories]  # 启用标签和分类归档
   layouts:
-    tag: tag              # 标签归档的布局文件
-    category: category    # 分类归档的布局文件
+    tag: archive              # 标签归档的布局文件
+    category: archive    # 分类归档的布局文件
   permalinks:
-    tag: /tags/:name/          # 标签归档的 URL 格式
-    category: /categories/:name/  # 分类归档的 URL 格式
+    tag: /tag/:name          # 标签归档的 URL 格式
+    category: /category/:name  # 分类归档的 URL 格式
 
 # Minima specific settings, which are only available from Minima 3.0 onward.
 # minima:
