@@ -1,0 +1,17 @@
+---
+layout: base
+title: this is a demo
+permalink: /categories
+---
+
+
+<h1>Tags</h1>
+
+<ul>
+  {% for tag in site.tags %}
+    <li>
+      <a href="/tag/{{ tag[0] | slugify }}">{{ tag[0] }}</a>
+      ({{ tag[1].size }} posts)
+    </li>
+  {% endfor %}
+</ul>
