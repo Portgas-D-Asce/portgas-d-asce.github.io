@@ -10,7 +10,7 @@ permalink: /tags
 <ul>
   {% for tag in site.tags %}
     <li>
-      <a href="/tag/{{ tag[0] | slugify }}">{{ tag[0] }}</a>
+      <a href="/tags/{{ tag[0] | slugify }}">{{ tag[0] }}</a>
       ({{ tag[1].size }} posts)
     </li>
   {% endfor %}
