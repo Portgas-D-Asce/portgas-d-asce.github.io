@@ -31,8 +31,8 @@ jekyll-archives:
     tag: archive              # 标签归档的布局文件
     category: archive    # 分类归档的布局文件
   permalinks:
-    tag: /tag/:name          # 标签归档的 URL 格式
-    category: /category/:name  # 分类归档的 URL 格式
+    tag: /tag/:name/          # 标签归档的 URL 格式
+    category: /category/:name/  # 分类归档的 URL 格式
 
 # Minima specific settings, which are only available from Minima 3.0 onward.
 # minima:
