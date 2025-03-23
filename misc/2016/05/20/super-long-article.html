@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/>
+    <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+    <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+    <title>Devil's blog</title>
+  </head>
+  <body>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        img {
+            width: 100%;
+        }
+        
+        a {
+            text-decoration: none;
+            cursor: pointer;
+            color: black;
+        }
+        
+        a:hover {
+            color: #2d9ebd;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease
+        }
+        
+        .hljs {
+            line-height: 1.8em;
+            font-family: Consolas, Monaco, monospace;
+            tab-size: 4;
+            background-color: rgb(250, 250, 250);
+            font-size: 13px;
+        }
+        
+        #music {
+            display: none;
+        }
+        
+        .wh100 {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .fontsz36 {
+            font-size: 36px !important;
+        }
+        
+        .fontsz28 {
+            font-size: 28px !important;
+        }
+        
+        .fontsz24 {
+            font-size: 24px !important;
+        }
+        
+        .fontsz20 {
+            font-size: 20px !important;
+        }
+        
+        .fontsz16 {
+            font-size: 16px !important;
+        }
+        
+        .color-white {
+            color: white;
+        }
+        
+        .font-bold {
+            font-weight: bold;
+        }
+        </style>
+
+    <div id="music">
+        <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+    </div>
+
+
+    <!--
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Some articles are just so long they deserve a really long title to see if things will break well</h1>
+  </header>
+
+  <div class="post-content">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+
+  </div>
+
+</article>
+--><!--
+<header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Your awesome title</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon fas fa-bars fa-lg"></span>
+        </label>
+
+        <div class="drawer-container">
+          <div class="drawer">
+  <a class="nav-item" href="/404.html">this is 404 page</a>
+  <a class="nav-item" href="/about.html">this is about page</a>
+  <a class="nav-item" href="/categories">this is a demo</a>
+  <a class="nav-item" href="/page.html">this is a demo</a>
+  <a class="nav-item" href="/tags">this is a demo</a>
+  <a class="nav-item" href="/tags/c">c</a>
+  <a class="nav-item" href="/tags/c">c</a>
+  <a class="nav-item" href="/tags/algorithm">algorithm</a>
+  <a class="nav-item" href="/tags/world">world</a>
+  <a class="nav-item" href="/tags/hello">hello</a>
+  <a class="nav-item" href="/categories/misc">misc</a>
+  <a class="nav-item" href="/categories/junk">junk</a>
+          </div>
+        </div>
+        <div class="slab">
+  <a class="nav-item" href="/404.html">this is 404 page</a>
+  <a class="nav-item" href="/about.html">this is about page</a>
+  <a class="nav-item" href="/categories">this is a demo</a>
+  <a class="nav-item" href="/page.html">this is a demo</a>
+  <a class="nav-item" href="/tags">this is a demo</a>
+  <a class="nav-item" href="/tags/c">c</a>
+  <a class="nav-item" href="/tags/c">c</a>
+  <a class="nav-item" href="/tags/algorithm">algorithm</a>
+  <a class="nav-item" href="/tags/world">world</a>
+  <a class="nav-item" href="/tags/hello">hello</a>
+  <a class="nav-item" href="/categories/misc">misc</a>
+  <a class="nav-item" href="/categories/junk">junk</a>
+        </div>
+      </nav>
+  </div>
+</header>
+-->
+
+<div id="header">
+    <div class="fontsz36 font-bold">  </div>
+    <div class="fontsz20 font-bold"> </div>
+</div>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/articles.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+</style>
+<h1> /misc/2016/05/20/super-long-article.html </h1>
+
+<h1>  </h1>
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
+<div id="giscus">
+    <script type="text/javascript" src="https://giscus.app/client.js"
+        data-repo="Portgas-D-Asce/blog-web"
+        data-repo-id="R_kgDOJCta4g"
+        data-category-id="DIC_kwDOJCta4s4CbvLE"
+        data-mapping="title"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><!--<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+                11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+                13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+                16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+              />
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">GitHub User</li>
+          <li><a class="u-email" href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>-->
+
+<div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil <a href="https://beian.miit.gov.cn">陕</a></div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<style>
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+</style>
+
+
+    <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+        <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+    <script>
+        var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+    </script>
+    <!--老版本包不能用了，要用新包-->
+    <script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+    
+  </body>
+</html>
