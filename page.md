@@ -1,7 +1,7 @@
 ---
 layout: post1
-title: "this is a demo"
-permalink: "/page/"
+title: this is a demo
+permalink: /page/
 ---
 <h1>Hello World!</h1>
 
