@@ -1,7 +1,7 @@
 ---
 layout: page
 title: this is a demo
-permalink: /page/
+permalink: /page
 ---
 <h1>Hello World!</h1>
 
