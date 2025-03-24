@@ -91,6 +91,18 @@
     </script>
     <!--老版本包不能用了，要用新包-->
     <script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'M') {
+                const music = document.querySelector(".aplayer-pic");
+                music.click();
+                console.log('回车键被按下');
+            } else if (event.key === 'Escape') {
+                console.log('ESC键被按下');
+            }
+        });
+    </script>
     
   </body>
 </html>
