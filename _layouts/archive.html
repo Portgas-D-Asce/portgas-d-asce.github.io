@@ -2,7 +2,7 @@
 layout: base
 ---
 
-{%- include header.html -%}
+{%- include header.html title="{{ page.title }}" -%}
 
 <div class="blog-abstracts">
     {% for post in page.posts %}
