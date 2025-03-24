@@ -130,6 +130,7 @@
 
 
 <script>
+    
 const tags_data = [
     {% for tag in site.tags %}
     {
@@ -138,7 +139,7 @@ const tags_data = [
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ];
-
+  
 
 // myChart.on('click', (params) => {
 //     router.push({path: '/articles', query: {tag: params.data["name"]}});
