@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <script src="https://unpkg.com/element-plus"></script>
     <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
     <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
     <title>Devil's blog</title>
@@ -147,16 +149,61 @@
     overflow: hidden;
 }
 </style>
-<div id="archive">
-<h1> junk</h1>
+<el-row class="blog-abstracts">
+    <el-col :xs="1" :sm="1" :md="2" :lg="3" :xl="3"></el-col>
+    <el-col :xs="22" :sm="22" :md="20" :lg="18" :xl="18">
+        
+            <el-row class="abstract">
+                <el-col :span="10">
+                    <img :src=" /asset/image/0.jpg "/>
+                </el-col>
+                
+                <el-col :span="14" class="right">
+                    <el-row class="title fontsz28">
+                        <el-col :span="24">
+                            <router-link :to=" /junk/2016/05/20/this-post-demonstrates-post-content-styles.html ">
+                                This post demonstrates post content styles
+                            </router-link>
+                        </el-col>
+                    </el-row>
+    
+                    <!--<el-row class="tags">
+                        <el-col :span="24"> 
+                            <router-link v-for="tag in article.tags" 
+                                    :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
+                                <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
+                            </router-link>
+                        </el-col>
+                    </el-row>-->
+        
+                    <el-row>
+                        <el-col :span="24"> xxxxxxxxxxxxxxxxxx </el-col>
+                    </el-row>
+    
+                    <el-row class="statistic">
+                        <el-col :span="12"> 1970-01-01 00:00:00 </el-col>
+                        <el-col :span="12" style="text-align: right;">
+                            阅读 ( 1 ) | 
+                            拉胯 ( 1 ) | 
+                            点赞 ( 1 )
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+        
+    </el-col>
+</el-row>
 
-<ul>
-  
+
+
+
+
+
     <li>
-      <a href="/junk/2016/05/20/this-post-demonstrates-post-content-styles.html">This post demonstrates post content styles</a>
-      <p>/asset/image/0.jpg</p>
+      <a href=""></a>
+      <p></p>
     </li>
-  
+    
 </ul>
 
 </div><!--<footer class="site-footer h-card">
@@ -210,6 +257,40 @@
     text-align: center;
 }
 </style>
+<style>
+.blog-abstracts {
+min-height: 80vmin;
+margin-top: 25px;
+}
+
+.abstract {
+box-shadow: 1px 1px 10px rgba(0,0,0,.2);
+border-bottom: 1px solid #eee;
+border-radius: 5px;
+margin-bottom: 30px;
+opacity:0.9;
+background-size: 50%;
+}
+
+.right {
+padding: 8px 15px !important;
+display: flex;
+flex-direction: column;
+}
+
+.tags {
+padding: 15px 0;
+}
+.tag {
+margin-right: 9px;
+}
+
+.statistic {
+padding: 10px 0px;
+margin-top: auto;
+}
+</style>
+
 
 
     <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
