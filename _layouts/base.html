@@ -100,7 +100,7 @@
         document.addEventListener('keydown', function(event) {
             if (event.key === 'm') {
                 const music = document.getElementById('music');
-                if(music.style.display === 'none') {
+                if(music.style.display !== 'block') {
                     music.style.display = 'block';
                 } else {
                     music.style.display = 'none';
