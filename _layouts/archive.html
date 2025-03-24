@@ -10,7 +10,7 @@ layout: base
         {% for post in page.posts %}
             <el-row class="abstract">
                 <el-col :span="10">
-                    <img :src=" {{ post.image }} "/>
+                    <img src="{{ post.image }}"/>
                 </el-col>
                 
                 <el-col :span="14" class="right">
@@ -48,16 +48,6 @@ layout: base
         {% endfor %}
     </el-col>
 </el-row>
-
-
-
-
-
-
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-      <p>{{ post.image }}</p>
-    </li>
     
 </ul>
 
