@@ -16,9 +16,7 @@ layout: base
                 <el-col :span="14" class="right">
                     <el-row class="title fontsz28">
                         <el-col :span="24">
-                            <router-link :to=" {{ post.url }} ">
-                                {{ post.title }}
-                            </router-link>
+                            <a href="{{ post.url }}"> {{ post.title }} </a>
                         </el-col>
                     </el-row>
     
