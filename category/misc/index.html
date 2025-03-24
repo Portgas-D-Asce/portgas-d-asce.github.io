@@ -153,45 +153,47 @@
     
     <div class="abstract">
         <img src="/assets/image/0.jpg"/>
-        
-        <a class="title fontsz28" href="/misc/2016/05/20/super-long-article.html"> Some articles are just so long they deserve a really long title to see if things will break well </a>
-
-        <!--<div class="tags">
-            <div :span="24"> 
-                <router-link v-for="tag in article.tags" 
-                        :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
-                    <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
-                </router-link>
-            </div>
-        </div>-->
+        <div class="right">
+            <a class="title fontsz28" href="/misc/2016/05/20/super-long-article.html"> Some articles are just so long they deserve a really long title to see if things will break well </a>
     
-        <div> xxxxxxxxxxxxxxxxxx </div>
+            <!--<div class="tags">
+                <div :span="24"> 
+                    <router-link v-for="tag in article.tags" 
+                            :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
+                        <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
+                    </router-link>
+                </div>
+            </div>-->
 
-        <div class="statistic">
-            <div> 1970-01-01 00:00:00 </div>
-            <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            <div> xxxxxxxxxxxxxxxxxx </div>
+
+            <div class="statistic">
+                <div> 1970-01-01 00:00:00 </div>
+                <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            </div>
         </div>
     </div>
     
     <div class="abstract">
         <img src="/assets/image/0.jpg"/>
-        
-        <a class="title fontsz28" href="/misc/2016/05/19/super-short-article.html"> Some articles are just so short that we have to make the footer stick </a>
-
-        <!--<div class="tags">
-            <div :span="24"> 
-                <router-link v-for="tag in article.tags" 
-                        :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
-                    <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
-                </router-link>
-            </div>
-        </div>-->
+        <div class="right">
+            <a class="title fontsz28" href="/misc/2016/05/19/super-short-article.html"> Some articles are just so short that we have to make the footer stick </a>
     
-        <div> xxxxxxxxxxxxxxxxxx </div>
+            <!--<div class="tags">
+                <div :span="24"> 
+                    <router-link v-for="tag in article.tags" 
+                            :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
+                        <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
+                    </router-link>
+                </div>
+            </div>-->
 
-        <div class="statistic">
-            <div> 1970-01-01 00:00:00 </div>
-            <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            <div> xxxxxxxxxxxxxxxxxx </div>
+
+            <div class="statistic">
+                <div> 1970-01-01 00:00:00 </div>
+                <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            </div>
         </div>
     </div>
     
@@ -248,10 +250,11 @@
 </style>
 <style>
 .blog-abstracts {
-    min-height: 80vmin;
-    margin-top: 25px;
-    width: 75%;
     margin: 0 auto;
+    width: 75%;
+    min-height: 80vmin;
+    padding-top: 25px;
+    
 }
 
 .abstract {
@@ -261,7 +264,6 @@
     margin-bottom: 30px;
     opacity:0.9;
     background-size: 50%;
-    
 }
 
 .right {
