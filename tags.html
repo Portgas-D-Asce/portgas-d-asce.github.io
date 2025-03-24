@@ -86,44 +86,13 @@
     </div>
 
 
-    <h1>Tags</h1>
-
-<ul>
-  
-    <li>
-      <a href="/tag/c">c</a>
-      (2 posts)
-    </li>
-  
-    <li>
-      <a href="/tag/cpp">cpp</a>
-      (2 posts)
-    </li>
-  
-    <li>
-      <a href="/tag/algorithm">algorithm</a>
-      (3 posts)
-    </li>
-  
-    <li>
-      <a href="/tag/world">world</a>
-      (1 posts)
-    </li>
-  
-    <li>
-      <a href="/tag/hello">hello</a>
-      (1 posts)
-    </li>
-  
-</ul>
-
-<!-- 1. 引入 ECharts 核心 -->
+    <!-- 1. 引入 ECharts 核心 -->
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   
 <!-- 2. 引入 WordCloud 扩展 -->
 <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 
-<div id="tags" class="chart"></div>
+<div id="tags"></div>
 
 <style>
 #tags {
@@ -215,10 +184,6 @@ chart.on('click', { seriesIndex: 0 }, function(params) {
   // 只响应第一个系列的点击
   window.location.href = '/tag/' + params.name;
 });
-
-// myChart.on('click', (params) => {
-//     router.push({path: '/articles', query: {tag: params.data["name"]}});
-// });
 </script>
 
 
