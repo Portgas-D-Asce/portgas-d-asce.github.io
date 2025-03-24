@@ -2,7 +2,7 @@
 layout: page
 title: "Some articles are just so short that we have to make the footer stick"
 categories: misc
-tags: c c++ algorithm
+tags: c cpp algorithm
 image: /assets/image/0.jpg
 description: xxxxxxxxxxxxxxxxxx
 author: pk

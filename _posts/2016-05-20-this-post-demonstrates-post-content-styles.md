@@ -7,7 +7,7 @@ author:
  - Nelson Mandela Muntz
 meta: "Springfield"
 modified_date: 2016-05-27
-tags: c++ world
+tags: cpp world
 image: /assets/image/0.jpg
 description: xxxxxxxxxxxxxxxxxx
 ---
