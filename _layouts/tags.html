@@ -41,10 +41,6 @@ const tags_data = [
     {% endfor %}
   ];
 
-// myChart.on('click', (params) => {
-//     router.push({path: '/articles', query: {tag: params.data["name"]}});
-// });
-
 const chart = echarts.init(document.getElementById('tags'));
 chart.setOption({
 	backgroundColor: "#fff",
@@ -92,6 +88,15 @@ chart.setOption({
         data: tags_data
 	}]
 });
+
+chart.on('click', { seriesIndex: 0 }, function(params) {
+  // 只响应第一个系列的点击
+  window.location.href = `/tag/${params.name}`;
+});
+
+// myChart.on('click', (params) => {
+//     router.push({path: '/articles', query: {tag: params.data["name"]}});
+// });
 </script>
 
 
