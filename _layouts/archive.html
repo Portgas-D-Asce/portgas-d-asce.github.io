@@ -4,7 +4,7 @@ layout: base
 
 {%- include header.html -%}
 
-<div class="blog-abstracts">
+<div id="abstracts">
     {% for post in page.posts %}
     <div class="abstract">
         <img src="{{ post.image }}"/>
@@ -19,7 +19,7 @@ layout: base
                 {% endfor %}
             </div>
 
-            <div> {{ post.description }} </div>
+            <div class="description"> {{ post.description }} </div>
 
             <div class="statistic">
                 <span> 1970-01-01 00:00:00 </span>
@@ -34,7 +34,7 @@ layout: base
 
 
 <style>
-.blog-abstracts {
+#abstracts {
     margin: 0 auto;
     width: 70%;
     min-height: 80vmin;
@@ -42,7 +42,7 @@ layout: base
     
 }
 
-.abstract {
+#abstracts .abstract {
     box-shadow: 1px 1px 10px rgba(0,0,0,.2);
     border-bottom: 1px solid #eee;
     border-radius: 30px;
@@ -52,19 +52,23 @@ layout: base
     overflow: hidden;
 }
 
-.right {
+#abstracts .right {
     padding: 8px 15px !important;
 }
 
-.tags {
+#abstracts .tags {
     padding: 15px 0;
 }
 
-.tag {
+#abstracts .tag {
     margin-right: 15px;
 }
 
-.statistic {
+#abstracts .description {
+    padding: 15px 0;
+}
+
+#abstracts .statistic {
     padding: 10px 0px;
     margin-top: auto;
 }
