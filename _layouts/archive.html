@@ -8,23 +8,24 @@ layout: base
     {% for post in page.posts %}
     <div class="abstract">
         <img src="{{ post.image }}"/>
-        
-        <a class="title fontsz28" href="{{ post.url }}"> {{ post.title }} </a>
-
-        <!--<div class="tags">
-            <div :span="24"> 
-                <router-link v-for="tag in article.tags" 
-                        :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
-                    <el-tag class="ml-2" :type="get_random_tag_type()"> {{ tag.name }} </el-tag>
-                </router-link>
-            </div>
-        </div>-->
+        <div class="right">
+            <a class="title fontsz28" href="{{ post.url }}"> {{ post.title }} </a>
     
-        <div> {{ post.description }} </div>
+            <!--<div class="tags">
+                <div :span="24"> 
+                    <router-link v-for="tag in article.tags" 
+                            :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
+                        <el-tag class="ml-2" :type="get_random_tag_type()"> {{ tag.name }} </el-tag>
+                    </router-link>
+                </div>
+            </div>-->
 
-        <div class="statistic">
-            <div> 1970-01-01 00:00:00 </div>
-            <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            <div> {{ post.description }} </div>
+
+            <div class="statistic">
+                <div> 1970-01-01 00:00:00 </div>
+                <div style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+            </div>
         </div>
     </div>
     {% endfor %}
@@ -35,10 +36,11 @@ layout: base
 
 <style>
 .blog-abstracts {
-    min-height: 80vmin;
-    margin-top: 25px;
-    width: 75%;
     margin: 0 auto;
+    width: 75%;
+    min-height: 80vmin;
+    padding-top: 25px;
+    
 }
 
 .abstract {
@@ -48,7 +50,6 @@ layout: base
     margin-bottom: 30px;
     opacity:0.9;
     background-size: 50%;
-    
 }
 
 .right {
