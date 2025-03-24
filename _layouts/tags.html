@@ -91,7 +91,7 @@ chart.setOption({
 
 chart.on('click', { seriesIndex: 0 }, function(params) {
   // 只响应第一个系列的点击
-  window.location.href = `/tag/${params.name}`;
+  window.location.href = '/tag/' + params.name;
 });
 
 // myChart.on('click', (params) => {
