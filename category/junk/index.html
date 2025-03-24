@@ -149,48 +149,31 @@
     overflow: hidden;
 }
 </style>
-<el-row class="blog-abstracts">
-    <el-col :xs="1" :sm="1" :md="2" :lg="3" :xl="3"></el-col>
-    <el-col :xs="22" :sm="22" :md="20" :lg="18" :xl="18">
-        
-            <el-row class="abstract">
-                <el-col :span="10">
-                    <img src="/assets/image/0.jpg"/>
-                </el-col>
-                
-                <el-col :span="14" class="right">
-                    <el-row class="title fontsz28">
-                        <el-col :span="24">
-                            <a href="/junk/2016/05/20/this-post-demonstrates-post-content-styles.html"> This post demonstrates post content styles </a>
-                        </el-col>
-                    </el-row>
+<div class="blog-abstracts">
     
-                    <!--<el-row class="tags">
-                        <el-col :span="24"> 
-                            <router-link v-for="tag in article.tags" 
-                                    :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
-                                <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
-                            </router-link>
-                        </el-col>
-                    </el-row>-->
+    <div class="abstract">
+        <img src="/assets/image/0.jpg"/>
         
-                    <el-row>
-                        <el-col :span="24"> xxxxxxxxxxxxxxxxxx </el-col>
-                    </el-row>
+        <a class="title fontsz28" href="/junk/2016/05/20/this-post-demonstrates-post-content-styles.html"> This post demonstrates post content styles </a>
+
+        <!--<div class="tags">
+            <div :span="24"> 
+                <router-link v-for="tag in article.tags" 
+                        :to="{ path: '/articles', query: {'tag': tag.name}}" class="tag">
+                    <el-tag class="ml-2" :type="get_random_tag_type()">  </el-tag>
+                </router-link>
+            </div>
+        </div>-->
     
-                    <el-row class="statistic">
-                        <el-col :span="12"> 1970-01-01 00:00:00 </el-col>
-                        <el-col :span="12" style="text-align: right;">
-                            阅读 ( 1 ) | 
-                            拉胯 ( 1 ) | 
-                            点赞 ( 1 )
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        
-    </el-col>
-</el-row><!--<footer class="site-footer h-card">
+        <div> xxxxxxxxxxxxxxxxxx </div>
+
+        <div class="statistic">
+            <div :span="12"> 1970-01-01 00:00:00 </div>
+            <div :span="12" style="text-align: right;">阅读 ( 1 ) | 拉胯 ( 1 ) | 点赞 ( 1 ) </div>
+        </div>
+    </div>
+    
+</div><!--<footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
 
   <div class="wrapper">
