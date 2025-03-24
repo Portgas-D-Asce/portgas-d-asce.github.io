@@ -39,10 +39,6 @@
             font-size: 13px;
         }
         
-        #music {
-            display: none;
-        }
-        
         .wh100 {
             width: 100vw;
             height: 100vh;
@@ -95,8 +91,8 @@
     <script>
         document.addEventListener('keydown', function(event) {
             if (event.key === 'm') {
-                const music = document.querySelector(".aplayer-pic");
-                music.click();
+                const music = document.getElementById('music');
+                music.style.display = 'none';
                 console.log('回车键被按下');
             } else if (event.key === 'Escape') {
                 console.log('ESC键被按下');
