@@ -8,6 +8,7 @@ layout: base
   {% for post in page.posts %}
     <li>
       <a href="{{ post.url }}">{{ post.title }}</a>
+      <p>{{ post.image }}</p>
     </li>
   {% endfor %}
 </ul>
