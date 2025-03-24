@@ -3,25 +3,13 @@ layout: base
 title: this is a demo
 ---
 
-
-<h1>Tags</h1>
-
-<ul>
-  {% for tag in site.tags %}
-    <li>
-      <a href="/tag/{{ tag[0] | slugify }}">{{ tag[0] }}</a>
-      ({{ tag[1].size }} posts)
-    </li>
-  {% endfor %}
-</ul>
-
 <!-- 1. 引入 ECharts 核心 -->
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   
 <!-- 2. 引入 WordCloud 扩展 -->
 <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 
-<div id="tags" class="chart"></div>
+<div id="tags"></div>
 
 <style>
 #tags {
@@ -93,10 +81,6 @@ chart.on('click', { seriesIndex: 0 }, function(params) {
   // 只响应第一个系列的点击
   window.location.href = '/tag/' + params.name;
 });
-
-// myChart.on('click', (params) => {
-//     router.push({path: '/articles', query: {tag: params.data["name"]}});
-// });
 </script>
 
 
