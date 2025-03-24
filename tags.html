@@ -130,16 +130,34 @@
 
 
 <script>
-    
 const tags_data = [
-    {% for tag in site.tags %}
+    
     {
-        name: '{{ tag[0] }}',
-        value: {{ tag[1].size | times: 10 }}
-    }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
+        name: 'c',
+        value: 20
+    },
+    
+    {
+        name: 'cpp',
+        value: 20
+    },
+    
+    {
+        name: 'algorithm',
+        value: 30
+    },
+    
+    {
+        name: 'world',
+        value: 10
+    },
+    
+    {
+        name: 'hello',
+        value: 10
+    }
+    
   ];
-  
 
 // myChart.on('click', (params) => {
 //     router.push({path: '/articles', query: {tag: params.data["name"]}});
