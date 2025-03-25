@@ -3,7 +3,7 @@ layout: page
 title: "Some articles are just so long they deserve a really long title to see if things will break well"
 categories: misc
 tags: algorithm
-image: /assets/image/0.jpg
+image: /assets/image/2.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 ---

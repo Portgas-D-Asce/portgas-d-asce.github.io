@@ -8,7 +8,7 @@ author:
 meta: "Springfield"
 modified_date: 2016-05-27
 tags: cpp world
-image: /assets/image/0.jpg
+image: /assets/image/3.jpeg
 description: xxxxxxxxxxxxxxxxxx
 ---
 

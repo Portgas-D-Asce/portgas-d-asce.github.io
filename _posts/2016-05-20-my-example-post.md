@@ -2,7 +2,7 @@
 layout: page
 author: John Doe
 tags: algorithm
-image: /assets/image/0.jpg
+image: /assets/image/1.jpeg
 title: dddddd
 description: xxxxxxxxxxxxxxxxxx
 ---
