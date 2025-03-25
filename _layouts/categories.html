@@ -6,10 +6,14 @@ layout: base
 <h1>categories</h1>
 
 <ul>
-  {% for tag in site.tags %}
+  {% for category in site.categories %}
     <li>
-      <a href="/tag/{{ tag[0] | slugify }}">{{ tag[0] }}</a>
-      ({{ tag[1].size }} posts)
+      <a href="/category/{{ category[0] | slugify }}">{{ category[0] }}</a>
+      ({{ category[1].size }} posts)
     </li>
   {% endfor %}
 </ul>
+
+<h1>
+I knew how to do this, but have no time to do it, can you help me, please.
+</h1>
