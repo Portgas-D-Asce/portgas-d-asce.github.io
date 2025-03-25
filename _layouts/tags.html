@@ -23,7 +23,7 @@ const tags_data = [
     {% for tag in site.tags %}
     {
         name: '{{ tag[0] }}',
-        value: {{ tag[1].size | times: 10 }}
+        value: {{ tag[1].size }}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ];
