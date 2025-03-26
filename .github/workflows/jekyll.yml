@@ -42,13 +42,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
       
-      - name: Deploy to Vercel
+      - name: Deploy to Production
         run: |
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
-                --yes
+          vercel deploy --prod \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --yes \
+            --scope=${{ secrets.VERCEL_ORG_ID }}
         env:
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       
       # 无需配置
       # - name: Deploy to Netlify
