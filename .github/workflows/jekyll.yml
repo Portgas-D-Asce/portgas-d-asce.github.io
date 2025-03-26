@@ -38,4 +38,14 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      # - name: Deploy to Netlify
+      #   uses: netlify/actions/cli@v2
+      #   with:
+      #     args: deploy --dir=_site --prod  # 部署 `dist/` 目录到生产环境
+      #   env:
+      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
           
+
