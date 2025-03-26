@@ -39,13 +39,11 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
       
+      # 无需配置, output 刷新后自动部署到生产
       # - name: Deploy to Netlify
       #   uses: netlify/actions/cli@v2
       #   with:
       #     args: deploy --dir=_site --prod  # 部署 `dist/` 目录到生产环境
       #   env:
       #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-          
-
+      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}     
