@@ -4,7 +4,8 @@ title: "Some articles are just so long they deserve a really long title to see i
 categories:
   - misc
   - sdddddd
-tags: algorithm
+  - 中文测试 哈哈哈
+tags: algorithm 啊啊啊啊啊
 image: /assets/image/2.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
