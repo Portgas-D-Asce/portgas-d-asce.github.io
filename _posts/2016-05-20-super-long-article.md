@@ -1,7 +1,9 @@
 ---
 layout: page
 title: "Some articles are just so long they deserve a really long title to see if things will break well"
-categories: misc
+categories:
+  - misc
+  - sdddddd
 tags: algorithm
 image: /assets/image/2.jpeg
 description: xxxxxxxxxxxxxxxxxx
