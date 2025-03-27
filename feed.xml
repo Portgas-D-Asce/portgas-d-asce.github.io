@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-27T18:48:03+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">多态实现原理（虚继承）</title><link href="https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html" rel="alternate" type="text/html" title="多态实现原理（虚继承）" /><published>2025-03-27T00:00:00+00:00</published><updated>2025-03-27T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%88%E8%99%9A%E7%BB%A7%E6%89%BF%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html"><![CDATA[<p>了解以上概念后，非虚继承场景基本就够了。虚继承场景更为复杂，需要了解更多的东西。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-27T18:53:31+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">二分查找（Binary Search）</title><link href="https://portgas-d-asce.github.io/2025/03/27/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE-Binary-Search.html" rel="alternate" type="text/html" title="二分查找（Binary Search）" /><published>2025-03-27T00:00:00+00:00</published><updated>2025-03-27T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/27/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%EF%BC%88Binary%20Search%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/27/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE-Binary-Search.html"><![CDATA[<p>二分法的本质： <strong>用来求解单调函数的零点！！！</strong></p>
+<ul>
+  <li>说得更清楚点就是：求解方程 $f(x) = y$ 的根，$f(x)$ 单调， $y$ 表示一个数字。</li>
+</ul>
+
+<h1 id="二分法求解方程任意解">二分法求解方程任意解</h1>
+
+<h2 id="fx-以数组形式给出">$f(x)$ 以数组形式给出</h2>
+
+<p>示例：</p>
+<ul>
+  <li>给定一个单调递增数组 $nums$，判断目标 $tar$ 是否存在；</li>
+  <li>如果存在返回 $tar$ 的下标；否则返回 -1 ；
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">binary_search</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tar</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">==</span> <span class="n">tar</span><span class="p">)</span> <span class="k">return</span> <span class="n">q</span><span class="p">;</span>
+      <span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tar</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <p>理解：</p>
+  </li>
+  <li>数组可以看作是 “自变量是数组下标，因变量为数组中元素” 的一个离散函数，即 $f(x) = nums[x]$；</li>
+  <li>上述问题的本质就是求解方程 $f(x) = nums[x] = tar$ 的解；</li>
+</ul>
+
+<h2 id="fx-为整形函数">$f(x)$ 为整形函数</h2>
+
+<p>示例：</p>
+<ul>
+  <li>判断正整数 $num$ 是否为平方数；</li>
+  <li>如果是平方数，返回 $num$ 的正平方根；否则返回 -1；</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">binary_search</span><span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="kt">int</span><span class="p">),</span> <span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">num</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="n">num</span><span class="p">)</span> <span class="k">return</span> <span class="n">q</span><span class="p">;</span>
+        <span class="n">val</span> <span class="o">&lt;</span> <span class="n">target</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>本质：求解方程 $f(x) = x * x = num$ 的整数解。</p>
+
+<h2 id="fx-为浮点函数">$f(x)$ 为浮点函数</h2>
+
+<p>示例：求解正浮点数 $num$ 的平方根。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span> <span class="nf">binary_search</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="kt">double</span><span class="p">),</span> <span class="kt">double</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">0.0000001</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>本质：求解方程 $f(x) = x * x = num$ 的浮点解。</p>
+
+<h1 id="二分法求解最优解">二分法求解最优解</h1>
+
+<p>二分最优化问题有两种类型：</p>
+<ul>
+  <li>00001111型：查找第一个 1</li>
+  <li>11110000型：查找最后一个 1</li>
+</ul>
+
+<p>$q$ 如何取值，看下 $p$ 如何赋值就好了</p>
+
+<ul>
+  <li>$p = q + 1$：$q = p + r » 1$</li>
+  <li>$p = q$：$q = p + r + 1 » 1$</li>
+</ul>
+
+<h2 id="00001111型">00001111型</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">binary_search01</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//使用 虚拟上界（r = n） 兼容 00000000 型 情况</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">:</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="11110000型">11110000型</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">binary_search10</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//使用虚拟下界（p = -1） 兼容 00000000型 情况</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>
+
+<h2 id="最大最小">最大最小</h2>
+
+<h2 id="kth-problem">kth problem</h2>
+
+<p>给定一个数 $x$ 排在其前面的数的个数可计算时，则可以通过二分查找来找到排在 $kth$ 位置的数。</p>
+
+<p>有一种场景，”寻找 *** 的 k-th num “ ，对于这种问题，我们可以尝试 x，检查其前面满足条件的数：</p>
+
+<ul>
+  <li>如果满足条件的数的个数小于 k，则条件为假</li>
+  <li>如果满足条件的数的个数大于等于 k，则条件为真</li>
+</ul>
+
+<p>显然，问题转化为了 00001111 场景的二分查找，寻找第一个 1。</p>
+
+<p><a href="https://leetcode.cn/problems/nth-magical-number/">878. 第 N 个神奇数字</a></p>
+
+<p><a href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/">378. 有序矩阵中第 K 小的元素</a></p>
+
+<p><a href="https://leetcode.cn/problems/kth-smallest-number-in-multiplication-table/">668. 乘法表中第k小的数</a></p>
+
+<p><a href="https://leetcode.cn/problems/find-the-median-of-the-uniqueness-array/">3134. 找出唯一性数组的中位数</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/7.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/7.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">多态实现原理（虚继承）</title><link href="https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html" rel="alternate" type="text/html" title="多态实现原理（虚继承）" /><published>2025-03-27T00:00:00+00:00</published><updated>2025-03-27T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%88%E8%99%9A%E7%BB%A7%E6%89%BF%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html"><![CDATA[<p>了解以上概念后，非虚继承场景基本就够了。虚继承场景更为复杂，需要了解更多的东西。</p>
 
 <p>为了支持虚继承，编译器做了一些修改，并添加了一些新的东西</p>
 
