@@ -22,7 +22,6 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-archives
-  - jekyll-category-hierarchy
 
 jekyll-archives:
   enabled: [tags, categories]  # 启用标签和分类归档
