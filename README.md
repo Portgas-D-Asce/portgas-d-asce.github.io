@@ -366,3 +366,20 @@ To test your theme, run `script/server` (or `bundle exec jekyll serve`) and open
 ## License
 
 The theme is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+
+# 音乐播放器
+[Meting-API](https://github.com/xizeyoupan/Meting-API)
+
+
+# 评论系统
+[giscus](https://giscus.app/zh-CN)
+
+
+# 多线部署
+## vercel
+
+[Vercel](https://vercel.com/)
+
+## Netlify
+[Netilify](https://app.netlify.com/)
