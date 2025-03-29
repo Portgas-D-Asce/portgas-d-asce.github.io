@@ -1,4 +1,310 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-29T10:25:00+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">卢卡斯定理</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="卢卡斯定理" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="卢卡斯定理">卢卡斯定理</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-29T10:35:42+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">BSGS</title><link href="https://portgas-d-asce.github.io/2025/03/28/BSGS.html" rel="alternate" type="text/html" title="BSGS" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/BSGS</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/BSGS.html"><![CDATA[<h1 id="bsgs">bsgs</h1>
+
+<p>已知非负整数 $a$ 、 $b$ 和正数 $p$，$a \neq 0$ 时 $a, p$ 互质，求以下同余方程的最小非负数整数解，无解时输出 $-1$</p>
+
+\[a^x \equiv b(mod p)\]
+
+<p>$0^0 = 1$，以下为一些特殊场景</p>
+
+<ul>
+  <li>当 $b == 1$ 时，$x = 0$​</li>
+  <li>
+    <p>当 $p == 1$ 时，$x = 0$</p>
+  </li>
+  <li>当 $a == 0$ 时：当 $b == 0$ 时，$x = 1$；当 $b &gt; 1$ 时，无解</li>
+</ul>
+
+<h2 id="bf">BF</h2>
+
+<p>从 $0$ 开始枚举 $x$ ，最多循环 $p$ 次即可得到结论：最小整数解 或 无解</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">while</span><span class="p">(</span><span class="n">res</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="o">*</span> <span class="n">a</span> <span class="o">%</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>时间复杂度 $O(p)$</p>
+
+<h2 id="bsgs-1">bsgs</h2>
+
+<p>大小步算法（baby-step giant-step, BSGS）可以在 $\sqrt{p}$ 时间复杂度下得到结论，要求 $a$ 和 $p$ 互质。</p>
+
+<p>假设 $x = A \lceil {\sqrt{p}} \rceil - B$，其中 $0\le B \le \lceil{\sqrt{p}} \rceil$，$1\le A \le \lceil{\sqrt{p}} \rceil$，带入方程后有：
+\(a^{A \lceil {\sqrt{p}} \rceil - B} \equiv b(mod p) \\
+a^{A \lceil {\sqrt{p}} \rceil} \equiv ba^{B}(mod p)\)
+算法步骤：</p>
+
+<ul>
+  <li>先枚举右侧 $B$ 并将取余结果保存到 <code class="language-plaintext highlighter-rouge">map</code> 中</li>
+  <li>然后再枚举左侧 $A$​
+    <ul>
+      <li>当其取余结果在 <code class="language-plaintext highlighter-rouge">map</code> 中存在时，则说明找到答案</li>
+      <li>否则说明无解。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>时间复杂度 $O(\sqrt{p})$</p>
+
+<p>为什么 bsgs 找到的是最小的 $x$ ？</p>
+
+<ul>
+  <li>当右侧出现相同余数时，大的 $B$ 会覆盖小的 $B$</li>
+  <li>$A$ 是从小到大开始枚举的。</li>
+</ul>
+
+<h2 id="实现">实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">bsgs</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">,</span> <span class="n">T</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">,</span> <span class="n">b</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">mod</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// 仅适用非互质场景</span>
+    <span class="c1">//if(gcd(a, mod) != 1) exit(1);</span>
+
+    <span class="n">map</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="p">;</span>
+
+    <span class="n">T</span> <span class="n">bs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">mod</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bs</span> <span class="o">=</span> <span class="n">bs</span> <span class="o">*</span> <span class="n">a</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+        <span class="n">mp</span><span class="p">[</span><span class="n">b</span> <span class="o">*</span> <span class="n">bs</span> <span class="o">%</span> <span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gs</span> <span class="o">=</span> <span class="n">bs</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mp</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">mp</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">i</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="n">gs</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">gs</span> <span class="o">*</span> <span class="n">bs</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="exbsgs">exbsgs</h1>
+
+<p>$a^{A \lceil {\sqrt{p}} \rceil} \equiv ba^{B}(mod p)$ 成立后，想恢复为 $a^{A \lceil {\sqrt{p}} \rceil - B} \equiv b(mod p)$，要求 $a^B$ 在 $mod p$ 下有逆元，也就是 $a$ 和 $p$ 互质。</p>
+
+<p>这就是 $bsgs$ 不适用于 $a$ 和 $p$ 不互质场景的原因。</p>
+
+<h2 id="原理">原理</h2>
+
+<p>通过简单操作，将非互质问题转化为互质问题，然后再按照普通 bsgs 求解即可。</p>
+
+<p>求解以下同余式，最小非负整数解
+\(a^{x} \equiv b(modp)\)
+将同余式展开
+\(a^{x} + kp = b\)
+设 $gcd(a, p) = d$，两边同除以 $d$
+\(\frac{a}{d} a^{x - 1} + k\frac{p}{d} = \frac{b}{d}\)
+两边取模 $\frac{p}{d}$ 转化为同余式
+\(\frac{a}{d} a^{x - 1} \equiv \frac{b}{d}(mod\frac{p}{d})\)
+$\frac{a}{d} \perp \frac{p}{d}$ 存在逆元。问题转化为互质场景了吗？没有，$a$ 、$\frac{p}{d}$ 不一定互质
+\(a^{x - 1} = \frac{b}{d}(\frac{a}{d})^{-1}(mod\frac{p}{d})\)
+ 需要重复操作，直到互质为止。假设重复了 $cnt$ 次，最小公倍数的累积值为 $d_{cnt}$。则有
+\(a^{x - cnt} = \frac{b}{d_{cnt}}(\frac{a^{cnt}}{d_{cnt}})^{-1}(mod\frac{p}{d_{cnt}})\)
+$a \perp \frac{p}{d_{cnt}}$ 问题转化为了互质场景！</p>
+
+<h2 id="实现-1">实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pair</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">exgcd</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">*</span> <span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">exbsgs</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">,</span> <span class="n">T</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">,</span> <span class="n">b</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">mod</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    
+    <span class="c1">// 将非互质场景，转化为互质场景</span>
+    <span class="n">T</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">((</span><span class="n">d</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">mod</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">%</span> <span class="n">d</span><span class="p">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="n">cnt</span><span class="o">++</span><span class="p">,</span> <span class="n">b</span> <span class="o">/=</span> <span class="n">d</span><span class="p">,</span> <span class="n">mod</span> <span class="o">/=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+        <span class="c1">// 如果已经找到结果直接返回</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">total</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="n">cnt</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// 求解 total 逆元</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">mod</span><span class="p">);</span>
+    <span class="c1">// total 逆元 “标准化”</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="n">mod</span> <span class="o">+</span> <span class="n">mod</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+    <span class="c1">// 更新 b 值</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+    
+    <span class="c1">// 已转化为了互质场景，直接求解</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="p">;</span>
+    <span class="n">T</span> <span class="n">bs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">mod</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bs</span> <span class="o">=</span> <span class="n">bs</span> <span class="o">*</span> <span class="n">a</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+        <span class="n">mp</span><span class="p">[</span><span class="n">b</span> <span class="o">*</span> <span class="n">bs</span> <span class="o">%</span> <span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gs</span> <span class="o">=</span> <span class="n">bs</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mp</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">mp</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">i</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="n">gs</span><span class="p">]</span> <span class="o">+</span> <span class="n">cnt</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">gs</span> <span class="o">*</span> <span class="n">bs</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://www.luogu.com.cn/problem/P4884?contestId=10238">P4884 多少个 1？</a></p>
+
+<p><a href="https://www.luogu.com.cn/problem/P3846">P3846 [TJOI2007] 可爱的质数/【模板】BSGS</a></p>
+
+<p><a href="https://www.luogu.com.cn/problem/P4195">P4195 【模板】扩展 BSGS/exBSGS</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="组合数学" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/16.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/16.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">剩余定理</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="剩余定理" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="剩余定理">剩余定理</h1>
+
+<h2 id="原理">原理</h2>
+
+<p><strong>本质是构造一个 $R = (x_1, x_2, …, x_n)$，要求模数两两互质，若模数不两两互质，向量中的部分元素无法求解。</strong></p>
+
+<p>找到以下几组数方程组的解
+$$
+\left{\begin{aligned}
+x_1 \equiv 1(mod m_1) <br />
+x_1 \equiv 0(mod m_2) <br />
+<br />
+x_1 \equiv 0(mod m_n)
+\end{aligned}\right.</p>
+
+<p>\left{\begin{aligned}
+x_2 \equiv 0(mod m_1) <br />
+x_2 \equiv 1(mod m_2) <br />
+<br />
+x_2 \equiv 0(mod m_n)
+\end{aligned}\right.</p>
+
+<p>…
+\left{\begin{aligned}
+x_n \equiv 0(mod m_1) <br />
+x_n \equiv 0(mod m_2) <br />
+<br />
+x_n \equiv 1(mod m_n)
+\end{aligned}\right.
+\(然后构造出最终解\)
+x = a_1x_1 + a_2x_2 + … + a_nx_n
+$$</p>
+
+<h2 id="算法过程">算法过程</h2>
+
+<ul>
+  <li>求模数的乘积 $mul$</li>
+  <li>$tmp_i = mul / m_i$</li>
+  <li>$tmp_i = tmp_i * tmp_i ^{-1}$ 在模 $m_i$ 下</li>
+  <li>$x = (\sum_{i = 1} ^ {k} {a_n * tmp_i}) \% mul$</li>
+</ul>
+
+<h2 id="实现">实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pair</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">exgcd</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">*</span> <span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kt">long</span> <span class="kt">long</span> <span class="nf">crt</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">mul</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">mul</span> <span class="o">*=</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">mul</span> <span class="o">/</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">*</span> <span class="n">x</span> <span class="o">%</span> <span class="n">mul</span><span class="p">;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">tmp</span><span class="p">)</span> <span class="o">%</span> <span class="n">mul</span><span class="p">)</span> <span class="o">%</span> <span class="n">mul</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">res</span> <span class="o">+</span> <span class="n">mul</span><span class="p">)</span> <span class="o">%</span> <span class="n">mul</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="扩展剩余定理">扩展剩余定理</h1>
+
+<p>当模数不两两互质时，会导致求解逆元时 $ax + by \equiv 1$ 无整数解，以上求解方法不再适用，需要另寻方法。</p>
+
+<h2 id="原理-1">原理</h2>
+
+<p>算法步骤：</p>
+
+<ul>
+  <li>先对前两个同余式进行合并：计算它们的一个特解，然后构造出通解 $x = x_0 + k * lcm(m1, m2)$ 也就是 $x \equiv x_0 (mod lcm(m_1, m_2))$</li>
+  <li>再将上一步合并出来的同余式与第三个同余式合并</li>
+  <li>…</li>
+  <li>直到最后只剩下一个同余式，其 $x_0$ 即为最终结果。</li>
+</ul>
+
+<p>总之，先求出前两个同余式的通解，然后再与第三个同余式求通解，…，最后与最后一个同余式求通解，即得到整个同余方程组的通解。</p>
+
+<h2 id="实现-1">实现</h2>
+
+<p>所有同余式的模数的 $lcm$ 可能很大，<code class="language-plaintext highlighter-rouge">long long</code> 级别，两个这样的数相乘会溢出，有两种解决方式：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">__int128</code></li>
+  <li>龟速乘法：将乘法转化为加法，期间不断取模，从而防止溢出。
+    <ul>
+      <li>乘法第二个数不能为负数，否则龟速乘法会陷入死循化。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>最终求得的是最小整数解，模数范围内的唯一解。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 扩展欧几里德不会溢出？？？？？？</span>
+<span class="n">pair</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="n">exgcd</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">*</span> <span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">//龟速乘，防止溢出，x 为负数时会陷入死循环。</span>
+<span class="kt">long</span> <span class="kt">long</span> <span class="nf">smul</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">x</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+        <span class="n">x</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 扩展剩余定理</span>
+<span class="kt">long</span> <span class="kt">long</span> <span class="nf">excrt</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">r0</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">m1</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="c1">// 无法整除，则无整数解</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">r1</span> <span class="o">-</span> <span class="n">r0</span><span class="p">)</span> <span class="o">/</span> <span class="n">gcd</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">);</span>
+        <span class="c1">// 扩展欧几里德求求 “标准式” 特解</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">exgcd</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">);</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">lcm</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">);</span>
+        <span class="c1">// 特解转化为正数</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">tmp</span><span class="p">)</span> <span class="o">%</span> <span class="n">tmp</span><span class="p">;</span>
+        <span class="c1">// 使用龟速乘将特解转化为 “非标准式” 特解</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">smul</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+        <span class="c1">// 带入公式求出方程组的特解</span>
+        <span class="n">r0</span> <span class="o">=</span> <span class="p">(</span><span class="n">smul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">r0</span><span class="p">)</span> <span class="o">%</span> <span class="n">tmp</span><span class="p">;</span>
+        <span class="c1">// 合并后同余方程的模数</span>
+        <span class="n">m0</span> <span class="o">=</span> <span class="n">lcm</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">r0</span> <span class="o">+</span> <span class="n">m0</span><span class="p">)</span> <span class="o">%</span> <span class="n">m0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://www.luogu.com.cn/problem/P1495">P1495 【模板】中国剩余定理（CRT）/ 曹冲养猪</a></p>
+
+<p><a href="https://www.luogu.com.cn/problem/P4777">P4777 【模板】扩展中国剩余定理（EXCRT）</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="组合数学" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/14.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/14.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">卢卡斯定理</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="卢卡斯定理" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="卢卡斯定理">卢卡斯定理</h1>
 
 <h2 id="定理">定理</h2>
 
@@ -258,7 +564,87 @@ dp[n] &amp;\equiv {\frac{n!}{p^x}} {\pmod{p^k}}\\
 
 <h1 id="参考">参考</h1>
 
-<p><a href="https://www.luogu.com/article/ty5knleg">[数论] 两平方数之和定理的研究</a></p>]]></content><author><name>pk</name></author><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/13.png" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/13.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">欧几里德定理</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="欧几里德定理" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="欧几里德定理">欧几里德定理</h1>
+<p><a href="https://www.luogu.com/article/ty5knleg">[数论] 两平方数之和定理的研究</a></p>]]></content><author><name>pk</name></author><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/13.png" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/13.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">摩尔投票法</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95.html" rel="alternate" type="text/html" title="摩尔投票法" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95.html"><![CDATA[<h1 id="摩尔投票法">摩尔投票法</h1>
+
+<p>Boyer–Moore majority vote algorithm</p>
+
+<ul>
+  <li>可以在常数空间复杂度找出多数元素</li>
+  <li>恰好一半不能算作是多数元素</li>
+  <li>主要元素不一定存在，投票完成之后需要进行检验</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">moore_vote</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">maj</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">maj</span> <span class="o">=</span> <span class="n">num</span><span class="p">;</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">num</span> <span class="o">!=</span> <span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cnt</span><span class="o">--</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="n">maj</span> <span class="o">==</span> <span class="n">num</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">maj</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="封装">封装</h1>
+
+<p>返回迭代器的好处：</p>
+
+<ul>
+  <li>就函数目标来说，返回迭代器与返回值都是可以的</li>
+  <li>当没有多数元素时，返回哪个数合适呢？
+    <ul>
+      <li>返回值：返回哪个数都不合适！！</li>
+      <li>返回迭代器：用 last 表示没有找到的情况，岂不完美</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">FIterator</span><span class="p">&gt;</span>
+<span class="n">FIterator</span> <span class="nf">moore_vote</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">FIterator</span> <span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">ssize_t</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">FIterator</span> <span class="n">maj</span> <span class="o">=</span> <span class="n">last</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">cur</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">maj</span> <span class="o">=</span> <span class="n">cur</span><span class="p">;</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="o">*</span><span class="n">cur</span> <span class="o">!=</span> <span class="o">*</span><span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">--</span><span class="n">cnt</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">ssize_t</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">cur</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">total</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">cur</span> <span class="o">==</span> <span class="o">*</span><span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">total</span> <span class="o">?</span> <span class="n">maj</span> <span class="o">:</span> <span class="n">last</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://leetcode.cn/problems/majority-element/">LeetCode 169. 多数元素</a></p>
+
+<p><a href="https://leetcode.cn/problems/find-majority-element-lcci/">LeetCode 面试题 17.10. 主要元素</a></p>
+
+<p><a href="https://leetcode.cn/problems/majority-element-ii/">LeetCode 229. 多数元素 II</a></p>
+
+<p><a href="https://codeforces.com/contest/1907/problem/C">CodeForces 913 C. Removal of Unattractive Pairs</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/15.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/15.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">欧几里德定理</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="欧几里德定理" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="欧几里德定理">欧几里德定理</h1>
 
 <p><strong>定理：</strong> 若 $a \% b = c$, 则 $gcd(a, b) = gcd(b, c)$ 。</p>
 
@@ -2082,684 +2468,4 @@ Base::Base() [base object ctor]:
 
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQyMDE2OQ==&amp;mid=2247484793&amp;idx=1&amp;sn=2426cf693ca1b00ace99888e08939b7e&amp;chksm=ead014dfdda79dc9a800e1de2404d94914b6f11d14739877c0a6c3197a16a0b196817b69e6a5&amp;scene=21#wechat_redirect">C++底层原理探究（C++对象模型一）</a></p>
 
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQyMDE2OQ==&amp;mid=2247484831&amp;idx=1&amp;sn=e6390784fa4aa2e6c0fb82063d8c6536&amp;chksm=ead01439dda79d2feeee684026bb773c68460d74b3f447a0b13289f1066b5c69cfb4479a2ae7&amp;scene=21#wechat_redirect">C++底层原理探究（C++对象模型二）</a></p>]]></content><author><name>pk</name></author><category term="cpp" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/5.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/5.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">树状数组（Fenwick Tree）</title><link href="https://portgas-d-asce.github.io/2025/03/27/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84-Fenwick-Tree.html" rel="alternate" type="text/html" title="树状数组（Fenwick Tree）" /><published>2025-03-27T00:00:00+00:00</published><updated>2025-03-27T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/27/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84%EF%BC%88Fenwick%20Tree%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/27/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84-Fenwick-Tree.html"><![CDATA[<h1 id="前缀和数组-和-差分数组">前缀和数组 和 差分数组</h1>
-
-<p>设有原数组 $nums$:</p>
-<ul>
-  <li>数组 $sum$ 称为 $nums$ 的前缀和数组，$sum[i] = nums[0] + nums[1] + … + nums[i]$；</li>
-  <li>数组 $dif$ 称为 $nums$ 的差分数组， $dif[i] = nums[i] - nums[i - 1]$；</li>
-  <li><strong>$nums$ 是 $dif$ 的前缀和数组，同时也是 $sum$ 的差分数组</strong>；</li>
-  <li>前缀和数组 和 差分数组 只是原数组的等价表示形式，没有额外增加/删除信息；</li>
-  <li>前缀和数组可以简化 <strong>查询原数组任意区间内元素和</strong> 操作；时间复杂度变化：$O(n)-&gt;O(1)$；</li>
-  <li>差分数组可以简化 <strong>原数组任意区间内元素统一增加 x</strong> 操作；时间复杂度变化：$O(n)-&gt;O(1)$；</li>
-</ul>
-
-<h1 id="树状数组">树状数组</h1>
-
-<p><img src="/assets/image/21.png" alt="/assets/image/21.png" /></p>
-
-<p>前缀和数组：</p>
-<ul>
-  <li>直接存储了前缀和信息；</li>
-  <li><strong>构建时间复杂度：</strong> $O(n)$；</li>
-  <li><strong>查询原数组任意区间内元素的和：</strong> 时间复杂度 $O(1)$；</li>
-  <li><strong>修改原数组中某个元素的值需要对前缀和数组进行维护：</strong> 时间复杂度为 $O(n)$；</li>
-</ul>
-
-<p>树状数组：</p>
-<ul>
-  <li>间接存储了前缀和信息，被分为连续的多段</li>
-  <li><strong>构建时间复杂度：</strong> $O(n)$；</li>
-  <li><strong>查询原数组任意区间内元素的和：</strong> 实际上是查询两次前缀和，然后作差；时间复杂度 $O(logn)$；</li>
-  <li><strong>修改原数组中某个元素的值需要对树状数组进行维护：</strong> 时间复杂度为 $O(logn)$；</li>
-</ul>
-
-<blockquote>
-  <p>树状数组是一种 “兼顾单点修改与区间查询平衡的一种数据结构”</p>
-</blockquote>
-
-<h2 id="lowbit-函数">lowbit 函数</h2>
-
-<p>$lowbit$ 是什么？</p>
-<ul>
-  <li>$lowbit(x)$：$x$ 的二进制表示最后一位 $1$ 的位权</li>
-  <li>$lowbit(x) = x\ \&amp;\ (-x)$</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="err">的二进制表示为：</span><span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
-<span class="n">x</span> <span class="err">的反码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.0111111</span>
-<span class="n">x</span> <span class="err">的补码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.1000000</span><span class="err">（也就是</span> <span class="o">-</span><span class="n">x</span> <span class="err">的二进制表示）</span>
-<span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="err">：</span>      <span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
-</code></pre></div></div>
-<h2 id="实现">实现</h2>
-
-<p>先上代码，然后再根据代码反向理解：</p>
-
-<ul>
-  <li>树状数组中每个元素 $ft[i]$ 的含义？</li>
-  <li>$lowbit(x)$ 在这期间的作用？</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums 表示原数组，ft 表示 nums 的树状数组</span>
-<span class="c1">//同前缀和数组，树状数组也需要补充一个前置 0</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">ft</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="c1">//第 idx 个元素 + x</span>
-    <span class="c1">//nums[idx] + x when 1-indexed</span>
-    <span class="c1">//nums[idx - 1] + x when 0-indexed</span>
-    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="c1">//前缀和查询</span>
-    <span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">+=</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="理解">理解</h2>
-
-<p>树状数组中每个元素 $ft[i]$ 的含义？模拟求和（为了方便描述，这里假设原数组 $nums$ 下标也从 $1$ 开始）：</p>
-
-<ul>
-  <li>$sum[7] = ft[7] + ft[6] + ft[4]$
-    <ul>
-      <li>7 的二进制表示 $111$</li>
-      <li>实际上，$ft[7] = nums[7]$</li>
-      <li>实际上，$ft[6] = nums[5] + nums[6]$</li>
-      <li>实际上，$ft[4] = nums[1] + nums[2] + nums[3] + nums[4]$</li>
-    </ul>
-  </li>
-  <li>看了上面例子，对于 $ft[i]$ 的本质基本有感觉了吧 🤔🤔
-    <ul>
-      <li>$ft[i]$ 表示的是 $nums[i - lowbit(i) + 1] + … + nums[i]$ 的和！！！</li>
-      <li>$ft[i]$ 维护的是区间 $[i - lowbit(i) + 1, i]$ 的性质</li>
-    </ul>
-  </li>
-</ul>
-
-<p>$lowbit(x)$ 在这期间的作用？</p>
-
-<ul>
-  <li>求和期间：从上到下，快速跳转到下一个求和区间</li>
-  <li>更新期间：从下到上，快速跳转到下一受影响的区间</li>
-</ul>
-
-<hr />
-
-<hr />
-
-<h1 id="区间最值">区间最值</h1>
-
-<p>What？？？树状数组可以求任意区间和是可以理解的：求两次前缀和，做差即可得到区间和。树状数组求任意区间最值？！！</p>
-
-<p>一开始也是不相信的，然而事实是，在特定场景下是可行的，而且效果还不错。</p>
-
-<p>特定场景：求区间最小/大值时，要求修改方向只能朝着变小/大的方向修改（线段树是没有这要求的），考虑区间最大值：</p>
-
-<ul>
-  <li>单点更新下 $nums[5] = 100$，$ft[5]$，$ft[6]$，$ft[8]$ 均受到影响，更新为 $100$，这没问题</li>
-  <li>接着更新下 $nums[5] = 99$，按道理 $ft[5]$，$ft[6]$，$ft[8]$ 均应更新为 $99$，但实际是不会更新的，这正是问题所在！</li>
-</ul>
-
-<h2 id="实现-1">实现</h2>
-
-<p>这里以求区间最大值为例，核心思想：</p>
-
-<ul>
-  <li>更新的时候不仅要维护树状数组 $ft$，还要维护原数组 $nums$</li>
-  <li>查询的时候 $[p, r]$ 最值朴素做法：从起点到终点逐个遍历，取最大值即可，可以使用 $ft$ 对其进行优化
-    <ul>
-      <li>若 $ft[i]$ 所管理的区间在查询区间范围内：用 $ft[i]$ 代表其所管理的区间即可</li>
-      <li>如果 $ft[i]$ 所管理的区间并没有完全在查询区间内，回到朴素做法即可，用原是数组中的元素做比较即可</li>
-    </ul>
-  </li>
-</ul>
-
-<p>示例：查询区间 $[3, 7]$</p>
-
-<ul>
-  <li>$ft[7]$ 管理的范围是 $[7, 7]$，完全在查询范围内</li>
-  <li>$ft[6]$ 管理的范围是 $[5, 6]$，完全在查询范围内</li>
-  <li>$ft[4]$ 管理的范围是 $[1, 4]$，不完全在查询范围内，使用原数组元素代表 $nums[4]$</li>
-  <li>$ft[3]$ 管理的范围是 $[3, 3]$，完全在查询范围内</li>
-  <li>$max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])$</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums is 1-indexed in logical but 0-indexed in fact</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">nums</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-        <span class="n">ft</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="c1">// require x &gt;= nums[idx]</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// update origin array</span>
-        <span class="n">nums</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-        
-        <span class="c1">// update ft array</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">int</span> <span class="nf">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">INT_MIN</span><span class="p">;</span>
-        
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h1 id="离散化">离散化</h1>
-
-<h2 id="维护离散区间">维护离散区间</h2>
-
-<p>常规：下标区间是连续的，维护区间 [5, 6] 之间的最值/和</p>
-
-<p>如果下标区间不连续呢：</p>
-
-<ul>
-  <li>范围小的话，声明一个数组，当成连续的就可以了</li>
-  <li>范围特别大，就没办法声明数组了</li>
-</ul>
-
-<p>解决办法：</p>
-
-<ul>
-  <li>对出现过的下标进行排序，排完序后，去重</li>
-  <li>每次先用二分查找，查找到对应的连续下标</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//排序</span>
-<span class="n">sort</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="c1">//去重</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
-<span class="n">Fenwick</span> <span class="nf">fw</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-
-<span class="kt">long</span> <span class="kt">long</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">LLONG_MIN</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//离散下标转化为连续下标</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">fw</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="n">fw</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-    <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="封装">封装</h1>
-
-<h2 id="使用说明">使用说明</h2>
-
-<p>支持区间和查询、区间最大值查询、区间最小值查询（前缀  &amp; 任意区间）。前面理论已经介绍过，使用需注意以下情况</p>
-
-<ul>
-  <li>任意区间查询由于实现手段特殊，效率可能会有所降低</li>
-  <li>用于区间最大/小值查询时，单点更新只能朝着固定方向更新：
-    <ul>
-      <li>最大值查询：新值大于等于旧值</li>
-      <li>最小值查询：新值小于等于旧值</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="实现-2">实现</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">typename</span> <span class="nc">FT</span> <span class="o">=</span> <span class="n">plus</span><span class="p">,</span>
-    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="n">allocator</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="k">typename</span> <span class="n">CT</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&gt;</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="k">constexpr</span> <span class="k">static</span> <span class="n">FT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">op</span> <span class="o">=</span> <span class="n">FT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="nl">private:</span>
-    <span class="k">const</span> <span class="n">T</span> <span class="n">init_value</span><span class="p">;</span>
-    <span class="n">CT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span> <span class="o">=</span> <span class="n">T</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">init_value</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init_value</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 1-indexed [1, idx]</span>
-    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_value</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 1-indexed [p, r]</span>
-    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
-    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="n">U</span><span class="o">&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_value</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="示例">示例</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Min</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// 默认求和，以下两者等价</span>
-<span class="c1">// 区间和查询</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft_sum</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">plus</span><span class="o">&gt;</span> <span class="n">ft_sum</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-
-<span class="c1">// 区间最大值查询</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Min</span><span class="o">&gt;</span> <span class="n">ft_min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
-
-<span class="c1">// 区间最小值查询</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Max</span><span class="o">&gt;</span> <span class="n">ft_max</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p>未验证</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 区间乘积</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">multiplies</span><span class="o">&gt;</span> <span class="n">ft_mul</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-
-<span class="c1">// 区间位运算</span>
-<span class="n">bit_and</span><span class="p">;</span>
-<span class="n">bit_or</span><span class="p">;</span>
-<span class="n">bit_xor</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h1 id="构建">构建</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">Cont</span><span class="o">&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span> <span class="o">=</span> <span class="n">T</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">init_value</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
-    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-    <span class="n">ft</span> <span class="o">=</span> <span class="n">Cont</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init_value</span><span class="p">);</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-        <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="再次封装">再次封装</h1>
-
-<p>min、max 单向增长</p>
-
-<p>需要满足交换律</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
-    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Calculate</span> <span class="n">value_calculate</span><span class="p">;</span>
-<span class="nl">protected:</span>
-    <span class="k">const</span> <span class="n">value_type</span> <span class="n">init_val</span><span class="p">;</span>
-    <span class="n">Sequence</span> <span class="n">raw</span><span class="p">;</span>
-    <span class="n">Sequence</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="n">Calculate</span> <span class="n">cal</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">raw</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">Sequence</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">raw</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_make_ft</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">InputIterator</span><span class="p">&gt;</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">raw</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_make_ft</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 1-indexed idx</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">raw</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 1-indexed idx</span>
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 1-indexed [p, r]</span>
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">raw</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">_make_ft</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">raw</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">raw</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-            <span class="n">size_type</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h1 id="练习">练习</h1>
-
-<p><a href="https://leetcode.cn/problems/longest-increasing-subsequence-ii">LeetCode 2407. 最长递增子序列 II</a></p>
-
-<p><a href="https://leetcode.cn/problems/maximum-balanced-subsequence-sum/">LeetCode 2926. 平衡子序列的最大和</a></p>
-
-<p><a href="https://leetcode.cn/problems/count-of-range-sum/">LeetCode 327. 区间和的个数</a></p>
-
-<p><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/">LeetCode 1649. Create Sorted Array through Instructions</a></p>
-
-<h1 id="第三次封装">第三次封装</h1>
-
-<p>更新运算？维护运算</p>
-
-<p>基本支持所有 “单点修改，区间查询“</p>
-
-<p>除了最大值，最小值，单向增长。</p>
-
-<p>0-indexed</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Min</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
-    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Calculate</span> <span class="n">value_calculate</span><span class="p">;</span>
-<span class="nl">protected:</span>
-    <span class="k">const</span> <span class="n">value_type</span> <span class="n">_init_val</span><span class="p">;</span>
-    <span class="n">container_type</span> <span class="n">_raw</span><span class="p">,</span> <span class="n">_ft</span><span class="p">;</span>
-    <span class="n">value_calculate</span> <span class="n">_cal</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">container_type</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">_raw</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_raw</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-            <span class="n">size_type</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_raw</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kr">inline</span> <span class="kt">size_t</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p>缺点，更新仅仅是但方向的，线段树单点更新全能搞得定</p>
-
-<ul>
-  <li>min/max 仅支持单调更新。</li>
-  <li><strong>更新运算</strong> 与 <strong>维护性质运算</strong> 相同。</li>
-</ul>
-
-<p>优点：轻量级，速度快。</p>
-
-<h2 id="plus">plus</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="multiplies">multiplies</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="min">min</h2>
-
-<p>仅支持递减更新</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="max">max</h2>
-
-<p>仅支持递增更新</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_and">bit_and</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_or">bit_or</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_xor">bit_xor</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/9.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/9.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">滑动窗口</title><link href="https://portgas-d-asce.github.io/2025/03/27/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3.html" rel="alternate" type="text/html" title="滑动窗口" /><published>2025-03-27T00:00:00+00:00</published><updated>2025-03-27T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/27/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/27/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<p><strong>滑动窗口是一种特殊的二分查找问题：</strong> 窗口大小是单调的。</p>
-
-<h2 id="窗口">窗口</h2>
-
-<p>窗口本质上就是子数组，无论是实现还是证明都可以从子数组角度考虑。</p>
-
-<p>窗口通常维护了某个性质，在滑动过程中需要保证维护的性质不会遭到破坏。</p>
-
-<p>窗口的性质具有单调性是使用滑动窗口的前提。</p>
-
-<h2 id="二分查找">二分查找</h2>
-
-<p>滑动窗口问题都可以通过二分查找方式解决：</p>
-
-<ul>
-  <li>最小窗口问题：可以转化为 00001111 型二分查找</li>
-  <li>最大窗口问题：可以转化成 11110000 型二分查找</li>
-</ul>
-
-<p>滑动窗口时间复杂度为 $O(n)$，二分查找时间复杂度为 $O(nlog(n))$</p>
-
-<h1 id="最大窗口">最大窗口</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 窗口初始位置及长度</span>
-<span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// 将第 i 个元素添加到窗口里面</span>
-    <span class="n">c</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-    
-    <span class="c1">// 添加新元素到窗口后可能会使窗口性质遭到破坏</span>
-    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">check</span><span class="p">(</span><span class="n">c</span><span class="p">)){</span>
-        <span class="c1">// 不断地从窗口左侧移出元素，直至窗口性质成立</span>
-        <span class="n">c</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="c1">// 更新最大窗口</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">len</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="最小窗口">最小窗口</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 窗口初始位置及长度</span>
-<span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">len</span> <span class="o">=</span> <span class="n">INT_MAX</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// 将第 i 个元素加入窗口</span>
-    <span class="n">c</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-    
-    <span class="c1">// 新元素加入可能会导致窗口性质成立，但当前不一定是最小窗口</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">check</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="p">{</span>
-        <span class="c1">// 更新最小窗口</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">len</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="c1">// 不断地从窗口左侧移出元素，直到性质不成立</span>
-        <span class="n">c</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/8.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/8.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">dddddd</title><link href="https://portgas-d-asce.github.io/2016/05/20/my-example-post.html" rel="alternate" type="text/html" title="dddddd" /><published>2016-05-20T00:00:00+00:00</published><updated>2016-05-20T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2016/05/20/my-example-post</id><content type="html" xml:base="https://portgas-d-asce.github.io/2016/05/20/my-example-post.html"><![CDATA[<p>Eos eu docendi tractatos sapientem, brute option menandri in vix, quando vivendo accommodare te ius. Nec melius fastidii constituam id, viderer theophrastus ad sit, hinc semper periculis cum id. Noluisse postulant assentior est in, no choro sadipscing repudiandae vix. Vis in euismod delenit dignissim. Ex quod nostrum sit, suas decore animal id ius, nobis solet detracto quo te.</p>
-
-<p>No laudem altera adolescens has, volumus lucilius eum no. Eam ei nulla audiam efficiantur. Suas affert per no, ei tale nibh sea. Sea ne magna harum, in denique scriptorem sea, cetero alienum tibique ei eos. Labores persequeris referrentur eos ei.</p>]]></content><author><name>John Doe</name></author><category term="algorithm" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/1.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/1.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQyMDE2OQ==&amp;mid=2247484831&amp;idx=1&amp;sn=e6390784fa4aa2e6c0fb82063d8c6536&amp;chksm=ead01439dda79d2feeee684026bb773c68460d74b3f447a0b13289f1066b5c69cfb4479a2ae7&amp;scene=21#wechat_redirect">C++底层原理探究（C++对象模型二）</a></p>]]></content><author><name>pk</name></author><category term="cpp" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/5.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/5.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
