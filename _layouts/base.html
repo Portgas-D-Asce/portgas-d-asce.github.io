@@ -1,77 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
-    <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
-    {% seo %}
-  </head>
-  <body>
-
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        
-        img {
-            width: 100%;
-        }
-        
-        a {
-            text-decoration: none;
-            cursor: pointer;
-            color: black;
-        }
-        
-        a:hover {
-            color: #2d9ebd;
-            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease
-        }
-        
-        .wh100 {
-            width: 100vw;
-            height: 100vh;
-        }
-        
-        .fontsz36 {
-            font-size: 36px !important;
-        }
-        
-        .fontsz28 {
-            font-size: 28px !important;
-        }
-        
-        .fontsz24 {
-            font-size: 24px !important;
-        }
-        
-        .fontsz20 {
-            font-size: 20px !important;
-        }
-        
-        .fontsz16 {
-            font-size: 16px !important;
-        }
-        
-        .color-white {
-            color: white;
-        }
-        
-        .font-bold {
-            font-weight: bold;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        {% seo %}
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
         </style>
     
-    {{ content }}
+        {{ content }}
 
-    {%- include music.html -%}
+        {%- include music.html -%}
 
-    {%- include event.html -%}
+        {%- include event.html -%}
     
-  </body>
+    </body>
 </html>
