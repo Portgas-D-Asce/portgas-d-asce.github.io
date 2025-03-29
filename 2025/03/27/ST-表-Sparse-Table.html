@@ -141,9 +141,11 @@
 
 <h2 id="状态转移">状态转移</h2>
 
-<p>对区间进行拆分：
-\([i, i + 2^j - 1] = [i, i + 2^{j - 1} - 1] + [i + 2^{j - 1}, i + 2^{j - 1} + 2^{j - 1} - 1]\)
-其中：</p>
+<p>对区间进行拆分：</p>
+
+\[[i, i + 2^j - 1] = [i, i + 2^{j - 1} - 1] + [i + 2^{j - 1}, i + 2^{j - 1} + 2^{j - 1} - 1]\]
+
+<p>其中：</p>
 
 <ul>
   <li>$[i, i + 2^j - 1]$ 区间的最大值为 $dp[i][j]$</li>
@@ -151,19 +153,25 @@
   <li>$[i + 2^{j - 1}, i + 2^{j - 1} + 2^{j - 1} - 1]$ 区间的最大值为 $dp[i + 2^{j - 1}][j - 1]$</li>
 </ul>
 
-<p>故，状态转移方程为：
-\(dp[i][j] = max(dp[i][j - 1], dp[i + 2^{j - 1}][j - 1])\)</p>
+<p>故，状态转移方程为：</p>
+
+\[dp[i][j] = max(dp[i][j - 1], dp[i + 2^{j - 1}][j - 1])\]
 
 <h1 id="查询">查询</h1>
 
 <p>设查询区间 $[p, r]$，区间长度 $r - p + 1$。</p>
 
-<p>求 $s$ 使得：
-\(((r - p + 1) / 2) &lt; 2 ^ s &lt;= r - p + 1\)
-使用 $s$ 将查询区间划分为两个长度均为 $2^s$ 的区间（一定具有重叠区域）：
-\([p, r] = [p, p + 2^s - 1] \cup [r - 2^s + 1, r]\)
-故，查询结果定义为：
-\(max(dp[p][s], dp[r - 2^s + 1][s])\)</p>
+<p>求 $s$ 使得：</p>
+
+\[((r - p + 1) / 2) &lt; 2 ^ s &lt;= r - p + 1\]
+
+<p>使用 $s$ 将查询区间划分为两个长度均为 $2^s$ 的区间（一定具有重叠区域）：</p>
+
+\[[p, r] = [p, p + 2^s - 1] \cup [r - 2^s + 1, r]\]
+
+<p>故，查询结果定义为：</p>
+
+\[max(dp[p][s], dp[r - 2^s + 1][s])\]
 
 <h1 id="实现">实现</h1>
 
@@ -300,17 +308,17 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
+        renderMathInElement(document.body, {
         delimiters: [
-          {left: "$$", right: "$$", display: true},    // 块级公式
-          {left: "$", right: "$", display: false},     // 行内公式
-          {left: "\\(", right: "\\)", display: false}, // 行内公式
-          {left: "\\[", right: "\\]", display: true}   // 块级公式
-        ],
-        throwOnError: false
-      });
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
     });
-    </script>
+</script>
 
 <style>
 #header {
