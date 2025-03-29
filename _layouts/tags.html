@@ -8,15 +8,7 @@ layout: base
 <!-- 2. 引入 WordCloud 扩展 -->
 <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 
-<div id="tags"></div>
-
-<style>
-#tags {
-    width: 100%;
-    height: 100%;
-}
-</style>
-
+<div id="tags" class="wh100"></div>
 
 <script>
 const tags_data = [
@@ -74,8 +66,8 @@ chart.setOption({
 });
 
 chart.on('click', { seriesIndex: 0 }, function(params) {
-  // 只响应第一个系列的点击
-  window.location.href = '/tag/' + params.name;
+    // 只响应第一个系列的点击
+    window.location.href = '/tag/' + params.name;
 });
 </script>
 
