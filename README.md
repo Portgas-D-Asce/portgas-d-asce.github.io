@@ -439,12 +439,9 @@ wordCloud
 <script>
 const tags_data = [
     {% for tag in site.tags %}
-    {
-        name: '{{ tag[0] }}',
-        value: {{ tag[1].size }}
-    }{% unless forloop.last %},{% endunless %}
+        { name: {{ tag[0] }}, value: {{ tag[1].size }} }{% unless forloop.last %},{% endunless %}
     {% endfor %}
-  ];
+];
 
 const chart = echarts.init(document.getElementById('tags'));
 chart.setOption({
