@@ -422,10 +422,20 @@ The theme is available as open source under the terms of the [MIT License](http:
 ## 图表显示
 [echarts](https://echarts.apache.org/zh/index.html)
 
+```html
+<!-- 1. 引入 ECharts 核心 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+```
+
 ### 标签页
 wordCloud
 
 ```html
+<!-- 2. 引入 WordCloud 扩展 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
+
+<div id="tags"></div>
+
 <script>
 const tags_data = [
     {% for tag in site.tags %}
