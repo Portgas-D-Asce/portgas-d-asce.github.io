@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-29T13:19:52+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">BSGS</title><link href="https://portgas-d-asce.github.io/2025/03/28/BSGS.html" rel="alternate" type="text/html" title="BSGS" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/BSGS</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/BSGS.html"><![CDATA[<h1 id="bsgs">bsgs</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-29T13:23:36+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">BSGS</title><link href="https://portgas-d-asce.github.io/2025/03/28/BSGS.html" rel="alternate" type="text/html" title="BSGS" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/BSGS</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/BSGS.html"><![CDATA[<h1 id="bsgs">bsgs</h1>
 
 <p>已知非负整数 $a$ 、 $b$ 和正数 $p$，$a \neq 0$ 时 $a, p$ 互质，求以下同余方程的最小非负数整数解，无解时输出 $-1$</p>
 
@@ -31,10 +31,12 @@
 
 <p>大小步算法（baby-step giant-step, BSGS）可以在 $\sqrt{p}$ 时间复杂度下得到结论，要求 $a$ 和 $p$ 互质。</p>
 
-<p>假设 $x = A \lceil {\sqrt{p}} \rceil - B$，其中 $0\le B \le \lceil{\sqrt{p}} \rceil$，$1\le A \le \lceil{\sqrt{p}} \rceil$，带入方程后有：
-\(a^{A \lceil {\sqrt{p}} \rceil - B} \equiv b(mod p) \\
-a^{A \lceil {\sqrt{p}} \rceil} \equiv ba^{B}(mod p)\)
-算法步骤：</p>
+<p>假设 $x = A \lceil {\sqrt{p}} \rceil - B$，其中 $0\le B \le \lceil{\sqrt{p}} \rceil$，$1\le A \le \lceil{\sqrt{p}} \rceil$，带入方程后有：</p>
+
+\[a^{A \lceil {\sqrt{p}} \rceil - B} \equiv b(mod p) \\
+a^{A \lceil {\sqrt{p}} \rceil} \equiv ba^{B}(mod p)\]
+
+<p>算法步骤：</p>
 
 <ul>
   <li>先枚举右侧 $B$ 并将取余结果保存到 <code class="language-plaintext highlighter-rouge">map</code> 中</li>
@@ -93,19 +95,31 @@ a^{A \lceil {\sqrt{p}} \rceil} \equiv ba^{B}(mod p)\)
 
 <p>通过简单操作，将非互质问题转化为互质问题，然后再按照普通 bsgs 求解即可。</p>
 
-<p>求解以下同余式，最小非负整数解
-\(a^{x} \equiv b(modp)\)
-将同余式展开
-\(a^{x} + kp = b\)
-设 $gcd(a, p) = d$，两边同除以 $d$
-\(\frac{a}{d} a^{x - 1} + k\frac{p}{d} = \frac{b}{d}\)
-两边取模 $\frac{p}{d}$ 转化为同余式
-\(\frac{a}{d} a^{x - 1} \equiv \frac{b}{d}(mod\frac{p}{d})\)
-$\frac{a}{d} \perp \frac{p}{d}$ 存在逆元。问题转化为互质场景了吗？没有，$a$ 、$\frac{p}{d}$ 不一定互质
-\(a^{x - 1} = \frac{b}{d}(\frac{a}{d})^{-1}(mod\frac{p}{d})\)
- 需要重复操作，直到互质为止。假设重复了 $cnt$ 次，最小公倍数的累积值为 $d_{cnt}$。则有
-\(a^{x - cnt} = \frac{b}{d_{cnt}}(\frac{a^{cnt}}{d_{cnt}})^{-1}(mod\frac{p}{d_{cnt}})\)
-$a \perp \frac{p}{d_{cnt}}$ 问题转化为了互质场景！</p>
+<p>求解以下同余式，最小非负整数解</p>
+
+\[a^{x} \equiv b(modp)\]
+
+<p>将同余式展开</p>
+
+\[a^{x} + kp = b\]
+
+<p>设 $gcd(a, p) = d$，两边同除以 $d$</p>
+
+\[\frac{a}{d} a^{x - 1} + k\frac{p}{d} = \frac{b}{d}\]
+
+<p>两边取模 $\frac{p}{d}$ 转化为同余式</p>
+
+\[\frac{a}{d} a^{x - 1} \equiv \frac{b}{d}(mod\frac{p}{d})\]
+
+<p>$\frac{a}{d} \perp \frac{p}{d}$ 存在逆元。问题转化为互质场景了吗？没有，$a$ 、$\frac{p}{d}$ 不一定互质</p>
+
+\[a^{x - 1} = \frac{b}{d}(\frac{a}{d})^{-1}(mod\frac{p}{d})\]
+
+<p>需要重复操作，直到互质为止。假设重复了 $cnt$ 次，最小公倍数的累积值为 $d_{cnt}$。则有</p>
+
+\[a^{x - cnt} = \frac{b}{d_{cnt}}(\frac{a^{cnt}}{d_{cnt}})^{-1}(mod\frac{p}{d_{cnt}})\]
+
+<p>$a \perp \frac{p}{d_{cnt}}$ 问题转化为了互质场景！</p>
 
 <h2 id="实现-1">实现</h2>
 
