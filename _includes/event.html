@@ -7,8 +7,20 @@
             } else {
                 music.style.display = 'none';
             }
-        } else if (event.key === 'Escape') {
-            console.log('ESC键被按下');
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(e.code === 'h') {
+            window.location.href = "/";
+        } else if(e.code === 'c') {
+            window.location.href = "/categories.html";
+        } else if(e.code === 't') {
+            window.location.href = "/tags.html";
+        } else if(e.code === 'p') {
+            window.history.back();  // 后退
+        } else if(e.code === 'n') {
+            window.history.forward();
         }
     });
 </script>
