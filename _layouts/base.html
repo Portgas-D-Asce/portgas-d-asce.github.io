@@ -84,13 +84,12 @@
             width: 100%;
         }
         </style>
+    
+    {{ content }}
 
     <div id="music">
         <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
     </div>
-
-
-    {{ content }}
 
     <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
         <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
@@ -99,8 +98,6 @@
     </script>
     <!--老版本包不能用了，要用新包-->
     <script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
-
-    
     
     <script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
