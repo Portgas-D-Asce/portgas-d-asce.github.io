@@ -367,6 +367,16 @@ To test your theme, run `script/server` (or `bundle exec jekyll serve`) and open
 
 The theme is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+# 使用
+按键操作：
+- h: 返回主页面
+- c: 目录页面
+- t: 标签页面
+- p: 回退
+- n: 前进
+- a: 顶部
+- v: 底部
+- m: 音乐显隐
 
 # 模块
 
