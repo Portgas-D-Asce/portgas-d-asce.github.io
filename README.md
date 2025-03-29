@@ -378,9 +378,10 @@ The theme is available as open source under the terms of the [MIT License](http:
 - v: 底部
 - m: 音乐显隐
 
+
 # 模块
 
-## 代码
+## 代码高亮
 [highlightjs](https://highlightjs.org)
 
 ```html
@@ -392,6 +393,90 @@ The theme is available as open source under the terms of the [MIT License](http:
     hljs.highlightAll();
 </script>
 ```
+
+## 图表显示
+[echarts](https://echarts.apache.org/zh/index.html)
+
+### 标签页
+wordCloud
+
+```html
+<script>
+const tags_data = [
+    {% for tag in site.tags %}
+    {
+        name: '{{ tag[0] }}',
+        value: {{ tag[1].size }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+
+const chart = echarts.init(document.getElementById('tags'));
+chart.setOption({
+	backgroundColor: "#fff",
+	// tooltip: {
+	//   pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+	// },
+	series: [{
+		type: "wordCloud",
+		//用来调整词之间的距离
+		gridSize: 20,
+		//用来调整字的大小范围
+		// Text size range which the value in data will be mapped to.
+		// Default to have minimum 12px and maximum 60px size.
+		sizeRange: [14, 60],
+		// Text rotation range and step in degree. Text will be rotated randomly in range [-90,                                                                             90] by rotationStep 45
+		//用来调整词的旋转方向，，[0,0]--代表着没有角度，也就是词为水平方向，需要设置角度参考注释内容
+		// rotationRange: [-45, 0, 45, 90],
+		// rotationRange: [ 0,90],
+		//rotationRange: [0, 0],
+		rotationRange: [-45, 0, 45, 90],
+		//随机生成字体颜色
+		// maskImage: maskImage,
+		textStyle: {
+			color: function () {
+				return (
+					"rgb(" +
+					Math.round(Math.random() * 255) +
+					", " +
+					Math.round(Math.random() * 255) +
+					", " +
+					Math.round(Math.random() * 255) +
+					")"
+				);
+			}
+		},
+		//位置相关设置
+		// Folllowing left/top/width/height/right/bottom are used for positioning the word cloud
+		// Default to be put in the center and has 75% x 80% size.
+		left: "center",
+		top: "center",
+		right: null,
+		bottom: null,
+		width: "100%",
+		height: "100%",
+        data: tags_data
+	}]
+});
+
+chart.on('click', { seriesIndex: 0 }, function(params) {
+  // 只响应第一个系列的点击
+  window.location.href = '/tag/' + params.name;
+});
+</script>
+```
+
+### 目录页
+
+tree
+
+```html
+
+```
+
+
+
+
 
 ## 音乐播放器
 [Meting-API](https://github.com/xizeyoupan/Meting-API)
