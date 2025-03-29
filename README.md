@@ -368,18 +368,37 @@ To test your theme, run `script/server` (or `bundle exec jekyll serve`) and open
 The theme is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 
-# 音乐播放器
+# 模块
+
+## 代码
+[highlightjs](https://highlightjs.org)
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+
+<script>
+    hljs.highlightAll();
+</script>
+```
+
+## 音乐播放器
 [Meting-API](https://github.com/xizeyoupan/Meting-API)
 
+```html
 
-# 评论系统
+```
+
+
+## 评论系统
 [giscus](https://giscus.app/zh-CN)
 
 
-# 多线部署
-## vercel
+## 多线部署
+### vercel
 
 [Vercel](https://vercel.com/)
 
-## Netlify
+### Netlify
 [Netilify](https://app.netlify.com/)
