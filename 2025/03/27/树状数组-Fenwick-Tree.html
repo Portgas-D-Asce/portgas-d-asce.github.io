@@ -67,21 +67,30 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="前缀和数组-和-差分数组">前缀和数组 和 差分数组</h1>
+</style><h1 id="原数组--前缀和数组--差分数组">原数组 &amp; 前缀和数组 &amp; 差分数组</h1>
 
 <p>设有原数组 $nums$:</p>
 <ul>
-  <li>数组 $sum$ 称为 $nums$ 的前缀和数组，$sum[i] = nums[0] + nums[1] + … + nums[i]$；</li>
-  <li>数组 $dif$ 称为 $nums$ 的差分数组， $dif[i] = nums[i] - nums[i - 1]$；</li>
-  <li><strong>$nums$ 是 $dif$ 的前缀和数组，同时也是 $sum$ 的差分数组</strong>；</li>
-  <li>前缀和数组 和 差分数组 只是原数组的等价表示形式，没有额外增加/删除信息；</li>
-  <li>前缀和数组可以简化 <strong>查询原数组任意区间内元素和</strong> 操作；时间复杂度变化：$O(n)-&gt;O(1)$；</li>
-  <li>差分数组可以简化 <strong>原数组任意区间内元素统一增加 x</strong> 操作；时间复杂度变化：$O(n)-&gt;O(1)$；</li>
+  <li>数组 $sum[i] nums[0] + nums[1] + … + nums[i]$ 称为 $nums$ 的前缀和数组</li>
+  <li>数组 $dif[i] = nums[i] - nums[i - 1]$ 称为 $nums$ 的差分数组</li>
+</ul>
+
+<p>前缀和数组、差分数组 只不过是原数组的不同表示形式。</p>
+<ul>
+  <li>原数组可以在常数时间内访问任意元素！！！</li>
+  <li>前缀和数组可以在常数时间获取任意区间的元素和！！！</li>
+  <li>差分数组可以在常数时间内对任意区间内元素增加/减少固定数值！！！</li>
+</ul>
+
+<p>前缀和、差分互为逆运算：</p>
+<ul>
+  <li>原数组 是 差分数组 的前缀和数组！！！</li>
+  <li>原数组 是 前缀和数组 的差分数组！！！</li>
 </ul>
 
 <h1 id="树状数组">树状数组</h1>
 
-<p><img src="/assets/image/21.png" alt="/assets/image/21.png" /></p>
+<p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
 <p>前缀和数组：</p>
 <ul>

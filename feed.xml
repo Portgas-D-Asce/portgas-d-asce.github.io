@@ -1,4 +1,273 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-03-29T15:12:12+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">BSGS</title><link href="https://portgas-d-asce.github.io/2025/03/28/BSGS.html" rel="alternate" type="text/html" title="BSGS" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/BSGS</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/BSGS.html"><![CDATA[<h1 id="bsgs">bsgs</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://portgas-d-asce.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://portgas-d-asce.github.io/" rel="alternate" type="text/html" /><updated>2025-04-01T15:04:16+00:00</updated><id>https://portgas-d-asce.github.io/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">最小生成树（Minimum Spanning Tree）</title><link href="https://portgas-d-asce.github.io/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" rel="alternate" type="text/html" title="最小生成树（Minimum Spanning Tree）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%EF%BC%88Minimum%20Spanning%20Tree%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"><![CDATA[<h1 id="最小生成树">最小生成树</h1>
+<p>带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
+
+<p>两种实现算法（都是基于贪心策略）：</p>
+<ul>
+  <li>kruscal</li>
+  <li>prim</li>
+</ul>
+
+<h1 id="kruskal">Kruskal</h1>
+
+<h2 id="原理">原理</h2>
+<p>$kruskal$ 是基于 <strong>并查集</strong> 来实现的：</p>
+<ul>
+  <li>先将所有边按权重排序</li>
+  <li>按权重从小到大遍历边
+    <ul>
+      <li>如果边的两个顶点属于已经属于同一集合，该边不属于最小生成树；</li>
+      <li>否则，该边属于最小生成树；</li>
+    </ul>
+  </li>
+  <li>权重为负值也是没有问题的</li>
+</ul>
+
+<h2 id="实现">实现</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">uf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]));</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">edges</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">uf</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">sort</span><span class="p">(</span><span class="n">edges</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">edges</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">pu</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">u</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pu</span> <span class="o">==</span> <span class="n">pv</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">w</span><span class="p">;</span>
+        <span class="n">uf</span><span class="p">[</span><span class="n">px</span><span class="p">]</span> <span class="o">=</span> <span class="n">py</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">total</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="复杂度">复杂度</h2>
+
+<p>时间复杂度：$O(ElogV)$</p>
+
+<p>空间复杂度：$O(V)$</p>
+
+<h1 id="prim">Prim</h1>
+
+<h2 id="原理-1">原理</h2>
+<p>$prim$ 和 $dijkstra$ 十分相似（有多相似，看下面实现就知道了），区别在于：</p>
+<ul>
+  <li><strong>$dijkstra$ ：</strong> 总是把 <strong>开集合中距离起点最近的点加入到闭集合</strong>；</li>
+  <li><strong>$prim$ ：</strong> 总是把 <strong>开集合中距离已生成的最小生成树最近的点加入到闭集合</strong>；</li>
+</ul>
+
+<p>显然，要求权重为正</p>
+
+<h2 id="实现-1">实现</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
+    <span class="n">dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
+    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+    
+    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">w</span> <span class="o">&gt;=</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span>
+            <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">v</span><span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">total</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="复杂度-1">复杂度</h2>
+
+<p>时间复杂度：$O(ElogV)$</p>
+
+<p>空间复杂度：$O(E)$</p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/25.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/25.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">迪杰斯特拉（Dijkstra）</title><link href="https://portgas-d-asce.github.io/2025/03/31/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89-Dijkstra.html" rel="alternate" type="text/html" title="迪杰斯特拉（Dijkstra）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/31/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%EF%BC%88Dijkstra%EF%BC%89</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/31/%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89-Dijkstra.html"><![CDATA[<h1 id="dijkstra">Dijkstra</h1>
+<h2 id="应用场景">应用场景</h2>
+
+<p>求解带权有向图的单源最短路径问题（无向图也是可以的），要求权重值非负</p>
+
+<h2 id="算法步骤">算法步骤</h2>
+<p>开/闭集合：</p>
+<ul>
+  <li><strong>开集合：</strong> 还未找到最短路径的节点的集合；</li>
+  <li><strong>闭集合：</strong> 已经找到最短路径的节点的集合；</li>
+</ul>
+
+<p>不断地从开集合中取出距离起点最近的点，将其加入到闭集合当中，并对与该点相邻的点进行松弛操作。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
+    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">s</span><span class="p">});</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="c1">//不要用引用，pop 之后引用是未定义的</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+        <span class="c1">//可以使用 visited 数组，用于标记已经找到最短路径的节点</span>
+        <span class="c1">//这里使用小优化，去掉了 visited 数组</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">w</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+                <span class="c1">//松弛只是将新结果 push 到优先队列中，并没有移除之前结果</span>
+                <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">temp</span><span class="p">,</span> <span class="n">v</span><span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">dist</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="复杂度">复杂度</h2>
+
+<p>时间复杂度：$O(ElogV)$</p>
+
+<p>空间复杂度：$O(E)$</p>
+
+<h2 id="思考">思考</h2>
+
+<p>节点松弛操作，只是向优先队列中插入新的最短距离，而被替代的旧最短距离并未被删除，这样是否会导致优先队列中的元素越来越多，最终导致效率低下？</p>
+<ul>
+  <li>不会，松弛是按边松弛的， 松弛次数 &lt; 边的条数</li>
+  <li>当弹出旧的最短距离时，此时缓冲是没有意义的，借助于 $d &gt; dist[u]$ （也就是 $visited$ 标记数组），直接跳过避免不必要的缓冲</li>
+</ul>
+
+<p>贪心的正确性：</p>
+<ul>
+  <li>贪心策略：每次从优先队列中弹出距离起点距离最小的节点，将其加入闭集合（该节点到起点的最短距离已计算完毕）</li>
+  <li>正确性：当前节点距离起点的距离已经是最小值（其他节点距离起点的距离大于该值）+ 变的权重为正数，这意味着当前节点无法被其他节点松弛，也就是说当前节点的最短距离已找到</li>
+  <li>这也正是算法要求边权重为正数的原因</li>
+</ul>
+
+<h1 id="最短路径打印">最短路径打印</h1>
+<p>$dijkstra$ 只是计算出了最短距离，如何输出最短路径呢（任意一条即可）</p>
+
+<h2 id="关键点">关键点</h2>
+
+<p>在松弛的时候，记录是 “谁松弛了谁“ 这层关系（也就是最短路径上的前一个节点）</p>
+
+<h2 id="实现">实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+    <span class="c1">//记录最短距离</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="c1">//记录最短路径前一个节点</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pre</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    
+    <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
+    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">s</span><span class="p">});</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">w</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+                <span class="n">pre</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">;</span>
+                <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">temp</span><span class="p">,</span> <span class="n">v</span><span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">dist</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">recover</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pre</span><span class="p">,</span> <span class="kt">int</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">path</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">e</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">path</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+        <span class="c1">//指向前一个节点</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">pre</span><span class="p">[</span><span class="n">e</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="c1">//路径反转回来，从起点到终点</span>
+    <span class="n">reverse</span><span class="p">(</span><span class="n">path</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">path</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">path</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="练习">练习</h2>
+<p><a href="">Leetcode XXX</a></p>
+
+<h1 id="最短路径方案数">最短路径方案数</h1>
+<p>这次，既不求最短距离，也不还原最短路径，而是统计最短路径的条数！！！</p>
+
+<p>关键词：最短路径、拓扑序、动态规划</p>
+
+<h2 id="动态规划">动态规划</h2>
+
+<h3 id="状态定义">状态定义</h3>
+
+<p>$dp[u]$：从起点到达节点 $u$ 最短路径的方案数</p>
+
+<h3 id="状态转移">状态转移</h3>
+
+<p>假设从 $u_i$ 都能以最短路径到达 $v$ ，则：
+\(dp[v] = \sum_{i = 0} ^{x} dp[u_i]\)</p>
+
+<p>方案数计算：</p>
+
+<ul>
+  <li>新的最短距离 &lt; 老的最短距离时：以老的最短距离作为最短路径统计的方案数作废，方案数重置为前一个节点的最短路径方案数</li>
+  <li>新的最短距离 = 老的最短距离时：前一个节点有多个，每个都能缓冲出当前的最短距离，方案数为多个节点的最短路径方案数之和</li>
+</ul>
+
+<h2 id="实现-1">实现</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+    <span class="c1">//记录最短距离</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">{</span><span class="n">INT_MAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="c1">//记录最短路径方案数</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">cnt</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="n">cnt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
+    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">s</span><span class="p">});</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">:</span> <span class="n">mp</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">w</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+                <span class="n">cnt</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">u</span><span class="p">];</span>
+                <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">temp</span><span class="p">,</span> <span class="n">v</span><span class="p">});</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">cnt</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">u</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">cnt</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="练习-1">练习</h2>
+<p><a href="https://leetcode.cn/problems/number-of-ways-to-arrive-at-destination/">LeetCode 1976. 到达目的地的方案数</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/21.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/21.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">BSGS</title><link href="https://portgas-d-asce.github.io/2025/03/28/BSGS.html" rel="alternate" type="text/html" title="BSGS" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/BSGS</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/BSGS.html"><![CDATA[<h1 id="bsgs">bsgs</h1>
 
 <p>已知非负整数 $a$ 、 $b$ 和正数 $p$，$a \neq 0$ 时 $a, p$ 互质，求以下同余方程的最小非负数整数解，无解时输出 $-1$</p>
 
@@ -1253,104 +1522,4 @@ a^b
 
 <h2 id="超级次方">超级次方</h2>
 
-<p><a href="https://leetcode.cn/problems/super-pow/">372. 超级次方</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/26.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/26.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">摩尔投票法</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95.html" rel="alternate" type="text/html" title="摩尔投票法" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8%E6%B3%95.html"><![CDATA[<h1 id="摩尔投票法">摩尔投票法</h1>
-
-<p>Boyer–Moore majority vote algorithm</p>
-
-<ul>
-  <li>可以在常数空间复杂度找出多数元素</li>
-  <li>恰好一半不能算作是多数元素</li>
-  <li>主要元素不一定存在，投票完成之后需要进行检验</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">moore_vote</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">maj</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">maj</span> <span class="o">=</span> <span class="n">num</span><span class="p">;</span>
-            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">num</span> <span class="o">!=</span> <span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">cnt</span><span class="o">--</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    
-    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">cnt</span> <span class="o">+=</span> <span class="n">maj</span> <span class="o">==</span> <span class="n">num</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">maj</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="封装">封装</h1>
-
-<p>返回迭代器的好处：</p>
-
-<ul>
-  <li>就函数目标来说，返回迭代器与返回值都是可以的</li>
-  <li>当没有多数元素时，返回哪个数合适呢？
-    <ul>
-      <li>返回值：返回哪个数都不合适！！</li>
-      <li>返回迭代器：用 last 表示没有找到的情况，岂不完美</li>
-    </ul>
-  </li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">FIterator</span><span class="p">&gt;</span>
-<span class="n">FIterator</span> <span class="nf">moore_vote</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">FIterator</span> <span class="n">last</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">ssize_t</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">FIterator</span> <span class="n">maj</span> <span class="o">=</span> <span class="n">last</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">cur</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">maj</span> <span class="o">=</span> <span class="n">cur</span><span class="p">;</span>
-            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="o">*</span><span class="n">cur</span> <span class="o">!=</span> <span class="o">*</span><span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
-            <span class="o">--</span><span class="n">cnt</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    
-    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">ssize_t</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">FIterator</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">cur</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
-        <span class="o">++</span><span class="n">total</span><span class="p">;</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">cur</span> <span class="o">==</span> <span class="o">*</span><span class="n">maj</span><span class="p">)</span> <span class="p">{</span>
-            <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">total</span> <span class="o">?</span> <span class="n">maj</span> <span class="o">:</span> <span class="n">last</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="练习">练习</h1>
-
-<p><a href="https://leetcode.cn/problems/majority-element/">LeetCode 169. 多数元素</a></p>
-
-<p><a href="https://leetcode.cn/problems/find-majority-element-lcci/">LeetCode 面试题 17.10. 主要元素</a></p>
-
-<p><a href="https://leetcode.cn/problems/majority-element-ii/">LeetCode 229. 多数元素 II</a></p>
-
-<p><a href="https://codeforces.com/contest/1907/problem/C">CodeForces 913 C. Removal of Unattractive Pairs</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/15.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/15.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">格雷码</title><link href="https://portgas-d-asce.github.io/2025/03/28/%E6%A0%BC%E9%9B%B7%E7%A0%81.html" rel="alternate" type="text/html" title="格雷码" /><published>2025-03-28T00:00:00+00:00</published><updated>2025-03-28T00:00:00+00:00</updated><id>https://portgas-d-asce.github.io/2025/03/28/%E6%A0%BC%E9%9B%B7%E7%A0%81</id><content type="html" xml:base="https://portgas-d-asce.github.io/2025/03/28/%E6%A0%BC%E9%9B%B7%E7%A0%81.html"><![CDATA[<h1 id="格雷码">格雷码</h1>
-
-<p>在一组数的编码中，若任意两个相邻的代码只有一位二进制数不同（首尾也满足这个性质），则称这种编码为<strong>格雷码</strong>（Gray Code）前 $n = 2^k$ 个数格雷码排列
-\(0, 1, 3, 2, 6, 7, 5, 4, 12, 13, 15, 14, 10, 11, 9, 8{\cdots}\)</p>
-
-<p>格雷码的构造过程，初始值为 $0, 1$ 接着向后构造
-\(\begin{aligned}
-0 \\
-1 \\
-3 &amp;= 1 * 2 + 1 \\
-2 &amp;= 1 * 2 \\
-6 &amp;= 3 * 2 \\
-7 &amp;= 3 * 2 + 1\\
-5 &amp;= 2 * 2 + 1 \\
-4 &amp;= 2 * 2\\
-&amp;\cdots
-\end{aligned}\)</p>
-
-<p><a href="https://leetcode.cn/problems/gray-code/">89. 格雷编码</a></p>
-
-<p><a href="https://leetcode.cn/problems/circular-permutation-in-binary-representation/">1238. 循环码排列</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/20.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/20.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p><a href="https://leetcode.cn/problems/super-pow/">372. 超级次方</a></p>]]></content><author><name>pk</name></author><category term="数据结构与算法" /><category term="数论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://portgas-d-asce.github.io/assets/image/26.jpeg" /><media:content medium="image" url="https://portgas-d-asce.github.io/assets/image/26.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
