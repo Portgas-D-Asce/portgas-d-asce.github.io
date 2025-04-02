@@ -5,6 +5,7 @@ image: /assets/image/34.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 原型模式（Prototype）
+categories: [aaa, bbb]
 ---
 
 # 概述
