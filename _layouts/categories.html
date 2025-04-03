@@ -10,6 +10,7 @@ layout: base
     <li>
       <a href="/category/{{ category[0] | slugify }}">{{ category[0] }}</a>
       ({{ category[1].size }} posts)
+      {{ category }}
     </li>
   {% endfor %}
 </ul>
