@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 # gemspec
 
-gem "jekyll", "~> 4.3.0"
+gem "jekyll", "~> 4.4.1"
 gem "kramdown-parser-gfm" if ENV["JEKYLL_VERSION"] == "~> 3.9"
 gem "jekyll-feed"
 gem "jekyll-seo-tag"
