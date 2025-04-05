@@ -67,44 +67,26 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><p>二分法的本质： <strong>用来求解单调函数的零点！！！</strong></p>
-<ul>
-  <li>说得更清楚点就是：求解方程 $f(x) = y$ 的根，$f(x)$ 单调， $y$ 表示一个数字。</li>
-</ul>
+</style><p>二分法就是求解单调函数 $f(x)$ 的零点！！！不难理解，就是 “猜数字”，难的是抽象的过程</p>
 
-<h1 id="二分法求解方程任意解">二分法求解方程任意解</h1>
+<h1 id="一些示例">一些示例</h1>
 
-<h2 id="fx-以数组形式给出">$f(x)$ 以数组形式给出</h2>
-
-<p>示例：</p>
-<ul>
-  <li>给定一个单调递增数组 $nums$，判断目标 $tar$ 是否存在；</li>
-  <li>如果存在返回 $tar$ 的下标；否则返回 -1 ；
-    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">binary_search</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tar</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">==</span> <span class="n">tar</span><span class="p">)</span> <span class="k">return</span> <span class="n">q</span><span class="p">;</span>
-      <span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tar</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<p>给定一个单调递增数组 $nums$，判断目标 $tar$ 是否存在，如果存在返回 $tar$ 的下标；否则返回 -1</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// f(x) 从索引到数组值映射, 求 f(x) - tar 的零点</span>
+<span class="kt">int</span> <span class="nf">binary_search</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tar</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">==</span> <span class="n">tar</span><span class="p">)</span> <span class="k">return</span> <span class="n">q</span><span class="p">;</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tar</span> <span class="o">?</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></div>    </div>
-    <p>理解：</p>
-  </li>
-  <li>数组可以看作是 “自变量是数组下标，因变量为数组中元素” 的一个离散函数，即 $f(x) = nums[x]$；</li>
-  <li>上述问题的本质就是求解方程 $f(x) = nums[x] = tar$ 的解；</li>
-</ul>
+</code></pre></div></div>
 
-<h2 id="fx-为整形函数">$f(x)$ 为整形函数</h2>
-
-<p>示例：</p>
-<ul>
-  <li>判断正整数 $num$ 是否为平方数；</li>
-  <li>如果是平方数，返回 $num$ 的正平方根；否则返回 -1；</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<p>判断正整数 $num$ 是否为平方数，如果是平方数，返回 $num$ 的正平方根，否则返回 -1</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// f(x) = x * x, 求 f(x) - num 的整数零点</span>
+<span class="kt">int</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -119,12 +101,10 @@
     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>本质：求解方程 $f(x) = x * x = num$ 的整数解。</p>
 
-<h2 id="fx-为浮点函数">$f(x)$ 为浮点函数</h2>
-
-<p>示例：求解正浮点数 $num$ 的平方根。</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<p>求解正浮点数的平方根</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// f(x) = x * x, 求 f(x) - num 的浮点零点</span>
+<span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -137,11 +117,10 @@
     <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>本质：求解方程 $f(x) = x * x = num$ 的浮点解。</p>
 
 <h1 id="二分法求解最优解">二分法求解最优解</h1>
 
-<p>二分最优化问题有两种类型：</p>
+<p>二分最优化问题有两种类型（还是没逃脱单调的范畴）：</p>
 <ul>
   <li>00001111型：查找第一个 1</li>
   <li>11110000型：查找最后一个 1</li>
@@ -180,7 +159,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h1 id="应用">应用</h1>
+<h1 id="练习">练习</h1>
 
 <h2 id="最大最小">最大最小</h2>
 
