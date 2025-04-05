@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 数据结构与算法 数论
-image: /assets/image/24.jpeg
+image: /assets/image/20.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: Next Palindrome

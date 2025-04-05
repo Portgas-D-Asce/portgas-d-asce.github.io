@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 数据结构与算法
-image: /assets/image/9.jpeg
+image: /assets/image/5.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 树状数组（Fenwick Tree）

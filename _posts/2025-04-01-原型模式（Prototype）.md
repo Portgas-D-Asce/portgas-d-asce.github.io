@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 设计模式
-image: /assets/image/34.jpeg
+image: /assets/image/32.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 原型模式（Prototype）

@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 设计模式
-image: /assets/image/26.jpeg
+image: /assets/image/24.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 装饰器模式（Decorator）

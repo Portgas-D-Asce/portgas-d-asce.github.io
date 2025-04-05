@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 数据结构与算法
-image: /assets/image/10.jpeg
+image: /assets/image/6.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: ST 表（Sparse Table）

@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 数据结构与算法 图论
-image: /assets/image/17.jpeg
+image: /assets/image/18.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: Bron Kerbosch 算法

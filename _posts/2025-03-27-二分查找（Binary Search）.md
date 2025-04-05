@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 数据结构与算法
-image: /assets/image/7.jpeg
+image: /assets/image/3.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 二分查找（Binary Search）

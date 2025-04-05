@@ -1,7 +1,7 @@
 ---
 layout: page
 tags: 设计模式
-image: /assets/image/31.jpeg
+image: /assets/image/28.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 单例模式（Singleton）
