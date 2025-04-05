@@ -5,6 +5,7 @@ image: /assets/image/24.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 装饰器模式（Decorator）
+categories: [计算机, 设计模式]
 ---
 
 # 概述

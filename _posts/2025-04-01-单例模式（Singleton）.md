@@ -5,6 +5,7 @@ image: /assets/image/28.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 单例模式（Singleton）
+categories: [计算机, 设计模式]
 ---
 
 # 概述

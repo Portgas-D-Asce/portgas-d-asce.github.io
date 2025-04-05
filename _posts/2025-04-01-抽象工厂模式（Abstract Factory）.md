@@ -5,6 +5,7 @@ image: /assets/image/27.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 抽象工厂模式（Abstract Factory）
+categories: [计算机, 设计模式]
 ---
 
 # 概述
