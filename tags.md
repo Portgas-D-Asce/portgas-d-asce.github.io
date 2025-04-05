@@ -1,4 +1,4 @@
 ---
 layout: tags
-title: tags page
+title: Tags
 ---
