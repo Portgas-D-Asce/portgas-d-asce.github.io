@@ -5,6 +5,7 @@ image: /assets/image/3.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 二分查找（Binary Search）
+categories: [计算机, 数据结构与算法]
 ---
 
 二分法就是求解单调函数 $f(x)$ 的零点！！！不难理解，就是 “猜数字”，难的是抽象的过程

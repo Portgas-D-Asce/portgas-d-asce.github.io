@@ -5,6 +5,7 @@ image: /assets/image/4.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 滑动窗口（Slide Window）
+categories: [计算机, 数据结构与算法]
 ---
 
 
