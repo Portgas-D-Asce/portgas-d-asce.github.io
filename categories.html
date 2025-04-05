@@ -41,57 +41,107 @@
             .font-bold { font-weight: bold; }
         </style>
     
-        <h1>categories</h1>
+        ---
+layout: base
+---
 
-<ul>
+<!-- 1. 引入 ECharts 核心 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   
-    <li>
-      <a href="/category/ddd">ddd</a>
-      (1 posts)
-      
-      
-    </li>
-  
-    <li>
-      <a href="/category/eee">eee</a>
-      (1 posts)
-      
-      
-    </li>
-  
-    <li>
-      <a href="/category/fff">fff</a>
-      (1 posts)
-      
-      
-    </li>
-  
-    <li>
-      <a href="/category/aaa">aaa</a>
-      (3 posts)
-      
-      
-    </li>
-  
-    <li>
-      <a href="/category/bbb">bbb</a>
-      (2 posts)
-      
-      
-    </li>
-  
-    <li>
-      <a href="/category/ccc">ccc</a>
-      (1 posts)
-      
-      
-    </li>
-  
-</ul>
+<!-- 2. 引入 WordCloud 扩展 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 
-<h1>
-have no time to do it, can you help me?
-</h1>
+<div id="categories" class="wh100"></div>
+
+
+<script>
+const categories_data = [
+    
+    {
+        name: 'ddd',
+        value: 1
+    },
+    
+    {
+        name: 'eee',
+        value: 1
+    },
+    
+    {
+        name: 'fff',
+        value: 1
+    },
+    
+    {
+        name: 'aaa',
+        value: 3
+    },
+    
+    {
+        name: 'bbb',
+        value: 2
+    },
+    
+    {
+        name: 'ccc',
+        value: 1
+    }
+    
+];
+
+const chart = echarts.init(document.getElementById('categories'));
+chart.setOption({
+	backgroundColor: "#fff",
+	// tooltip: {
+	//   pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+	// },
+	series: [{
+		type: "wordCloud",
+		//用来调整词之间的距离
+		gridSize: 20,
+		//用来调整字的大小范围
+		// Text size range which the value in data will be mapped to.
+		// Default to have minimum 12px and maximum 60px size.
+		sizeRange: [14, 60],
+		// Text rotation range and step in degree. Text will be rotated randomly in range [-90,                                                                             90] by rotationStep 45
+		//用来调整词的旋转方向，，[0,0]--代表着没有角度，也就是词为水平方向，需要设置角度参考注释内容
+		// rotationRange: [-45, 0, 45, 90],
+		// rotationRange: [ 0,90],
+		//rotationRange: [0, 0],
+		rotationRange: [-45, 0, 45, 90],
+		//随机生成字体颜色
+		// maskImage: maskImage,
+		textStyle: {
+			color: function () {
+				return (
+					"rgb(" +
+					Math.round(Math.random() * 255) +
+					", " +
+					Math.round(Math.random() * 255) +
+					", " +
+					Math.round(Math.random() * 255) +
+					")"
+				);
+			}
+		},
+		//位置相关设置
+		// Folllowing left/top/width/height/right/bottom are used for positioning the word cloud
+		// Default to be put in the center and has 75% x 80% size.
+		left: "center",
+		top: "center",
+		right: null,
+		bottom: null,
+		width: "100%",
+		height: "100%",
+        data: categories_data
+	}]
+});
+
+chart.on('click', { seriesIndex: 0 }, function(params) {
+    // 只响应第一个系列的点击
+    window.location.href = '/category/' + params.name;
+});
+</script>
 <div id="music">
     <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
 </div>
