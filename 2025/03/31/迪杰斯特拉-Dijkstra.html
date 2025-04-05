@@ -68,19 +68,16 @@
     margin-bottom: 12px;
 }
 </style><h1 id="dijkstra">Dijkstra</h1>
-<h2 id="应用场景">应用场景</h2>
 
-<p>求解带权有向图的单源最短路径问题（无向图也是可以的），要求权重值非负</p>
-
-<h2 id="算法步骤">算法步骤</h2>
-<p>开/闭集合：</p>
+<h2 id="原理">原理</h2>
+<p>求解带权有向图的单源最短路径问题，要求权重值非负。算法步骤：</p>
 <ul>
   <li><strong>开集合：</strong> 还未找到最短路径的节点的集合；</li>
   <li><strong>闭集合：</strong> 已经找到最短路径的节点的集合；</li>
+  <li>不断地从开集合中取出距离起点最近的点，将其加入到闭集合当中，并对与该点相邻的点进行松弛操作。</li>
 </ul>
 
-<p>不断地从开集合中取出距离起点最近的点，将其加入到闭集合当中，并对与该点相邻的点进行松弛操作。</p>
-
+<h2 id="实现">实现</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
@@ -120,7 +117,7 @@
 <p>节点松弛操作，只是向优先队列中插入新的最短距离，而被替代的旧最短距离并未被删除，这样是否会导致优先队列中的元素越来越多，最终导致效率低下？</p>
 <ul>
   <li>不会，松弛是按边松弛的， 松弛次数 &lt; 边的条数</li>
-  <li>当弹出旧的最短距离时，此时缓冲是没有意义的，借助于 $d &gt; dist[u]$ （也就是 $visited$ 标记数组），直接跳过避免不必要的缓冲</li>
+  <li>当弹出旧的最短距离时，此时松弛是没有意义的，借助于 $d &gt; dist[u]$ （也就是 $visited$ 标记数组），直接跳过避免不必要的松弛操作</li>
 </ul>
 
 <p>贪心的正确性：</p>
@@ -137,7 +134,7 @@
 
 <p>在松弛的时候，记录是 “谁松弛了谁“ 这层关系（也就是最短路径上的前一个节点）</p>
 
-<h2 id="实现">实现</h2>
+<h2 id="实现-1">实现</h2>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
@@ -181,7 +178,6 @@
 <span class="p">}</span>
 </code></pre></div></div>
 <h2 id="练习">练习</h2>
-<p><a href="">Leetcode XXX</a></p>
 
 <h1 id="最短路径方案数">最短路径方案数</h1>
 <p>这次，既不求最短距离，也不还原最短路径，而是统计最短路径的条数！！！</p>
@@ -206,7 +202,7 @@
   <li>新的最短距离 = 老的最短距离时：前一个节点有多个，每个都能缓冲出当前的最短距离，方案数为多个节点的最短路径方案数之和</li>
 </ul>
 
-<h2 id="实现-1">实现</h2>
+<h2 id="实现-2">实现</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dijkstra</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
 
