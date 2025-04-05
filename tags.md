@@ -1,4 +1,4 @@
 ---
 layout: tags
-title: this is a demo
+title: tags page
 ---
