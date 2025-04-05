@@ -7,19 +7,13 @@ author: pk
 title: 二分查找（Binary Search）
 ---
 
-二分法的本质： **用来求解单调函数的零点！！！**
-- 说得更清楚点就是：求解方程 $f(x) = y$ 的根，$f(x)$ 单调， $y$ 表示一个数字。
+二分法就是求解单调函数 $f(x)$ 的零点！！！不难理解，就是 “猜数字”，难的是抽象的过程
 
-# 二分法求解方程任意解
+# 一些示例
 
-
-
-## $f(x)$ 以数组形式给出
-
-示例：
-- 给定一个单调递增数组 $nums$，判断目标 $tar$ 是否存在；
-- 如果存在返回 $tar$ 的下标；否则返回 -1 ；
+给定一个单调递增数组 $nums$，判断目标 $tar$ 是否存在，如果存在返回 $tar$ 的下标；否则返回 -1 
 ```cpp
+// f(x) 从索引到数组值映射, 求 f(x) - tar 的零点
 int binary_search(const vector<int> &nums, int n, int tar) {
     int p = 0, r = n - 1;
     while(p <= r) {
@@ -30,19 +24,10 @@ int binary_search(const vector<int> &nums, int n, int tar) {
     return -1;
 }
 ```
-理解：
-- 数组可以看作是 “自变量是数组下标，因变量为数组中元素” 的一个离散函数，即 $f(x) = nums[x]$；
-- 上述问题的本质就是求解方程 $f(x) = nums[x] = tar$ 的解；
 
-
-
-## $f(x)$ 为整形函数
-
-示例：
-- 判断正整数 $num$ 是否为平方数；
-- 如果是平方数，返回 $num$ 的正平方根；否则返回 -1；
-
+判断正整数 $num$ 是否为平方数，如果是平方数，返回 $num$ 的正平方根，否则返回 -1
 ```cpp
+// f(x) = x * x, 求 f(x) - num 的整数零点
 int f(int x) {
     return x * x;
 }
@@ -58,14 +43,10 @@ int binary_search(int (*f)(int), int num) {
     return -1;
 }
 ```
-本质：求解方程 $f(x) = x * x = num$ 的整数解。
 
-
-
-## $f(x)$ 为浮点函数
-
-示例：求解正浮点数 $num$ 的平方根。
+求解正浮点数的平方根
 ```cpp
+// f(x) = x * x, 求 f(x) - num 的浮点零点
 double f(double x) {
     return x * x;
 }
@@ -79,13 +60,11 @@ double binary_search(double (*f)(double), double num) {
     return p;
 }
 ```
-本质：求解方程 $f(x) = x * x = num$ 的浮点解。
-
 
 
 # 二分法求解最优解
 
-二分最优化问题有两种类型：
+二分最优化问题有两种类型（还是没逃脱单调的范畴）：
 - 00001111型：查找第一个 1
 - 11110000型：查找最后一个 1
 
@@ -128,7 +107,7 @@ int binary_search10(int *nums, int n) {
 
 
 
-# 应用
+# 练习
 
 ## 最大最小
 
