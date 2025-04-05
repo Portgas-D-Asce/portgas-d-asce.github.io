@@ -14,8 +14,8 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="xxxxxxxxxxxxxxxxxx" />
 <meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
-<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
-<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
 <meta property="og:site_name" content="Portgas·D·Asce’s blog" />
 <meta property="og:image" content="https://xdevil.top/assets/image/1.jpeg" />
 <meta property="og:type" content="article" />
@@ -24,7 +24,7 @@
 <meta property="twitter:image" content="https://xdevil.top/assets/image/1.jpeg" />
 <meta property="twitter:title" content="多态实现原理（非虚继承）" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-27T00:00:00+00:00","datePublished":"2025-03-27T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"多态实现原理（非虚继承）","image":"https://xdevil.top/assets/image/1.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-27T00:00:00+00:00","datePublished":"2025-03-27T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"多态实现原理（非虚继承）","image":"https://xdevil.top/assets/image/1.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/c/c++/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -88,7 +88,6 @@
 </code></pre></div></div>
 
 <p>纯虚函数：</p>
-
 <ul>
   <li>纯虚函数就是只有声明，没有定义的虚函数；以“=0”结尾；</li>
   <li>纯虚函数的目的就是：提供一个统一的接口（也可以说是：为所有继承它的类制定统一标准）；</li>
@@ -96,18 +95,11 @@
 </ul>
 
 <p>纯虚函数存在的意义</p>
-
 <ul>
-  <li>
-    <p>制定标准</p>
-
+  <li>制定标准
     <ul>
-      <li>
-        <p>纯虚函数是为程序制定一种标准，只要你继承了它，就必须按照它的标准来，实现它的所有的方法，否则你也是虚拟的；</p>
-      </li>
-      <li>
-        <p>制定标准是为了让所有实现它或继承自它的派生类类全部按同一标准来工作，从而使程序更加通用化，提高程序的可重用性；</p>
-      </li>
+      <li>纯虚函数是为程序制定一种标准，只要你继承了它，就必须按照它的标准来，实现它的所有的方法，否则你也是虚拟的；</li>
+      <li>制定标准是为了让所有实现它或继承自它的派生类类全部按同一标准来工作，从而使程序更加通用化，提高程序的可重用性；</li>
     </ul>
   </li>
   <li>在很多情况下，基类本身生成对象是不合情理的。例如，动物作为一个基类可以派生出老虎、孔雀等子类，但动物本身生成对象明显不合常理；</li>
@@ -115,7 +107,6 @@
 </ul>
 
 <h2 id="抽象类">抽象类</h2>
-
 <p>包含纯虚函数的类叫做抽象类，抽象类无法进行实例化。</p>
 
 <p>必须在派生类中对抽象类中的所有纯虚函数进行重写，否则该类也是一个抽象类。</p>
@@ -133,7 +124,7 @@
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::func2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Base1</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::~base1()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::~base1()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">b1</span><span class="p">;</span>
@@ -148,7 +139,7 @@
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::func4()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Base2</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::~base2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::~base2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">b2</span><span class="p">;</span>
@@ -173,7 +164,7 @@
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func6()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Derive</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::~derive()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::~derive()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
