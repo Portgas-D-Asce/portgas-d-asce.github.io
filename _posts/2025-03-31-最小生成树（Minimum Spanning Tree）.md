@@ -5,6 +5,7 @@ image: /assets/image/25.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 最小生成树（Minimum Spanning Tree）
+categories: [aaa]
 ---
 
 # 最小生成树
