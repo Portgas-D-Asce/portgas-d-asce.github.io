@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-05T16:43:02+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">单例模式（Singleton）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html" rel="alternate" type="text/html" title="单例模式（Singleton）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Singleton%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-06T15:30:17+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">单例模式（Singleton）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html" rel="alternate" type="text/html" title="单例模式（Singleton）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Singleton%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <h2 id="动机">动机</h2>
 
@@ -1024,10 +1024,11 @@
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/30.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/30.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小生成树（Minimum Spanning Tree）</title><link href="https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" rel="alternate" type="text/html" title="最小生成树（Minimum Spanning Tree）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%EF%BC%88Minimum%20Spanning%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"><![CDATA[<h1 id="最小生成树">最小生成树</h1>
-<p>带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/30.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/30.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小生成树（Minimum Spanning Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" rel="alternate" type="text/html" title="最小生成树（Minimum Spanning Tree）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%EF%BC%88Minimum%20Spanning%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"><![CDATA[<h1 id="最小生成树">最小生成树</h1>
 
-<p>两种实现算法（都是基于贪心策略）：</p>
+<p>最小生成树：带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
+
+<p>若干个城镇，修路将所有城镇连接起来的的最小代价，两种实现算法（都是基于贪心策略）：</p>
 <ul>
   <li>kruscal</li>
   <li>prim</li>
@@ -1036,7 +1037,7 @@
 <h1 id="kruskal">Kruskal</h1>
 
 <h2 id="原理">原理</h2>
-<p>$kruskal$ 是基于 <strong>并查集</strong> 来实现的：</p>
+<p>$kruskal$ 是基于并查集来实现的：</p>
 <ul>
   <li>先将所有边按权重排序</li>
   <li>按权重从小到大遍历边
@@ -1083,13 +1084,13 @@
 <h1 id="prim">Prim</h1>
 
 <h2 id="原理-1">原理</h2>
-<p>$prim$ 和 $dijkstra$ 十分相似（有多相似，看下面实现就知道了），区别在于：</p>
+<p>$prim$ 和 $dijkstra$ 十分相似，区别在于：</p>
 <ul>
-  <li><strong>$dijkstra$ ：</strong> 总是把 <strong>开集合中距离起点最近的点加入到闭集合</strong>；</li>
-  <li><strong>$prim$ ：</strong> 总是把 <strong>开集合中距离已生成的最小生成树最近的点加入到闭集合</strong>；</li>
+  <li>$dijkstra$：总是把开集合中距离起点最近的点加入到闭集合；</li>
+  <li>$prim$：总是把开集合中距离已生成的最小生成树最近的点加入到闭集合；</li>
 </ul>
 
-<p>显然，要求权重为正</p>
+<p>权重可正可负</p>
 
 <h2 id="实现-1">实现</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">)</span> <span class="p">{</span>
@@ -1119,7 +1120,7 @@
 
 <p>时间复杂度：$O(ElogV)$</p>
 
-<p>空间复杂度：$O(E)$</p>]]></content><author><name>pk</name></author><category term="aaa" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/25.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/25.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">桥模式（Bridge）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html" rel="alternate" type="text/html" title="桥模式（Bridge）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F%EF%BC%88Bridge%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html"><![CDATA[<h1 id="概述">概述</h1>
+<p>空间复杂度：$O(E)$</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/25.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/25.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">桥模式（Bridge）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html" rel="alternate" type="text/html" title="桥模式（Bridge）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F%EF%BC%88Bridge%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>由于某些类型的固有实现逻辑，使得它们具有两个变化的维度，乃至多个维度的变化</p>
 

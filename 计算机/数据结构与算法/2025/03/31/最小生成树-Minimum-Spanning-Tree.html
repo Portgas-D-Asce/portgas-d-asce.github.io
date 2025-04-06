@@ -14,8 +14,8 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="xxxxxxxxxxxxxxxxxx" />
 <meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
-<link rel="canonical" href="https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" />
-<meta property="og:url" content="https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" />
 <meta property="og:site_name" content="Portgas·D·Asce’s blog" />
 <meta property="og:image" content="https://xdevil.top/assets/image/25.jpeg" />
 <meta property="og:type" content="article" />
@@ -24,7 +24,7 @@
 <meta property="twitter:image" content="https://xdevil.top/assets/image/25.jpeg" />
 <meta property="twitter:title" content="最小生成树（Minimum Spanning Tree）" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-31T00:00:00+00:00","datePublished":"2025-03-31T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"最小生成树（Minimum Spanning Tree）","image":"https://xdevil.top/assets/image/25.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"},"url":"https://xdevil.top/aaa/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-31T00:00:00+00:00","datePublished":"2025-03-31T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"最小生成树（Minimum Spanning Tree）","image":"https://xdevil.top/assets/image/25.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -68,9 +68,10 @@
     margin-bottom: 12px;
 }
 </style><h1 id="最小生成树">最小生成树</h1>
-<p>带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
 
-<p>两种实现算法（都是基于贪心策略）：</p>
+<p>最小生成树：带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
+
+<p>若干个城镇，修路将所有城镇连接起来的的最小代价，两种实现算法（都是基于贪心策略）：</p>
 <ul>
   <li>kruscal</li>
   <li>prim</li>
@@ -79,7 +80,7 @@
 <h1 id="kruskal">Kruskal</h1>
 
 <h2 id="原理">原理</h2>
-<p>$kruskal$ 是基于 <strong>并查集</strong> 来实现的：</p>
+<p>$kruskal$ 是基于并查集来实现的：</p>
 <ul>
   <li>先将所有边按权重排序</li>
   <li>按权重从小到大遍历边
@@ -126,13 +127,13 @@
 <h1 id="prim">Prim</h1>
 
 <h2 id="原理-1">原理</h2>
-<p>$prim$ 和 $dijkstra$ 十分相似（有多相似，看下面实现就知道了），区别在于：</p>
+<p>$prim$ 和 $dijkstra$ 十分相似，区别在于：</p>
 <ul>
-  <li><strong>$dijkstra$ ：</strong> 总是把 <strong>开集合中距离起点最近的点加入到闭集合</strong>；</li>
-  <li><strong>$prim$ ：</strong> 总是把 <strong>开集合中距离已生成的最小生成树最近的点加入到闭集合</strong>；</li>
+  <li>$dijkstra$：总是把开集合中距离起点最近的点加入到闭集合；</li>
+  <li>$prim$：总是把开集合中距离已生成的最小生成树最近的点加入到闭集合；</li>
 </ul>
 
-<p>显然，要求权重为正</p>
+<p>权重可正可负</p>
 
 <h2 id="实现-1">实现</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">)</span> <span class="p">{</span>
