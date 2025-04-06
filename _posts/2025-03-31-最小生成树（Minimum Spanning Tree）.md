@@ -1,17 +1,18 @@
 ---
 layout: page
-tags: 数据结构与算法 图论
+tags: 图论
 image: /assets/image/25.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 最小生成树（Minimum Spanning Tree）
-categories: [aaa]
+categories: [计算机, 数据结构与算法]
 ---
 
 # 最小生成树
-带权重的无向图 -> 连通分量 -> 生成树 -> 最小生成树
 
-两种实现算法（都是基于贪心策略）：
+最小生成树：带权重的无向图 -> 连通分量 -> 生成树 -> 最小生成树
+
+若干个城镇，修路将所有城镇连接起来的的最小代价，两种实现算法（都是基于贪心策略）：
 - kruscal
 - prim
 
@@ -20,7 +21,7 @@ categories: [aaa]
 # Kruskal
 
 ## 原理
-$kruskal$ 是基于 **并查集** 来实现的：
+$kruskal$ 是基于并查集来实现的：
 - 先将所有边按权重排序
 - 按权重从小到大遍历边
   - 如果边的两个顶点属于已经属于同一集合，该边不属于最小生成树；
@@ -69,11 +70,11 @@ int mst(vector<vector<int>> &edges, int n) {
 # Prim
 
 ## 原理
-$prim$ 和 $dijkstra$ 十分相似（有多相似，看下面实现就知道了），区别在于：
-- **$dijkstra$ ：** 总是把 **开集合中距离起点最近的点加入到闭集合**；
-- **$prim$ ：** 总是把 **开集合中距离已生成的最小生成树最近的点加入到闭集合**；
+$prim$ 和 $dijkstra$ 十分相似，区别在于：
+- $dijkstra$：总是把开集合中距离起点最近的点加入到闭集合；
+- $prim$：总是把开集合中距离已生成的最小生成树最近的点加入到闭集合；
 
-显然，要求权重为正
+权重可正可负
 
 
 
