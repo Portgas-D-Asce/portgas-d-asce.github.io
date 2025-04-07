@@ -1,4 +1,958 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-06T15:30:17+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">单例模式（Singleton）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html" rel="alternate" type="text/html" title="单例模式（Singleton）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Singleton%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-07T16:37:16+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88%EF%BC%88Next%20Permutation%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html"><![CDATA[<h1 id="问题描述">问题描述</h1>
+<p>对当前数组进行任意排列组合，得到下一个比当前数组大的数组</p>
+
+<h1 id="原理">原理</h1>
+<p>假设数组为 $nums$ 的长度为 $n$, 思路如下：</p>
+<ul>
+  <li>从后往前遍历，找到第一个这样的位置 $i$ 使得 $nums[i] &lt; nums[i + 1]$ （此时，[i + 1, n - 1] 区间上的数是单调递减的）；</li>
+  <li>再从后往前遍历，找到第一个比 $nums[i]$ 大的数 $nums[p]$ ，并交换 $nums[i]$ 和 $nums[p]$ （此时，[i + 1, n - 1]区间上的数还是单调递减的）;</li>
+  <li>最后把 [p, n - 1] 区间上的数变为单递增的。</li>
+</ul>
+
+<h1 id="实现">实现</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">nextPermutation</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">p</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="n">p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="数组" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/40.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/40.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C-Two-Sum.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C%EF%BC%88Two%20Sum%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C-Two-Sum.html"><![CDATA[<h1 id="两数之和">两数之和</h1>
+<p>给定一个数组，从中找出任意一组和为目标值的数对。</p>
+
+<p>暴力方法:</p>
+<ul>
+  <li>时间复杂度：$O(n^2)$；</li>
+  <li>空间复杂度：$O(1)$</li>
+</ul>
+
+<p>Hash 方法</p>
+<ul>
+  <li>时间复杂度 $O(n)$；</li>
+  <li>空间复杂度：$O(n)$</li>
+</ul>
+
+<p>双指针法</p>
+<ul>
+  <li>使用前提：要求数组有序时</li>
+  <li>时间复杂度：$O(n)$</li>
+  <li>空间复杂度：$O(1)$</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">two_sum</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tar</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">tar</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">};</span>
+        <span class="n">temp</span> <span class="o">&lt;</span> <span class="n">tar</span> <span class="o">?</span> <span class="o">++</span><span class="n">i</span> <span class="o">:</span> <span class="o">--</span><span class="n">j</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>尝试从 “双指针法是暴力方法的优化” 角度去理解即可。</p>
+
+<h1 id="和为目标值数对个数">和为目标值数对个数</h1>
+
+<p>数组中存在相同的元素</p>
+
+<p>“10 = 5 + 5” 这种情况该怎么处理。</p>
+
+<p>建议直接使用 Hash 实现（除非数组有序且不存在相同元素，此时用双指针即可）</p>
+
+<h1 id="三数之和">三数之和</h1>
+
+<p>核心思想：固定第一个数，剩余按两数之和处理，时间复杂度为 $O(n^2)$</p>
+
+<h1 id="两数之差">两数之差</h1>
+<p>还是双指针，但是是从同测出发。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">two_dif</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tar</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">tar</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">};</span>
+        <span class="n">temp</span> <span class="o">&gt;</span> <span class="n">tar</span> <span class="o">?</span> <span class="o">++</span><span class="n">i</span> <span class="o">:</span> <span class="o">++</span><span class="n">j</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="数组" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/38.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/38.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F.html"><![CDATA[<h1 id="冒泡排序bubble-sort">冒泡排序（Bubble Sort）</h1>
+
+<p>通过不断比较相邻位置元素大小，依次得到第 $n, n-1, \cdots ,2$ 大元素，从而实现对原数组的排序；</p>
+<ul>
+  <li>时间复杂度 $O(n^2)$；</li>
+  <li>空间复杂度 $O(1)$ ；</li>
+  <li>是稳定的；
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">bubble_sort</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+              <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+              <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="选择排序selection-sort">选择排序（Selection Sort）</h1>
+
+<p>原理：先在数组中找到最小元素，并将其与左侧第一个元素交换，接着从剩余元素中继续寻找最小元素，然后将其与左侧第二个元素交换，…，不断重复，直到所有元素排序完成（本质就是，依次找最小，第 2 小，…，第 n - 1 小）</p>
+<ul>
+  <li>时间复杂度 $O(n^2)$ ，空间复杂度 $O(1)$ ；</li>
+  <li>不稳定；
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">select_sort</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="p">{</span>
+              <span class="n">k</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <h1 id="插入排序">插入排序</h1>
+  </li>
+</ul>
+
+<p><img src="https://img-blog.csdnimg.cn/20190611152456532.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI0MzA5OTgx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" />
+不断地通过将新的元素与前面已排好序的每个元素进行比较，找到其该插入的位置插入，当所有元素都添加完成时，排序完成。</p>
+<ul>
+  <li>时间复杂度 $O(n^2)$ ，空间复杂度$O(1)$；</li>
+  <li>稳定；
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">insert_sort</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span>  <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">break</span><span class="p">;</span>
+          <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="希尔排序shell-sort">希尔排序（Shell Sort）</h1>
+
+<p>原理：当数据的 <strong>有序程度</strong> 越高，插入排序算法效率越高，基于这一特点，希尔排序对插入排序进行了改进：根据 <strong>增量</strong> 将数据划分为若干小组，然后通过对每一小组进行插入排序（由于数据量较小，插入效率高）提高数据的有序程度；按着 <strong>增量序列</strong> ，依次减小增量，并重复上述步骤，直到增量大小为1，即完成排序。</p>
+
+<ul>
+  <li>希尔排序时间复杂度分析极其复杂，增量序列不同，时间复杂度不同：
+    <ul>
+      <li>$1，2，…，2^n$ ，这种序列并不是很好的增量序列，使用这个增量序列的时间复杂度（最坏情形）是 $O(n^2)$ ；</li>
+      <li>增量序列 $1,3,7，…,2^{k-1}$ ，的时间复杂度(最坏情形)为$O(n^{1.5})$ ；</li>
+    </ul>
+  </li>
+  <li>空间复杂度$O(1)$ ;</li>
+  <li>不稳定；</li>
+  <li>对各组进行插入排序地时候，并不是先对一个数组插入排序完成，再对另一个数组进行插入排序，而是轮流地对各数组进行插入排序；
+```cpp</li>
+</ul>
+
+<p>void shell_sort(vector<int>&amp; nums) {
+	int gap = nums.size();
+	for (int gap = nums.size() / 2; gap &gt; 0; gap /= 2)
+	{
+		for (int i = gap; i &lt; nums.size(); i++)
+		{
+			int inserting = nums[i];
+			int j = i - gap;
+			while (j &gt;= 0 &amp;&amp; nums[j] &gt; inserting)
+			{
+				nums[j + gap] = nums[j];
+				j -= gap;
+			}
+			nums[j + gap] = inserting;
+		}
+	}
+}</int></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# 堆排序
+
+原理：利用堆数据结构所设计的一种排序算法。主要思路，首先先建好最大堆，然后迭代地执行 **交换堆顶和堆尾** 、 **堆大小减一** 、 **维护堆**，当堆的大小为一时，排序完成。
+- 时间复杂度 $O(nlgn)$ ，空间复杂度 $O(1)$；
+- 不稳定；
+
+线性建堆证明：错位相减；
+
+线性建堆不稳定证明：左右大小相同时，上升至堆顶的节点是固定的（要么固定是左节点/要么固定是右节点，通常是后者）
+```cpp
+
+int parent(int i) {
+	return i - 1 &gt;&gt; 1;
+}
+
+int left(int i) {
+	return (i &lt;&lt; 1) | 1;
+}
+
+int right(int i) {
+	return i + 1 &lt;&lt; 1;
+}
+
+void heapfy(vector&lt;int&gt;&amp; nums, int idx, int heapSize) {
+	int l = left(idx);
+	int r = right(idx);
+	int largest = idx;
+	if (l &lt; heapSize &amp;&amp; nums[l] &gt; nums[largest])
+		largest = l;
+	if (r &lt; heapSize &amp;&amp; nums[r] &gt; nums[largest])
+		largest = r;
+	if (largest != idx)
+	{
+		swap(nums[idx], nums[largest]);
+		heapfy(nums, largest, heapSize);
+	}
+}
+
+//对每个内部节点执行维护堆
+void buildHeap(vector&lt;int&gt;&amp; nums) {
+	for (int i = nums.size() - 2 &gt;&gt; 1; i &gt;= 0; i--)
+		heapfy(nums, i, nums.size());
+}
+
+void heapSort(vector&lt;int&gt;&amp; nums) {
+	buildHeap(nums);
+	for (int i = nums.size() - 1; i &gt; 0; i--)
+	{
+		swap(nums[0], nums[i]);
+		heapfy(nums, 0, i);
+	}
+}
+</code></pre></div></div>
+
+<h1 id="归并排序">归并排序</h1>
+
+<p>核心思想：采用分治策略将原数组一分为二，划分为规模较小的两个子数组，递归地对子数组进行排序，然后合并已排序子数组从而完成原数组的排序；</p>
+<ul>
+  <li>时间复杂度 $O(nlogn)$，空间复杂度 $O(n)$ ；</li>
+  <li>稳定；
+```cpp
+void merge(vector<int>&amp; nums, int p, int q, int r) {
+  vector<int> temp(r - p + 1);
+  int x = p, y = q + 1, z = 0;
+  while(x &lt;= q &amp;&amp; y &lt;= r) {
+      //必须要有等号，否则是不稳定的
+      temp[z++] = nums[x] &lt;= nums[y] ? nums[x++] : nums[y++];
+  }
+  while(x &lt;= q) {
+      temp[z++] = nums[x++];
+  }
+  for(int i = 0; i &lt; z; ++i) {
+      nums[p + i] = temp[i];
+  }
+}</int></int></li>
+</ul>
+
+<p>void mergeSort(vector<int>&amp; nums, int p, int r) {
+	if (p &gt;= r) return;
+	int q = p + r &gt;&gt; 1;
+	mergeSort(nums, p, q);
+	mergeSort(nums, q + 1, r);
+	merge(nums, p, q, r);
+}</int></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 快速排序
+
+原理：快速排序利用 **主元** 将原数组划分成两部分，左侧部分均小于主元，右侧部分均大于等于主元，最后将主元放在中间；本质就是采用分治策略将原问题划分为两个子问题，递归地进行求解。
+- 时间复杂度取决于划分是否均衡；最坏时间复杂度为 $O(n^2)$ ；期望时间复杂度为 $O(nlogn)$ ，且 $O(nlogn)$ 中隐含的常数因子非常小；
+- 空间复杂度 $O(1)$ ；
+- 不稳定；
+
+通常以范围内第一个元素为主元，这里为了实现得 “优雅” ， 以范围内最后一个元素为主元。
+- 实现时注意：所有的范围均为闭区间 $[p, r]$ ；
+```cpp
+int partition(vector&lt;int&gt;&amp; nums, int p, int r) {
+	int q = p;
+
+	for (int i = p; i &lt; r; i++)
+		if (nums[i] &lt; nums[r])
+			swap(nums[i], nums[q++]);
+    //之所以不稳定在这块
+    //nums[r] 后面可能有等于它的数
+    //这里直接把它放在了最后面
+	swap(nums[r], nums[q]);
+	return q;
+}
+
+int randomizedPartition(vector&lt;int&gt;&amp; nums, int p, int r) {
+	srand((unsigned)time(NULL));
+	int temp = rand() % (r - p + 1) + p;
+	swap(nums[r], nums[temp]);
+	return partition(nums, p, r);
+}
+
+void quickSort(vector&lt;int&gt;&amp; nums, int p, int r) {
+	if (p &gt;= r) return;
+	//int q = partition(nums, p, r);
+	int q = randomizedPartition(nums, p, r);
+		
+	quickSort(nums, p, q - 1);
+	quickSort(nums, q + 1, r);
+}
+</code></pre></div></div>
+
+<h1 id="计数排序counting-sort">计数排序（Counting Sort）</h1>
+
+<p><strong>1、要点</strong></p>
+
+<ul>
+  <li>基本思想：对每一个输入元素 $x$ ，确定小于 $x$ 元素的个数，即可确定 $x$ 在排序数组中的位置；</li>
+  <li>输入元素均在 $0$ 到 $k$ 之间（或某一较小区间范围内），且为整数；</li>
+  <li>时间复杂度，空间复杂度均为 $O(k + n)$；</li>
+  <li>计数排序是稳定的：具有相同值得元素在输出数组中的相对次序与它们在输入数组中的相对次序是一致的；</li>
+</ul>
+
+<p><strong>2、算法步骤（3 for）</strong></p>
+<ul>
+  <li>统计 <strong>输入数组</strong> 中， [0, k] 每个值出现的次数；</li>
+  <li>累加 <strong>临时数组</strong>，计算 [0, k] 中每个值在排序数组中的位置；</li>
+  <li>将 <strong>输入数组</strong> 中每个值，按照计算的对应位置插入到 <strong>输出数组</strong> 中；
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//输入数组：A[1 .. n]，A.length = n
+//输出数组：B[1 .. n]，B.length = n
+//临时数组：C[0 .. k]，C.length = k + 1
+COUNTING-SORT(A, B, k)
+let C[0 .. k] be a new array;
+for i = 0 to k
+  C[i] = 0;
+for j = 1 to A.length
+  C[A[j]] = C[A[j]] + 1;
+for i = 1 to k
+  C[i] = C[i] + C[i - 1];
+for j = A.length downto 1
+  B[C[A[j]]] = A[j];
+  C[A[j]] = C[A[j]] - 1;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">counting_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">A</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">*</span><span class="n">min_element</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">A</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+	<span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="o">*</span><span class="n">max_element</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">A</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">B</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">C</span><span class="p">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">num</span> <span class="o">:</span> <span class="n">A</span><span class="p">)</span>	
+		<span class="n">C</span><span class="p">[</span><span class="n">num</span> <span class="o">-</span> <span class="n">min</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">C</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+		<span class="n">B</span><span class="p">[</span><span class="o">--</span><span class="n">C</span><span class="p">[</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">min</span><span class="p">]]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>	
+	<span class="k">return</span> <span class="n">B</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="基数排序radix-sort">基数排序（Radix Sort）</h1>
+
+<p><img src="https://img-blog.csdnimg.cn/2019061217322687.gif" alt="在这里插入图片描述" />
+原理：先按照个位上的数字将原数组中元素划分到不同的桶，然后从左往右将桶中的元素依次提取出来作为新的数组，重复地在十、百、千、万…位上进行相同的操作。</p>
+<ul>
+  <li>适用于非负整数；</li>
+  <li>时间复杂度 $O(n)$ ；空间复杂度 $O(n)$ ；</li>
+  <li>是稳定的；
+```cpp</li>
+</ul>
+
+<p>void radix_sort(vector<int>&amp; nums) {
+	const int bucketCount = 10;
+	vector&lt;list<int>&gt; buckets(bucketCount);
+	int maximum = *max_element(nums.begin(), nums.end());
+	int temp = 0;
+	while(maximum &gt;&gt; temp)
+	{
+		for (int i = 0; i &lt; buckets.size(); i++)
+			buckets[i].clear();</int></int></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	for (int i = 0; i &lt; nums.size(); i++)
+		buckets[(nums[i] &gt;&gt; temp) % 10].push_back(nums[i]);
+	temp++;
+
+	int idx = 0;
+	for (int i = 0; i &lt; buckets.size(); i++)
+		for (auto&amp; ele : buckets[i])
+			nums[idx++] = ele;
+}  } ```
+</code></pre></div></div>
+
+<h1 id="桶排序bucket-sort">桶排序（Bucket Sort）</h1>
+
+<p>原理：在假设数组中元素均匀分布的前提下，先把原数组元素划到 $n$ （$n$ 为数组大小）个 <strong>大小相同的桶</strong> 中，且一定要保证 <strong>左侧桶中数字大于右侧桶中元素</strong>，然后对每个桶中元素各自进行排序，最后从左到右将所有桶中元素合并即可完成排序。</p>
+<ul>
+  <li>当所有桶大小的平方和与总的元素数成线性关系时，时间复杂度为 $O(n)$；空间复杂度为 $O(n)$；</li>
+  <li>桶的个数最好为 $n$ ：当桶的个数较少时，桶内元素个数普遍增加，导致各自排序耗时快速上升，进而使效率降低；当桶的个数较多时，会造成空间的浪费；有时为了避免数组越界，需要将桶的个数调整为 $n + 1$；</li>
+  <li>适用于整数和浮点数的桶排序实现，略有不同：针对整数，保持桶个数不变，桶大小 $+1$ ；针对浮点数，保持桶的大小不变，桶的个数  $+1$；</li>
+  <li>稳定性取决于链表排序的稳定性；</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">bucket_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">maximum</span> <span class="o">=</span> <span class="o">*</span><span class="n">max_element</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+	<span class="kt">int</span> <span class="n">minimum</span> <span class="o">=</span> <span class="o">*</span><span class="n">min_element</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	
+	<span class="c1">//若用于整数排序，桶大小 +1</span>
+	<span class="c1">//bucketSize 的值为 (maximum - minimum) / nums.size()的值向上取整或直接加一（当能整除时）</span>
+	<span class="c1">//所以可以保证(nums[i] - minimum) / bucketSize不会发生数组越界</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">buckets</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+	<span class="kt">int</span> <span class="n">bucketSize</span> <span class="o">=</span> <span class="p">(</span><span class="n">maximum</span> <span class="o">-</span> <span class="n">minimum</span><span class="p">)</span> <span class="o">/</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+	
+	<span class="c1">//若用于浮点数排序，桶个数 + 1</span>
+	<span class="c1">//当nums[i]取最大值时， (nums[i] - minimum) / bucketSize可能会发生数组越界</span>
+	<span class="c1">//为了避免数组越界，这里采用的策略是将桶的个数加一</span>
+	<span class="c1">//为什么不是将桶的大小加一的原因是：数组最大最小值之差可能是一个小于 1 的数，桶大小贸然加一会使得所有元素都放在一个桶中</span>
+	<span class="c1">//因此，桶的个数加一更好</span>
+	<span class="c1">//vector&lt;list&lt;int&gt;&gt; buckets(nums.size() + 1);</span>
+	<span class="c1">//double bucketSize = (maximum - minimum) / nums.size();</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">buckets</span><span class="p">[(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">minimum</span><span class="p">)</span> <span class="o">/</span> <span class="n">bucketSize</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buckets</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">buckets</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">sort</span><span class="p">();</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buckets</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">ele</span> <span class="o">:</span> <span class="n">buckets</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+			<span class="n">nums</span><span class="p">[</span><span class="n">idx</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">ele</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="数组" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/39.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/39.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%95%E8%B0%83%E6%A0%88%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%95%E8%B0%83%E6%A0%88%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%95%E8%B0%83%E6%A0%88%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97.html"><![CDATA[<p>单调栈 / 单调队列：即数组中元素是单调的。但用途不可小觑，常常是效率优化的神器。</p>
+
+<h1 id="最大小栈">最大/小栈</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//实际上就是维护了一个单调递增栈</span>
+<span class="k">class</span> <span class="nc">MaxStack</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">mx</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">()</span> <span class="o">==</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">top</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">max</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><a href="https://leetcode.cn/problems/min-stack/">LeetCode 155. 最小栈</a></p>
+
+<h1 id="prefix-first-less-array">prefix first less array</h1>
+
+<p>找到数组中每个元素左/右侧第一个比它小的数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 维护的是单调递增栈</span>
+<span class="c1">// 右侧第一个比它小的数</span>
+<span class="c1">// 从左到右维护了一个单调递增栈</span>
+<span class="c1">// 栈顶元素的左侧元素就是它左侧第一个比它小的数（没必要再从后往前跑一遍了）</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">suffix</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">)</span>	<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">suf</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+	<span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">top</span><span class="p">()])</span> <span class="p">{</span>
+		    <span class="n">suf</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">top</span><span class="p">()]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+			<span class="n">s</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="n">s</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+    <span class="k">return</span> <span class="n">suf</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//左侧第一个比它小的数</span>
+<span class="c1">//从右到左维护了一个单调递增栈</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">prefix</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pre</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">top</span><span class="p">()])</span> <span class="p">{</span>
+		    <span class="n">pre</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">top</span><span class="p">()]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+			<span class="n">s</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="n">s</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+    <span class="k">return</span> <span class="n">pre</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">LeetCode 84. 柱状图中最大的矩形</a></p>
+
+<p><a href="https://leetcode.cn/problems/maximal-rectangle/">LeetCode 85. 最大矩形</a></p>
+
+<h1 id="最大队列">最大队列</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 实际上就是维护一个单调递减双端队列</span>
+<span class="k">class</span> <span class="nc">MaxQueue</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">deque</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">mx</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">mx</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">mx</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">mx</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">data</span><span class="p">.</span><span class="n">front</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">front</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">max</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">mx</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h1 id="长度不超过-k-的最大和子数组">长度不超过 k 的最大和子数组</h1>
+
+<p>设原数组为 $nums$，其前缀和数组（$prefix\ sum\ array$）为 $sum$，则：</p>
+<ul>
+  <li>以 $nums$ 第 $i$ 项结尾的 长度不超过 $k$ 的子数组的最大和 $mx = sum[i] - min(sum[i - 1], sum[i - 2], …, sum[i - k])$;</li>
+  <li>$min(sum[i - 1], sum[i - 2], …, sum[i - k])$ 可以通过维护一个长度不超过 $k$ 的最小队列来实现；
+```cpp
+class MinQueue {
+private:
+  queue<int> data;
+  deque<int> mn;
+public:
+  void push(int x) {
+      data.push(x);
+      while(!mn.empty() &amp;&amp; mn.back() &gt; x) {
+          mn.pop_back();
+      }
+      mn.push(x);
+  }
+  void pop() {
+      if(data.front() == mn.front()) {
+          mn.pop_front();
+      }
+      data.pop();
+  }
+  int front()() {
+      return data.front();
+  }
+  int min() {
+      return mn.front();
+  }
+  int size() {
+      return data.size();
+  }
+  bool empty() {
+      return data.empty();
+  }
+};</int></int></li>
+</ul>
+
+<p>int max_sum_within_k(const vector<int> &amp;nums, int k) {
+    int sum = 0, mx = -2147483648;
+    MinQueue mq;
+    mq.push(0);
+    for(int i = 0; i &lt; nums.size(); ++i) {
+        sum += nums[i];
+        mx = max(mx, sum - mq.min());
+        mq.push(sum);
+        if(mq.size() &gt; k) {
+            mq.pop();
+        }
+    }
+    return mx;
+}</int></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+思考，按这个思路来考虑 最大和子数组（卡丹算法）也可以这么做：
+- 先求 $nums$ 的 前缀和数组 $sum$；
+- 遍历 $sum$ 维护一个最小值变量 $mn$，则以 $nums$ 第 $i$ 项结尾的子数组组大和 $mx = sum[i] - mn$；
+
+```cpp
+int max_sum(const vector&lt;int&gt; &amp;nums) {
+    int mn = 0, sum = 0, mx = -2147483647;
+    for(int i = 0; i &lt; nums.size(); ++i) {
+        sum += nums[i];
+        mx = max(mx, sum - mn);
+        mn = min(mn, sum);
+    }
+    return mx;
+}
+</code></pre></div></div>
+
+<p><a href="https://leetcode.cn/problems/sliding-window-maximum/description/">LeetCode 239. 滑动窗口最大值</a></p>
+
+<h1 id="封装">封装</h1>
+
+<p>最大/小栈</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">MStack</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">Func</span> <span class="o">=</span> <span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">mx</span><span class="p">;</span>
+    <span class="n">Func</span> <span class="n">comp</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">MStack</span><span class="p">(</span><span class="n">Func</span> <span class="n">func</span> <span class="o">=</span> <span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="n">func</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">comp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">()))</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">()</span> <span class="o">==</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">T</span> <span class="nf">top</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">T</span> <span class="nf">m</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">mx</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="nf">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>最大/小队列</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">MQueue</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">Func</span> <span class="o">=</span> <span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="n">queue</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">deque</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">mx</span><span class="p">;</span>
+    <span class="n">Func</span> <span class="n">comp</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">MQueue</span><span class="p">(</span><span class="n">Func</span> <span class="n">func</span> <span class="o">=</span> <span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="n">func</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">mx</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">comp</span><span class="p">(</span><span class="n">mx</span><span class="p">.</span><span class="n">back</span><span class="p">(),</span> <span class="n">x</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">mx</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">data</span><span class="p">.</span><span class="n">front</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">mx</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">T</span> <span class="nf">front</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">T</span> <span class="nf">m</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">mx</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="nf">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="栈队列" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/36.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/36.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95-Kadane's-Algorithm.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95%EF%BC%88Kadane&apos;s%20Algorithm%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95-Kadane&apos;s-Algorithm.html"><![CDATA[<h1 id="问题描述">问题描述</h1>
+
+<p>最大和子数组（Maximum Sum Subarray）：给定一个一维数组，数组中元素可正可负可为零，求解所有连续子数组的最大和。</p>
+<h1 id="卡丹尔算法">卡丹尔算法</h1>
+
+<h2 id="原理">原理</h2>
+
+<p>在理解卡丹尔算法前，先明确以下内容：</p>
+<ul>
+  <li>一个长度为n的一维数组，其所有连续子数组的个数为 $n(n + 1) / 2$；</li>
+  <li>将 $n(n + 1) / 2$ 个子数组可分组为：以第1个元素结尾的子数组（1个），以第2个元素结尾的子数组（2个），…，以第n个元素结尾的子数组（n个）</li>
+  <li>最大和子数组为题此时可被理解为：分别计算出以第1个元素结尾的子数组的最大和 $s_1$，以第二个元素结尾的子数组的最大和$s_2$，…，以第 $n$ 个元素结尾的子数组的最大和 $s_n$，则 $s_1$，$s_2$，…，$s_n$ 中的最大值即为最终所求结果；</li>
+  <li>不难理解相邻的 $s_i$ 和 $s_{i+1}$ 之间具有关系：$si+1 = max(s_i + num[i + 1], nums[i + 1])$</li>
+</ul>
+
+<p>卡丹尔算法基于上述思路，遍历数组中元素，先计算出以当前元素结尾的子数组的最大和，然后与临时结果比较，若其值大于临时结果，则用其更新临时结果，否则临时结果不变；完成遍历后，临时结果即为最终结果。</p>
+
+<h2 id="代码">代码</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">maxSubArray</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">temp</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">)</span> <span class="n">res</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="时间空间复杂度">时间/空间复杂度</h2>
+
+<p>时间复杂度：O(n)</p>
+
+<p>空间复杂度：O(1)。</p>
+
+<h1 id="扩展">扩展</h1>
+
+<p>若对子数组的长度加一个“长度不能超过k”的约束，即Maximum Sum SubArray 转化为 Maximum sum subarray whose length isn’t more than k，该如和求解？</p>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://leetcode.com/problems/maximum-sum-circular-subarray/">LeetCode 918. Maximum Sum Circular Subarray</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="数组" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/37.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/37.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86-Union-Find-Set.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86%EF%BC%88Union%20Find%20Set%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86-Union-Find-Set.html"><![CDATA[<h1 id="简介">简介</h1>
+
+<p>并查集：用于处理不相交集合问题的一种数据结构。定义在其上的两个操作：</p>
+<ul>
+  <li><strong>Find：</strong> 查找节点所属于的集合</li>
+  <li><strong>Union：</strong> 合并两个不相交的集合</li>
+</ul>
+
+<p>典型应用当属 Kruskal 算法，优化方式：</p>
+<ul>
+  <li><strong>路径压缩：</strong> 让查找路径上的所有节点均指向根节点，提高下一次查找效率；</li>
+  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。</li>
+</ul>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">uf</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">UnionFind</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">union1</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">uf</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><strong>注意：</strong> 刚合并完成时，并不是每个元素都知道自己所在的集合的代表是谁！在使用之前，先要确保所有元素都指向自己所在的集合的代表。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//确保所有元素都知道自己所在的集合的代表是谁</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//统计 uf 中不同元素个数即可知道最终不相交集合个数</span>
+</code></pre></div></div>
+
+<h1 id="封装">封装</h1>
+
+<p>强行封装成泛型，真是瞎玩！！！！！！！！！！！</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Cont</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">Cont</span> <span class="n">uf</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
+    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="n">U</span><span class="o">&amp;</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">key</span> <span class="o">:</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">uf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">explicit</span> <span class="nf">UnionFind</span><span class="p">(</span><span class="n">T</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">Cont</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="n">T</span><span class="p">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">T</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">union1</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">uf</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>示例</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UnionFind</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ufx</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">ufx</span><span class="p">.</span><span class="n">union1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ufx</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ss</span> <span class="o">=</span> <span class="p">{</span><span class="s">"abc"</span><span class="p">,</span> <span class="s">"xyz"</span><span class="p">};</span>
+<span class="n">UnionFind</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">uf</span><span class="p">(</span><span class="n">ss</span><span class="p">);</span>
+<span class="n">uf</span><span class="p">.</span><span class="n">union1</span><span class="p">(</span><span class="s">"abc"</span><span class="p">,</span> <span class="s">"xyz"</span><span class="p">);</span>
+<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">:</span> <span class="n">ss</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">" : "</span> <span class="o">&lt;&lt;</span> <span class="n">uf</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="集论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/35.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/35.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">基环树（Pseudo Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91-Pseudo-Tree.html" rel="alternate" type="text/html" title="基环树（Pseudo Tree）" /><published>2025-04-05T00:00:00+00:00</published><updated>2025-04-05T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91%EF%BC%88Pseudo%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91-Pseudo-Tree.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>“$n$ 个节点 $n$ 条边” 的图不都是基环树！你能想到哪些例子？</p>
+
+<p>基环树长啥样子：一个环 + 多个以环上节点为根节点的子树</p>
+
+<p>基环树通常以一维数组的方式给出。</p>
+
+<h1 id="分类">分类</h1>
+
+<h2 id="基环树">基环树</h2>
+
+<p>基环树：$n$ 个节点 $n$ 条边，无向连通图</p>
+
+<ul>
+  <li>叶子节点：度数均为 1，转移到了代表节点上</li>
+  <li>代表节点：度数大于等于 1</li>
+  <li>其余节点：度数均为 2</li>
+</ul>
+
+<h2 id="内基环树">内基环树</h2>
+
+<p>内基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
+
+<ul>
+  <li>叶子节点：出度为 1，入度为 0，转移到了代表节点上</li>
+  <li>代表节点：出度为 1，入度大于等于 1</li>
+  <li>其余节点：出度为 1，入度为 1</li>
+</ul>
+
+<h2 id="外基环树">外基环树</h2>
+
+<p>外基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
+
+<ul>
+  <li>叶子节点：入度为 1，出度为 0，转移到了代表节点上</li>
+  <li>代表节点：入度为 1，出度大于等于 1</li>
+  <li>其余节点：入度为 1，出度为 1</li>
+</ul>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://leetcode.cn/problems/count-visited-nodes-in-a-directed-graph/">2876. 有向图访问计数</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/33.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/33.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F-Topo-Sort.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-05T00:00:00+00:00</published><updated>2025-04-05T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%EF%BC%88Topo%20Sort%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F-Topo-Sort.html"><![CDATA[<h1 id="拓扑排序">拓扑排序</h1>
+
+<p>在保持依赖关系的前提下，将节点排成一行，也可以看作是图的一种搜索方式。</p>
+
+<p>虽然 DFS（后序遍历 + 反转）、BFS 都可以实现拓扑排序，但实现都不如 kahn 算法优雅，且适用性更广。</p>
+
+<h1 id="kahn-算法">Kahn 算法</h1>
+
+<p>从入度为 0 的节点开始遍历，期间减少相邻节点的入度，并在入度减少为 0 时加入队列 …… 不断重复</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">topo_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+    <span class="c1">//统计入度</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">indeg</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">vs</span> <span class="o">:</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">vs</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">indeg</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//保存入度为 0 的顶点</span>
+    <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">que</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">topo</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">que</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">que</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+        <span class="n">que</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="n">topo</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">--</span><span class="n">indeg</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">topo</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>复杂度：</p>
+<ul>
+  <li>时间：$O(E)$</li>
+  <li>空间：$O(V)$</li>
+</ul>
+
+<p>思考 1：拓扑排序结果中未出现的顶点构成环（一个或多个环）</p>
+<ul>
+  <li>多个环如何分开？并查集？</li>
+  <li>当两个环共边时，这种情况没法分开吧？</li>
+</ul>
+
+<p>思考 2：无向图如何拓扑排序，度为 1 的节点，都是叶子节点，可以仿照拓扑排序卡恩算法，从外到内遍历节点</p>
+
+<h1 id="最长路问题">最长路问题</h1>
+
+<p>拓扑排序最长路：按照拓扑序进行搜索，结合动态规划，求解处最长路。</p>
+
+<p>之所以必须按照拓扑序列进行搜索，是保证动态规划的正确性的前提。</p>
+
+<hr />
+
+<p>有向无环图（不带权，起点任意），有向无环图（带权，起点任意），有向无环图（带权，起点固定）</p>
+
+<p>有向无环图：</p>
+<ul>
+  <li>带权：权重可正可负可为零；</li>
+  <li>起点任意：指的是起点可以为任意入度为 0 的节点之一；</li>
+</ul>
+
+<p>有向无环图：</p>
+
+<ul>
+  <li>带权：权重可正可负可为零；</li>
+  <li>起点固定：指的是起点为入度为 0 的节点之一。</li>
+</ul>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/34.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/34.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">单例模式（Singleton）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html" rel="alternate" type="text/html" title="单例模式（Singleton）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Singleton%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <h2 id="动机">动机</h2>
 
@@ -290,1222 +1244,4 @@
 
 <p>Prototype 模式对于 “如何创建易变类的尸体对象” 采用 “原型克隆” 的方法来做，它是的我们可以分厂灵活地动态创建 “拥有某些稳定接口” 的新对象：所需工作仅仅是注册一个新类的对象（即原型），然后在任何需要的地方 clone</p>
 
-<p>prototype 模式中的 clone 方法可以利用某些框架中的序列化来实现深拷贝。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/32.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/32.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">命令模式（Command）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F-Command.html" rel="alternate" type="text/html" title="命令模式（Command）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%EF%BC%88Command%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F-Command.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件构建过程中，“行为请求者” 与 “行为实现者” 通常呈现一种 “紧耦合”。但在某些场景：比如需要对行为进行 “记录、撤销、事务” 等处理，这种无法抵御变化的紧耦合是不合适的。</p>
-
-<p>在这种情况下，如何将 “行为请求者” 与 “行为实现者” 解耦？将一组行为抽象为 对象，可以实现二者之间的松耦合</p>
-
-<h2 id="定义">定义</h2>
-
-<p>将一个请求封装为一个对象，从而使你可用不同的请求对客户进行参数化，对请求排队或记录请求日志，以及支持可撤销的操作。</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/7.png" alt="/assets/content/7.png" /></p>
-
-<p>命令模式就是把命令封装成一个个可调用对象，当需要执行某个命令的时候，只需要做两件事：</p>
-
-<ul>
-  <li>创建一个命令对象</li>
-  <li>调用（执行）这个命令对象</li>
-</ul>
-
-<p>涉及角色：</p>
-
-<ul>
-  <li>Receive：命令接收者，一个命令通常是由若干部门配合完成的，也就是有多个接收者，每人完成自己的部分，最终完成整个命令。</li>
-  <li>Command：命令可调用对象，包含命令需要由哪些人配合，以及如何执行</li>
-</ul>
-
-<p>核心：</p>
-<ul>
-  <li>将命令本身和命令的接收者封装成对象，命令的发送方、执行者都无需感知命令接收者的存在</li>
-  <li>命令的接收者以单例的形式存在？？？</li>
-  <li>命令模式符合开闭原则，对扩展开放，对修改封闭。</li>
-</ul>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Receive1</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Receive1 func"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Receive2</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Receive2 func"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Command1</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">Receive1</span> <span class="n">_r1</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="c1">// 这个命令只要 Receive1 一个人就能完成</span>
-    <span class="n">Command1</span><span class="p">()</span> <span class="o">:</span> <span class="n">_r1</span><span class="p">(</span><span class="n">Receive1</span><span class="p">())</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()()</span> <span class="p">{</span>
-        <span class="n">_r1</span><span class="p">.</span><span class="n">func</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Command2</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">Receive1</span> <span class="n">_r1</span><span class="p">;</span>
-    <span class="n">Receive2</span> <span class="n">_r2</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="c1">// 命令需要 Receive1 和 Receive2 配合完成</span>
-    <span class="n">Command2</span><span class="p">()</span> <span class="o">:</span> <span class="n">_r1</span><span class="p">(</span><span class="n">Receive1</span><span class="p">()),</span> <span class="n">_r2</span><span class="p">(</span><span class="n">Receive2</span><span class="p">())</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()()</span> <span class="p">{</span>
-        <span class="n">_r1</span><span class="p">.</span><span class="n">func</span><span class="p">();</span>
-        <span class="n">_r2</span><span class="p">.</span><span class="n">func</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// 创建一个 Command1 命令</span>
-    <span class="n">Command1</span> <span class="n">c1</span><span class="p">;</span>
-    <span class="c1">// 执行命令</span>
-    <span class="n">c1</span><span class="p">();</span>
-
-    <span class="c1">// 创建一个 Command2 命令</span>
-    <span class="n">Command2</span> <span class="n">c2</span><span class="p">;</span>
-    <span class="c1">// 执行命令</span>
-    <span class="n">c2</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ICommand</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">ICommand</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Command1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ICommand</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">_x</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">Command1</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="o">:</span> <span class="n">_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="n">_x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Command2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ICommand</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">Command2</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="n">_x</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">_y</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">_x</span> <span class="o">+</span> <span class="n">_y</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h1 id="应用">应用</h1>
-
-<p>将命令 与 命令的接收者分离，</p>
-
-<p>一个命令的 参数、命令接收者、命令执行 封装到一个可执行类中：执行命令的时候只需要构造一个可调用对象，然后执行它。</p>
-
-<p>说白了就是 C++ 中的可调用对象！！！！</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/31.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/31.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">工厂模式（Factory）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Factory.html" rel="alternate" type="text/html" title="工厂模式（Factory）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%EF%BC%88Factory%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Factory.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件系统中，经常面临着创建对象的工作;由于需求的变化， 需要创建的对象的具体类型经常变化。</p>
-
-<p>如何应对这种变化?如何绕过常规的对象创建方法(new)，提供一 种“封装机制”来避免客户程序和这种“具体对象创建工作”的紧 耦合?</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProduct</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Product1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Product1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Product2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Product2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">void</span> <span class="nf">test</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">pro</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Product1</span><span class="p">();</span>
-    <span class="c1">// IProduct* pro = new Product2();</span>
-    <span class="n">pro</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>无论是哪种选择，都会导致 test 函数强制依赖于某个具体的实现，一旦要切换到其它具体实现，必须修改代码。将 <code class="language-plaintext highlighter-rouge">pro</code> 以参数的形式传递进来就好了吧</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IProduct</span><span class="o">*</span> <span class="n">pro</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">pro</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>可以，test 函数现在只依赖于抽象，而不依赖于某个具体的实现。</p>
-
-<blockquote>
-  <p>为什么要有工厂？</p>
-</blockquote>
-
-<ul>
-  <li>但如果 test 实现内部还需要多个跟 pro 一样的实例怎么获得？？？</li>
-  <li>拷贝？？？我要的是原生的实例，你知道它们刚出生时长什么样子吗？？？</li>
-  <li>得了得了，把生产机器传给你总可以了吧，要多少个就自己生产多少个！！！</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IProductFactory</span><span class="o">*</span> <span class="n">factory</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">pro</span> <span class="o">=</span> <span class="n">factory</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>IProductFactory 就是主角</p>
-
-<h2 id="定义">定义</h2>
-
-<p>定义一个用于创建对象的接口，让子类决定实例化哪一个类。 Factory Method使得一个类的实例化延迟(目的:解耦， 手段:虚函数)到子类</p>
-
-<p>让当前模块摆脱具体依赖（new …）</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/4.png" alt="/assets/content/4.png" /></p>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProduct</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactory</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">IProduct</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Product1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Product1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProduct1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Product1</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Product2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProduct</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Product2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProduct2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">Product2</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IFactory</span><span class="o">*</span> <span class="n">factory</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">pro1</span> <span class="o">=</span> <span class="n">factory</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
-    <span class="n">pro1</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-
-    <span class="n">IProduct</span><span class="o">*</span> <span class="n">pro2</span> <span class="o">=</span> <span class="n">factory</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
-    <span class="n">pro2</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-<span class="p">}</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">IFactory</span><span class="o">*</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactoryProduct2</span><span class="p">();</span>
-    <span class="n">test</span><span class="p">(</span><span class="n">factory</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>test 模块摆脱了具体实现（new）的依赖，再也不用换个具体实现就要改代码了！！！</p>
-
-<h1 id="应用">应用</h1>
-
-<p>工厂模式说白了，就是帮助某个模块摆脱具体依赖！！！！！！！</p>
-
-<ul>
-  <li>这个模块需要动态创建多个同种类型产品（如果不需要多个，就不用工厂了，直接用虚基类指针就行）</li>
-  <li>产品可以有不同的类型</li>
-</ul>
-
-<p>Factory Method模式用于隔离类对象的使用者和具体类型之间的 耦合关系。面对一个经常变化的具体类型，紧耦合关系(new)会导 致软件的脆弱。</p>
-
-<p>Factory Method模式通过面向对象的手法，将所要创建的具体对 象工作延迟到子类，从而实现一种扩展(而非更改)的策略，较好 地解决了这种紧耦合关系。</p>
-
-<p>Factory Method模式解决“单个对象”的需求变化。缺点在于要 求创建方法/参数相同</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/29.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/29.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">抽象工厂模式（Abstract Factory）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html" rel="alternate" type="text/html" title="抽象工厂模式（Abstract Factory）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%EF%BC%88Abstract%20Factory%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件系统中，经常面临着“一系列相互依赖的对象”的创建工 作;同时，由于需求的变化，往往存在更多系列对象的创建工作。</p>
-
-<p>如何应对这种变化?如何绕过常规的对象创建方法(new)，提供一 种“封装机制”来避免客户程序和这种“多系列具体对象创建工作” 的紧耦合?</p>
-
-<h2 id="定义">定义</h2>
-
-<p>提供一个接口，让该接口负责创建一系列“相关或者相互依赖的对象”，无需指定它们具体的类</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/5.png" alt="/assets/content/5.png" /></p>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="c1">// 产品 A 工厂模式</span>
-<span class="k">class</span> <span class="nc">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">IFactoryA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactoryA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA1</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA2</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-
-<span class="c1">// 产品 B 工厂模式</span>
-<span class="k">class</span> <span class="nc">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">IFactoryB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactoryB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB1</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">FactoryProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB2</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// 生产一个产品 a 和一个产品 b</span>
-<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IFactoryA</span><span class="o">*</span> <span class="n">fa</span><span class="p">,</span> <span class="n">IFactoryB</span><span class="o">*</span> <span class="n">fb</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">fa</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
-    <span class="n">a</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-
-    <span class="n">IProductB</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">fb</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
-    <span class="n">b</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-<span class="p">}</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">IFactoryA</span><span class="o">*</span> <span class="n">fa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactoryProductA1</span><span class="p">();</span>
-    <span class="n">IFactoryB</span><span class="o">*</span> <span class="n">fb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactoryProductB2</span><span class="p">();</span>
-    <span class="n">test</span><span class="p">(</span><span class="n">fa</span><span class="p">,</span> <span class="n">fb</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>涉及两个产品，分别用工厂模式创建出它们，没有问题。但有时会有一种情况：</p>
-
-<ul>
-  <li>FactoryProductA1 和 FactoryProductB1 是 Factory1 的生产线</li>
-  <li>FactoryProductA2 和 FactoryProductB2 是 Factory2 的生产线</li>
-  <li>A、B 两个产品需要搭配使用，但最好是同一家公司的产品，也就是不允许 ProductA1 和 ProductB2 （ProductA2 和 ProductB1）搭配使用</li>
-  <li>此时该怎么办？？？？</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// 抽象工厂</span>
-<span class="k">class</span> <span class="nc">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactory</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">IProductB</span><span class="o">*</span> <span class="n">create_b</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Factory1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA1</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="n">IProductB</span><span class="o">*</span> <span class="nf">create_b</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB1</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Factory2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA2</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="n">IProductB</span><span class="o">*</span> <span class="nf">create_b</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB2</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// 生产一个产品 a 和一个产品 b</span>
-<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IFactory</span><span class="o">*</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">IProductA</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">create_a</span><span class="p">();</span>
-    <span class="n">a</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-
-    <span class="n">IProductB</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">create_b</span><span class="p">();</span>
-    <span class="n">b</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-<span class="p">}</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">IFactory</span><span class="o">*</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Factory2</span><span class="p">();</span>
-    <span class="n">test</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>此时 test 创建出的搭配只有 ProductA1、ProductB1 和 ProductA2、ProductB2 两种情况。</p>
-
-<p>工厂模式和抽象工厂模式的区别：</p>
-
-<ul>
-  <li>工厂模式用于创建单个产品（苹果手机、小米手机）</li>
-  <li>抽象工厂模式用于创建某个系列的所有产品（苹果系列：iphone、mac、iwatch、ipods）</li>
-</ul>
-
-<h1 id="应用">应用</h1>
-
-<p>如果没有应对“多系列对象构建”的需求变化，则没有必要使用 Abstract Factory模式，这时候使用简单的工厂完全可以。</p>
-
-<p>“系列对象”指的是在某一特定系列下的对象之间有相互依赖、 或作用的关系。不同系列的对象之间不能相互依赖。</p>
-
-<p>Abstract Factory模式主要在于应对“新系列”的需求变动。其缺 点在于难以应对“新对象”的需求变动</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/27.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/27.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">策略模式（Strategy）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F-Strategy.html" rel="alternate" type="text/html" title="策略模式（Strategy）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%EF%BC%88Strategy%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F-Strategy.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件构建过程中，某些对象使用的算法可能多种多样，经常改 变，如果将这些算法都编码到对象中，将会使对象变得异常复杂; 而且有时候支持不使用的算法也是一个性能负担。</p>
-
-<p>如何在运行时根据需要透明地更改对象的算法?将算法与对象本 身解耦，从而避免上述问题?</p>
-
-<h2 id="定义">定义</h2>
-
-<p>定义一系列策略，把它们一个个封装起来，并且使它们可互 相替换(变化)。该模式使得算法可独立于使用它的客户程序(稳定)而变化(扩展，子类化)。</p>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Algorithm</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Strategy1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func2</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Strategy2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Default Strategy"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">func1</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">func2</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">func3</span><span class="p">();</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Algorithm</span> <span class="n">algorithm1</span><span class="p">;</span>
-    <span class="n">algorithm1</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">Algorithm</span> <span class="n">algorithm2</span><span class="p">;</span>
-    <span class="n">algorithm2</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>如果需要添加一个新的策略，需要在 Algorithm 中添加新的策略方法，然后在 run 方法中添加条件判断。</p>
-
-<ul>
-  <li>违背开放原则，扩展时，需要修改 Algorithm 类，没有对修改关闭</li>
-  <li>在 run 中添加条件判断可能会影响原有逻辑</li>
-  <li>如果只需要使用策略 2，但运行时需要逐个判断直到到达策略 2 为止，存在效率问题</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">IStrategy</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IStrategy</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Strategy1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IStrategy</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Strategy1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Strategy2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IStrategy</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Strategy2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Algorithm</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">IStrategy</span><span class="o">*</span> <span class="n">_strategy</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">IStrategy</span><span class="o">*</span> <span class="n">strategy</span><span class="p">)</span> <span class="o">:</span> <span class="n">_strategy</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">_strategy</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Strategy1</span> <span class="n">strategy1</span><span class="p">;</span>
-    <span class="n">Algorithm</span> <span class="n">algorithm1</span><span class="p">(</span><span class="o">&amp;</span><span class="n">strategy1</span><span class="p">);</span>
-    <span class="n">algorithm1</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">Strategy2</span> <span class="n">strategy2</span><span class="p">;</span>
-    <span class="n">Algorithm</span> <span class="n">algorithm2</span><span class="p">(</span><span class="o">&amp;</span><span class="n">strategy2</span><span class="p">);</span>
-    <span class="n">algorithm2</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>就是一个笔筒，想写黑色的字，就给它装黑笔芯，想写红色的字，就给它装红笔芯，…，想写其它颜色的字，就给它装其它颜色的笔芯。符合开闭原则：笔筒的部分是固定不变的（对修改关闭），笔芯是可替换的（对扩展开放）。</p>
-
-<p>这不就是桥模式的一个分支么？</p>
-
-<h1 id="应用">应用</h1>
-
-<p>Strategy及其子类为组件提供了一系列可重用的算法，从而可以使 得类型在运行时方便地根据需要在各个算法之间进行切换。</p>
-
-<p>Strategy模式提供了用条件判断语句以外的另一种选择，消除条件 判断语句，就是在解耦合。含有许多条件判断语句的代码通常都需 要Strategy模式。</p>
-
-<p>如果Strategy对象没有实例变量，那么各个上下文可以共享同一个 Strategy对象，从而节省对象开销。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/26.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/26.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">观察者模式（Observer）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F-Observer.html" rel="alternate" type="text/html" title="观察者模式（Observer）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%EF%BC%88Observer%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F-Observer.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件构建过程中，我们需要为某些对象建立一种“通知依赖关 系” ——一个对象(目标对象)的状态发生改变，所有的依赖对 象(观察者对象)都将得到通知。如果这样的依赖关系过于紧密， 将使软件不能很好地抵御变化。</p>
-
-<p>使用面向对象技术，可以将这种依赖关系弱化，并形成一种稳定 的依赖关系。从而实现软件体系结构的松耦合。</p>
-
-<h2 id="定义">定义</h2>
-
-<p>定义对象间的一种一对多(变化)的依赖关系，以便当一个 对象(Subject)的状态发生改变时，所有依赖于它的对象都 得到通知并自动更新。</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/2.png" alt="/assets/content/2.png" /></p>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">ISubject</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">IObserver</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IObserver</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="c1">// Subject1 通知消息到来</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="n">ISubject</span><span class="o">*</span> <span class="n">sub</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ISubject</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">set</span><span class="o">&lt;</span><span class="n">IObserver</span><span class="o">*&gt;</span> <span class="n">_obs</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">ISubject</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-
-    <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="n">IObserver</span><span class="o">*</span> <span class="n">ob</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_obs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ob</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">rm</span><span class="p">(</span><span class="n">IObserver</span><span class="o">*</span> <span class="n">ob</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_obs</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">ob</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 通知每一个观察者</span>
-    <span class="kt">void</span> <span class="nf">notify</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">IObserver</span><span class="o">*</span> <span class="n">ob</span> <span class="o">:</span> <span class="n">_obs</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ob</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Observer1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IObserver</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="n">ISubject</span><span class="o">*</span> <span class="n">sub</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Observer1 receive change from Subject"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Observer2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IObserver</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="n">ISubject</span><span class="o">*</span> <span class="n">sub</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Observer2 receive change from Subject"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Subject1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ISubject</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">change</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">notify</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Subject2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ISubject</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">change</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">notify</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Observer1</span> <span class="n">ob1</span><span class="p">;</span>
-    <span class="n">Observer2</span> <span class="n">ob2</span><span class="p">;</span>
-    <span class="n">Subject1</span> <span class="n">sub1</span><span class="p">;</span>
-    <span class="n">sub1</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ob1</span><span class="p">);</span>
-    <span class="n">sub1</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ob2</span><span class="p">);</span>
-    <span class="n">sub1</span><span class="p">.</span><span class="n">change</span><span class="p">();</span>
-
-    <span class="n">Subject2</span> <span class="n">sub2</span><span class="p">;</span>
-    <span class="n">sub2</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ob1</span><span class="p">);</span>
-    <span class="n">sub2</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ob2</span><span class="p">);</span>
-    <span class="n">sub2</span><span class="p">.</span><span class="n">change</span><span class="p">();</span>
-
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/30.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/30.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小生成树（Minimum Spanning Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html" rel="alternate" type="text/html" title="最小生成树（Minimum Spanning Tree）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%EF%BC%88Minimum%20Spanning%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Minimum-Spanning-Tree.html"><![CDATA[<h1 id="最小生成树">最小生成树</h1>
-
-<p>最小生成树：带权重的无向图 -&gt; 连通分量 -&gt; 生成树 -&gt; 最小生成树</p>
-
-<p>若干个城镇，修路将所有城镇连接起来的的最小代价，两种实现算法（都是基于贪心策略）：</p>
-<ul>
-  <li>kruscal</li>
-  <li>prim</li>
-</ul>
-
-<h1 id="kruskal">Kruskal</h1>
-
-<h2 id="原理">原理</h2>
-<p>$kruskal$ 是基于并查集来实现的：</p>
-<ul>
-  <li>先将所有边按权重排序</li>
-  <li>按权重从小到大遍历边
-    <ul>
-      <li>如果边的两个顶点属于已经属于同一集合，该边不属于最小生成树；</li>
-      <li>否则，该边属于最小生成树；</li>
-    </ul>
-  </li>
-  <li>权重为负值也是没有问题的</li>
-</ul>
-
-<h2 id="实现">实现</h2>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">uf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]));</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">edges</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">uf</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">sort</span><span class="p">(</span><span class="n">edges</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">edges</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
-        <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">pu</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">u</span><span class="p">);</span>
-        <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">pu</span> <span class="o">==</span> <span class="n">pv</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-        <span class="n">total</span> <span class="o">+=</span> <span class="n">w</span><span class="p">;</span>
-        <span class="n">uf</span><span class="p">[</span><span class="n">px</span><span class="p">]</span> <span class="o">=</span> <span class="n">py</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">total</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="复杂度">复杂度</h2>
-
-<p>时间复杂度：$O(ElogV)$</p>
-
-<p>空间复杂度：$O(V)$</p>
-
-<h1 id="prim">Prim</h1>
-
-<h2 id="原理-1">原理</h2>
-<p>$prim$ 和 $dijkstra$ 十分相似，区别在于：</p>
-<ul>
-  <li>$dijkstra$：总是把开集合中距离起点最近的点加入到闭集合；</li>
-  <li>$prim$：总是把开集合中距离已生成的最小生成树最近的点加入到闭集合；</li>
-</ul>
-
-<p>权重可正可负</p>
-
-<h2 id="实现-1">实现</h2>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">mst</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="o">&amp;</span><span class="n">g</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
-    <span class="n">dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
-    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
-    
-    <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-        <span class="k">auto</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
-        <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
-        <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span>
-        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">w</span> <span class="o">&gt;=</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
-            <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span>
-            <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">v</span><span class="p">});</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">total</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="复杂度-1">复杂度</h2>
-
-<p>时间复杂度：$O(ElogV)$</p>
-
-<p>空间复杂度：$O(E)$</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/25.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/25.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">桥模式（Bridge）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html" rel="alternate" type="text/html" title="桥模式（Bridge）" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F%EF%BC%88Bridge%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A1%A5%E6%A8%A1%E5%BC%8F-Bridge.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<p>由于某些类型的固有实现逻辑，使得它们具有两个变化的维度，乃至多个维度的变化</p>
-
-<p>如何应对这种 “多维度的变化”？如何利用面向对象技术来使得类型可以轻松地沿着两个乃至多个方向变化，而不引入额外的复杂度？</p>
-
-<h2 id="模式定义">模式定义</h2>
-
-<p>将抽象部分（业务功能）与实现部分（平台实现）分离，使得它们可以独立地变化</p>
-
-<p><strong>将多个变化维度分离，使得它们可以独立地变化。</strong></p>
-
-<h1 id="实现">实现</h1>
-
-<h2 id="继承方式">继承方式</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">ILeftRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="c1">// Left 抽象</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// Right 抽象</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ILeft1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeftRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Left1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">ILeft2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeftRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Left2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left1Right1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft1</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left1Right2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft1</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left2Right1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft2</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left2Right2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft2</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// 编译时装配</span>
-    <span class="n">Left2Right2</span> <span class="n">l2r2</span><span class="p">;</span>
-    <span class="n">l2r2</span><span class="p">.</span><span class="n">func1</span><span class="p">();</span>
-    <span class="n">l2r2</span><span class="p">.</span><span class="n">func2</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>可以实现不同维度的任意搭配，但不够灵活，类种类 $n * m$</p>
-
-<h2 id="桥模式">桥模式</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">ILeft</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">ILeft</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Left1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Left2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ILeft</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Left2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">IRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IRight</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Right1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Right2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IRight</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Right2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Bridge</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">ILeft</span><span class="o">*</span> <span class="n">_left</span><span class="p">;</span>
-    <span class="n">IRight</span><span class="o">*</span> <span class="n">_right</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="n">Bridge</span><span class="p">(</span><span class="n">ILeft</span><span class="o">*</span> <span class="n">left</span><span class="p">,</span> <span class="n">IRight</span><span class="o">*</span> <span class="n">right</span><span class="p">)</span> <span class="o">:</span> <span class="n">_left</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">_right</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">_left</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-        <span class="n">_right</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// 运行时装配</span>
-    <span class="n">Left1</span> <span class="n">left1</span><span class="p">;</span>
-    <span class="n">Right2</span> <span class="n">right2</span><span class="p">;</span>
-    <span class="n">Bridge</span> <span class="n">b</span><span class="p">(</span><span class="o">&amp;</span><span class="n">left1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">right2</span><span class="p">);</span>
-    <span class="n">b</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/23.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/23.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">模板方法模式</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F.html" rel="alternate" type="text/html" title="模板方法模式" /><published>2025-03-31T00:00:00+00:00</published><updated>2025-03-31T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/03/31/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>对于某一类任务，它常常有稳定的整体操作结构，但各个子步骤却有很多改变的需求，或由于固有原因而无法和任务的整体结构同时实现</p>
-
-<p>如何在确定稳定操作结构的前提下，来灵活应对各个子步骤的灵活变化或者晚期实现需求？</p>
-
-<h2 id="定义">定义</h2>
-
-<p>定义一个操作中的算法骨架（稳定），而将一些子步骤延迟到子类中。Template Method 使得子类可以不改变（复用）一个算法的结构即可重定义（override 重写）该算法的某些步骤。</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/2.png" alt="/assets/content/2.png" /></p>
-
-<h1 id="实现">实现</h1>
-
-<h2 id="非-template-method">非 Template Method</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">ITemplate</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">ITemplate</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"func3"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Template1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ITemplate</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template1::func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func4</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template1::func4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">func1</span><span class="p">();</span>
-        <span class="n">func2</span><span class="p">();</span>
-        <span class="n">func3</span><span class="p">();</span>
-        <span class="n">func4</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Template2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ITemplate</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template2::func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func4</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template2::func4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">func1</span><span class="p">();</span>
-        <span class="n">func2</span><span class="p">();</span>
-        <span class="n">func3</span><span class="p">();</span>
-        <span class="n">func4</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ITemplate</span><span class="o">*</span> <span class="n">temp1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Template1</span><span class="p">();</span>
-    <span class="n">temp1</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">ITemplate</span><span class="o">*</span> <span class="n">temp2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Template2</span><span class="p">();</span>
-    <span class="n">temp2</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>用户除了关心 “变化” 的部分，还需要关注整个 run 方法的执行流程，但实际上 run 方法的执行流程时 “稳定” 的，用户完全没有必要关心。</p>
-
-<h2 id="模版方法模式">模版方法模式</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">ITemplate</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">ITemplate</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"func3"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func4</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// Template Method</span>
-    <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">func1</span><span class="p">();</span>
-        <span class="n">func2</span><span class="p">();</span>
-        <span class="n">func3</span><span class="p">();</span>
-        <span class="n">func4</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Template1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ITemplate</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template1::func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">func4</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template1::func4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Template2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ITemplate</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template2::func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">func4</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Template2::func4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ITemplate</span><span class="o">*</span> <span class="n">temp1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Template1</span><span class="p">();</span>
-    <span class="n">temp1</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">ITemplate</span><span class="o">*</span> <span class="n">temp2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Template2</span><span class="p">();</span>
-    <span class="n">temp2</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>用户只需要对 “变化” 的部分进行重新实现，而不必关心整个方法的具体执行流程。</p>
-
-<h1 id="应用">应用</h1>
-
-<h2 id="升级流程">升级流程</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">IUpgrade</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IUpgrade</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">pre_uninstall</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="n">uninstall</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"uninstall"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">post_uninstall</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">pre_install</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="nf">install</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"install"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">post_install</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="kt">void</span> <span class="nf">upgrade</span><span class="p">()</span> <span class="p">{</span>
-        <span class="c1">// 卸载旧软件包前，处理步骤</span>
-        <span class="n">pre_uninstall</span><span class="p">();</span>
-        <span class="c1">// 卸载旧软件包</span>
-        <span class="n">uninstall</span><span class="p">();</span>
-        <span class="c1">// 卸载旧软件包后，处理步骤</span>
-        <span class="n">post_uninstall</span><span class="p">();</span>
-
-        <span class="c1">// 安装新软件包前，处理步骤</span>
-        <span class="n">pre_install</span><span class="p">();</span>
-        <span class="c1">// 安装新软件包</span>
-        <span class="n">install</span><span class="p">();</span>
-        <span class="c1">// 安装新软件包后，处理步骤</span>
-        <span class="n">post_install</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Upgrade1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IUpgrade</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">pre_uninstall</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade1::pre_uninstall"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">post_uninstall</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade1::post_uninstall"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">pre_install</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade1::pre_install"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">post_install</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade1::post_install"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Upgrade2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IUpgrade</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="n">pre_uninstall</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade2::pre_uninstall"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">post_uninstall</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade2::post_uninstall"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">pre_install</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade2::pre_install"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="n">post_install</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Upgrade2::post_install"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">IUpgrade</span><span class="o">*</span> <span class="n">upg1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Upgrade1</span><span class="p">();</span>
-    <span class="n">upg1</span><span class="o">-&gt;</span><span class="n">upgrade</span><span class="p">();</span>
-
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">IUpgrade</span><span class="o">*</span> <span class="n">upg2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Upgrade2</span><span class="p">();</span>
-    <span class="n">upg2</span><span class="o">-&gt;</span><span class="n">upgrade</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/22.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/22.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>prototype 模式中的 clone 方法可以利用某些框架中的序列化来实现深拷贝。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/32.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/32.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
