@@ -4,7 +4,7 @@ tags: 数组
 image: /assets/image/37.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
-title: 拓扑排序（Topo Sort）
+title: 卡丹尔算法（Kadane's Algorithm）
 categories: [计算机, 数据结构与算法]
 ---
 

@@ -4,7 +4,7 @@ tags: 数组
 image: /assets/image/40.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
-title: 拓扑排序（Topo Sort）
+title: 下一个排列组合（Next Permutation）
 categories: [计算机, 数据结构与算法]
 ---
 

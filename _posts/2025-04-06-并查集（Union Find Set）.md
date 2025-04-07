@@ -4,7 +4,7 @@ tags: 集论
 image: /assets/image/35.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
-title: 拓扑排序（Topo Sort）
+title: 并查集（Union Find Set）
 categories: [计算机, 数据结构与算法]
 ---
 
