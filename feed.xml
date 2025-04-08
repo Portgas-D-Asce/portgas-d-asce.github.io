@@ -1,4 +1,265 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-08T13:23:53+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">职责链模式（chain of responsibility）</title><link href="https://xdevil.top/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F-Chain-of-Responsibility.html" rel="alternate" type="text/html" title="职责链模式（chain of responsibility）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F%EF%BC%88Chain%20of%20Responsibility%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F-Chain-of-Responsibility.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-04-08T15:15:35+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">备忘录模式（Memento）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F-Memento.html" rel="alternate" type="text/html" title="备忘录模式（Memento）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F%EF%BC%88Memento%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F-Memento.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>拷贝个副本不就行么，简单但代价高，但其实只需要备份还原现场的必要信息即可。</p>
+
+<p>涉及角色：</p>
+
+<ul>
+  <li>目标（被管理者）：除了基本的成员方法，还要包含如何备份，如何恢复</li>
+  <li>备份类：描述具体要备份的东西，备份时产生一个对象，恢复时用一个对象恢复。</li>
+  <li>管理员：负责管理备份，创建、删除、查询等</li>
+</ul>
+
+<p>多状态如何备份？</p>
+
+<p>多备份如何备份？</p>
+
+<h1 id="类图">类图</h1>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Backup</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="c1">// 多状态</span>
+    <span class="kt">int</span> <span class="n">_stat1</span><span class="p">,</span> <span class="n">_stat2</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Backup</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="n">Backup</span><span class="p">(</span><span class="kt">int</span> <span class="n">stat1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stat2</span><span class="p">)</span> <span class="o">:</span> <span class="n">_stat1</span><span class="p">(</span><span class="n">stat1</span><span class="p">),</span> <span class="n">_stat2</span><span class="p">(</span><span class="n">stat2</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">int</span> <span class="n">stat1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_stat1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">stat2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_stat2</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Target</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Target</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="n">_x</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">_y</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="n">Backup</span> <span class="nf">backup</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Backup</span><span class="p">(</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">recover</span><span class="p">(</span><span class="k">const</span> <span class="n">Backup</span><span class="o">&amp;</span> <span class="n">bp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_x</span> <span class="o">=</span> <span class="n">bp</span><span class="p">.</span><span class="n">stat1</span><span class="p">();</span>
+        <span class="n">_y</span> <span class="o">=</span> <span class="n">bp</span><span class="p">.</span><span class="n">stat2</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">output</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x: "</span> <span class="o">&lt;&lt;</span> <span class="n">_x</span> <span class="o">&lt;&lt;</span> <span class="s">", y: "</span> <span class="o">&lt;&lt;</span> <span class="n">_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Manager</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="c1">// 多备份</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">Backup</span><span class="o">&gt;</span> <span class="n">_bps</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="k">const</span> <span class="n">Backup</span><span class="o">&amp;</span> <span class="n">bp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_bps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">bp</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Backup</span> <span class="nf">query</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_bps</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Target</span> <span class="n">t</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="n">Manager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"01"</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">backup</span><span class="p">());</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Target</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">recover</span><span class="p">(</span><span class="n">manager</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="s">"01"</span><span class="p">));</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/41.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/41.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">外观模式（Facade）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html" rel="alternate" type="text/html" title="外观模式（Facade）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F%EF%BC%88Facade%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>对外部提供稳定的接口，避免过度耦合（外部依赖内部的具体实现）</p>
+
+<h2 id="动机">动机</h2>
+
+<p><img src="/assets/content/14.png" alt="/assets/content/14.png" /></p>
+
+<p>用户和子系统存在过多的耦合，无论是用户还是子系统，更新迭代起来很容易发生冲突。</p>
+
+<p>如何简化外部客户程序和系统间的交互接口？如何将外部客户程序的演化和内部子系统的变化之间的依赖相互解耦</p>
+
+<h2 id="定义">定义</h2>
+
+<p>为子系统中的一组接口提供一个一致（稳定）的界面，Facade 模式定义了一个高层接口，这个接口使得这一子系统更加容易使用（复用）。</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/15.png" alt="/assets/content/15.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Server</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">func2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func3"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">Server</span> <span class="n">_server</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Facade</span><span class="p">()</span> <span class="o">:</span> <span class="n">_server</span><span class="p">(</span><span class="n">Server</span><span class="p">())</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="nf">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func1</span><span class="p">();</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func2</span><span class="p">();</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func3</span><span class="p">();</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Facade</span> <span class="n">f</span><span class="p">;</span>
+    <span class="n">f</span><span class="p">.</span><span class="n">deal</span><span class="p">(</span><span class="s">"Hello World!"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>
+
+<p>本质就是 “解耦用户与子系统之间的关系”</p>
+
+<ul>
+  <li>用户不关心子系统内部如何处理，只关注结果</li>
+  <li>子系统只提供稳定的接口，演进起来更灵活。</li>
+</ul>
+
+<p>从客户程序的角度来看， Facade 模式简化了整个组件系统的接口，对于组件内部与外部客户程序来说，达到了一种“解耦” 的效果：内部子系统的任何变化不会影响到 Facade 接口的变化</p>
+
+<p>Facade 设计模式更注重从架构的层次去看整个系统，而不是单个类的层次。Facade 很多时候更是一种架构设计模式。</p>
+
+<p>Facade 设计模式并非一个集装箱，可以任意地放进任何多个对象。Facade 模式中组件的内部应该是 “相互耦合关系比较大的一系列组件”，而不是一个简单的功能集合。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/44.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/44.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">组合模式（Composite）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F-Composite.html" rel="alternate" type="text/html" title="组合模式（Composite）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F%EF%BC%88Composite%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F-Composite.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>老板下达一条指令，不需要传递给公司每个人，只需要传递给各个部门负责人，部门负责人再传递给子部门负责人 …… 直到传递给每个人</p>
+
+<h2 id="动机">动机</h2>
+
+<p>在软件的某些情况下，客户代码过多地依赖于对象容器复杂的内部实现结构，对象容器内部实现结构（而非抽象接口）的变化将引起客户代码的频繁变化，带来了代码的维护性、扩展性等弊端</p>
+
+<p>如何将 “客户代码与复杂的对象容器结构” 解耦？让对象容器自己来实现自身的复杂结构，从而使得客户代码就像处理简单对象一样来处理复杂的对象容器？</p>
+
+<h2 id="定义">定义</h2>
+
+<p>将对象组合成树形结构以表示 “部分-整体” 的层次结构。Composite 使得用户对单个对象和组合对象的使用具有一致性（稳定）</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/13.png" alt="/assets/content/13.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">IComposite</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IComposite</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Composite</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IComposite</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">set</span><span class="o">&lt;</span><span class="n">IComposite</span><span class="o">*&gt;</span> <span class="n">_children</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">_name</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Composite</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="o">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="n">IComposite</span><span class="o">*</span> <span class="n">child</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_children</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">child</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">rm</span><span class="p">(</span><span class="n">IComposite</span><span class="o">*</span> <span class="n">child</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_children</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">child</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Composite Node: "</span> <span class="o">&lt;&lt;</span> <span class="n">_name</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">child</span> <span class="o">:</span> <span class="n">_children</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">child</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Leaf</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IComposite</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">string</span> <span class="n">_name</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Leaf</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="o">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Leaf Node: "</span> <span class="o">&lt;&lt;</span> <span class="n">_name</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Composite</span> <span class="n">root</span><span class="p">(</span><span class="s">"root"</span><span class="p">);</span>
+    <span class="n">Composite</span> <span class="n">node11</span><span class="p">(</span><span class="s">"node11"</span><span class="p">);</span>
+    <span class="n">Composite</span> <span class="n">node12</span><span class="p">(</span><span class="s">"node12"</span><span class="p">);</span>
+    <span class="n">Leaf</span> <span class="n">leaf13</span><span class="p">(</span><span class="s">"leaf13"</span><span class="p">);</span>
+    <span class="n">Leaf</span> <span class="n">leaf21</span><span class="p">(</span><span class="s">"leaf21"</span><span class="p">);</span>
+    <span class="n">Leaf</span> <span class="n">leaf22</span><span class="p">(</span><span class="s">"leaf22"</span><span class="p">);</span>
+
+    <span class="n">root</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">node11</span><span class="p">);</span>
+    <span class="n">root</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">node12</span><span class="p">);</span>
+    <span class="n">root</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">leaf13</span><span class="p">);</span>
+    <span class="n">node11</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">leaf21</span><span class="p">);</span>
+    <span class="n">node11</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">leaf22</span><span class="p">);</span>
+
+    <span class="n">root</span><span class="p">.</span><span class="n">process</span><span class="p">();</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">node11</span><span class="p">.</span><span class="n">process</span><span class="p">();</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">leaf21</span><span class="p">.</span><span class="n">process</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/46.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/46.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">职责链模式（Chain of Responsibility）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F-Chain-of-Responsibility.html" rel="alternate" type="text/html" title="职责链模式（Chain of Responsibility）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F%EF%BC%88Chain%20of%20Responsibility%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F-Chain-of-Responsibility.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <h2 id="动机">动机</h2>
 
@@ -98,7 +359,217 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h1 id="应用">应用</h1>]]></content><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><summary type="html"><![CDATA[概述]]></summary></entry><entry><title type="html">下一个排列组合（Next Permutation）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html" rel="alternate" type="text/html" title="下一个排列组合（Next Permutation）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88%EF%BC%88Next%20Permutation%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html"><![CDATA[<h1 id="问题描述">问题描述</h1>
+<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/45.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/45.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">设计模式（Design Pattern）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-Design-Pattern.html" rel="alternate" type="text/html" title="设计模式（Design Pattern）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%88Design%20Pattern%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-Design-Pattern.html"><![CDATA[<h1 id="六大设计原则">六大设计原则</h1>
+
+<p>solid 原则</p>
+
+<ul>
+  <li>
+    <p>s( Single-Resposibility Principle ): 单一职责原则。</p>
+  </li>
+  <li>
+    <p>o( Open-Closed principle ): 开放封闭原则。</p>
+  </li>
+  <li>
+    <p>l( Liskov-Substituion Principle ): 里氏替换原则。</p>
+  </li>
+  <li>
+    <p>i( Interface-Segregation Principle ): 接口隔离原则。</p>
+  </li>
+  <li>
+    <p>d( Dependecy-Inversion Principle ): 依赖倒置原则。</p>
+  </li>
+</ul>
+
+<h2 id="单一职责原则">单一职责原则</h2>
+
+<p>一个类应该仅有一个引起它变化的原因</p>
+
+<h2 id="开放封闭原则">开放封闭原则</h2>
+
+<p>对扩展是开放的，对更改是封闭的：尽量通过扩展实体的行为来实现变化，而不是通过修改已有代码来完成变化</p>
+
+<h2 id="里氏替换原则">里氏替换原则</h2>
+
+<p>所有使用基类的地方，都可以使用派生类。</p>
+
+<h2 id="接口隔离原则">接口隔离原则</h2>
+
+<p>建立单一接口，不要建立臃肿庞大的接口。接口尽量细化，接口中的方法尽可能的少。</p>
+
+<h2 id="依赖倒置原则">依赖倒置原则</h2>
+
+<p>模块间的依赖通过接口产生：接口类不依赖于实现类，实现类依赖接口类。</p>
+
+<h2 id="迪米特法则">迪米特法则</h2>
+
+<p>高内聚，低耦合</p>
+
+<h1 id="六大类关系">六大类关系</h1>
+
+<p>泛化、依赖、聚合、组合、关联、依赖</p>
+
+<h2 id="泛化">泛化</h2>
+
+<p>基类和派生类之间的关系：从派生类指向基类</p>
+
+<p>实线三角形</p>
+
+<h2 id="实现">实现</h2>
+
+<p>实现类和接口之间的关系：从实现类指向接口</p>
+
+<p>虚线三角形</p>
+
+<h2 id="关联">关联</h2>
+
+<p>两个类之间具有多对多的关系：一个学生可以选多门课程，一个课程也可以被多个学生选择。</p>
+
+<p>实现时就是：A 类对象里面有多个 B 类对象，B 类对象里面有多个 A 类对象</p>
+
+<p>实线箭头</p>
+
+<h2 id="依赖">依赖</h2>
+
+<p>虚线箭头，指向被依赖者</p>
+
+<p>局部变量、方法的参数或者对静态方法的调</p>
+
+<h2 id="聚合">聚合</h2>
+
+<p>整体与部分关系，部分可以脱离整体而独立存在：汽车与轮胎、发动机之间的关系。</p>
+
+<p>代码体现：成员变量</p>
+
+<p>实线空心菱形，从整体指向部分</p>
+
+<h2 id="组合">组合</h2>
+
+<p>整体与部分关系，部分不能脱离整体而独立存在：公司与部门</p>
+
+<p>代码体现：成员变量</p>
+
+<p>实线实心菱形，从整体指向部分。</p>
+
+<h1 id="23-种设计模式">23 种设计模式</h1>
+
+<p>单例模式、原型模式</p>
+
+<p>建造模式、工厂模式</p>
+
+<p>命令模式、职责链模式</p>
+
+<p>观察者模式、访问者模式</p>
+
+<p>迭代器模式、适配器模式</p>
+
+<p>外观模式、备忘录模式</p>
+
+<h1 id="专有名词">专有名词</h1>
+
+<p>早绑定、晚绑定</p>
+
+<p>稳定、变化</p>
+
+<p>继承、组合</p>
+
+<p>编译时依赖、运行时依赖</p>
+
+<p>紧耦合、松耦合</p>
+
+<p>寻找变化点，在变化点处应用设计模式</p>
+
+<p>应对变化，提高复用</p>
+
+<p>重构到设计模式（Refactoring to pattern）</p>
+
+<p>面向接口编程</p>
+
+<p>依赖倒置原则：应该依赖抽象，而不应该依赖细节。</p>
+
+<p>new 紧耦合</p>
+
+<p>设计模式是为了弥补语言的不足而出现的。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/42.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/42.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">适配器模式（Adapter）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html" rel="alternate" type="text/html" title="适配器模式（Adapter）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F%EF%BC%88Adapter%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>就是把一个东西包装成另外一个东西，使其符合标准或用起来更方便等。典型的就是栈、队列，既可以用数组包装得到，也可以用链表包装得到。</p>
+
+<h2 id="动机">动机</h2>
+
+<p>由于应该用环境的变化，常常需要将 “一些现存的对象” 放在新的环境中应用，但是新环境要求的接口是这些现存对象所不满足的。</p>
+
+<p>如何应对这种 “迁移的变化”？如何既能利用现有对象的良好实现，同时又能满足新的应用环境所要求的接口？</p>
+
+<h2 id="定义">定义</h2>
+
+<p>将一个类的接口转换成客户希望的另一个接口。Adapter 模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/16.png" alt="/assets/content/16.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<p>例子可能不太合适</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">IAdaptee</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IAdaptee</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Adaptee</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IAdaptee</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adaptee func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adaptee func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">IAdapter</span> <span class="p">{</span>
+<span class="nl">protected:</span>
+    <span class="n">IAdaptee</span><span class="o">*</span> <span class="n">_adaptee</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">IAdapter</span><span class="p">(</span><span class="n">IAdaptee</span><span class="o">*</span> <span class="n">adaptee</span><span class="p">)</span> <span class="o">:</span> <span class="n">_adaptee</span><span class="p">(</span><span class="n">adaptee</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IAdapter</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Adapter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IAdapter</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Adapter</span><span class="p">(</span><span class="n">IAdaptee</span><span class="o">*</span> <span class="n">adaptee</span><span class="p">)</span> <span class="o">:</span> <span class="n">IAdapter</span><span class="p">(</span><span class="n">adaptee</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adapter process"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">_adaptee</span><span class="o">-&gt;</span><span class="n">func1</span><span class="p">();</span>
+        <span class="n">_adaptee</span><span class="o">-&gt;</span><span class="n">func2</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Adaptee</span> <span class="n">adaptee</span><span class="p">;</span>
+    <span class="n">Adapter</span> <span class="n">adapter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">adaptee</span><span class="p">);</span>
+    <span class="n">adapter</span><span class="p">.</span><span class="n">process</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>
+
+<p>Adapter 模式主要应用于 “希望复用一些现存的类，但是接口又与复用环境要求不一致的情况”，在遗留代码复用，类库迁移等方面非常有用</p>
+
+<p>GoF 23 定义了两种 Adapter 模式的实现结构：对象适配器和类适配器。但类适配器采用 “多继承” 的实现方式，一般不推荐使用。对象适配器采用 “对象组合” 的方式，更符合松耦合精神。</p>
+
+<p>Adapter 模式可以实现得非常灵活，不必拘泥上面定义的两种结构</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/43.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/43.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">下一个排列组合（Next Permutation）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html" rel="alternate" type="text/html" title="下一个排列组合（Next Permutation）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88%EF%BC%88Next%20Permutation%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88-Next-Permutation.html"><![CDATA[<h1 id="问题描述">问题描述</h1>
 <p>对当前数组进行任意排列组合，得到下一个比当前数组大的数组</p>
 
 <h1 id="原理">原理</h1>
@@ -800,482 +1271,4 @@ int max_sum(const vector&lt;int&gt; &amp;nums) {
         <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">};</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="栈队列" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/36.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/36.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">卡丹尔算法（Kadane’s Algorithm）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95-Kadane's-Algorithm.html" rel="alternate" type="text/html" title="卡丹尔算法（Kadane’s Algorithm）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95%EF%BC%88Kadane&apos;s%20Algorithm%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%8D%A1%E4%B8%B9%E5%B0%94%E7%AE%97%E6%B3%95-Kadane&apos;s-Algorithm.html"><![CDATA[<h1 id="问题描述">问题描述</h1>
-
-<p>最大和子数组（Maximum Sum Subarray）：给定一个一维数组，数组中元素可正可负可为零，求解所有连续子数组的最大和。</p>
-<h1 id="卡丹尔算法">卡丹尔算法</h1>
-
-<h2 id="原理">原理</h2>
-
-<p>在理解卡丹尔算法前，先明确以下内容：</p>
-<ul>
-  <li>一个长度为n的一维数组，其所有连续子数组的个数为 $n(n + 1) / 2$；</li>
-  <li>将 $n(n + 1) / 2$ 个子数组可分组为：以第1个元素结尾的子数组（1个），以第2个元素结尾的子数组（2个），…，以第n个元素结尾的子数组（n个）</li>
-  <li>最大和子数组为题此时可被理解为：分别计算出以第1个元素结尾的子数组的最大和 $s_1$，以第二个元素结尾的子数组的最大和$s_2$，…，以第 $n$ 个元素结尾的子数组的最大和 $s_n$，则 $s_1$，$s_2$，…，$s_n$ 中的最大值即为最终所求结果；</li>
-  <li>不难理解相邻的 $s_i$ 和 $s_{i+1}$ 之间具有关系：$si+1 = max(s_i + num[i + 1], nums[i + 1])$</li>
-</ul>
-
-<p>卡丹尔算法基于上述思路，遍历数组中元素，先计算出以当前元素结尾的子数组的最大和，然后与临时结果比较，若其值大于临时结果，则用其更新临时结果，否则临时结果不变；完成遍历后，临时结果即为最终结果。</p>
-
-<h2 id="代码">代码</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">maxSubArray</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
-    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">temp</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">)</span> <span class="n">res</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-<h2 id="时间空间复杂度">时间/空间复杂度</h2>
-
-<p>时间复杂度：O(n)</p>
-
-<p>空间复杂度：O(1)。</p>
-
-<h1 id="扩展">扩展</h1>
-
-<p>若对子数组的长度加一个“长度不能超过k”的约束，即Maximum Sum SubArray 转化为 Maximum sum subarray whose length isn’t more than k，该如和求解？</p>
-
-<h1 id="练习">练习</h1>
-
-<p><a href="https://leetcode.com/problems/maximum-sum-circular-subarray/">LeetCode 918. Maximum Sum Circular Subarray</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="数组" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/37.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/37.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">并查集（Union Find Set）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86-Union-Find-Set.html" rel="alternate" type="text/html" title="并查集（Union Find Set）" /><published>2025-04-06T00:00:00+00:00</published><updated>2025-04-06T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86%EF%BC%88Union%20Find%20Set%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/06/%E5%B9%B6%E6%9F%A5%E9%9B%86-Union-Find-Set.html"><![CDATA[<h1 id="简介">简介</h1>
-
-<p>并查集：用于处理不相交集合问题的一种数据结构。定义在其上的两个操作：</p>
-<ul>
-  <li><strong>Find：</strong> 查找节点所属于的集合</li>
-  <li><strong>Union：</strong> 合并两个不相交的集合</li>
-</ul>
-
-<p>典型应用当属 Kruskal 算法，优化方式：</p>
-<ul>
-  <li><strong>路径压缩：</strong> 让查找路径上的所有节点均指向根节点，提高下一次查找效率；</li>
-  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。</li>
-</ul>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">uf</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="n">UnionFind</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">union1</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p><strong>注意：</strong> 刚合并完成时，并不是每个元素都知道自己所在的集合的代表是谁！在使用之前，先要确保所有元素都指向自己所在的集合的代表。</p>
-
-<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//确保所有元素都知道自己所在的集合的代表是谁</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="c1">//统计 uf 中不同元素个数即可知道最终不相交集合个数</span>
-</code></pre></div></div>
-
-<h1 id="封装">封装</h1>
-
-<p>强行封装成泛型，真是瞎玩！！！！！！！！！！！</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Cont</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;</span>
-<span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">Cont</span> <span class="n">uf</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
-    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="n">U</span><span class="o">&amp;</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">key</span> <span class="o">:</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">uf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="k">explicit</span> <span class="nf">UnionFind</span><span class="p">(</span><span class="n">T</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span> <span class="o">=</span> <span class="n">Cont</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">T</span> <span class="n">i</span> <span class="o">=</span> <span class="n">T</span><span class="p">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="n">T</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">union1</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p>示例</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UnionFind</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ufx</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-<span class="n">ufx</span><span class="p">.</span><span class="n">union1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
-<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ufx</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-
-<span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ss</span> <span class="o">=</span> <span class="p">{</span><span class="s">"abc"</span><span class="p">,</span> <span class="s">"xyz"</span><span class="p">};</span>
-<span class="n">UnionFind</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">uf</span><span class="p">(</span><span class="n">ss</span><span class="p">);</span>
-<span class="n">uf</span><span class="p">.</span><span class="n">union1</span><span class="p">(</span><span class="s">"abc"</span><span class="p">,</span> <span class="s">"xyz"</span><span class="p">);</span>
-<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">:</span> <span class="n">ss</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">" : "</span> <span class="o">&lt;&lt;</span> <span class="n">uf</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="集论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/35.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/35.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">基环树（Pseudo Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91-Pseudo-Tree.html" rel="alternate" type="text/html" title="基环树（Pseudo Tree）" /><published>2025-04-05T00:00:00+00:00</published><updated>2025-04-05T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91%EF%BC%88Pseudo%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E5%9F%BA%E7%8E%AF%E6%A0%91-Pseudo-Tree.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<p>“$n$ 个节点 $n$ 条边” 的图不都是基环树！你能想到哪些例子？</p>
-
-<p>基环树长啥样子：一个环 + 多个以环上节点为根节点的子树</p>
-
-<p>基环树通常以一维数组的方式给出。</p>
-
-<h1 id="分类">分类</h1>
-
-<h2 id="基环树">基环树</h2>
-
-<p>基环树：$n$ 个节点 $n$ 条边，无向连通图</p>
-
-<ul>
-  <li>叶子节点：度数均为 1，转移到了代表节点上</li>
-  <li>代表节点：度数大于等于 1</li>
-  <li>其余节点：度数均为 2</li>
-</ul>
-
-<h2 id="内基环树">内基环树</h2>
-
-<p>内基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
-
-<ul>
-  <li>叶子节点：出度为 1，入度为 0，转移到了代表节点上</li>
-  <li>代表节点：出度为 1，入度大于等于 1</li>
-  <li>其余节点：出度为 1，入度为 1</li>
-</ul>
-
-<h2 id="外基环树">外基环树</h2>
-
-<p>外基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
-
-<ul>
-  <li>叶子节点：入度为 1，出度为 0，转移到了代表节点上</li>
-  <li>代表节点：入度为 1，出度大于等于 1</li>
-  <li>其余节点：入度为 1，出度为 1</li>
-</ul>
-
-<h1 id="练习">练习</h1>
-
-<p><a href="https://leetcode.cn/problems/count-visited-nodes-in-a-directed-graph/">2876. 有向图访问计数</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/33.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/33.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">拓扑排序（Topo Sort）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F-Topo-Sort.html" rel="alternate" type="text/html" title="拓扑排序（Topo Sort）" /><published>2025-04-05T00:00:00+00:00</published><updated>2025-04-05T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%EF%BC%88Topo%20Sort%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F-Topo-Sort.html"><![CDATA[<h1 id="拓扑排序">拓扑排序</h1>
-
-<p>在保持依赖关系的前提下，将节点排成一行，也可以看作是图的一种搜索方式。</p>
-
-<p>虽然 DFS（后序遍历 + 反转）、BFS 都可以实现拓扑排序，但实现都不如 kahn 算法优雅，且适用性更广。</p>
-
-<h1 id="kahn-算法">Kahn 算法</h1>
-
-<p>从入度为 0 的节点开始遍历，期间减少相邻节点的入度，并在入度减少为 0 时加入队列 …… 不断重复</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">topo_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">g</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-
-    <span class="c1">//统计入度</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">indeg</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">vs</span> <span class="o">:</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">vs</span><span class="p">)</span> <span class="p">{</span>
-            <span class="o">++</span><span class="n">indeg</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="c1">//保存入度为 0 的顶点</span>
-    <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">que</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">topo</span><span class="p">;</span>
-    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">que</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">que</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
-        <span class="n">que</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-        <span class="n">topo</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">g</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">--</span><span class="n">indeg</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">topo</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>复杂度：</p>
-<ul>
-  <li>时间：$O(E)$</li>
-  <li>空间：$O(V)$</li>
-</ul>
-
-<p>思考 1：拓扑排序结果中未出现的顶点构成环（一个或多个环）</p>
-<ul>
-  <li>多个环如何分开？并查集？</li>
-  <li>当两个环共边时，这种情况没法分开吧？</li>
-</ul>
-
-<p>思考 2：无向图如何拓扑排序，度为 1 的节点，都是叶子节点，可以仿照拓扑排序卡恩算法，从外到内遍历节点</p>
-
-<h1 id="最长路问题">最长路问题</h1>
-
-<p>拓扑排序最长路：按照拓扑序进行搜索，结合动态规划，求解处最长路。</p>
-
-<p>之所以必须按照拓扑序列进行搜索，是保证动态规划的正确性的前提。</p>
-
-<hr />
-
-<p>有向无环图（不带权，起点任意），有向无环图（带权，起点任意），有向无环图（带权，起点固定）</p>
-
-<p>有向无环图：</p>
-<ul>
-  <li>带权：权重可正可负可为零；</li>
-  <li>起点任意：指的是起点可以为任意入度为 0 的节点之一；</li>
-</ul>
-
-<p>有向无环图：</p>
-
-<ul>
-  <li>带权：权重可正可负可为零；</li>
-  <li>起点固定：指的是起点为入度为 0 的节点之一。</li>
-</ul>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="图论" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/34.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/34.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">单例模式（Singleton）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html" rel="alternate" type="text/html" title="单例模式（Singleton）" /><published>2025-04-01T00:00:00+00:00</published><updated>2025-04-01T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Singleton%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="动机">动机</h2>
-
-<p>在软件系统中，存在一种特殊的类，必须保证它们只存在一个实例，才能保证它们的逻辑正确性、良好的效率。</p>
-
-<p>如何绕过常规构造器，提供一种机制来保证一个类只有一个实例？</p>
-
-<p>这是类设计者的责任，而不是使用者的责任。</p>
-
-<h2 id="定义">定义</h2>
-
-<p>保证一个类仅有一个实例，并提供一个该实例的全局访问点。</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/3.png" alt="/assets/content/3.png" /></p>
-
-<h2 id="实现">实现</h2>
-
-<p>实现方式有两种，懒汉模式/饿汉模式</p>
-
-<p>当要求类仅有一个实例化对象时，就需要使用单例模式。</p>
-
-<ul>
-  <li>构造函数、拷贝构造、拷贝赋值、析构函数：私有，防止存在多个对象，单例被意外释放</li>
-  <li>单例：静态，私有，指针形式。</li>
-  <li><code class="language-plaintext highlighter-rouge">get_instance</code>：静态公有，可以返回单例指针，单例引用。</li>
-</ul>
-
-<h1 id="饿汉模式">饿汉模式</h1>
-
-<p>在一开始就进行单例的实例化：也是线程安全的，但当有很多单例，且比较大时，会浪费内存空间。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">*</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">Singleton</span><span class="o">*</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Singleton</span><span class="p">();</span>
-</code></pre></div></div>
-
-<p>最简单模式！！！</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="p">;</span>
-        <span class="k">return</span> <span class="n">singleton</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="c1">// ...</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h1 id="懒汉模式">懒汉模式</h1>
-
-<p>只有用到的时候才进行实例化</p>
-
-<h2 id="baseline">Baseline</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">*</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">Singleton</span><span class="o">*</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>显然以上实现，存在两点问题：</p>
-
-<ul>
-  <li>内存泄露问题：虽然是特殊的内存泄露，程序结束时系统会自动回收，但是泄漏就是泄漏，必须回收</li>
-  <li>不是线程安全的</li>
-</ul>
-
-<h2 id="无脑加锁">无脑加锁</h2>
-
-<p>虽然保证了线程安全，但存在效率问题。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">{</span>
-            <span class="k">static</span> <span class="n">mutex</span> <span class="n">mtx</span><span class="p">;</span>
-            <span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lg</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="p">();</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">*</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">Singleton</span><span class="o">*</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="double-check">Double Check</h2>
-
-<p>主要是为了避免每次调用都加锁的开销，看上去是线程安全的，但实际上不是：内存读写 reorder 会导致线程不安全：</p>
-
-<ul>
-  <li>线程 1 取得互斥锁：new 表达式先申请内存，然后将起始地址赋值给 <code class="language-plaintext highlighter-rouge">_instance</code> ，但是还没有调用构造函数</li>
-  <li>线程 2 检查 <code class="language-plaintext highlighter-rouge">_instance</code> 已经初始化，直接返回，但此时 <code class="language-plaintext highlighter-rouge">_instance</code> 对象还没有构造好呢</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">static</span> <span class="n">mutex</span> <span class="n">mtx</span><span class="p">;</span>
-            <span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lg</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="p">();</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">*</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">Singleton</span><span class="o">*</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="once-init">once init</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">static</span> <span class="n">once_flag</span> <span class="n">flag</span><span class="p">;</span>
-        <span class="n">call_once</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](){</span>
-            <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="p">();</span>
-        <span class="p">});</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">*</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">Singleton</span><span class="o">*</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="内存泄露">内存泄露</h2>
-
-<p>通过智能指针，来自动释放申请的内存空间。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">friend</span> <span class="k">class</span> <span class="nc">default_delete</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">_instance</span> <span class="o">=</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">Singleton</span><span class="p">());</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-<span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="final">final</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">friend</span> <span class="k">class</span> <span class="nc">default_delete</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">get_instance</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">static</span> <span class="n">once_flag</span> <span class="n">flag</span><span class="p">;</span>
-        <span class="n">call_once</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
-            <span class="n">_instance</span> <span class="o">=</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">Singleton</span><span class="p">());</span>
-        <span class="p">});</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="n">Singleton</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Singleton</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span> <span class="n">_instance</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/28.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/28.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="栈队列" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/36.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/36.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
