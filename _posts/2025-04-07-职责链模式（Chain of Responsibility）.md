@@ -1,3 +1,12 @@
+---
+layout: page
+image: /assets/image/45.jpeg
+description: xxxxxxxxxxxxxxxxxx
+author: pk
+title: 职责链模式（Chain of Responsibility）
+categories: [计算机, 设计模式]
+---
+
 # 概述
 
 ## 动机
