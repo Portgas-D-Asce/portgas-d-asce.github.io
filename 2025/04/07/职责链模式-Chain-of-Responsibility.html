@@ -1,0 +1,101 @@
+<h1 id="概述">概述</h1>
+
+<h2 id="动机">动机</h2>
+
+<p>在软件构建过程中，一个请求可能被多个对象处理，但是每个请求在运行时只能有一个接收者，如果显示指定，将必不可少地带来请求发送者与接收者的紧耦合</p>
+
+<p>如何使请求的发送者不需要指定具体的接收者？让请求的接收者自己在运行时决定来处理请求，从而使两者解耦。</p>
+
+<h2 id="定义">定义</h2>
+
+<p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递请求，直到有一个对象处理它为止。</p>
+
+<p>将请求处理者连成一条链，让请求沿着这条链去处理，直到有一个对象处理它为止。</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/12.png" alt="/assets/content/12.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">IHandler</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">IHandler</span><span class="o">*</span> <span class="n">_next</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">IHandler</span><span class="p">(</span><span class="n">IHandler</span><span class="o">*</span> <span class="n">next</span><span class="p">)</span> <span class="o">:</span> <span class="n">_next</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IHandler</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">pred</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">process</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pred</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">deal</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">_next</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Handler1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IHandler</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Handler1</span><span class="p">(</span><span class="n">IHandler</span><span class="o">*</span> <span class="n">next</span><span class="p">)</span> <span class="o">:</span> <span class="n">IHandler</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">bool</span> <span class="nf">pred</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">event</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"event is empty"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Handler2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IHandler</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Handler2</span><span class="p">(</span><span class="n">IHandler</span><span class="o">*</span> <span class="n">next</span><span class="p">)</span> <span class="o">:</span> <span class="n">IHandler</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">bool</span> <span class="n">pred</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">event</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">event</span> <span class="o">&lt;&lt;</span> <span class="s">": small event"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Handler3</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IHandler</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Handler3</span><span class="p">()</span> <span class="o">:</span> <span class="n">IHandler</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">bool</span> <span class="n">pred</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">event</span> <span class="o">&lt;&lt;</span> <span class="s">": big event"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">event1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">event2</span> <span class="o">=</span> <span class="s">"abc"</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">event3</span> <span class="o">=</span> <span class="s">"abcdefgh"</span><span class="p">;</span>
+
+    <span class="n">Handler3</span> <span class="n">handler3</span><span class="p">{};</span>
+    <span class="n">Handler2</span> <span class="nf">handler2</span><span class="p">(</span><span class="o">&amp;</span><span class="n">handler3</span><span class="p">);</span>
+    <span class="n">Handler1</span> <span class="nf">handler1</span><span class="p">(</span><span class="o">&amp;</span><span class="n">handler2</span><span class="p">);</span>
+
+    <span class="n">handler1</span><span class="p">.</span><span class="n">process</span><span class="p">(</span><span class="n">event1</span><span class="p">);</span>
+    <span class="n">handler1</span><span class="p">.</span><span class="n">process</span><span class="p">(</span><span class="n">event2</span><span class="p">);</span>
+    <span class="n">handler1</span><span class="p">.</span><span class="n">process</span><span class="p">(</span><span class="n">event3</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>
