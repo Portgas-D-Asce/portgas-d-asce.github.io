@@ -1,6 +1,6 @@
 ---
 layout: page
-image: /assets/image/45.jpeg
+image: /assets/image/50.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 职责链模式（Chain of Responsibility）

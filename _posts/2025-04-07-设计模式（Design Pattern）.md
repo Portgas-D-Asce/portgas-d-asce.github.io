@@ -1,6 +1,6 @@
 ---
 layout: page
-image: /assets/image/42.jpeg
+image: /assets/image/45.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 设计模式（Design Pattern）

@@ -1,6 +1,6 @@
 ---
 layout: page
-image: /assets/image/46.jpeg
+image: /assets/image/51.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 组合模式（Composite）
