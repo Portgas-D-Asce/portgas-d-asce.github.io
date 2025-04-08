@@ -7,24 +7,24 @@
         <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
         <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
         <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>适配器模式（Adapter） | Portgas·D·Asce’s blog</title>
+<title>扫描线算法 | Portgas·D·Asce’s blog</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="适配器模式（Adapter）" />
+<meta property="og:title" content="扫描线算法" />
 <meta name="author" content="pk" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="xxxxxxxxxxxxxxxxxx" />
 <meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
-<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html" />
-<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html" />
 <meta property="og:site_name" content="Portgas·D·Asce’s blog" />
-<meta property="og:image" content="https://xdevil.top/assets/image/46.jpeg" />
+<meta property="og:image" content="https://xdevil.top/assets/image/44.jpeg" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2025-04-07T00:00:00+00:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://xdevil.top/assets/image/46.jpeg" />
-<meta property="twitter:title" content="适配器模式（Adapter）" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/44.jpeg" />
+<meta property="twitter:title" content="扫描线算法" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-04-07T00:00:00+00:00","datePublished":"2025-04-07T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"适配器模式（Adapter）","image":"https://xdevil.top/assets/image/46.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-04-07T00:00:00+00:00","datePublished":"2025-04-07T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"扫描线算法","image":"https://xdevil.top/assets/image/44.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -45,7 +45,7 @@
         </style>
     
         <div id="header">
-    <div class="fontsz36 font-bold"> 适配器模式（Adapter） </div>
+    <div class="fontsz36 font-bold"> 扫描线算法 </div>
 </div>
 
 <div id="article">
@@ -67,87 +67,66 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="概述">概述</h1>
+</style><h1 id="b-维正交范围">B 维正交范围</h1>
 
-<p>就是把一个东西包装成另外一个东西，使其符合标准或用起来更方便等。典型的就是栈、队列，既可以用数组包装得到，也可以用链表包装得到。</p>
+<p>B 维正交范围指在一个 B 维直角坐标系下，第 $i$ 维坐标在一个整数范围 $[p_i, r_i]$ 间，内部的点集。</p>
 
-<h2 id="动机">动机</h2>
+<ul>
+  <li>零维正交范围可以理解为数？？？？？？</li>
+  <li>一维正交范围是区间</li>
+  <li>二维正交范围是矩形</li>
+  <li>三维正交范围是立方体</li>
+</ul>
 
-<p>由于应该用环境的变化，常常需要将 “一些现存的对象” 放在新的环境中应用，但是新环境要求的接口是这些现存对象所不满足的。</p>
+<p>扫描线算法：通常是扫描某一维，维护剩下维度的性质</p>
 
-<p>如何应对这种 “迁移的变化”？如何既能利用现有对象的良好实现，同时又能满足新的应用环境所要求的接口？</p>
+<ul>
+  <li>一维：扫描某一维度，维护…？？？</li>
+  <li>二维：扫描某一维度，维护剩下一维（多个一维正交范围）的性质</li>
+  <li>三维：扫描某一维度，维护剩下两维（多个二维正交范围）的性质</li>
+</ul>
 
-<h2 id="定义">定义</h2>
+<p>扫描过程：</p>
 
-<p>将一个类的接口转换成客户希望的另一个接口。Adapter 模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+<ul>
+  <li>假设在 $S$ 维进行扫描</li>
+  <li>将所有正交范围的 $p_s$ 和 $r_s$ 从小到大排列，并依次扫描这些位置
+    <ul>
+      <li>位置为 $p$ 表示开始进入某个正交范围</li>
+      <li>位置为 $r$ 表示离开某个正交范围</li>
+      <li>当某个位置既有 $p$ 又有 $r$​ ，需要考虑是先 “进入” 还是先 “离开”</li>
+    </ul>
+  </li>
+</ul>
 
-<h2 id="类图">类图</h2>
+<h1 id="一维正交范围">一维正交范围</h1>
 
-<p><img src="/assets/content/16.png" alt="/assets/content/16.png" /></p>
+<p>给定若干个区间，计算区间的最大重叠度</p>
 
-<h1 id="实现">实现</h1>
+<h2 id="练习">练习</h2>
 
-<p>例子可能不太合适</p>
+<p><a href="https://leetcode.cn/problems/car-pooling/">LeetCode 1094. 拼车</a></p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<p><a href="https://leetcode.cn/problems/describe-the-painting/">LeetCode 1943. 描述绘画结果</a></p>
 
-<span class="k">class</span> <span class="nc">IAdaptee</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IAdaptee</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
+<p><a href="https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/">LeetCode 452. 用最少数量的箭引爆气球</a></p>
 
-<span class="k">class</span> <span class="nc">Adaptee</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IAdaptee</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adaptee func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
+<h1 id="二维正交范围">二维正交范围</h1>
 
-    <span class="kt">void</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adaptee func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
+<h2 id="atlantis-问题">Atlantis 问题</h2>
 
-<span class="k">class</span> <span class="nc">IAdapter</span> <span class="p">{</span>
-<span class="nl">protected:</span>
-    <span class="n">IAdaptee</span><span class="o">*</span> <span class="n">_adaptee</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">IAdapter</span><span class="p">(</span><span class="n">IAdaptee</span><span class="o">*</span> <span class="n">adaptee</span><span class="p">)</span> <span class="o">:</span> <span class="n">_adaptee</span><span class="p">(</span><span class="n">adaptee</span><span class="p">)</span> <span class="p">{}</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">IAdapter</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+<p>在二维坐标系上，给出多个矩形的左下以及右上坐标，求出所有矩形构成的图形的面积</p>
 
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">};</span>
+<h2 id="二维数点">二维数点</h2>
 
-<span class="k">class</span> <span class="nc">Adapter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IAdapter</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">Adapter</span><span class="p">(</span><span class="n">IAdaptee</span><span class="o">*</span> <span class="n">adaptee</span><span class="p">)</span> <span class="o">:</span> <span class="n">IAdapter</span><span class="p">(</span><span class="n">adaptee</span><span class="p">)</span> <span class="p">{}</span>
+<h2 id="练习-1">练习</h2>
 
-    <span class="kt">void</span> <span class="n">process</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Adapter process"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-        <span class="n">_adaptee</span><span class="o">-&gt;</span><span class="n">func1</span><span class="p">();</span>
-        <span class="n">_adaptee</span><span class="o">-&gt;</span><span class="n">func2</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
+<p><a href="https://leetcode.cn/problems/rectangle-area-ii/">LeetCode 850. 矩形面积 II</a></p>
 
+<p><a href="https://leetcode.cn/problems/xepqZ5/">LeetCode LCP 74. 最强祝福力场</a></p>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Adaptee</span> <span class="n">adaptee</span><span class="p">;</span>
-    <span class="n">Adapter</span> <span class="n">adapter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">adaptee</span><span class="p">);</span>
-    <span class="n">adapter</span><span class="p">.</span><span class="n">process</span><span class="p">();</span>
+<h1 id="三维正交范围">三维正交范围</h1>
 
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="应用">应用</h1>
-
-<p>Adapter 模式主要应用于 “希望复用一些现存的类，但是接口又与复用环境要求不一致的情况”，在遗留代码复用，类库迁移等方面非常有用</p>
-
-<p>GoF 23 定义了两种 Adapter 模式的实现结构：对象适配器和类适配器。但类适配器采用 “多继承” 的实现方式，一般不推荐使用。对象适配器采用 “对象组合” 的方式，更符合松耦合精神。</p>
-
-<p>Adapter 模式可以实现得非常灵活，不必拘泥上面定义的两种结构</p>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
