@@ -1,10 +1,11 @@
 ---
 layout: page
-tags: 数据结构与算法
+tags: 数组
 image: /assets/image/6.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: ST 表（Sparse Table）
+categories: [计算机, 数据结构与算法]
 ---
 
 # 概述

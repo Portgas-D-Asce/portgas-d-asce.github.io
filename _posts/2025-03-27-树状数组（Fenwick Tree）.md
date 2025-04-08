@@ -1,10 +1,11 @@
 ---
 layout: page
-tags: 数据结构与算法
+tags: 数组
 image: /assets/image/5.jpeg
 description: xxxxxxxxxxxxxxxxxx
 author: pk
 title: 树状数组（Fenwick Tree）
+categories: [计算机, 数据结构与算法]
 ---
 
 # 原数组 & 前缀和数组 & 差分数组
