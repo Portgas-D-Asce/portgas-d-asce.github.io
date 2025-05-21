@@ -558,3 +558,7 @@ tree
 
 ### Netlify
 [Netilify](https://app.netlify.com/)
+
+# Bug
+
+categories: [计算机, cpp] 不要用大写英文否则会 404
