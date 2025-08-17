@@ -556,6 +556,54 @@ tree
 
 [Vercel](https://vercel.com/)
 
+New Project:
+- Importing from GitHub: 用户名/仓库名/分支
+- Vercel Team：xxxx
+- Project Name：仓库名
+- Framework Preset：Other
+- Root Directory: ./
+
+Project Settings:
+- Environments: Production
+- Branch Tracking: master 更新之后会自动部署生产环境
+
+Deployments: master 分支更新后可以看到新增了一条部署记录
+
+---
+部署以上内容就够了，以下仅记录踩的一些坑！！！
+
+VERCEL_TOKEN：Account Settings -> Tokens -> Create Token
+- TOKEN NAME：名称
+- SCOPE：projects_xxx
+- EXPIRATION： 永不过期
+
+Vercel_Project_ID：工程页面可以看到 prj_xxx
+
+Vercel_ORG_ID: `curl -X GET "https://api.vercel.com/v2/teams" -H "Authorization: Bearer VERCEL_TOKEN"`
+
+```bash
+# jekyll
+
+- name: Deploy to Vercel
+  uses: amondnet/vercel-action@v20
+  with:
+    vercel-token: ${{ secrets.VERCEL_TOKEN }}
+    vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+    vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+
+- name: Install Vercel CLI
+  run: npm install -g vercel@latest
+- name: Deploy to Production
+  run: |
+    vercel deploy --prod \
+      --token=${{ secrets.VERCEL_TOKEN }} \
+      --yes
+  env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+```
+
 ### Netlify
 [Netilify](https://app.netlify.com/)
 
