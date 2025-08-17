@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>抽象工厂模式（Abstract Factory） | Portgas·D·Asce’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="抽象工厂模式（Abstract Factory）" />
+<meta name="author" content="pk" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxxxxxxxxxxxxxx" />
+<meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html" />
+<meta property="og:site_name" content="Portgas·D·Asce’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/27.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-04-01T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/27.jpeg" />
+<meta property="twitter:title" content="抽象工厂模式（Abstract Factory）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-04-01T00:00:00+00:00","datePublished":"2025-04-01T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"抽象工厂模式（Abstract Factory）","image":"https://xdevil.top/assets/image/27.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 抽象工厂模式（Abstract Factory） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="概述">概述</h1>
+
+<h2 id="动机">动机</h2>
+
+<p>在软件系统中，经常面临着“一系列相互依赖的对象”的创建工 作;同时，由于需求的变化，往往存在更多系列对象的创建工作。</p>
+
+<p>如何应对这种变化?如何绕过常规的对象创建方法(new)，提供一 种“封装机制”来避免客户程序和这种“多系列具体对象创建工作” 的紧耦合?</p>
+
+<h2 id="定义">定义</h2>
+
+<p>提供一个接口，让该接口负责创建一系列“相关或者相互依赖的对象”，无需指定它们具体的类</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/5.png" alt="/assets/content/5.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">// 产品 A 工厂模式</span>
+<span class="k">class</span> <span class="nc">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">IFactoryA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactoryA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FactoryProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FactoryProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA2</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="c1">// 产品 B 工厂模式</span>
+<span class="k">class</span> <span class="nc">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">IFactoryB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactoryB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FactoryProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FactoryProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactoryB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductB</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB2</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 生产一个产品 a 和一个产品 b</span>
+<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IFactoryA</span><span class="o">*</span> <span class="n">fa</span><span class="p">,</span> <span class="n">IFactoryB</span><span class="o">*</span> <span class="n">fb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">fa</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
+    <span class="n">a</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
+
+    <span class="n">IProductB</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">fb</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">();</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">IFactoryA</span><span class="o">*</span> <span class="n">fa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactoryProductA1</span><span class="p">();</span>
+    <span class="n">IFactoryB</span><span class="o">*</span> <span class="n">fb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactoryProductB2</span><span class="p">();</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">fa</span><span class="p">,</span> <span class="n">fb</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>涉及两个产品，分别用工厂模式创建出它们，没有问题。但有时会有一种情况：</p>
+
+<ul>
+  <li>FactoryProductA1 和 FactoryProductB1 是 Factory1 的生产线</li>
+  <li>FactoryProductA2 和 FactoryProductB2 是 Factory2 的生产线</li>
+  <li>A、B 两个产品需要搭配使用，但最好是同一家公司的产品，也就是不允许 ProductA1 和 ProductB2 （ProductA2 和 ProductB1）搭配使用</li>
+  <li>此时该怎么办？？？？</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductA</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductA2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductA</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductA2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IProductB</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductB1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ProductB2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IProductB</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ProductB2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 抽象工厂</span>
+<span class="k">class</span> <span class="nc">IFactory</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IFactory</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">IProductB</span><span class="o">*</span> <span class="n">create_b</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Factory1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">IProductB</span><span class="o">*</span> <span class="nf">create_b</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Factory2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IFactory</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">create_a</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductA2</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">IProductB</span><span class="o">*</span> <span class="nf">create_b</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ProductB2</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 生产一个产品 a 和一个产品 b</span>
+<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">IFactory</span><span class="o">*</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">IProductA</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">create_a</span><span class="p">();</span>
+    <span class="n">a</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
+
+    <span class="n">IProductB</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">create_b</span><span class="p">();</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">IFactory</span><span class="o">*</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Factory2</span><span class="p">();</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>此时 test 创建出的搭配只有 ProductA1、ProductB1 和 ProductA2、ProductB2 两种情况。</p>
+
+<p>工厂模式和抽象工厂模式的区别：</p>
+
+<ul>
+  <li>工厂模式用于创建单个产品（苹果手机、小米手机）</li>
+  <li>抽象工厂模式用于创建某个系列的所有产品（苹果系列：iphone、mac、iwatch、ipods）</li>
+</ul>
+
+<h1 id="应用">应用</h1>
+
+<p>如果没有应对“多系列对象构建”的需求变化，则没有必要使用 Abstract Factory模式，这时候使用简单的工厂完全可以。</p>
+
+<p>“系列对象”指的是在某一特定系列下的对象之间有相互依赖、 或作用的关系。不同系列的对象之间不能相互依赖。</p>
+
+<p>Abstract Factory模式主要在于应对“新系列”的需求变动。其缺 点在于难以应对“新对象”的需求变动</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Portgas·D·Asce </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包-->
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

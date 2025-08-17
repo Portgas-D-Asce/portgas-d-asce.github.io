@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>高精度运算 | Portgas·D·Asce’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="高精度运算" />
+<meta name="author" content="pk" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxxxxxxxxxxxxxx" />
+<meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/28/%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%BF%90%E7%AE%97.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/28/%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%BF%90%E7%AE%97.html" />
+<meta property="og:site_name" content="Portgas·D·Asce’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/8.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-03-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/8.jpeg" />
+<meta property="twitter:title" content="高精度运算" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-28T00:00:00+00:00","datePublished":"2025-03-28T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"高精度运算","image":"https://xdevil.top/assets/image/8.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/28/%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%BF%90%E7%AE%97.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/03/28/%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%BF%90%E7%AE%97.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 高精度运算 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="大数相加">大数相加</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">string</span> <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//短字符串补零</span>
+    <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">t1</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">s1</span> <span class="o">:</span> <span class="n">s2</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">s2</span> <span class="o">:</span> <span class="n">s1</span><span class="p">;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">t1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>  <span class="o">-</span> <span class="n">t2</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="sc">'0'</span><span class="p">)</span> <span class="o">+</span> <span class="n">t2</span><span class="p">;</span>
+
+    <span class="c1">//相加</span>
+    <span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">carry</span> <span class="o">+=</span> <span class="n">t1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span> <span class="o">+</span> <span class="n">t2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">t2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">+</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">carry</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//进位（0 或 1）</span>
+    <span class="k">return</span> <span class="n">carry</span> <span class="o">?</span> <span class="s">"1"</span> <span class="o">+</span> <span class="n">t2</span> <span class="o">:</span> <span class="n">t2</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="大数相乘">大数相乘</h1>
+
+<p>同大数相加一样，大数相乘也是模拟竖式实现的：</p>
+<ul>
+  <li>长度分别为 $m$, $n$ 的两个数，它们乘积的位数不会超过 $m + n$，于是可以申请一个长度为 $m + n$ 的字符串来存储乘积；</li>
+  <li>第一个数的第 $i$ 位 和 第二个数的第 $j$ 位，所乘的结果应存放在乘积数组的第 $i + j + 1$ 位（0 indexed）；</li>
+</ul>
+
+<p>为了直观感受第二点内容，这里以 $123456 * 123$ 为例来模拟一下：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//注释表示索引</span>
+
+<span class="c1">//      0 1 2 3 4 5</span>
+        <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span>
+<span class="c1">//            0 1 2</span>
+              <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span>
+<span class="o">-------------------</span>
+        <span class="mi">3</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">8</span>
+      <span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">9</span> <span class="mi">1</span> <span class="mi">2</span>
+    <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span>
+<span class="o">-------------------</span>
+    <span class="mi">1</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">5</span> <span class="mi">0</span> <span class="mi">8</span> <span class="mi">8</span>
+<span class="c1">//0 1 2 3 4 5 6 7 8</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">string</span> <span class="nf">multiply</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">s1</span> <span class="o">==</span> <span class="s">"0"</span> <span class="o">||</span> <span class="n">s2</span> <span class="o">==</span> <span class="s">"0"</span><span class="p">)</span> <span class="k">return</span> <span class="s">"0"</span><span class="p">;</span>
+
+    <span class="c1">//初始化</span>
+    <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s2</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">string</span> <span class="n">mul</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="sc">'0'</span><span class="p">);</span>
+
+    <span class="c1">//相乘</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">s1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+            <span class="c1">//原位置 + 乘积 + 进位</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">mul</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+            <span class="n">mul</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">+</span> <span class="sc">'0'</span><span class="p">;</span>
+            <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">//进位（不大于9）别忘了</span>
+        <span class="n">mul</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span> <span class="o">+</span> <span class="sc">'0'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//乘积的位数 &lt;= m + n</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">mul</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="sc">'0'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">mul</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="大数相除和取余">大数相除和取余</h1>
+
+<h2 id="整体思路">整体思路</h2>
+
+<p>除法过程：这里以 被除数为 987654321，除数为 123 为例。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       _0_0_8_0__________
+1 2 3 / 9 8 7 6 5 4 3 2 1
+       _9_8_4__
+            3 6    
+</code></pre></div></div>
+<p>模拟过程：</p>
+<ul>
+  <li>从被除数中拿出 9，发现 9 &lt; 123，商 0，余 9；</li>
+  <li>从被除数中拿出 8，与之前的余数 9 构成 98，发现 98 &lt; 123，商 0，余 98；</li>
+  <li>从被除数中拿出 7，与之前的余数 98 构成 987，发现 987 &gt;= 123，那么商 几，余 几 呢？
+    <ul>
+      <li>理论上，应该是按 “试乘” 的办法来计算商 几 余 几 的；</li>
+      <li>为了计算方便，不断的从余数（987）中减去除数（123）直到余数小于除数，以这种方式来计算商 几 余 几；减了几次就商 几，最后剩余 几 就余 几；</li>
+      <li>这里商 987 / 123 = 8 余 987 % 123 = 3；</li>
+    </ul>
+  </li>
+  <li>从被除数中拿出 6，与之前的余数 3 构成 36，发现 36 &lt; 123，商 0，余 36；</li>
+  <li>…</li>
+</ul>
+
+<p>结果处理：</p>
+<ul>
+  <li>得到的 商 去掉前导零，就是 两数相除 的结果；</li>
+  <li>得到的 余数 去掉前导零，就是 两数取余 的结果；</li>
+</ul>
+
+<h2 id="实现">实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">// 比较两个数大小：</span>
+<span class="c1">// a == b，返回 0；</span>
+<span class="c1">// a &lt; b，返回 -1； </span>
+<span class="c1">// a &gt; b，返回 1；</span>
+<span class="kt">int</span> <span class="nf">comp</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">||</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">))</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//只处理 a &gt;= b 的情况，即：comp(a, b) != -1</span>
+<span class="c1">//模拟从 余数 里面减去一次 除数 的过程</span>
+<span class="c1">//a 是余数，b 是除数</span>
+<span class="kt">void</span> <span class="nf">subtract</span><span class="p">(</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">m</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+    <span class="c1">//计算 a - b</span>
+    <span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">);</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">+</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">--</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="c1">//余数 a 原来是 987 最后变成了 003（同 3.1 模拟过程），需要去掉前导零</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="sc">'0'</span><span class="p">);</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="s">""</span> <span class="o">:</span> <span class="n">a</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">//只处理 a &gt;= b 的情况，即：comp(a, b != -1)</span>
+<span class="c1">//a 为被除数，b 为除数</span>
+<span class="c1">//模拟除法过程，商的结果保存在 quo 中，余数的结果保存在 rem 中（两者均以引用的方式传出）</span>
+<span class="kt">void</span> <span class="nf">simulate</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">rem</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">quo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">m</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">rem</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+        <span class="c1">//若没有, 10000 / 1 会出现bug</span>
+        <span class="c1">//如果不清空，会对判断大小造成干扰</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">rem</span> <span class="o">==</span> <span class="s">"0"</span><span class="p">)</span> <span class="n">rem</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+        
+        <span class="c1">//以减法方式，计算 “商几余几”，这里是 “商 temp 余 rem”</span>
+        <span class="kt">char</span> <span class="n">temp</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">comp</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">subtract</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+            <span class="o">++</span><span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">quo</span> <span class="o">+=</span> <span class="n">temp</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//去掉两数相除结果的前导零</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">quo</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="sc">'0'</span><span class="p">);</span>
+    <span class="n">quo</span> <span class="o">=</span> <span class="n">quo</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+
+    <span class="c1">//去掉两数取余结果的前导零</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">rem</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="sc">'0'</span><span class="p">);</span>
+    <span class="n">rem</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="s">"0"</span> <span class="o">:</span> <span class="n">rem</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//两数相除</span>
+<span class="n">string</span> <span class="nf">divide</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//若 a &lt; b，直接返回零</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">comp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="s">"0"</span><span class="p">;</span>
+
+    <span class="c1">//处理 a &gt;= b 的情况</span>
+    <span class="n">string</span> <span class="n">rem</span><span class="p">,</span> <span class="n">quo</span><span class="p">;</span>
+    <span class="n">simulate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">rem</span><span class="p">,</span> <span class="n">quo</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">quo</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//两数取余</span>
+<span class="n">string</span> <span class="nf">mod</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//若 a &lt; b，直接返回 a</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">comp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+
+    <span class="c1">//处理 a &gt;= b 的情况</span>
+    <span class="n">string</span> <span class="n">rem</span><span class="p">,</span> <span class="n">quo</span><span class="p">;</span>
+    <span class="n">simulate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">rem</span><span class="p">,</span> <span class="n">quo</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">rem</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="s">"0"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"divided by zero!"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">string</span> <span class="n">quo</span> <span class="o">=</span> <span class="n">divide</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s">" / "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">quo</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">string</span> <span class="n">rem</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s">" % "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">rem</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="练习">练习</h1>
+
+<ul>
+  <li><a href="https://leetcode.com/problems/multiply-strings/">LeetCode 43. Multiply Strings</a></li>
+  <li><a href="https://leetcode.com/problems/add-strings/">LeetCode 415. Add Strings</a></li>
+</ul>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Portgas·D·Asce </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包-->
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

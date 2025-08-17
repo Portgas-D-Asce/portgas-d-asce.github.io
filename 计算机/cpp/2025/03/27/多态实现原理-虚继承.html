@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>多态实现原理（虚继承） | Portgas·D·Asce’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="多态实现原理（虚继承）" />
+<meta name="author" content="pk" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxxxxxxxxxxxxxx" />
+<meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<meta property="og:site_name" content="Portgas·D·Asce’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/2.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-03-27T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/2.jpeg" />
+<meta property="twitter:title" content="多态实现原理（虚继承）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-27T00:00:00+00:00","datePublished":"2025-03-27T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"多态实现原理（虚继承）","image":"https://xdevil.top/assets/image/2.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E8%99%9A%E7%BB%A7%E6%89%BF.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 多态实现原理（虚继承） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>了解以上概念后，非虚继承场景基本就够了。虚继承场景更为复杂，需要了解更多的东西。</p>
+
+<p>为了支持虚继承，编译器做了一些修改，并添加了一些新的东西</p>
+
+<h1 id="虚表变化">虚表变化</h1>
+
+<p>以下为虚继承情况下的虚表结构，主要有两点变化：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">base-offset</code>：直接 （Base2，Base3）或间接（Derive）继承了虚基类的类，虚表头部都额外添加了一个到虚基类对象的偏移量</li>
+  <li>虚基类的派生类中关于虚基类的虚表有点奇怪</li>
+</ul>
+
+<pre><code class="language-assembly">vtable for Derive:
+    .quad   40				; base-offset
+    .quad   0				; top-offset
+    .quad   typeinfo for Derive
+    .quad   Base2::yyy()
+    .quad   Derive::~Derive() [complete object destructor]
+    .quad   Derive::~Derive() [deleting destructor]
+    .quad   24				; base-offset
+    .quad   -16				; top-offset
+    .quad   typeinfo for Derive
+    .quad   non-virtual thunk to Derive::~Derive() [complete object destructor]
+    .quad   non-virtual thunk to Derive::~Derive() [deleting destructor]
+    .quad   -40				; yyy call-offset
+    .quad   -40				; complete &amp; deleting call-offset
+    .quad   0				; ddd call-offset
+    .quad   0				; www call-offset
+    .quad   0				; zzz call-offset
+    .quad   0				; xxx call-offset
+    .quad   -40				; top-offset
+    .quad   typeinfo for Derive
+    .quad   Base::xxx()
+    .quad   Base::zzz()
+    .quad   Base::www()
+    .quad   Base::ddd()
+    .quad   virtual thunk to Derive::~Derive() [complete object destructor]
+    .quad   virtual thunk to Derive::~Derive() [deleting destructor]
+    .quad   virtual thunk to Base2::yyy()
+vtable for Base2:
+    .quad   16
+    .quad   0
+    .quad   typeinfo for Base2
+    .quad   Base2::yyy()
+    .quad   Base2::~Base2() [complete object destructor]
+    .quad   Base2::~Base2() [deleting destructor]
+    .quad   -16
+    .quad   -16
+    .quad   0
+    .quad   0
+    .quad   0
+    .quad   0
+    .quad   -16
+    .quad   typeinfo for Base2
+    .quad   Base::xxx()
+    .quad   Base::zzz()
+    .quad   Base::www()
+    .quad   Base::ddd()
+    .quad   virtual thunk to Base2::~Base2() [complete object destructor]
+    .quad   virtual thunk to Base2::~Base2() [deleting destructor]
+    .quad   virtual thunk to Base2::yyy()
+</code></pre>
+
+<h2 id="析构函数">析构函数</h2>
+
+<p>在虚继承场景中，complete object destructor != base object destructor，可以这么区分</p>
+
+<ul>
+  <li>负责释放虚基类资源的就是 complete object destructor</li>
+  <li>不负责释放虚基类资源的就是 base object destructor</li>
+</ul>
+
+<p>deleting object destructor 与非虚继承场景一致。</p>
+
+<h3 id="base-object-destructor">base object destructor</h3>
+
+<p><strong>虚继承场景只执行本类析构函数，不会调用基类的析构函数</strong></p>
+
+<pre><code class="language-assembly">Base3::~Base3() [base object destructor]:
+    ...
+    # 执行本类析构函数
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    ...
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    # 没有调用基类的析构函数
+    nop
+    leave
+</code></pre>
+
+<h3 id="complete-object-destructor">complete object destructor</h3>
+
+<p>在大多数场景下，base object destructor 都工作得很好，但在特殊场景下就 hold 不住了。此时就要采取特殊的析构方式 complete object destructor，除了 base object destructor 的基本操作外，还会执行一些额外的操作，最终来完成内存释放任务。</p>
+
+<ul>
+  <li>执行本类析构函数 <code class="language-plaintext highlighter-rouge">Derived::~Derived()</code> 中内容</li>
+  <li>
+    <p>调用基类 base object destructor 析构函数 <code class="language-plaintext highlighter-rouge">Base3::~Base3()</code> <code class="language-plaintext highlighter-rouge">Base2::~Base2()</code></p>
+  </li>
+  <li>调用虚基类的 base object destructor 析构函数 <code class="language-plaintext highlighter-rouge">Base::~Base()</code></li>
+</ul>
+
+<pre><code class="language-assembly">Derived::~Derived() [complete object destructor]:
+    ...
+    # 当前类析构函数中内容
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    ...
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    ...
+    # 调用基类析构
+    call    Base3::~Base3() [base object destructor]
+    ...
+    call    Base2::~Base2() [base object destructor]
+    ...
+    # 调用虚基类析构
+    call    Base::~Base() [base object destructor]
+</code></pre>
+
+<h2 id="virtual-thunk">virtual thunk</h2>
+
+<p>non-virtual thunk 指的是非虚继承，virtual thunk 指的是虚继承</p>
+
+<ul>
+  <li><strong>两者都是先偏移 this 指针，然后跳转到重写函数</strong></li>
+  <li><strong>只不过偏移 this 指针的方式不同而已</strong></li>
+</ul>
+
+<p>虚基类指针的多态使用的是 virtual thunk 实现的，其指令如下：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">rdi</code> 中保存的是 this 指针</li>
+  <li><code class="language-plaintext highlighter-rouge">mov     r10, QWORD PTR [rdi]</code>：从前 8 个字节获取到虚表地址，放到 <code class="language-plaintext highlighter-rouge">r10</code> 中</li>
+  <li><code class="language-plaintext highlighter-rouge">add     rdi, QWORD PTR [r10-56]</code>：获取 <code class="language-plaintext highlighter-rouge">deleting destructor</code> 的 <code class="language-plaintext highlighter-rouge">call-offset</code>，并对 this 指针进行偏移</li>
+  <li><code class="language-plaintext highlighter-rouge">jmp     .LTHUNK7</code>：跳转到 <code class="language-plaintext highlighter-rouge">Derive::~Derive() [deleting destructor]</code></li>
+</ul>
+
+<pre><code class="language-assembly">virtual thunk to Derive::~Derive() [deleting destructor]:
+    mov     r10, QWORD PTR [rdi]
+    add     rdi, QWORD PTR [r10-56]
+    jmp     .LTHUNK7
+</code></pre>
+
+<blockquote>
+  <p>non-virtural thunk 是根据 top-offset 偏移 this 指针的，virtual thunk 为什么不能根据 top-offset 来偏移 this 指针，非要对每一个虚函数搞出一个 call-offset 出来，这样做有什么意义？？？？</p>
+</blockquote>
+
+<h1 id="vtt">VTT</h1>
+
+<p>虚表的表：一个表，表里面的每个元素都指向一个虚表</p>
+
+<p>相当于把一个类的所有虚表集合起来，用的时候会方便点而已？？？</p>
+
+<h1 id="_ztc">_ZTC</h1>
+
+<p>构造虚表，重新构造出来的表</p>
+
+<blockquote>
+  <p>重新构建虚表的原因是什么，为什么之前的虚表为什么不能再用了？？？？？？？</p>
+
+</blockquote>
+
+<blockquote>
+  <p>重新构建的虚表与之前虚表都有哪些地方不同？</p>
+
+  <ul>
+    <li>call-offset ？？？</li>
+    <li>destructor 为什么都设置为 0 了？？？？</li>
+  </ul>
+</blockquote>
+
+<p>不同的对象用不同的虚表</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">a = new Derive()</code> 这种方式产生的对象使用 <code class="language-plaintext highlighter-rouge">Derive</code> 的虚表</li>
+  <li><code class="language-plaintext highlighter-rouge">new Base2()</code> 这种方式产生的对象使用 <code class="language-plaintext highlighter-rouge">Base2</code> 的虚表，<code class="language-plaintext highlighter-rouge">a</code> 里面也有一个 <code class="language-plaintext highlighter-rouge">Base2</code> 对象，两者一样吗？不一样！所以要用不同的虚表。</li>
+  <li><code class="language-plaintext highlighter-rouge">new Base3()</code> 这种方式产生的对象使用 <code class="language-plaintext highlighter-rouge">Base3</code> 的虚表，<code class="language-plaintext highlighter-rouge">a</code> 里面也有一个 <code class="language-plaintext highlighter-rouge">Base3</code> 对象，两者一样吗？不一样！所以要用不同的虚表。</li>
+</ul>
+
+<h1 id="对象内存布局">对象内存布局</h1>
+
+<p>虚继承 Base、Base2、Base3、Derive 类</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Base 非虚</span>
+base2 vptr
+base2 data
+base3 vptr
+base3 data
+derived data
+base data
+<span class="c"># Base 包含虚函数</span>
+base2 vptr
+base2 data
+base3 vptr
+base3 data
+derived data
+base vptrnn
+base data
+</code></pre></div></div>
+
+<h1 id="多态触发过程">多态触发过程</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base_data</span> <span class="o">=</span> <span class="mh">0x11</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Base2</span> <span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base2</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base2_data</span> <span class="o">=</span> <span class="mh">0x21</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Base3</span> <span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base3</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base2_data</span> <span class="o">=</span> <span class="mh">0x31</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Derive</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base2</span><span class="p">,</span> <span class="k">public</span> <span class="n">Base3</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Derive</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_derive_data</span> <span class="o">=</span> <span class="mh">0x41</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Base</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Derive</span><span class="p">();</span>
+    <span class="k">delete</span> <span class="n">b</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<pre><code class="language-assembly">vtable for Derive:
+    .quad   40
+    .quad   0
+    .quad   typeinfo for Derive
+    .quad   Derive::~Derive() [complete object destructor]
+    .quad   Derive::~Derive() [deleting destructor]
+    .quad   24
+    .quad   -16
+    .quad   typeinfo for Derive
+    .quad   non-virtual thunk to Derive::~Derive() [complete object destructor]
+    .quad   non-virtual thunk to Derive::~Derive() [deleting destructor]
+    .quad   -40
+    .quad   -40
+    .quad   typeinfo for Derive
+    .quad   virtual thunk to Derive::~Derive() [complete object destructor]
+    .quad   virtual thunk to Derive::~Derive() [deleting destructor]
+VTT for Derive:
+    .quad   vtable for Derive+24
+    .quad   construction vtable for Base2-in-Derive+24
+    .quad   construction vtable for Base2-in-Derive+64
+    .quad   construction vtable for Base3-in-Derive+24
+    .quad   construction vtable for Base3-in-Derive+64
+    .quad   vtable for Derive+104
+    .quad   vtable for Derive+64
+construction vtable for Base2-in-Derive:
+    .quad   40
+    .quad   0
+    .quad   typeinfo for Base2
+    .quad   0
+    .quad   0
+    .quad   -40
+    .quad   -40
+    .quad   typeinfo for Base2
+    .quad   0
+    .quad   0
+construction vtable for Base3-in-Derive:
+    .quad   24
+    .quad   0
+    .quad   typeinfo for Base3
+    .quad   0
+    .quad   0
+    .quad   -24
+    .quad   -24
+    .quad   typeinfo for Base3
+    .quad   0
+    .quad   0
+vtable for Base:
+    .quad   0
+    .quad   typeinfo for Base
+    .quad   Base::~Base() [complete object destructor]
+    .quad   Base::~Base() [deleting destructor]
+typeinfo for Derive:
+    .quad   vtable for __cxxabiv1::__vmi_class_type_info+16
+    .quad   typeinfo name for Derive
+    .long   2
+    .long   2
+    .quad   typeinfo for Base2
+    .quad   2
+    .quad   typeinfo for Base3
+    .quad   4098
+typeinfo name for Derive:
+    .string "6Derive"
+typeinfo for Base3:
+    .quad   vtable for __cxxabiv1::__vmi_class_type_info+16
+    .quad   typeinfo name for Base3
+    .long   0
+    .long   1
+    .quad   typeinfo for Base
+    .quad   -6141
+typeinfo name for Base3:
+    .string "5Base3"
+typeinfo for Base2:
+    .quad   vtable for __cxxabiv1::__vmi_class_type_info+16
+    .quad   typeinfo name for Base2
+    .long   0
+    .long   1
+    .quad   typeinfo for Base
+    .quad   -6141
+typeinfo name for Base2:
+    .string "5Base2"
+typeinfo for Base:
+    .quad   vtable for __cxxabiv1::__class_type_info+16
+    .quad   typeinfo name for Base
+typeinfo name for Base:
+    .string "4Base"
+</code></pre>
+
+<pre><code class="language-assembly">.L13:
+    mov     QWORD PTR [rbp-24], rax
+    mov     rax, QWORD PTR [rbp-24]
+    test    rax, rax
+    je      .L14					; "this" in rax and point to Base ject
+    mov     rdx, QWORD PTR [rax]	; get virtual table from vptr, and store in rdx
+    add     rdx, 8					; move rdx to deleting object destructor
+    mov     rdx, QWORD PTR [rdx]	; rdx is virtual thunk to Derive::~Derive() [deleting destructor]
+    mov     rdi, rax				; store "this" in rdi
+    call    rdx						; exec virtual thunk
+</code></pre>
+
+<pre><code class="language-assembly">virtual thunk to Derive::~Derive() [deleting destructor]:
+    mov     r10, QWORD PTR [rdi]	; get vtable from "this" and store in r10
+    add     rdi, QWORD PTR [r10-24]	; get call-offset at r10-24 and move "this"
+    								; "this" point to Derive object
+    jmp     .LTHUNK6
+</code></pre>
+
+<pre><code class="language-assembly">Derive::~Derive() [deleting destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi	; backup "this" at rbp-8
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax				; "this" not changed
+    call    Derive::~Derive() [complete object destructor]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     esi, 56					; sizeof(Derive) is 56
+    mov     rdi, rax				; "this" point to Derive object as before
+    call    operator delete(void*, unsigned long)
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Derive::~Derive() [complete object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi					; backup "this" at rbp-8
+    
+    mov     edx, OFFSET FLAT:vtable for Derive+24	; update vptr.Base2
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    
+    mov     rax, QWORD PTR [rbp-8]					; update vptr.Base
+    add     rax, 40
+    mov     edx, OFFSET FLAT:vtable for Derive+104
+    mov     QWORD PTR [rax], rdx
+    
+    mov     edx, OFFSET FLAT:vtable for Derive+64	; update vptr.Base3
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax+16], rdx
+    
+    mov     esi, OFFSET FLAT:.LC2
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    
+    mov     rax, QWORD PTR [rbp-8]					; get "this"
+    add     rax, 16									; move "this" to Base3 object
+    
+    mov     edx, OFFSET FLAT:VTT for Derive+24		; store construction vtable Base3-in-Derive in rsi
+    mov     rsi, rdx
+    mov     rdi, rax
+    call    Base3::~Base3() [base object destructor]
+    
+    mov     rax, QWORD PTR [rbp-8]					; get "this" and it also point to Base2 object
+    mov     edx, OFFSET FLAT:VTT for Derive+8		; store construction vtable Base2-in-Derive in rsi
+    mov     rsi, rdx
+    mov     rdi, rax
+    call    Base2::~Base2() [base object destructor]
+    
+    mov     rax, QWORD PTR [rbp-8]					; get "this"
+    add     rax, 40									; move to Base
+    mov     rdi, rax
+    call    Base::~Base() [base object destructor]
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base3::~Base3() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     QWORD PTR [rbp-16], rsi
+    mov     rax, QWORD PTR [rbp-16]
+    mov     rdx, QWORD PTR [rax]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rax, QWORD PTR [rax]
+    sub     rax, 24
+    mov     rax, QWORD PTR [rax]
+    mov     rdx, rax
+    mov     rax, QWORD PTR [rbp-8]
+    add     rdx, rax
+    mov     rax, QWORD PTR [rbp-16]
+    mov     rax, QWORD PTR [rax+8]
+    mov     QWORD PTR [rdx], rax
+    mov     esi, OFFSET FLAT:.LC2
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base2::~Base2() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     QWORD PTR [rbp-16], rsi
+    mov     rax, QWORD PTR [rbp-16]
+    mov     rdx, QWORD PTR [rax]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rax, QWORD PTR [rax]
+    sub     rax, 24
+    mov     rax, QWORD PTR [rax]
+    mov     rdx, rax
+    mov     rax, QWORD PTR [rbp-8]
+    add     rdx, rax
+    mov     rax, QWORD PTR [rbp-16]
+    mov     rax, QWORD PTR [rax+8]
+    mov     QWORD PTR [rdx], rax
+    mov     esi, OFFSET FLAT:.LC1
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base::~Base() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     esi, OFFSET FLAT:.LC0
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    nop
+    leave
+    ret
+</code></pre>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Portgas·D·Asce </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包-->
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>多态实现原理（非虚继承） | Portgas·D·Asce’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="多态实现原理（非虚继承）" />
+<meta name="author" content="pk" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxxxxxxxxxxxxxx" />
+<meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html" />
+<meta property="og:site_name" content="Portgas·D·Asce’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/1.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-03-27T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/1.jpeg" />
+<meta property="twitter:title" content="多态实现原理（非虚继承）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"pk"},"dateModified":"2025-03-27T00:00:00+00:00","datePublished":"2025-03-27T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"多态实现原理（非虚继承）","image":"https://xdevil.top/assets/image/1.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/03/27/%E5%A4%9A%E6%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E9%9D%9E%E8%99%9A%E7%BB%A7%E6%89%BF.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 多态实现原理（非虚继承） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="虚函数">虚函数</h1>
+
+<h2 id="虚函数-1">虚函数</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"virtual func"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="纯虚函数">纯虚函数</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>纯虚函数：</p>
+<ul>
+  <li>纯虚函数就是只有声明，没有定义的虚函数；以“=0”结尾；</li>
+  <li>纯虚函数的目的就是：提供一个统一的接口（也可以说是：为所有继承它的类制定统一标准）；</li>
+  <li>与虚函数不同，无法直接调用纯虚函数，必须通过多态的形式对其进行调用；</li>
+</ul>
+
+<p>纯虚函数存在的意义</p>
+<ul>
+  <li>制定标准
+    <ul>
+      <li>纯虚函数是为程序制定一种标准，只要你继承了它，就必须按照它的标准来，实现它的所有的方法，否则你也是虚拟的；</li>
+      <li>制定标准是为了让所有实现它或继承自它的派生类类全部按同一标准来工作，从而使程序更加通用化，提高程序的可重用性；</li>
+    </ul>
+  </li>
+  <li>在很多情况下，基类本身生成对象是不合情理的。例如，动物作为一个基类可以派生出老虎、孔雀等子类，但动物本身生成对象明显不合常理；</li>
+  <li>父类中存在纯虚函数，子类中重写（override）该函数，可实现多态；</li>
+</ul>
+
+<h2 id="抽象类">抽象类</h2>
+<p>包含纯虚函数的类叫做抽象类，抽象类无法进行实例化。</p>
+
+<p>必须在派生类中对抽象类中的所有纯虚函数进行重写，否则该类也是一个抽象类。</p>
+
+<h1 id="gdb-调试">GDB 调试</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">Base1</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::func1()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">func2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::func2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base1::~base1()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">b1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Base2</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func3</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::func3()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">func4</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::func4()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"base2::~base2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">b2</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="k">class</span> <span class="nc">Derive</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base1</span><span class="p">,</span> <span class="k">public</span> <span class="n">Base2</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func1()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">func2</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func2()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">func3</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func3()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">func5</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func5()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">func6</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::func6()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Derive</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"derive::~derive()"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Base1</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">Base2</span> <span class="n">b</span><span class="p">;</span>
+
+    <span class="n">Derive</span> <span class="n">c</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="__class_type_info">__class_type_info</h2>
+
+<p>首先看下这几个东西：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">__cxxabiv1::__class_type_info</code></li>
+  <li><code class="language-plaintext highlighter-rouge">__cxxabiv1::__class_type_info@@CXXABI_1.3</code></li>
+  <li><code class="language-plaintext highlighter-rouge">__cxxabiv1::__vmi_class_type_info</code></li>
+  <li><code class="language-plaintext highlighter-rouge">__cxxabiv1::__vmi_class_type_info@@CXXABI_1.3</code></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># (gdb) info variables</span>
+...
+0x000000000041fd18  vtable <span class="k">for </span>__cxxabiv1::__class_type_info
+0x000000000041fd18  vtable <span class="k">for </span>__cxxabiv1::__class_type_info@@CXXABI_1.3
+0x000000000041fd70  vtable <span class="k">for </span>__cxxabiv1::__vmi_class_type_info
+0x000000000041fd70  vtable <span class="k">for </span>__cxxabiv1::__vmi_class_type_info@@CXXABI_1.3
+...
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>gdb<span class="o">)</span> x/50xg 0x000000000041fd18
+0x41fd18 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3&gt;:   0x0000000000000000      0x0000fffff7fafb50
+0x41fd28 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3+16&gt;:        0x0000fffff7ea9110      0x0000fffff7ea9128
+0x41fd38 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3+32&gt;:        0x0000fffff7eabdf0      0x0000fffff7eabdf0
+0x41fd48 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3+48&gt;:        0x0000fffff7ea9290      0x0000fffff7ea9070
+0x41fd58 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3+64&gt;:        0x0000fffff7ea9228      0x0000fffff7ea9150
+0x41fd68 &lt;_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3+80&gt;:        0x0000fffff7ea9100      0x0000000000000000
+0x41fd78 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+8&gt;:     0x0000fffff7fb0800      0x0000fffff7eac5f0
+0x41fd88 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+24&gt;:    0x0000fffff7eac608      0x0000fffff7eabdf0
+0x41fd98 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+40&gt;:    0x0000fffff7eabdf0      0x0000fffff7ea9290
+0x41fda8 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+56&gt;:    0x0000fffff7ea9070      0x0000fffff7eaccd0
+0x41fdb8 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+72&gt;:    0x0000fffff7eac750      0x0000fffff7eac630
+<span class="o">(</span>gdb<span class="o">)</span> x/50xg 0x000000000041fd70
+0x41fd70 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3&gt;:       0x0000000000000000      0x0000fffff7fb0800
+0x41fd80 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+16&gt;:    0x0000fffff7eac5f0      0x0000fffff7eac608
+0x41fd90 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+32&gt;:    0x0000fffff7eabdf0      0x0000fffff7eabdf0
+0x41fda0 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+48&gt;:    0x0000fffff7ea9290      0x0000fffff7ea9070
+0x41fdb0 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+64&gt;:    0x0000fffff7eaccd0      0x0000fffff7eac750
+0x41fdc0 &lt;_ZTVN10__cxxabiv121__vmi_class_type_infoE@@CXXABI_1.3+80&gt;:    0x0000fffff7eac630      0x0000000000000001
+</code></pre></div></div>
+
+<h2 id="结构信息">结构信息</h2>
+
+<p>编译器为类创建了一些结构信息：虚表、类型信息、 类名等。</p>
+
+<h3 id="存储位置">存储位置</h3>
+
+<p>结构信息的存储位置</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># (gdb) info variables</span>
+...
+0x00000000004010e0  vtable <span class="k">for </span>Derive
+0x0000000000401158  vtable <span class="k">for </span>Base2
+0x0000000000401188  vtable <span class="k">for </span>Base1
+0x00000000004011b8  typeinfo <span class="k">for </span>Derive
+0x00000000004011f0  typeinfo name <span class="k">for </span>Derive
+0x00000000004011f8  typeinfo <span class="k">for </span>Base2
+0x0000000000401208  typeinfo name <span class="k">for </span>Base2
+0x0000000000401210  typeinfo <span class="k">for </span>Base1
+0x0000000000401220  typeinfo name <span class="k">for </span>Base1
+...
+</code></pre></div></div>
+
+<h3 id="存储结构">存储结构</h3>
+
+<p>结构信息的整体布局</p>
+
+<ul>
+  <li>_ZTV6Derive，_ZTV5Base2，_ZTV5Base1</li>
+  <li>_ZTI6Derive，_ZTS6Derive</li>
+  <li>_ZTI5Base2，_ZTS5Base2</li>
+  <li>_ZTI5Base1，_ZTS5Base1</li>
+</ul>
+
+<blockquote>
+  <p>_ZTV、_ZTI、_ZTS 前缀的含义？</p>
+
+  <ul>
+    <li>_ZTV：保存着类的虚表（type-virtual）</li>
+    <li>_ZTI：保存着类的类型结构（type-info）</li>
+    <li>_ZTS：存储着类的名字（type-string）</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>_ZTV6Derive+16 的含义？</p>
+
+  <ul>
+    <li>_ZTV：表示虚表</li>
+    <li>6：表示类名的长度</li>
+    <li>Derive：类名</li>
+    <li>+16：表示地址偏移量</li>
+  </ul>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>gdb<span class="o">)</span> x/45xg 0x00000000004010e0
+0x4010e0 &lt;_ZTV6Derive&gt;: 0x0000000000000000      0x00000000004011b8
+0x4010f0 &lt;_ZTV6Derive+16&gt;:      0x0000000000400d30      0x0000000000400b80
+0x401100 &lt;_ZTV6Derive+32&gt;:      0x0000000000400e38      0x0000000000400eb4
+0x401110 &lt;_ZTV6Derive+48&gt;:      0x0000000000400d70      0x0000000000400db8
+0x401120 &lt;_ZTV6Derive+64&gt;:      0x0000000000400df8      0xfffffffffffffff0
+0x401130 &lt;_ZTV6Derive+80&gt;:      0x00000000004011b8      0x0000000000400db0
+0x401140 &lt;_ZTV6Derive+96&gt;:      0x0000000000400c78      0x0000000000400eac
+0x401150 &lt;_ZTV6Derive+112&gt;:     0x0000000000400edc      0x0000000000000000
+0x401160 &lt;_ZTV5Base2+8&gt;:        0x00000000004011f8      0x0000000000400c38
+0x401170 &lt;_ZTV5Base2+24&gt;:       0x0000000000400c78      0x0000000000400cb8
+0x401180 &lt;_ZTV5Base2+40&gt;:       0x0000000000400d08      0x0000000000000000
+0x401190 &lt;_ZTV5Base1+8&gt;:        0x0000000000401210      0x0000000000400b40
+0x4011a0 &lt;_ZTV5Base1+24&gt;:       0x0000000000400b80      0x0000000000400bc0
+0x4011b0 &lt;_ZTV5Base1+40&gt;:       0x0000000000400c10      0x000000000041fd80
+0x4011c0 &lt;_ZTI6Derive+8&gt;:       0x00000000004011f0      0x0000000200000000
+0x4011d0 &lt;_ZTI6Derive+24&gt;:      0x0000000000401210      0x0000000000000002
+0x4011e0 &lt;_ZTI6Derive+40&gt;:      0x00000000004011f8      0x0000000000001002
+0x4011f0 &lt;_ZTS6Derive&gt;: 0x0065766972654436      0x000000000041fd28
+0x401200 &lt;_ZTI5Base2+8&gt;:        0x0000000000401208      0x0000326573614235
+0x401210 &lt;_ZTI5Base1&gt;:  0x000000000041fd28      0x0000000000401220
+0x401220 &lt;_ZTS5Base1&gt;:  0x0000316573614235      0x000000f43b031b01
+<span class="o">(</span>gdb<span class="o">)</span> print <span class="o">(</span>char <span class="k">*</span><span class="o">)</span>0x4011f0
+<span class="nv">$2</span> <span class="o">=</span> 0x4011f0 &lt;typeinfo name <span class="k">for </span>Derive&gt; <span class="s2">"6Derive"</span>
+<span class="o">(</span>gdb<span class="o">)</span> print <span class="o">(</span>char <span class="k">*</span><span class="o">)</span>0x401208
+<span class="nv">$3</span> <span class="o">=</span> 0x401208 &lt;typeinfo name <span class="k">for </span>Base2&gt; <span class="s2">"5Base2"</span>
+<span class="o">(</span>gdb<span class="o">)</span> print <span class="o">(</span>char <span class="k">*</span><span class="o">)</span>0x401220
+<span class="nv">$4</span> <span class="o">=</span> 0x401220 &lt;typeinfo name <span class="k">for </span>Base1&gt; <span class="s2">"5Base1"</span>
+<span class="o">(</span>gdb<span class="o">)</span> info vtbl a
+vtable <span class="k">for</span> <span class="s1">'Base1'</span> @ 0x401198 <span class="o">(</span>subobject @ 0xfffffffffb20<span class="o">)</span>:
+<span class="o">[</span>0]: 0x400b40 &lt;Base1::func1<span class="o">()&gt;</span>
+<span class="o">[</span>1]: 0x400b80 &lt;Base1::func2<span class="o">()&gt;</span>
+<span class="o">(</span>gdb<span class="o">)</span> info vtbl b
+vtable <span class="k">for</span> <span class="s1">'Base2'</span> @ 0x401168 <span class="o">(</span>subobject @ 0xfffffffffb10<span class="o">)</span>:
+<span class="o">[</span>0]: 0x400c38 &lt;Base2::func3<span class="o">()&gt;</span>
+<span class="o">[</span>1]: 0x400c78 &lt;Base2::func4<span class="o">()&gt;</span>
+<span class="o">(</span>gdb<span class="o">)</span> info vtbl c
+vtable <span class="k">for</span> <span class="s1">'Derive'</span> @ 0x4010f0 <span class="o">(</span>subobject @ 0xfffffffffaf0<span class="o">)</span>:
+<span class="o">[</span>0]: 0x400d30 &lt;Derive::func1<span class="o">()&gt;</span>
+<span class="o">[</span>1]: 0x400b80 &lt;Base1::func2<span class="o">()&gt;</span>
+<span class="o">[</span>2]: 0x400e38 &lt;Derive::~Derive<span class="o">()&gt;</span>
+<span class="o">[</span>3]: 0x400eb4 &lt;Derive::~Derive<span class="o">()&gt;</span>
+<span class="o">[</span>4]: 0x400d70 &lt;Derive::func3<span class="o">()&gt;</span>
+<span class="o">[</span>5]: 0x400db8 &lt;Derive::func5<span class="o">()&gt;</span>
+<span class="o">[</span>6]: 0x400df8 &lt;Derive::func6<span class="o">()&gt;</span>
+
+vtable <span class="k">for</span> <span class="s1">'Base2'</span> @ 0x401138 <span class="o">(</span>subobject @ 0xfffffffffb00<span class="o">)</span>:
+<span class="o">[</span>0]: 0x400db0 &lt;non-virtual thunk to Derive::func3<span class="o">()&gt;</span>
+<span class="o">[</span>1]: 0x400c78 &lt;Base2::func4<span class="o">()&gt;</span>
+
+<span class="o">(</span>gdb<span class="o">)</span> x/xg 0x0000000000400db0
+0x400db0 &lt;_ZThn16_N6Derive5func3Ev&gt;:    0x17ffffefd1004000
+<span class="o">(</span>gdb<span class="o">)</span> x/xg 0x0000000000400eac
+0x400eac &lt;_ZThn16_N6DeriveD1Ev&gt;:        0x17ffffe2d1004000
+<span class="o">(</span>gdb<span class="o">)</span> x/xg 0x0000000000400edc
+0x400edc &lt;_ZThn16_N6DeriveD0Ev&gt;:        0x17fffff5d1004000
+
+<span class="o">(</span>gdb<span class="o">)</span> disas 0x0000000000400db0
+Dump of assembler code <span class="k">for function </span>_ZThn16_N6Derive5func3Ev:
+   0x0000000000400db0 &lt;+0&gt;:     sub     x0, x0, <span class="c">#0x10</span>
+   0x0000000000400db4 &lt;+4&gt;:     b       0x400d70 &lt;Derive::func3<span class="o">()&gt;</span>
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> disas 0x0000000000400eac
+Dump of assembler code <span class="k">for function </span>_ZThn16_N6DeriveD1Ev:
+   0x0000000000400eac &lt;+0&gt;:     sub     x0, x0, <span class="c">#0x10</span>
+   0x0000000000400eb0 &lt;+4&gt;:     b       0x400e38 &lt;Derive::~Derive<span class="o">()&gt;</span>
+End of assembler dump.
+<span class="o">(</span>gdb<span class="o">)</span> disas 0x0000000000400edc
+Dump of assembler code <span class="k">for function </span>_ZThn16_N6DeriveD0Ev:
+   0x0000000000400edc &lt;+0&gt;:     sub     x0, x0, <span class="c">#0x10</span>
+   0x0000000000400ee0 &lt;+4&gt;:     b       0x400eb4 &lt;Derive::~Derive<span class="o">()&gt;</span>
+End of assembler dump.
+</code></pre></div></div>
+
+<h1 id="virtual-table">Virtual Table</h1>
+
+<h2 id="虚表结构">虚表结构</h2>
+
+<p>虚表部分 _ZTV 开头，多继承会导致有多块虚表，每块虚表以一个 16 字节的头部开始</p>
+
+<ul>
+  <li>
+    <p>虚表1</p>
+
+    <ul>
+      <li>
+        <p>头部前 8 个字节：top offset，通常为 0；虚指针地址 + 偏移量 = 对象首地址</p>
+      </li>
+      <li>
+        <p>头部后 8 字节：指向当前类的 type-info 地址（_ZTI）</p>
+      </li>
+      <li>
+        <p>内容：虚函数指针1、虚函数指针2 … 虚函数指针 n</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>虚表2</p>
+
+    <ul>
+      <li>
+        <p>头部前 8 个字节：top offset 0xfffffffffffffff0 = -16 虚指针地址 + 偏移量 = 对象首地址</p>
+      </li>
+      <li>头部后 8 字节：指向当前类的 type-info 地址（_ZTI）</li>
+      <li>内容：虚函数指针1、虚函数指针2 … 虚函数指针 n</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="non-virtual-thunk">non-virtual thunk</h2>
+
+<p><code class="language-plaintext highlighter-rouge">[0]: 0x400db0 &lt;non-virtual thunk to Derive::func3()&gt;</code>、<code class="language-plaintext highlighter-rouge">0x400eac</code>、 <code class="language-plaintext highlighter-rouge">0x400edc</code> 这几处内存比较奇怪，存储的好像并非某个虚函数的指针，查看内存信息如下：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">0x400db0 &lt;_ZThn16_N6Derive5func3Ev&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">0x400eac &lt;_ZThn16_N6DeriveD1Ev&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">0x400edc &lt;_ZThn16_N6DeriveD0Ev&gt;</code></li>
+</ul>
+
+<p>是的，这些内存保存的不是虚函数指针，而是 8 字节的指令，反汇编之后发现有两条命令：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">0x0000000000400db0 &lt;+0&gt;:     sub     x0, x0, #0x10</code>：偏移基类 this 指针，使其指向派生类的 this 指针</li>
+  <li><code class="language-plaintext highlighter-rouge">0x0000000000400db4 &lt;+4&gt;:     b       0x400d70 &lt;Derive::func3()&gt;</code>：跳转到派生类的重写函数上去</li>
+</ul>
+
+<p>通过上面两条指令可以引导执行派生类中的虚函数，这也就是所谓的  <code class="language-plaintext highlighter-rouge">non-virtual thunk</code> 技术。</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Base1 *p1 = new Derive();</code> 和 <code class="language-plaintext highlighter-rouge">Base2 *p2 = new Derive();</code> 两个指针分别指向什么位置？</p>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">p1</code> 指向 <code class="language-plaintext highlighter-rouge">Derive::_vptr.Base1</code> ，与对象的起始地址是一样的，也就是偏移量为 0</li>
+    <li><code class="language-plaintext highlighter-rouge">p2</code> 指向 <code class="language-plaintext highlighter-rouge">Derive::_vptr.Base2</code>，与对象的起始地址不同，偏移量 16 保存在虚表首部</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>派生类的虚表是如何排放的，这么放置有什么优点？</p>
+
+  <ul>
+    <li>由基类的虚表按顺序堆叠而成</li>
+    <li>派生类新添加的虚函数指针会追加在第一个虚表后面</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>为什么不在内存位置直接存放派生类虚函数地址，而是存放 thunk 指令？</p>
+
+  <ul>
+    <li>主要目的是为了更新 this 指针</li>
+    <li>试想 <code class="language-plaintext highlighter-rouge">Derive::func3</code> 内调用了某个非虚成员函数 <code class="language-plaintext highlighter-rouge">Derive::xxx</code>
+      <ul>
+        <li>如果 this 指针不更新，基类的指针压根就找不到这个函数，会导致调用失败</li>
+        <li>this 指针更新为派生类指针，调用就完全没有问题</li>
+      </ul>
+    </li>
+  </ul>
+</blockquote>
+
+<h2 id="虚析构函数">虚析构函数</h2>
+
+<p>注意：在非虚继承场景中，complete object destructor == base object destructor</p>
+
+<p>虚表里面有两个析构函数有点奇怪：</p>
+
+<ul>
+  <li>第一个 <code class="language-plaintext highlighter-rouge">[2]: 0x400f64 &lt;Derive::~Derive()&gt;</code> 是 complete object destructor 析构函数</li>
+  <li>第二个 <code class="language-plaintext highlighter-rouge">[3]: 0x400fe0 &lt;Derive::~Derive()&gt;</code> 是 deleting object destructor 析构函数</li>
+</ul>
+
+<h3 id="base-object-destructor">base object destructor</h3>
+
+<p>通常情况下负责：</p>
+
+<ul>
+  <li>执行本类析构函数 <code class="language-plaintext highlighter-rouge">Derived::~Derived()</code> 中内容</li>
+  <li>调用基类 base object destructor 析构函数 <code class="language-plaintext highlighter-rouge">Base3::~Base3()</code> <code class="language-plaintext highlighter-rouge">Base2::~Base2()</code></li>
+</ul>
+
+<pre><code class="language-assembly">Derived::~Derived() [base object destructor]:
+    ...
+    # 执行析构函数中内容
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;&amp; std::operator&lt;&lt;...
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt; &gt;::operator&lt;&lt;...
+    ...
+    # 调用基类析构函数 base object destructor
+    call    Base3::~Base3() [base object destructor]
+    call    Base2::~Base2() [base object destructor]
+</code></pre>
+
+<h3 id="deleting-object-destructor">deleting object destructor</h3>
+
+<p>当释放对象时，会从类的 deleting object destructor 析构函数入口，基类/成员对象属性的释放不会执行，永远只负责两块内容：</p>
+
+<ul>
+  <li>调用当前类的 base object destructor 或 complete object destructor 触发析构链</li>
+  <li>执行 <code class="language-plaintext highlighter-rouge">operator delete()</code> 释放对象内存空间</li>
+</ul>
+
+<pre><code class="language-assembly">Derived::~Derived() [deleting destructor]:
+    ...
+    # 调用析构函数
+    # 实际上调用的是 base object destructor
+    call    Derived::~Derived() [complete object destructor]
+    ...
+    # 释放对象内存空间
+    call    operator delete(void*, unsigned long)
+</code></pre>
+
+<h1 id="type-info">type-info</h1>
+
+<p>type-info，_ZTI 结构</p>
+
+<ul>
+  <li>前 8 个字节：指向 <code class="language-plaintext highlighter-rouge">__cxxabiv1::__class_type_info</code> 或 <code class="language-plaintext highlighter-rouge">__cxxabiv1::__vmi_class_type_info</code></li>
+  <li>剩余条目：
+    <ul>
+      <li>首条目：指向当前类的类名（_ZTS）+ ？？？？</li>
+      <li>第一个条目：成员对象 1 的 type-info + ？？？</li>
+      <li>…</li>
+      <li>第 n 个条目：成员对象 n 的 type-info + ？？？</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>每个条目的后 8 个字节是什么意思？？？？？？？？</p>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">0x4012f0 &lt;_ZTI6Derive+8&gt;:       0x0000000000401320      0x0000000200000000</code></li>
+    <li><code class="language-plaintext highlighter-rouge">0x401300 &lt;_ZTI6Derive+24&gt;:      0x0000000000401340      0x0000000000000002</code></li>
+    <li><code class="language-plaintext highlighter-rouge">0x401310 &lt;_ZTI6Derive+40&gt;:      0x0000000000401328      0x0000000000001002</code></li>
+  </ul>
+</blockquote>
+
+<h1 id="type-string">type-string</h1>
+
+<p>_ZTS 保存的是类的名字</p>
+
+<h1 id="对象内存布局">对象内存布局</h1>
+
+<p>单继承 Base、Derive 类</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base vptr
+base data
+derived data
+</code></pre></div></div>
+
+<p>多继承 Base1、Base2、Derive 类</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base1 vptr
+base1 data
+base2 vptr
+base2 data
+derived data
+</code></pre></div></div>
+
+<p>菱形继承Base、Base2、Base3、Derive 类</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Base 非虚, Base2、Base3 包含虚函数</span>
+base2 vptr
+base data
+base2 data
+base3 vptr
+base data
+base3 data
+derived data
+<span class="c"># Base 包含虚函数</span>
+base vptr
+base data
+base2 data
+base vptr
+base data
+base3 data
+derived data
+</code></pre></div></div>
+
+<h1 id="构造与析构">构造与析构</h1>
+
+<p>base object destructor</p>
+
+<p>complete object destructor</p>
+
+<p>deleting object  destructor</p>
+
+<p>base object constructor</p>
+
+<p>complete object constructor</p>
+
+<p>没有与 deleting object  destructor 对应的 destructor，是直接展开的</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mov</span>     <span class="n">edi</span><span class="p">,</span> <span class="mi">56</span>
+<span class="n">call</span>    <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span>
+<span class="n">mov</span>     <span class="n">rbx</span><span class="p">,</span> <span class="n">rax</span>
+<span class="n">pxor</span>    <span class="n">xmm0</span><span class="p">,</span> <span class="n">xmm0</span>
+<span class="n">movups</span>  <span class="n">XMMWORD</span> <span class="n">PTR</span> <span class="p">[</span><span class="n">rbx</span><span class="p">],</span> <span class="n">xmm0</span>
+<span class="n">movups</span>  <span class="n">XMMWORD</span> <span class="n">PTR</span> <span class="p">[</span><span class="n">rbx</span><span class="o">+</span><span class="mi">16</span><span class="p">],</span> <span class="n">xmm0</span>
+<span class="n">movups</span>  <span class="n">XMMWORD</span> <span class="n">PTR</span> <span class="p">[</span><span class="n">rbx</span><span class="o">+</span><span class="mi">32</span><span class="p">],</span> <span class="n">xmm0</span>
+<span class="n">movq</span>    <span class="n">QWORD</span> <span class="n">PTR</span> <span class="p">[</span><span class="n">rbx</span><span class="o">+</span><span class="mi">48</span><span class="p">],</span> <span class="n">xmm0</span>
+<span class="n">mov</span>     <span class="n">rdi</span><span class="p">,</span> <span class="n">rbx</span>
+<span class="n">call</span>    <span class="n">Derive</span><span class="o">::</span><span class="n">Derive</span><span class="p">()</span> <span class="p">[</span><span class="n">complete</span> <span class="n">object</span> <span class="n">constructor</span><span class="p">]</span>
+<span class="n">mov</span>     <span class="n">QWORD</span> <span class="n">PTR</span> <span class="p">[</span><span class="n">rbp</span><span class="o">-</span><span class="mi">24</span><span class="p">],</span> <span class="n">rbx</span>
+</code></pre></div></div>
+
+<h1 id="多态调用过程">多态调用过程</h1>
+
+<p>构造函数除了构造对象外，还需要设置构造出来的对象指向正确的虚表</p>
+
+<p>析构函数在执行前，会恢复对象的虚表</p>
+
+<p>this 指针的偏移也是重头戏！！！！</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base_data</span> <span class="o">=</span> <span class="mh">0x11</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Base2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base2</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base2_data</span> <span class="o">=</span> <span class="mh">0x21</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Base3</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base3</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_base2_data</span> <span class="o">=</span> <span class="mh">0x31</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Derive</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base2</span><span class="p">,</span> <span class="k">public</span> <span class="n">Base3</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Derive</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FUNCTION__</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">m_derive_data</span> <span class="o">=</span> <span class="mh">0x41</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Base3</span> <span class="o">*</span><span class="n">b3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Derive</span><span class="p">();</span>
+    <span class="k">delete</span> <span class="n">b3</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<pre><code class="language-assembly">vtable for Derive:
+    .quad   0
+    .quad   typeinfo for Derive
+    .quad   Derive::~Derive() [complete object destructor]
+    .quad   Derive::~Derive() [deleting destructor]
+    .quad   -24
+    .quad   typeinfo for Derive
+    .quad   non-virtual thunk to Derive::~Derive() [complete object destructor]
+    .quad   non-virtual thunk to Derive::~Derive() [deleting destructor]
+vtable for Base3:
+    .quad   0
+    .quad   typeinfo for Base3
+    .quad   Base3::~Base3() [complete object destructor]
+    .quad   Base3::~Base3() [deleting destructor]
+vtable for Base2:
+    .quad   0
+    .quad   typeinfo for Base2
+    .quad   Base2::~Base2() [complete object destructor]
+    .quad   Base2::~Base2() [deleting destructor]
+vtable for Base:
+    .quad   0
+    .quad   typeinfo for Base
+    .quad   Base::~Base() [complete object destructor]
+    .quad   Base::~Base() [deleting destructor]
+typeinfo for Derive:
+    .quad   vtable for __cxxabiv1::__vmi_class_type_info+16
+    .quad   typeinfo name for Derive
+    .long   1
+    .long   2
+    .quad   typeinfo for Base2
+    .quad   2
+    .quad   typeinfo for Base3
+    .quad   6146
+typeinfo name for Derive:
+    .string "6Derive"
+typeinfo for Base3:
+    .quad   vtable for __cxxabiv1::__si_class_type_info+16
+    .quad   typeinfo name for Base3
+    .quad   typeinfo for Base
+typeinfo name for Base3:
+    .string "5Base3"
+typeinfo for Base2:
+    .quad   vtable for __cxxabiv1::__si_class_type_info+16
+    .quad   typeinfo name for Base2
+    .quad   typeinfo for Base
+typeinfo name for Base2:
+    .string "5Base2"
+typeinfo for Base:
+    .quad   vtable for __cxxabiv1::__class_type_info+16
+    .quad   typeinfo name for Base
+typeinfo name for Base:
+    .string "4Base"
+</code></pre>
+
+<p>执行 <code class="language-plaintext highlighter-rouge">Base3 deleting destructor</code></p>
+
+<pre><code class="language-assembly">.L15:
+    mov     QWORD PTR [rbp-24], rax
+    mov     rax, QWORD PTR [rbp-24]
+    test    rax, rax
+    je      .L16
+    mov     rdx, QWORD PTR [rax]
+    add     rdx, 8
+    mov     rdx, QWORD PTR [rdx]
+    mov     rdi, rax
+    call    rdx
+</code></pre>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">Base2 b2 = new Derive()</code> 时，不涉及 non-virtual thunk</p>
+
+<pre><code class="language-assembly">non-virtual thunk to Derive::~Derive() [deleting destructor]:
+    sub     rdi, 24
+    jmp     .LTHUNK1
+</code></pre>
+
+<pre><code class="language-assembly">Derive::~Derive() [deleting destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    Derive::~Derive() [complete object destructor]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     esi, 56
+    mov     rdi, rax
+    call    operator delete(void*, unsigned long)
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Derive::~Derive() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Derive+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     edx, OFFSET FLAT:vtable for Derive+48
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax+24], rdx
+    mov     esi, OFFSET FLAT:.LC3
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     rax, QWORD PTR [rbp-8]
+    add     rax, 24
+    mov     rdi, rax
+    call    Base3::~Base3() [base object destructor]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    Base2::~Base2() [base object destructor]
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base3::~Base3() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base3+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     esi, OFFSET FLAT:.LC2
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    Base::~Base() [base object destructor]
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base2::~Base2() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base2+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     esi, OFFSET FLAT:.LC1
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    Base::~Base() [base object destructor]
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base::~Base() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     esi, OFFSET FLAT:.LC0
+    mov     edi, OFFSET FLAT:_ZSt4cout
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    mov     esi, OFFSET FLAT:_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    mov     rdi, rax
+    call    std::basic_ostream&lt;char, std::char_traits&lt;char&gt;...
+    nop
+    leave
+    ret
+</code></pre>
+
+<h1 id="多态触发">多态触发</h1>
+
+<h2 id="构造--析构">构造 &amp; 析构</h2>
+
+<p>构造函数、析构函数中不会触发多态！！！</p>
+
+<ul>
+  <li>
+    <p>无论是构造函数，还是析构函数，第一件做的事都是修改虚指针！</p>
+  </li>
+  <li>
+    <p>遇到虚函数，不会根据虚指针查虚表（自己刚设置，查什么查），直接根据偏移量执行函数</p>
+  </li>
+</ul>
+
+<p>虚表指针只会在构造和析构的过程中修改。</p>
+
+<p>虚指针是如何一步步构造起来的，又是如何销毁的。</p>
+
+<pre><code class="language-assembly">; cons 会导致汇编代码不正常显示？
+Base::Base() [base object ctor]:
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    Base::func()
+    nop
+    leave
+    ret
+</code></pre>
+
+<pre><code class="language-assembly">Base::~Base() [base object destructor]:
+    push    rbp
+    mov     rbp, rsp
+    mov     QWORD PTR [rbp-8], rdi
+    mov     edx, OFFSET FLAT:vtable for Base+16
+    mov     rax, QWORD PTR [rbp-8]
+    mov     QWORD PTR [rax], rdx
+    nop
+    pop     rbp
+    ret
+</code></pre>
+
+<blockquote>
+  <p>构造函数不能触发多态：这 一似 乎 反 直 觉 的 行 为 有 个 好 理 由 。 由 于 b a s e c l a s s 构 造 函 数 的 执 行 更 早 于 d e r i v e d c l a s s 构 造 函 数 ，当 b a s e c l a s s 构 造 函 数 执 行 时 d e r i v e d c l a s s 的 成 员 变 量 尚 未 初 始化。如果此期间调用的virtual 函数下降至derivedclasses阶层，要知道derivedclass 的函数几乎必然取用local 成员变量，而那些成员变量尚未初始化。这将是 一张通往 不明确行为和彻夜调试大会串的直达车票。“要求使用对象内部尚未初始化的成分” 是危险的代名词，所以C++ 不让你走这条路</p>
+
+  <p>析构函数不能触发多态：也类似，当析构基类对象时，派生类部分已经销毁了</p>
+</blockquote>
+
+<h2 id="普通成员函数">普通成员函数</h2>
+
+<p>普通成员函数调用是会触发多态的！！！</p>
+
+<ul>
+  <li>普通成员函数中是不会动虚表指针的</li>
+</ul>
+
+<pre><code class="language-assembly">Base::func():
+    push    rbp
+    mov     rbp, rsp
+    sub     rsp, 16
+    mov     QWORD PTR [rbp-8], rdi
+
+    mov     rax, QWORD PTR [rbp-8]			;触发多态
+    mov     rax, QWORD PTR [rax]
+    add     rax, 8
+    mov     rdx, QWORD PTR [rax]
+    mov     rax, QWORD PTR [rbp-8]
+    mov     rdi, rax
+    call    rdx
+    nop
+    leave
+    ret
+</code></pre>
+
+<h2 id="练习">练习</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span> <span class="n">xxx</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">xxx</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Base::xxx"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Base</span><span class="p">()</span> <span class="p">{</span> <span class="n">func</span><span class="p">();</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Derive</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">xxx</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Derive::xxx"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Base</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Derive</span><span class="p">();</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">func</span><span class="p">();</span>		<span class="c1">//Derive::xxx</span>
+    <span class="k">delete</span> <span class="n">b</span><span class="p">;</span>		<span class="c1">//Base::xxx，析构函数修改虚指针了</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="问题">问题</h1>
+
+<blockquote>
+  <p>构造函数可以为虚函数吗？</p>
+
+  <ul>
+    <li>不可以，基类构造函数执行的时候，派生类部分还没有进行初始化</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>静态成员函数可以为虚函数吗？</p>
+
+  <ul>
+    <li>不可以，静态成员函数没有 this 指针，自然也就找不到虚指针，也就找不到虚表了。</li>
+  </ul>
+</blockquote>
+
+<h1 id="参考">参考</h1>
+
+<p><a href="https://zhuanlan.zhihu.com/p/90726313">gdb分析C++对象内存布局(一)</a></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/90770282">gdb分析C++对象内存布局(二)</a></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/652005053">深入探索 C++ 多态 ① - 虚函数调用链路</a></p>
+
+<p><a href="https://www.zhihu.com/question/528374835">C++进行虚继承时为什么要新建虚函数表？</a></p>
+
+<p><a href="https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class">What is the VTT for a class?</a></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/190169823">第17篇:C++继承中虚表的内存布局</a></p>
+
+<p><a href="https://www.cnblogs.com/yang5sui/p/16873947.html">gdb获取C++类成员函数地址</a></p>
+
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQyMDE2OQ==&amp;mid=2247484793&amp;idx=1&amp;sn=2426cf693ca1b00ace99888e08939b7e&amp;chksm=ead014dfdda79dc9a800e1de2404d94914b6f11d14739877c0a6c3197a16a0b196817b69e6a5&amp;scene=21#wechat_redirect">C++底层原理探究（C++对象模型一）</a></p>
+
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQyMDE2OQ==&amp;mid=2247484831&amp;idx=1&amp;sn=e6390784fa4aa2e6c0fb82063d8c6536&amp;chksm=ead01439dda79d2feeee684026bb773c68460d74b3f447a0b13289f1066b5c69cfb4479a2ae7&amp;scene=21#wechat_redirect">C++底层原理探究（C++对象模型二）</a></p>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Portgas·D·Asce </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包-->
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

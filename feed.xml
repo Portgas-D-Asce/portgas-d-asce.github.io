@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-17T09:46:27+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Portgas·D·Asce’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Portgas·D·Asce</name><email>Portgas·D·Asce@gmail.com</email></author><entry><title type="html">变参函数</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0.html" rel="alternate" type="text/html" title="变参函数" /><published>2025-05-17T00:00:00+00:00</published><updated>2025-05-17T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0.html"><![CDATA[<h1 id="初识变参函数">初识变参函数</h1>
+<p>变参函数基本内容：</p>
+<ul>
+  <li>就是那个参数列表中有 … （即，<strong>变参列表</strong>）的函数；</li>
+  <li>变参函数的 <strong>参数个数</strong> 和 <strong>参数类型</strong> 都是不固定的，但它必须包含一个 <strong>固定参数</strong>；</li>
+</ul>
+
+<p>以下为一个变参函数原型示例：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">super_add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="简单变参函数实现">简单变参函数实现</h1>
+
+<p>以下为 n 个 int 类型数字求和的变参函数实现（大概看看长什么样子就够了）：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//需要包含头文件 &lt;stdarg.h&gt;</span>
+<span class="c1">//这里 n 充当的就是上面所提到的 固定参数</span>
+<span class="kt">int</span> <span class="nf">super_add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span>
+    <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>ps：printf 和 scanf 函数毫无疑问是变参函数的代表作品，有兴趣可以详细了解。</p>
+
+<h2 id="va-一族">va 一族</h2>
+<p>上面实现中包含好几个以 va_ 开头的东西（通常被叫做 <strong>va 一族</strong>），下面对它们进行简单介绍：</p>
+<ul>
+  <li><strong>va_list:</strong> 用它来 声明一个 “变参指针”，我们可以通过该指针来获取变参列表中的内容；</li>
+  <li><strong>va_start:</strong> 用于初始化 变参指针，使其指向变参列表中第一个变量；第一个参数为 变参指针，第二个参数为 固定参数；</li>
+  <li><strong>va_arg:</strong> 用于获取 变参指针 当前所指的变量，并将 变参指针 指向下一个参数；第一个参数为 变参指针，第二个参数为 当前变参指针所指向变量的类型；</li>
+  <li><strong>va_end:</strong> 用于结束变参列表的读取；</li>
+</ul>
+
+<h2 id="变参列表以外的参数">变参列表以外的参数</h2>
+
+<p>要想正确的读取到变参列表里面的变量，变参列表以外的变量（包括固定参数）需要完成以下两个任务：</p>
+<ul>
+  <li><strong>暗示变参列表中参数的个数</strong>: 明确变参列表中有多少个参数</li>
+  <li><strong>暗示变参列表中每个参数的类型</strong>: 明确怎么读取变参列表中每个参数</li>
+  <li>scanf 和 printf 函数有明确以上两点么？</li>
+</ul>
+
+<h2 id="好奇心害死猫">好奇心害死猫</h2>
+<p>变参函数究竟是怎么实现的?</p>
+
+<p><strong>/usr/lib/gcc/x86_64-linux-gnu/9/include</strong> 路径下的 <strong>stdarg.h</strong> 中找到了 va 一族的相关内容：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* Define the standard macros for the user,
+   if this invocation was from the user program.  */</span>
+<span class="cp">#ifdef _STDARG_H
+</span>
+<span class="cp">#define va_start(v,l)	__builtin_va_start(v,l)
+#define va_end(v)	__builtin_va_end(v)
+#define va_arg(v,l)	__builtin_va_arg(v,l)
+</span></code></pre></div></div>
+
+<p>奥，原来它们都是宏啊。这里显然一点有用的信息都没有，继续追踪 <strong>__builtin_va_start(v,l)</strong> 这些东西，然而找不到。</p>
+
+<h1 id="实践出真知">实践出真知</h1>
+
+<h2 id="一些背景">一些背景</h2>
+
+<blockquote>
+  <p>从i386到X86架构，函数调用约定发生了天翻地覆的变化：X86不再完全依赖栈进行传递参数，而是通过寄存器传参数，这给运运行库实现va_list、va_start、va_arg和va_end接口带来更大挑战。</p>
+</blockquote>
+
+<blockquote>
+  <p>X86有6个寄存器传递参数，每个寄存器位宽是8字节;</p>
+</blockquote>
+
+<blockquote>
+  <p>gcc是采用讨巧的办法，6个寄存器，传递可变参数的那些寄存器，全部压到称为参数保存区的栈空间上;</p>
+</blockquote>
+
+<h2 id="实验代码">实验代码</h2>
+<p>先不着急看它是干嘛的，就放这，后面再仔细分析。</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdarg.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"&amp;n = %p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+
+    <span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span>
+    <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"sizeof(ap) = %ld, &amp;ap = %p</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ap</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">ap</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"&amp;gp = %p, &amp;fp = %p, &amp;overflow = %p, &amp;reg = %p</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">gp_offset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">fp_offset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">overflow_arg_area</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">reg_save_area</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">while</span><span class="p">(</span><span class="n">n</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"gp = %d, fp = %d, overflow = %p, reg = %p, "</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">gp_offset</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">fp_offset</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">overflow_arg_area</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">reg_save_area</span><span class="p">);</span>
+		<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"x = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+	    <span class="n">res</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"sum(1...8) = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//输出</span>
+<span class="o">&amp;</span><span class="n">n</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e3fc</span>
+<span class="k">sizeof</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e410</span>
+
+<span class="o">&amp;</span><span class="n">gp</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e410</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fp</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e414</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e418</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e420</span>
+
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f8</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e500</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e508</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e510</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e518</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e520</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">...</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">78</span>
+</code></pre></div></div>
+
+<h2 id="va_list">va_list</h2>
+
+<p>理解 va_list 是个什么东西？</p>
+
+<p>终端执行以下命令，编译上面源码，并用 gdb 查看 va_list：</p>
+<ul>
+  <li>gcc -g main.c</li>
+  <li>gdb ./a.out</li>
+  <li>ptype va_list</li>
+</ul>
+
+<p>得到以下内容：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">type</span> <span class="o">=</span> <span class="k">struct</span> <span class="n">__va_list_tag</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">gp_offset</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">fp_offset</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">overflow_arg_area</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">reg_save_area</span><span class="p">;</span>
+<span class="p">}</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+<p>成员含义：</p>
+<ul>
+  <li>gp_offset：通用寄存器偏移量，是指下个va_arg(ap, xxx)调用要获取的参数，在参数保存区的offset；</li>
+  <li>fp_offset：浮点寄存器偏移量；</li>
+  <li>overflow_arg_area：其它参数保存区，是个指针，指向栈传递的参数区；</li>
+  <li>reg_save_area：寄存器保存区，是个指针，指向prologue指令建好的参数保存区；</li>
+</ul>
+
+<p>对比代码输出，有规律：</p>
+<ul>
+  <li>总体上，先取寄存器里面的变量，后取参数保存区里的变量</li>
+  <li>取第几个寄存器中的变量由 寄存器基地址 + 寄存器偏移量决定</li>
+  <li>取参数保存区哪个变量由 overflow 指针决定</li>
+</ul>
+
+<!--此处应该有一张图-->
+
+<h2 id="其它">其它</h2>
+
+<p>为变参列表中每个变量所申请的内存空间都是 8 字节，无论实际传进去的是 char / int / long；</p>
+
+<p>参数保存区的到小固定，为 6 * 8 = 48 字节；</p>
+
+<h1 id="参考">参考</h1>
+<p><a href="https://zhuanlan.zhihu.com/p/94036267">揭秘X86架构C可变参数函数实现原理</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="cpp" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/54.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/54.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">马拉车算法（Longest Palindromic Substring）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/10/%E9%A9%AC%E6%8B%89%E8%BD%A6%E7%AE%97%E6%B3%95-Longest-Palindromic-Substring.html" rel="alternate" type="text/html" title="马拉车算法（Longest Palindromic Substring）" /><published>2025-04-10T00:00:00+00:00</published><updated>2025-04-10T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/10/%E9%A9%AC%E6%8B%89%E8%BD%A6%E7%AE%97%E6%B3%95%EF%BC%88Longest%20Palindromic%20Substring%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/10/%E9%A9%AC%E6%8B%89%E8%BD%A6%E7%AE%97%E6%B3%95-Longest-Palindromic-Substring.html"><![CDATA[<h1 id="brute-force">Brute Force</h1>
+
+<p>可以先找到所有子串，然后判断每个子串是否为回文，期间记录最长回文子串即可：</p>
+<ul>
+  <li>一个长度为 $n$ 的字符串的子串的个数为： $n(n + 1) / 2$ ；</li>
+  <li>判断字符串是否为回文时间复杂度为 $O(n)$;</li>
+</ul>
+
+<p>因此，总的时间复杂度为 $O(n^3)$ 。</p>
+
+<h1 id="better-than-brute-force">Better Than Brute Force</h1>
+
+<p>以第 $i$ 个字符为中心，向两边扩展（奇数、偶数都扩展一次），即可得到：</p>
+
+<ul>
+  <li>以第 $i$ 个字符为中心的最长回文（时间复杂度为 $O(n)$）</li>
+  <li>对每个字符进行同样的操作，总共需执行 $n$ 次</li>
+  <li>期间记录下最长回文即可。</li>
+</ul>
+
+<p>显然，总的时间复杂度为 $O(n^2)$ 。</p>
+
+<h1 id="马拉车算法">马拉车算法</h1>
+
+<h2 id="算法步骤">算法步骤</h2>
+
+<p>可分为三步：</p>
+<ul>
+  <li>对原字符串 $s$ 预处理，得到预处理字符串 $t$ ，<strong>使回文子串长度只能是奇数</strong>，简化后续处理</li>
+  <li>计算 $t$ 的最长回文子串</li>
+  <li>还原出 $s$ 的最长回文子串</li>
+</ul>
+
+<h2 id="预处理">预处理</h2>
+
+<p>在 <strong>Better Than Brute Force</strong> 方案中我们需要考虑回文子串长度为奇数（eg，bcb）、偶数（eg，bccb）的两种情况</p>
+
+<p>马拉车的预处理方法：在每个字符左右两侧都加上特殊字符，巧妙地避开了这个问题：</p>
+<ul>
+  <li>原字符串：”acbcd”;</li>
+  <li>预处理后字符串：”#a#c#b#c#d#”;</li>
+</ul>
+
+<p>通过这样的预处理，使得回文子串长度只能为奇数，完全不必讨论偶数情况。</p>
+
+<p>额外加一个特殊字符</p>
+
+<ul>
+  <li>可以预防左边界越界 “#a#c#b#c#a#”（整个串都是回文） 变为 “##a#c#b#c#a#”</li>
+  <li>为什么右边界不用预防？看不起 ‘\0’ ？</li>
+</ul>
+
+<h2 id="预处理后字符串-t-的最长回文子串">预处理后字符串 t 的最长回文子串</h2>
+
+<h3 id="变量说明">变量说明</h3>
+
+<p>首先需要理解两个重要而又晦涩难懂的辅助变量：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">mx</code>：当前已找到的回文子串能延伸到的最右端位置的 <strong>下一个位置</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">id</code>：延伸到最右端的位置的回文子串的中心点位置（预处理字符串回文子串长度必为奇数，所以一定有中心点位置）</li>
+</ul>
+
+<p>其它一些变量及其含义：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">p[id]</code>：以索引 <code class="language-plaintext highlighter-rouge">id</code> 为中心的最长回文子串的半径（包括中心点）；</li>
+  <li><code class="language-plaintext highlighter-rouge">i</code>：当前访问字符的索引；</li>
+  <li><code class="language-plaintext highlighter-rouge">j</code>：<code class="language-plaintext highlighter-rouge">i</code> 关于 <code class="language-plaintext highlighter-rouge">id</code> 的对称位置（即，<code class="language-plaintext highlighter-rouge">j = 2 * id - i</code>）；</li>
+</ul>
+
+<h3 id="核心代码">核心代码</h3>
+
+<p>马拉车算法中最核心的一行代码</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mx</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">?</span> <span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">id</span> <span class="o">-</span> <span class="n">i</span><span class="p">],</span> <span class="n">mx</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>当 $mx &lt;= i$ 时：$i$ 处于 $mx$ 右端，没有可用信息，只能确定以 $i$ 为中心的最长回文子串的半径至少为1</p>
+
+<p>当 $mx &gt; i$ 时：$i$ 在 $mx$ 延伸范围内，存在可用信息：</p>
+
+<ul>
+  <li>当 $mx - i &gt;= p[j]$ 时，根据对称，以 $j$ 为中心的最长回文子串 和 以 $i$ 为中心的最长回文子串都被包含在以 $id$ 为中心的最长回文子串内，如下图所示：</li>
+</ul>
+
+<p><img src="/assets/content/17.png" alt="/assets/content/17.png" /></p>
+
+<ul>
+  <li>当 $mx - i &lt; p[j]$ 时，根据对称，我们可以确定以$i$ 为中心的最长回文子串的半径至少为 $mx - i$，到底是多少还要继续进行比较，如下图所示：</li>
+</ul>
+
+<p><img src="/assets/content/18.png" alt="/assets/content/18.png" /></p>
+
+<h2 id="原字符串-s-的最长回文子串">原字符串 s 的最长回文子串</h2>
+
+<h3 id="长度计算">长度计算</h3>
+
+<p>先观察以下两种情况：</p>
+<ul>
+  <li>$t$ 的最长回文子串 “#b#c#b#” 长度为 7，半径为 4，其所对应的 $s$ 的最长回文子串 “bcb” 长度为 3</li>
+  <li>$t$ 的最长回文子串 “#b#c#c#b#”  长度为 9，半径为 5，其所对应的 $s$ 的最长回文子串 “bccb” 长度为 4</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">s 最长回文子串长度 = t 最长回文子串半径长度 - 1</code></p>
+
+<h3 id="起始索引计算">起始索引计算</h3>
+
+<p>知道了 $s$ 最长回文子串的长度，只要再知道其在原字符串中的起始索引，就可以截取到最长回文子串。示例：</p>
+
+<p>$s$ = “cambcbdn” （最长回文子串为奇数情况）：</p>
+<ul>
+  <li>预处理后：$t$ = “##c#a#m#b#c#b#d#n#”</li>
+  <li>$t$ 最长回文子串：#b#c#b#，半径为4，其中心字符 ‘c’ 的索引为10</li>
+  <li>$s$ 最长回文子串：bcb，起始索引为 (10 - 4) / 2 = 3</li>
+</ul>
+
+<p>$s$ = “ambccbdn”（最长回文子串为偶数情况）：</p>
+<ul>
+  <li>预处理后为：$t$ = “##a#m#b#c#c#b#d#n#”</li>
+  <li>$t$ 最长回文子串：#b#c#c#b#，半径为5，其中心字符为’#’索引为9</li>
+  <li>$s$ 最长回文子串：bccb，起始索引为 (9 - 5) / 2 = 2</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">s 最长回文子串起始索引 =（t 最长回文子串中心字符索引 - t 最长回文子串半径）/ 2</code></p>
+
+<h2 id="代码实现">代码实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span>
+
+<span class="n">string</span> <span class="nf">process</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">){</span>
+    <span class="n">string</span> <span class="n">res</span> <span class="o">=</span> <span class="s">"##"</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">'#'</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">string</span> <span class="nf">manacher</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">){</span>
+    <span class="n">string</span> <span class="n">t</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// 无法从 0 开始，p[i] 至少为 1，从 0 开始 i - p[i] = -1</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 延伸内部存在可用信息</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mx</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">?</span> <span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">id</span> <span class="o">-</span> <span class="n">i</span><span class="p">],</span> <span class="n">mx</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+        
+        <span class="c1">// 延伸外部不存在可用信息，需逐一比较</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 更新延伸</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">mx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 记录 t 最长回文子串的半径及中心</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 还原得到 s 的最长回文子串</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">((</span><span class="n">c</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="时间复杂度">时间复杂度</h2>
+
+<p>时间复杂度：$O(n)$</p>
+
+<p>空间复杂度：$O(n)$</p>
+
+<h1 id="封装">封装</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">manacher</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">U</span> <span class="n">start</span><span class="p">,</span> <span class="n">U</span> <span class="n">end</span><span class="p">){</span>
+    <span class="k">using</span> <span class="n">U</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">type_traits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    
+    <span class="n">T</span> <span class="n">t</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">start</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">ch</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ch</span><span class="p">);</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">end</span><span class="p">);</span>
+    
+    <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 延伸内部存在可用信息</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mx</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">?</span> <span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">id</span> <span class="o">-</span> <span class="n">i</span><span class="p">],</span> <span class="n">mx</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+        
+        <span class="c1">// 延伸外部不存在可用信息，需逐一比较</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 更新延伸</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mx</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">mx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 记录 t 最长回文子串的半径及中心</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 还原得到 s 的最长回文子串, 起始位置 + 长度</span>
+    <span class="k">return</span> <span class="p">{(</span><span class="n">c</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="练习题">练习题</h1>
+
+<p><a href="https://leetcode.com/problems/longest-palindromic-substring/">LeetCode 5. Longest Palindromic Substring</a>
+<a href="https://leetcode.com/problems/palindromic-substrings/">LeetCode 647. Palindromic Substrings</a></p>
+
+<p><a href="https://codeforces.com/contest/1943/problem/B">B. Non-Palindromic Substring</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="字符串" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/53.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/53.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Pick 定理</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick-%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="Pick 定理" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick%20%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick-%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="pick-定理">Pick 定理</h1>
+
+<p>顶点均为整点的简单多边形，其面积 $A$，内部整点数目 $i$，边上整点数目 $b$ 之间具有如下关系：
+\(A = i + b / 2 - 1\)</p>
+
+<h2 id="证明">证明</h2>
+
+<h2 id="推广">推广</h2>
+
+<h3 id="平行四边形格点">平行四边形格点</h3>
+
+<p>皮克定理依然成立。</p>
+
+<p>证明？？？？</p>
+
+<h3 id="三角形格点">三角形格点</h3>
+
+<p>皮克定理如下：
+\(A = 2 * i + b - 2\)
+证明？？？？？</p>
+
+<h3 id="非简单多边形">非简单多边形</h3>
+
+<p>皮克定理如下，$\chi(P)$ 表示 $P$ 的 <strong>欧拉特征数</strong>：
+\(A = i + b / 2 - \chi(P)\)
+欧拉特征数？？？？</p>
+
+<p>证明？？？？</p>
+
+<h3 id="高维推广">高维推广</h3>
+
+<p>Ehrhart 多项式</p>
+
+<h1 id="实现">实现</h1>
+
+<h2 id="多边形的面积">多边形的面积</h2>
+
+<p>顶点均为整点的多边形面积一定为 $1/2$ 的倍数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<h2 id="边上整点个数">边上整点个数</h2>
+
+<p>以整点开始和结束的线短，经过的格点数为：
+\(gcd(dx, dy) + 1\)</p>
+
+<h2 id="多边形内整点数">多边形内整点数</h2>
+
+<p>根据 Pick 定理，计算出简单多边形内整点个数</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/52.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/52.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">凸包</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E5%87%B8%E5%8C%85.html" rel="alternate" type="text/html" title="凸包" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E5%87%B8%E5%8C%85</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E5%87%B8%E5%8C%85.html"><![CDATA[<h1 id="二维凸包">二维凸包</h1>
+
+<h2 id="概述">概述</h2>
+
+<h3 id="凸多边形">凸多边形</h3>
+
+<p>所有内角大小都在 $[0, \pi]$ 范围内的简单多边形。</p>
+
+<h3 id="凸包">凸包</h3>
+
+<p>平面上能包含所有给定点的最小凸多边形叫做凸包。</p>
+
+<p>在包含所有点的多边形中（可能是凸多边形，也可能不是凸多边形），凸包的周长是最短的</p>
+
+<p>小于 4 个点直接就是凸包，点和线短可以看作是特殊的凸包</p>
+
+<h2 id="andrew">Andrew</h2>
+
+<h3 id="原理">原理</h3>
+
+<p>先对点排序，第一个点和最后一个点一定在凸包上</p>
+
+<ul>
+  <li>从前往后遍历，使用外积找到下凸包</li>
+  <li>从后往前遍历，使用外积找到上凸包</li>
+</ul>
+
+<h3 id="实现">实现</h3>
+
+<p>当前点与栈顶两个点的外积小于 0 时，需要不断弹出栈顶，直到剩下一个元素为止</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// (p1, p2) x (p1, p3)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p2</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">-</span>
+           <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 返回值末尾包含起点</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">andrew</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">pts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 0 个点和 1 个点都返回点集自身</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="n">pts</span><span class="p">;</span>
+    
+    <span class="c1">// 包含 2 个点、3 个点情况，且都会追加起始点</span>
+    <span class="k">auto</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">pts</span><span class="p">](</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">stk</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">step</span> <span class="o">=</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="n">stk</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">step</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">stk</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">base</span><span class="p">;</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">stk</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">stk</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">2</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+                <span class="n">stk</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="n">stk</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="n">sort</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">pts</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">res</span><span class="p">;</span>
+    <span class="n">start</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+    <span class="n">start</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="复杂度">复杂度</h3>
+
+<p>时间复杂度：$O(nlog(n))$</p>
+
+<p>空间复杂度：$O(O(n))$​</p>
+
+<h2 id="graham">Graham</h2>
+
+<h3 id="原理-1">原理</h3>
+
+<p>从凸包上任意点出发，逆时针按照极角从小到大遍历，凸包上相邻 3 点的外积 &gt;= 0</p>
+
+<p>步骤：</p>
+
+<ul>
+  <li>选择起始点：要求改点在凸包上即可，选择的点的不同会导致极角的取值范围不同
+    <ul>
+      <li>选取 y 轴最小的点时，极角的取值范围 $[0, \pi]$</li>
+      <li>选取 x 轴最小的点时，极角的取值范围 $[-\pi / 2, \pi / 2]$​</li>
+      <li>显然，为了简化计算，还是选择 “最值点”。</li>
+    </ul>
+  </li>
+  <li>按极角排序：计算其余点与起始点连线的极角，并按照大小进行排序。</li>
+</ul>
+
+<h3 id="实现-1">实现</h3>
+
+<p>注意：实现时，没必要真的把极角计算出来，只需要比较出相对大小，例如使用外积，但需注意 0 和 180 度也要能正确比较大小。</p>
+
+<p>andrew 已经很好用了，就不… 😂 😂</p>
+
+<h3 id="复杂度-1">复杂度</h3>
+
+<p>时间复杂度：$O(nlog(n))$</p>
+
+<p>空间复杂度：$O(n)$</p>
+
+<h1 id="三维凸包">三维凸包</h1>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://www.luogu.com.cn/problem/P2742">P2742 [USACO5.1] 圈奶牛Fencing the Cows /【模板】二维凸包</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/47.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/47.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">备忘录模式（Memento）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F-Memento.html" rel="alternate" type="text/html" title="备忘录模式（Memento）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F%EF%BC%88Memento%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F-Memento.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>拷贝个副本不就行么，简单但代价高，但其实只需要备份还原现场的必要信息即可。</p>
+
+<p>涉及角色：</p>
+
+<ul>
+  <li>目标（被管理者）：除了基本的成员方法，还要包含如何备份，如何恢复</li>
+  <li>备份类：描述具体要备份的东西，备份时产生一个对象，恢复时用一个对象恢复。</li>
+  <li>管理员：负责管理备份，创建、删除、查询等</li>
+</ul>
+
+<p>多状态如何备份？</p>
+
+<p>多备份如何备份？</p>
+
+<h1 id="类图">类图</h1>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Backup</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="c1">// 多状态</span>
+    <span class="kt">int</span> <span class="n">_stat1</span><span class="p">,</span> <span class="n">_stat2</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Backup</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="n">Backup</span><span class="p">(</span><span class="kt">int</span> <span class="n">stat1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stat2</span><span class="p">)</span> <span class="o">:</span> <span class="n">_stat1</span><span class="p">(</span><span class="n">stat1</span><span class="p">),</span> <span class="n">_stat2</span><span class="p">(</span><span class="n">stat2</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">int</span> <span class="n">stat1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_stat1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">stat2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_stat2</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Target</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Target</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="o">:</span> <span class="n">_x</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">_y</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="n">Backup</span> <span class="nf">backup</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Backup</span><span class="p">(</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">recover</span><span class="p">(</span><span class="k">const</span> <span class="n">Backup</span><span class="o">&amp;</span> <span class="n">bp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_x</span> <span class="o">=</span> <span class="n">bp</span><span class="p">.</span><span class="n">stat1</span><span class="p">();</span>
+        <span class="n">_y</span> <span class="o">=</span> <span class="n">bp</span><span class="p">.</span><span class="n">stat2</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">output</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x: "</span> <span class="o">&lt;&lt;</span> <span class="n">_x</span> <span class="o">&lt;&lt;</span> <span class="s">", y: "</span> <span class="o">&lt;&lt;</span> <span class="n">_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Manager</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="c1">// 多备份</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">Backup</span><span class="o">&gt;</span> <span class="n">_bps</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="k">const</span> <span class="n">Backup</span><span class="o">&amp;</span> <span class="n">bp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_bps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">bp</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Backup</span> <span class="nf">query</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_bps</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Target</span> <span class="n">t</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="n">Manager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"01"</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">backup</span><span class="p">());</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Target</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">recover</span><span class="p">(</span><span class="n">manager</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="s">"01"</span><span class="p">));</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">output</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/41.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/41.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">外观模式（Facade）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html" rel="alternate" type="text/html" title="外观模式（Facade）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F%EF%BC%88Facade%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>对外部提供稳定的接口，避免过度耦合（外部依赖内部的具体实现）</p>
+
+<h2 id="动机">动机</h2>
+
+<p><img src="/assets/content/14.png" alt="/assets/content/14.png" /></p>
+
+<p>用户和子系统存在过多的耦合，无论是用户还是子系统，更新迭代起来很容易发生冲突。</p>
+
+<p>如何简化外部客户程序和系统间的交互接口？如何将外部客户程序的演化和内部子系统的变化之间的依赖相互解耦</p>
+
+<h2 id="定义">定义</h2>
+
+<p>为子系统中的一组接口提供一个一致（稳定）的界面，Facade 模式定义了一个高层接口，这个接口使得这一子系统更加容易使用（复用）。</p>
+
+<h2 id="类图">类图</h2>
+
+<p><img src="/assets/content/15.png" alt="/assets/content/15.png" /></p>
+
+<h1 id="实现">实现</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Server</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">func2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func3"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">Server</span> <span class="n">_server</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">Facade</span><span class="p">()</span> <span class="o">:</span> <span class="n">_server</span><span class="p">(</span><span class="n">Server</span><span class="p">())</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="nf">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func1</span><span class="p">();</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func2</span><span class="p">();</span>
+        <span class="n">_server</span><span class="p">.</span><span class="n">func3</span><span class="p">();</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Facade</span> <span class="n">f</span><span class="p">;</span>
+    <span class="n">f</span><span class="p">.</span><span class="n">deal</span><span class="p">(</span><span class="s">"Hello World!"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="应用">应用</h1>
+
+<p>本质就是 “解耦用户与子系统之间的关系”</p>
+
+<ul>
+  <li>用户不关心子系统内部如何处理，只关注结果</li>
+  <li>子系统只提供稳定的接口，演进起来更灵活。</li>
+</ul>
+
+<p>从客户程序的角度来看， Facade 模式简化了整个组件系统的接口，对于组件内部与外部客户程序来说，达到了一种“解耦” 的效果：内部子系统的任何变化不会影响到 Facade 接口的变化</p>
+
+<p>Facade 设计模式更注重从架构的层次去看整个系统，而不是单个类的层次。Facade 很多时候更是一种架构设计模式。</p>
+
+<p>Facade 设计模式并非一个集装箱，可以任意地放进任何多个对象。Facade 模式中组件的内部应该是 “相互耦合关系比较大的一系列组件”，而不是一个简单的功能集合。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/48.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/48.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">扫描线算法</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html" rel="alternate" type="text/html" title="扫描线算法" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html"><![CDATA[<h1 id="b-维正交范围">B 维正交范围</h1>
+
+<p>B 维正交范围指在一个 B 维直角坐标系下，第 $i$ 维坐标在一个整数范围 $[p_i, r_i]$ 间，内部的点集。</p>
+
+<ul>
+  <li>零维正交范围可以理解为数？？？？？？</li>
+  <li>一维正交范围是区间</li>
+  <li>二维正交范围是矩形</li>
+  <li>三维正交范围是立方体</li>
+</ul>
+
+<p>扫描线算法：通常是扫描某一维，维护剩下维度的性质</p>
+
+<ul>
+  <li>一维：扫描某一维度，维护…？？？</li>
+  <li>二维：扫描某一维度，维护剩下一维（多个一维正交范围）的性质</li>
+  <li>三维：扫描某一维度，维护剩下两维（多个二维正交范围）的性质</li>
+</ul>
+
+<p>扫描过程：</p>
+
+<ul>
+  <li>假设在 $S$ 维进行扫描</li>
+  <li>将所有正交范围的 $p_s$ 和 $r_s$ 从小到大排列，并依次扫描这些位置
+    <ul>
+      <li>位置为 $p$ 表示开始进入某个正交范围</li>
+      <li>位置为 $r$ 表示离开某个正交范围</li>
+      <li>当某个位置既有 $p$ 又有 $r$​ ，需要考虑是先 “进入” 还是先 “离开”</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="一维正交范围">一维正交范围</h1>
+
+<p>给定若干个区间，计算区间的最大重叠度</p>
+
+<h2 id="练习">练习</h2>
+
+<p><a href="https://leetcode.cn/problems/car-pooling/">LeetCode 1094. 拼车</a></p>
+
+<p><a href="https://leetcode.cn/problems/describe-the-painting/">LeetCode 1943. 描述绘画结果</a></p>
+
+<p><a href="https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/">LeetCode 452. 用最少数量的箭引爆气球</a></p>
+
+<h1 id="二维正交范围">二维正交范围</h1>
+
+<h2 id="atlantis-问题">Atlantis 问题</h2>
+
+<p>在二维坐标系上，给出多个矩形的左下以及右上坐标，求出所有矩形构成的图形的面积</p>
+
+<h2 id="二维数点">二维数点</h2>
+
+<h2 id="练习-1">练习</h2>
+
+<p><a href="https://leetcode.cn/problems/rectangle-area-ii/">LeetCode 850. 矩形面积 II</a></p>
+
+<p><a href="https://leetcode.cn/problems/xepqZ5/">LeetCode LCP 74. 最强祝福力场</a></p>
+
+<h1 id="三维正交范围">三维正交范围</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/44.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/44.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">旋转卡壳</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%97%8B%E8%BD%AC%E5%8D%A1%E5%A3%B3.html" rel="alternate" type="text/html" title="旋转卡壳" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%97%8B%E8%BD%AC%E5%8D%A1%E5%A3%B3</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%97%8B%E8%BD%AC%E5%8D%A1%E5%A3%B3.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<h2 id="切线">切线</h2>
+
+<p>过凸包上一点的线，如果凸包全部位于线的一侧，则称该线为凸包的切线</p>
+
+<h2 id="对踵点">对踵点</h2>
+
+<p>过凸包上两点作两条相互平行的直线，且凸包位于两条平行线之间，则这两个点称作为对踵点。有三种情况：</p>
+
+<ul>
+  <li>点点对踵：</li>
+  <li>点边对踵：包含两对对踵点</li>
+  <li>边边对踵：包含四对对踵点</li>
+</ul>
+
+<p>可以证明，一个凸 边形的对踵点最多只有 $3n/2$ 对(上取整)。</p>
+
+<h2 id="旋转卡壳">旋转卡壳</h2>
+
+<p>凸包的很多问题都是使用旋转卡壳思想解决的。</p>
+
+<h1 id="凸包直径">凸包直径</h1>
+
+<p>凸多边形的直径：将一个凸多边形上任意两点间的距离的最大值定义为多边形的直径。确定这个直径的点对数可能多于一对</p>
+
+<blockquote>
+  <p><strong>存在一个凸多边形直径定理：凸多边形P的直径 的所有平行支撑线之间距离的最大值，因此，凸多边形的直径可以在对踵点对之间寻找</strong> 如何证明？？？？？？？？？？</p>
+
+</blockquote>
+
+<h2 id="原理">原理</h2>
+
+<p>逆时针遍历凸包上的边，并找到离其最远的点（对踵点）。随着边的旋转，最远点也在逆时针旋转，旋转期间维护最长直径。</p>
+
+<p>步骤：</p>
+
+<ul>
+  <li>对于每条边，都检查，下一个点是否比当前点离边更远
+    <ul>
+      <li>如果是，则前进到下一个点，接着判断</li>
+      <li>如果不是，则说明最远点已经找到了，计算当前边的两个端点与最远点的距离，并与当前最长直径比较。</li>
+    </ul>
+  </li>
+  <li>当遍历完所有边后，即可得到最长直径</li>
+</ul>
+
+<h2 id="实现">实现</h2>
+
+<p>凸包计算</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// (p1, p2) x (p1, p3)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p2</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">-</span>
+           <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 返回值末尾包含起点</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">andrew</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">pts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 0 个点和 1 个点都返回点集自身</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="n">pts</span><span class="p">;</span>
+    
+    <span class="c1">// 包含 2 个点、3 个点情况，且都会追加起始点</span>
+    <span class="k">auto</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">pts</span><span class="p">](</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">stk</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">step</span> <span class="o">=</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="n">stk</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">step</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">stk</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">base</span><span class="p">;</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">stk</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">stk</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">2</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+                <span class="n">stk</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="n">stk</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="n">sort</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">pts</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">res</span><span class="p">;</span>
+    <span class="n">start</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+    <span class="n">start</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>凸包直径计算</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">dist2</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">+</span>
+           <span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// 输入为逆序凸包顶点，末尾重复起点</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">rotating_calipers</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">pts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="n">T</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">dist</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="n">mx</span><span class="p">;</span>
+    
+    <span class="c1">// 不算末尾重复的起点</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 寻找当前边的对踵点</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">pts</span><span class="p">[(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">cross</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// 两对对踵点之间距离的最大值</span>
+        <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">dist</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">j</span><span class="p">]));</span>
+        <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">dist</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">j</span><span class="p">]));</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">mx</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="复杂度">复杂度</h2>
+
+<p>时间复杂度：$O(n)$</p>
+
+<p>空间复杂度：$O(1)$</p>
+
+<h1 id="凸包的宽度">凸包的宽度</h1>
+
+<p>凸包的宽度定义为平行切线间的最小距离</p>
+
+<h2 id="原理-1">原理</h2>
+
+<p>找到所有的点边对踵，并计算点到边的距离，维护一个最小值就是凸包的宽度</p>
+
+<h2 id="实现-1">实现</h2>
+
+<p>类似于凸包直径，叉积有了，边的长度也有了，三角形的高自然也有了，旋转过程中维护最小的高即可。</p>
+
+<h2 id="复杂度-1">复杂度</h2>
+
+<p>时间复杂度：$O(n)$</p>
+
+<p>空间复杂度：$O(1)$​</p>
+
+<h1 id="最小矩形">最小矩形</h1>
+
+<p>涉及两个问题，面积最小矩形 和 周长最小矩形，两者基本一样。这里以面积最小为例。</p>
+
+<h2 id="原理-2">原理</h2>
+
+<p>面积最小的外接矩形一定有一条边与凸包的边重合。因此，固定一条边，其它三条边就确定了，旋转过程中维护面积最小值。</p>
+
+<p>注意：周长最小矩形原理与面积最小矩形一样，只不过在旋转过程中维护的是最小周长而已。</p>
+
+<h2 id="实现-2">实现</h2>
+
+<p>旋转过程中维护三个点，逆时针旋转边的时候，这三个点也在跟着旋转</p>
+
+<ul>
+  <li>上边点是使用叉积来选择的</li>
+  <li>左右两边的点是通过点积来选择的</li>
+  <li><strong>注意右侧点初始值的选择</strong></li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">dot</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p2</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">double</span> <span class="nf">mn_rec</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">pts</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">rec</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">double</span> <span class="n">res</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 查找上边的点</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">pts</span><span class="p">[(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">cross</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">q</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 查找右侧的点</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">p</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 左侧点初始值</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">q</span><span class="p">;</span>
+        <span class="c1">// 查找左侧的点</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">r</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 右侧点与当前边的点积</span>
+        <span class="n">T</span> <span class="n">temp1</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">p</span><span class="p">]);</span>
+        <span class="c1">// 左侧点与当前边的点积</span>
+        <span class="n">T</span> <span class="n">temp2</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
+        <span class="c1">// 当前边与自己的点积</span>
+        <span class="n">T</span> <span class="n">temp3</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="c1">// 以当前边为底的三角形的面积</span>
+        <span class="n">T</span> <span class="n">s</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">q</span><span class="p">]);</span>
+        <span class="c1">// h = s / sqrt(temp3)</span>
+        <span class="c1">// w = 两个投影之和减去当前边长度</span>
+        <span class="kt">double</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">temp1</span> <span class="o">+</span> <span class="n">temp2</span> <span class="o">-</span> <span class="n">temp3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">temp3</span><span class="p">);</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="复杂度-2">复杂度</h2>
+
+<p>时间复杂度：$O(n)$​</p>
+
+<p>空间复杂度：$O(1)$​</p>
+
+<h1 id="凸包距离todo">凸包距离(todo)</h1>
+
+<p>有两种情况，最大距离比较简单，最小距离相对复杂。</p>
+
+<p>最大距离</p>
+
+<ul>
+  <li>
+    <p>两个点分别位于两个凸包上，求两个点的最大距离</p>
+  </li>
+  <li>
+    <p>显然，这两个点一定是凸包的顶点</p>
+  </li>
+</ul>
+
+<p>最小距离：</p>
+
+<ul>
+  <li>两个点分别位于两个凸包上，求两个点的最小距离</li>
+  <li>这两个点不一定都是顶点</li>
+</ul>
+
+<h2 id="原理-3">原理</h2>
+
+<h2 id="实现-3">实现</h2>
+
+<h2 id="复杂度-3">复杂度</h2>
+
+<h1 id="练习">练习</h1>
+
+<table>
+  <tbody>
+    <tr>
+      <td>[P1452 【模板】旋转卡壳</td>
+      <td>[USACO03FALL] Beauty Contest G](https://www.luogu.com.cn/problem/P1452)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a href="https://www.luogu.com.cn/problem/P3187">P3187 [HNOI2007] 最小矩形覆盖</a></p>
+
+<p><a href="https://www.luogu.com.cn/problem/P3829">P3829 [SHOI2012] 信用卡凸包</a></p>
+
+<h1 id="参考">参考</h1>
+
+<p><a href="https://oi-wiki.org/geometry/rotating-calipers/">旋转卡壳</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/49.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/49.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">曼哈顿距离</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB.html" rel="alternate" type="text/html" title="曼哈顿距离" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p><strong>到某个点，曼哈顿距离相等的所有点构成一个正方形。</strong></p>
+
+<h1 id="曼哈顿距离">曼哈顿距离</h1>
+
+<p>平面上两个点之间的曼哈顿距离定义如下：
+\(\begin{aligned}
+d_{ij} &amp;= |x_i - x_j| + |y_i - y_j|\\
+&amp;= max(x_i - x_j, x_j - x_i) + max(y_i - y_j, y_j - y_i) \\
+&amp;= max(x_i - x_j + y_i - y_j, x_i - x_j + y_j - y_i, x_j - x_i + y_i - y_j, x_j - x_i + y_j - y_i)\\
+&amp;= max(|(x_i + y_i) - (x_j + y_j)|, |(x_i - y_i) - (x_j - y_j)|)
+\end{aligned}\)</p>
+
+\[d_1 = x + y \\
+d_2 = x - y\]
+
+<p>空间上两个点：
+\(d_1 = x + y + z \\
+d_2 = x + y - z \\
+d_3 = x - y + z \\
+d_4 = x - y - z\)</p>
+
+<p>推广到 $n$ 维空间……</p>
+
+<h1 id="最大曼哈顿距离">最大曼哈顿距离</h1>
+
+<p>平面上若干点，求最大曼哈顿距离
+\(max(max(x_i + y_i) - min(x_i + y_i), max(x_i - y_i), min(x_i - y_i))\)</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<h1 id="所有点对的曼哈顿距离之和">所有点对的曼哈顿距离之和</h1>
+
+<p>分x，y 分别计算</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/42.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/42.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">欧拉公式</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%AC%A7%E6%8B%89%E5%85%AC%E5%BC%8F.html" rel="alternate" type="text/html" title="欧拉公式" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%AC%A7%E6%8B%89%E5%85%AC%E5%BC%8F</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%AC%A7%E6%8B%89%E5%85%AC%E5%BC%8F.html"><![CDATA[<p>立体几何中欧拉公式：简单多面体的顶点数 $V$，边数 $E$，面数 $F$ 之间有如下关系
+\(V + F - E = 2\)</p>
+
+<h1 id="证明">证明</h1>
+
+<p>设多面体的各面为 $n_i$ 边形， $i = 1, 2, …, F$ 。每一条边都只属于两个面
+\(n_1 + n_2 + ... + n_F = 2E\)</p>
+
+<p>根据内角和定理，多面体的所有面内角总和为：
+\((n_1 - 2)\pi + (n_2 - 2)\pi + ... + (n_F - 2)\pi = 2\pi(E - F)\)</p>
+
+<p>另一方面，选择一个面作为最大的面，然后将简单多面体压成平面图形，不管怎么压，所有多边形的内角和总和是不变的。假设最大多边形的顶点数为 $m$</p>
+
+<ul>
+  <li>非最大面的面内角总和：
+    <ul>
+      <li>内部点数为 $V - m$ 个，每个 $2\pi$，总计 $2\pi(V - m)$</li>
+      <li>边缘点内角总和：$\pi(m - 2)$</li>
+    </ul>
+  </li>
+  <li>最大面的内角总和：$\pi(m - 2)$​</li>
+</ul>
+
+<p>三部分总和加起来
+\(2\pi(V - m) + \pi(m - 2) + \pi(m - 2) = 2\pi(V - 2)\)
+故：
+\(V + F - E = 2\)</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/43.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/43.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
