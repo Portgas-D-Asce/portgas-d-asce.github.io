@@ -42,11 +42,15 @@
             .font-bold { font-weight: bold; }
         </style>
     
-        <!-- 1. 引入 ECharts 核心 -->
+        <!-- 1. 引入 ECharts 核心
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+-->
+<script src="assets/css/echarts.min.js"></script>
   
-<!-- 2. 引入 WordCloud 扩展 -->
+<!-- 2. 引入 WordCloud 扩展
 <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
+-->
+<script src="assets/css/echarts-wordcloud.min.js"></script>
 
 <div id="categories" class="wh100"></div>
 
@@ -143,13 +147,18 @@ chart.on('click', { seriesIndex: 0 }, function(params) {
     <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
 </div>
 
-<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
-    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="assets/css/APlayer.min.css" />
+<script src="assets/css/APlayer.min.js"></script>
+
 <script>
     var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
 </script>
-<!--老版本包不能用了，要用新包-->
+<!--老版本包不能用了，要用新包
 <script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="assets/css/Meting.min.js"></script>
 
 <style>
 #music {
