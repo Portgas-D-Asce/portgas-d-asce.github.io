@@ -1,4 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-19T10:01:01+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">车载域控芯片</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87.html" rel="alternate" type="text/html" title="车载域控芯片" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87.html"><![CDATA[<h1 id="高通骁龙-sa8155p">高通骁龙 SA8155P</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-19T11:29:43+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Linux 实用工具</title><link href="https://xdevil.top/2025/08/17/Linux-%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="Linux 实用工具" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/Linux%20%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/17/Linux-%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="cloc">cloc</h1>
+
+<h2 id="安装">安装</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>cloc
+</code></pre></div></div>
+
+<h2 id="使用">使用</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cloc <span class="nb">.</span>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="linux" /><summary type="html"><![CDATA[实用工具汇总]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/57.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/57.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">QNX 常用命令</title><link href="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="QNX 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/QNX%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="pidin">pidin</h1>
+
+<p>查看进程信息</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pidin | grep hud</span>
+16322605   1 nt/bin/hud_ArCyber  10r NANOSLEEP                              
+16322605   2 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x10f9d17e38<span class="o">)</span>             
+16322605   3 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54b5d920<span class="o">)</span>             
+16322605   4 nt/bin/hud_ArCyber  10r RECEIVE     4                          
+16322605   5 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54c03d10<span class="o">)</span>             
+16322605   6 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54c03d10<span class="o">)</span>
+</code></pre></div></div>
+
+<h1 id="hogs">hogs</h1>
+
+<p>进程号，进程名称，距离上一次采样到现在 cpu 占用多少 ms，多核 cpu 占用率，单核 cpu 占用率，内存占用大小，内存占用率</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># hogs | grep hud</span>
+ 16322605  /mnt/bin/hud_    92   0%   3%  19592k   0%
+ 16322605  /mnt/bin/hud_    89   0%   2%  19592k   0%
+ 16322605  /mnt/bin/hud_    87   0%   2%  19592k   0%
+ 
+<span class="c"># 杀进程</span>
+<span class="nb">kill</span> <span class="nt">-9</span> pid
+
+slay <span class="nt">-9</span> process_name
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="qnx" /><summary type="html"><![CDATA[常用命令记录]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/58.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/58.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">车载域控芯片</title><link href="https://xdevil.top/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87.html" rel="alternate" type="text/html" title="车载域控芯片" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87</id><content type="html" xml:base="https://xdevil.top/2025/08/17/%E8%BD%A6%E8%BD%BD%E5%9F%9F%E6%8E%A7%E8%8A%AF%E7%89%87.html"><![CDATA[<h1 id="高通骁龙-sa8155p">高通骁龙 SA8155P</h1>
 
 <h2 id="安卓">安卓</h2>
 
@@ -274,7 +310,7 @@ Processor8: 1091556544 Octa Kryo-695 Gold Plus 2380MHz FPU
 
 pidin syspage | <span class="nb">grep </span>TAGID
   <span class="o">[</span>979]<span class="s1">'TAGID=QXA.QA.6.1.r1-00129-GEN4.HYP-1'</span> <span class="o">[</span>1016]<span class="s1">'STATE=Stable'</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="qnx" /><summary type="html"><![CDATA[8155、8295等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/57.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/57.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Don’t open it</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont-open-it.html" rel="alternate" type="text/html" title="Don’t open it" /><published>2025-08-15T00:00:00+00:00</published><updated>2025-08-15T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont%20open%20it</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont-open-it.html"><![CDATA[<p>这世界对我很失望，正如我对着世界一样！</p>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="qnx" /><summary type="html"><![CDATA[8155、8295等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/59.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/59.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Don’t open it</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont-open-it.html" rel="alternate" type="text/html" title="Don’t open it" /><published>2025-08-15T00:00:00+00:00</published><updated>2025-08-15T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont%20open%20it</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2025/08/15/Dont-open-it.html"><![CDATA[<p>这世界对我很失望，正如我对着世界一样！</p>
 
 <p>人生就像一场戏，有些人入戏太深！</p>
 
@@ -966,138 +1002,4 @@ pidin syspage | <span class="nb">grep </span>TAGID
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/41.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/41.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">外观模式（Facade）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html" rel="alternate" type="text/html" title="外观模式（Facade）" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F%EF%BC%88Facade%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2025/04/07/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<p>对外部提供稳定的接口，避免过度耦合（外部依赖内部的具体实现）</p>
-
-<h2 id="动机">动机</h2>
-
-<p><img src="/assets/content/14.png" alt="/assets/content/14.png" /></p>
-
-<p>用户和子系统存在过多的耦合，无论是用户还是子系统，更新迭代起来很容易发生冲突。</p>
-
-<p>如何简化外部客户程序和系统间的交互接口？如何将外部客户程序的演化和内部子系统的变化之间的依赖相互解耦</p>
-
-<h2 id="定义">定义</h2>
-
-<p>为子系统中的一组接口提供一个一致（稳定）的界面，Facade 模式定义了一个高层接口，这个接口使得这一子系统更加容易使用（复用）。</p>
-
-<h2 id="类图">类图</h2>
-
-<p><img src="/assets/content/15.png" alt="/assets/content/15.png" /></p>
-
-<h1 id="实现">实现</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Server</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="kt">void</span> <span class="nf">func2</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">func3</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"server func3"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">Server</span> <span class="n">_server</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="n">Facade</span><span class="p">()</span> <span class="o">:</span> <span class="n">_server</span><span class="p">(</span><span class="n">Server</span><span class="p">())</span> <span class="p">{}</span>
-
-    <span class="kt">void</span> <span class="nf">deal</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_server</span><span class="p">.</span><span class="n">func1</span><span class="p">();</span>
-        <span class="n">_server</span><span class="p">.</span><span class="n">func2</span><span class="p">();</span>
-        <span class="n">_server</span><span class="p">.</span><span class="n">func3</span><span class="p">();</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Facade</span> <span class="n">f</span><span class="p">;</span>
-    <span class="n">f</span><span class="p">.</span><span class="n">deal</span><span class="p">(</span><span class="s">"Hello World!"</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="应用">应用</h1>
-
-<p>本质就是 “解耦用户与子系统之间的关系”</p>
-
-<ul>
-  <li>用户不关心子系统内部如何处理，只关注结果</li>
-  <li>子系统只提供稳定的接口，演进起来更灵活。</li>
-</ul>
-
-<p>从客户程序的角度来看， Facade 模式简化了整个组件系统的接口，对于组件内部与外部客户程序来说，达到了一种“解耦” 的效果：内部子系统的任何变化不会影响到 Facade 接口的变化</p>
-
-<p>Facade 设计模式更注重从架构的层次去看整个系统，而不是单个类的层次。Facade 很多时候更是一种架构设计模式。</p>
-
-<p>Facade 设计模式并非一个集装箱，可以任意地放进任何多个对象。Facade 模式中组件的内部应该是 “相互耦合关系比较大的一系列组件”，而不是一个简单的功能集合。</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/48.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/48.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">扫描线算法</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html" rel="alternate" type="text/html" title="扫描线算法" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E6%89%AB%E6%8F%8F%E7%BA%BF%E7%AE%97%E6%B3%95.html"><![CDATA[<h1 id="b-维正交范围">B 维正交范围</h1>
-
-<p>B 维正交范围指在一个 B 维直角坐标系下，第 $i$ 维坐标在一个整数范围 $[p_i, r_i]$ 间，内部的点集。</p>
-
-<ul>
-  <li>零维正交范围可以理解为数？？？？？？</li>
-  <li>一维正交范围是区间</li>
-  <li>二维正交范围是矩形</li>
-  <li>三维正交范围是立方体</li>
-</ul>
-
-<p>扫描线算法：通常是扫描某一维，维护剩下维度的性质</p>
-
-<ul>
-  <li>一维：扫描某一维度，维护…？？？</li>
-  <li>二维：扫描某一维度，维护剩下一维（多个一维正交范围）的性质</li>
-  <li>三维：扫描某一维度，维护剩下两维（多个二维正交范围）的性质</li>
-</ul>
-
-<p>扫描过程：</p>
-
-<ul>
-  <li>假设在 $S$ 维进行扫描</li>
-  <li>将所有正交范围的 $p_s$ 和 $r_s$ 从小到大排列，并依次扫描这些位置
-    <ul>
-      <li>位置为 $p$ 表示开始进入某个正交范围</li>
-      <li>位置为 $r$ 表示离开某个正交范围</li>
-      <li>当某个位置既有 $p$ 又有 $r$​ ，需要考虑是先 “进入” 还是先 “离开”</li>
-    </ul>
-  </li>
-</ul>
-
-<h1 id="一维正交范围">一维正交范围</h1>
-
-<p>给定若干个区间，计算区间的最大重叠度</p>
-
-<h2 id="练习">练习</h2>
-
-<p><a href="https://leetcode.cn/problems/car-pooling/">LeetCode 1094. 拼车</a></p>
-
-<p><a href="https://leetcode.cn/problems/describe-the-painting/">LeetCode 1943. 描述绘画结果</a></p>
-
-<p><a href="https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/">LeetCode 452. 用最少数量的箭引爆气球</a></p>
-
-<h1 id="二维正交范围">二维正交范围</h1>
-
-<h2 id="atlantis-问题">Atlantis 问题</h2>
-
-<p>在二维坐标系上，给出多个矩形的左下以及右上坐标，求出所有矩形构成的图形的面积</p>
-
-<h2 id="二维数点">二维数点</h2>
-
-<h2 id="练习-1">练习</h2>
-
-<p><a href="https://leetcode.cn/problems/rectangle-area-ii/">LeetCode 850. 矩形面积 II</a></p>
-
-<p><a href="https://leetcode.cn/problems/xepqZ5/">LeetCode LCP 74. 最强祝福力场</a></p>
-
-<h1 id="三维正交范围">三维正交范围</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/44.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/44.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<h1 id="应用">应用</h1>]]></content><author><name>pk</name></author><category term="计算机" /><category term="设计模式" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/41.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/41.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
