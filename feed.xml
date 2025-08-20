@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:44:40+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:48:53+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
 
@@ -309,7 +309,20 @@ drwxr-xr-x 8 root root 4096 Sep 13  2024 Engine
   <li><strong>CMake Target: package:</strong> 打包命令，将输出路径下编译产物打包为压缩文件</li>
 </ul>
 
-<p><img src="/assets/content/19.png" alt="19.png" /></p>]]></content><author><name>devil</name></author><category term="kanzi" /><category term="qnx" /><summary type="html"><![CDATA[xxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">内存检查工具</title><link href="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="内存检查工具" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="valgrind">Valgrind</h1>
+<p><img src="/assets/content/19.png" alt="19.png" /></p>
+
+<h1 id="kanzi-stdio">Kanzi Stdio</h1>
+<p>替换 dll 和 license</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># kanzi.lic</span>
+
+C:<span class="se">\P</span>rogramData<span class="se">\R</span>ightware<span class="se">\K</span>anzi<span class="se">\L</span>icenses_Kanzi3
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># rlm1212.dll</span>
+
+D:<span class="se">\k</span>anzi3_6_15_63<span class="se">\S</span>tudio<span class="se">\B</span><span class="k">in</span>
+</code></pre></div></div>]]></content><author><name>devil</name></author><category term="kanzi" /><category term="qnx" /><summary type="html"><![CDATA[xxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">内存检查工具</title><link href="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="内存检查工具" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="valgrind">Valgrind</h1>
 
 <h2 id="apt">apt</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 版本老, 存在 valgrind: the 'impossible' happened: Unsupported arch_prctl option 问题</span>
