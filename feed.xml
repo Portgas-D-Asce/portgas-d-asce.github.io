@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:14:22+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:22:23+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
 
@@ -146,7 +146,7 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 </code></pre></div></div>
 
-<h1 id="sanitizer">Sanitizer</h1>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[Valgrind, Sanitizer 等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linux 实用工具</title><link href="https://xdevil.top/2025/08/17/Linux-%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="Linux 实用工具" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/Linux%20%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/17/Linux-%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="cloc">cloc</h1>
+<h1 id="sanitizer">Sanitizer</h1>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[Valgrind, Sanitizer 等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linux 常用命令</title><link href="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="Linux 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/Linux%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="cloc">cloc</h1>
 <p>代码统计工具</p>
 <h2 id="安装">安装</h2>
 
@@ -156,6 +156,17 @@
 <h2 id="使用">使用</h2>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cloc <span class="nb">.</span>
+</code></pre></div></div>
+
+<h1 id="压缩命令">压缩命令</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># tar 压缩</span>
+<span class="nb">tar</span> <span class="nt">-zcvf</span> xxx.tar.gz dir_xxx
+
+<span class="c"># tar 解压缩</span>
+<span class="nb">tar</span> <span class="nt">-zxvf</span> xxx.tar.gz
+
+<span class="c"># rar 压缩</span>
+rar a xxx.rar dir_xxx
 </code></pre></div></div>]]></content><author><name>pk</name></author><category term="linux" /><summary type="html"><![CDATA[实用工具汇总]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/57.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/57.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">QNX 常用命令</title><link href="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="QNX 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/QNX%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="pidin">pidin</h1>
 
 <p>查看进程信息</p>
