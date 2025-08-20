@@ -8,21 +8,21 @@
         <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
         <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
         <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Tags | Devil’s blog</title>
+<title>排列组合 | Devil’s blog</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="Tags" />
+<meta property="og:title" content="排列组合" />
 <meta name="author" content="Devil" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Technology summarization for personal usage." />
 <meta property="og:description" content="Technology summarization for personal usage." />
-<link rel="canonical" href="https://xdevil.top/tags.html" />
-<meta property="og:url" content="https://xdevil.top/tags.html" />
+<link rel="canonical" href="https://xdevil.top/tag/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/" />
+<meta property="og:url" content="https://xdevil.top/tag/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/" />
 <meta property="og:site_name" content="Devil’s blog" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Tags" />
+<meta property="twitter:title" content="排列组合" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Devil"},"description":"Technology summarization for personal usage.","headline":"Tags","url":"https://xdevil.top/tags.html"}</script>
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Devil"},"description":"Technology summarization for personal usage.","headline":"排列组合","url":"https://xdevil.top/tag/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -42,139 +42,99 @@
             .font-bold { font-weight: bold; }
         </style>
     
-        <!-- 1. 引入 ECharts 核心 -->
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-  
-<!-- 2. 引入 WordCloud 扩展 -->
-<script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
-
-<div id="tags" class="wh100"></div>
+        <div id="header">
+    <div class="fontsz36 font-bold"> 排列组合 </div>
+</div>
 
 
-<script>
-const tags_data = [
+<div id="abstracts">
     
-    {
-        name: '数组',
-        value: 10
-    },
+    <div class="abstract">
+        <img src="/assets/image/64.jpeg" loading="lazy" style="min-height: 400px;"/>
+        <div class="right">
+            <a class="title fontsz28" href="/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"> 贝尔数（Bell Numbers） </a>
     
-    {
-        name: '组合数学',
-        value: 3
-    },
-    
-    {
-        name: '数论',
-        value: 11
-    },
-    
-    {
-        name: '图论',
-        value: 5
-    },
-    
-    {
-        name: '设计模式',
-        value: 10
-    },
-    
-    {
-        name: '栈队列',
-        value: 1
-    },
-    
-    {
-        name: '集论',
-        value: 1
-    },
-    
-    {
-        name: '计算几何',
-        value: 6
-    },
-    
-    {
-        name: '字符串',
-        value: 1
-    },
-    
-    {
-        name: 'linux',
-        value: 3
-    },
-    
-    {
-        name: 'qnx',
-        value: 4
-    },
-    
-    {
-        name: 'kanzi',
-        value: 1
-    },
-    
-    {
-        name: '排列组合',
-        value: 1
-    }
-    
-];
+            <div class="tags">
+                
+                <span> 
+                    <a href="/tag/排列组合" class="tag"> 排列组合 </a>
+                </span>
+                
+            </div>
 
-const chart = echarts.init(document.getElementById('tags'));
-chart.setOption({
-	backgroundColor: "#fff",
-	// tooltip: {
-	//   pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
-	// },
-	series: [{
-		type: "wordCloud",
-		//用来调整词之间的距离
-		gridSize: 20,
-		//用来调整字的大小范围
-		// Text size range which the value in data will be mapped to.
-		// Default to have minimum 12px and maximum 60px size.
-		sizeRange: [14, 60],
-		// Text rotation range and step in degree. Text will be rotated randomly in range [-90,                                                                             90] by rotationStep 45
-		//用来调整词的旋转方向，，[0,0]--代表着没有角度，也就是词为水平方向，需要设置角度参考注释内容
-		// rotationRange: [-45, 0, 45, 90],
-		// rotationRange: [ 0,90],
-		//rotationRange: [0, 0],
-		rotationRange: [-45, 0, 45, 90],
-		//随机生成字体颜色
-		// maskImage: maskImage,
-		textStyle: {
-			color: function () {
-				return (
-					"rgb(" +
-					Math.round(Math.random() * 255) +
-					", " +
-					Math.round(Math.random() * 255) +
-					", " +
-					Math.round(Math.random() * 255) +
-					")"
-				);
-			}
-		},
-		//位置相关设置
-		// Folllowing left/top/width/height/right/bottom are used for positioning the word cloud
-		// Default to be put in the center and has 75% x 80% size.
-		left: "center",
-		top: "center",
-		right: null,
-		bottom: null,
-		width: "100%",
-		height: "100%",
-        data: tags_data
-	}]
-});
+            <div class="description"> 贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划 </div>
 
-chart.on('click', { seriesIndex: 0 }, function(params) {
-    // 只响应第一个系列的点击
-    window.location.href = '/tag/' + params.name;
-});
-</script>
+            <div class="statistic">
+                <span> 2025-08-19 00:00:00 +0000 </span>
+                <span style="float: right;">author:  devil </span>
+            </div>
+        </div>
+    </div>
+    
+</div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
 
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/articles.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+#abstracts {
+    margin: 0 auto;
+    width: 61.8%;
+    min-height: 80vmin;
+    padding-top: 25px;
+}
+
+#abstracts .abstract {
+    box-shadow: 1px 1px 10px rgba(0,0,0,.2);
+    border-bottom: 1px solid #eee;
+    border-radius: 30px;
+    margin-bottom: 30px;
+    opacity:0.9;
+    background-size: 50%;
+    overflow: hidden;
+}
+
+#abstracts .right {
+    padding: 8px 15px !important;
+}
+
+#abstracts .tags {
+    padding: 15px 0;
+}
+
+#abstracts .tag {
+    margin-right: 15px;
+}
+
+#abstracts .description {
+    padding-bottom: 15px;
+}
+
+#abstracts .statistic {
+    padding: 5px 0px;
+}
+</style>
 
 <div id="music">
     <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>

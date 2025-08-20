@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:59:53+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T17:17:52+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">贝尔数（Bell Numbers）</title><link href="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html" rel="alternate" type="text/html" title="贝尔数（Bell Numbers）" /><published>2025-08-19T00:00:00+00:00</published><updated>2025-08-19T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0%EF%BC%88Bell%20Numbers%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"><![CDATA[<h1 id="贝尔数">贝尔数</h1>
+<p>贝尔数 ($Bell \ numbers$) 是一个在组合数学中非常重要的数列，记为 $B_n$，它表示的是 <strong>一个有 $n$ 个元素的集合，能够划分成非空子集的全部方法的数量</strong>。</p>
+
+<p>贝尔数确实有一个非常经典且实用的递推公式，它依赖于另一个重要的概念: <strong>第二类斯特林数（Stirling numbers of the second kind）</strong>。</p>
+
+<p>$B_3 = 5$ 其划分方案如下：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[1]</code>, <code class="language-plaintext highlighter-rouge">[2]</code>, <code class="language-plaintext highlighter-rouge">[3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1]</code>, <code class="language-plaintext highlighter-rouge">[2, 3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[2]</code>, <code class="language-plaintext highlighter-rouge">[1, 3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[3]</code>, <code class="language-plaintext highlighter-rouge">[1, 2]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1, 2, 3]</code></li>
+</ul>
+
+<h1 id="贝尔数列">贝尔数列</h1>
+
+<p>由贝尔数构成的数列称为贝尔数列</p>
+<ul>
+  <li>$B_0 = 1$</li>
+  <li>$B_1= 1$</li>
+  <li>$B_2 = 2$</li>
+  <li>$B_3 = 5$</li>
+  <li>$B_4 = 15$</li>
+  <li>$B_5 = 52$</li>
+  <li>…</li>
+  <li>$B_{n + 1} = \sum\limits_{k = 0}^{n}C_{n}^{n - k}B_k = \sum\limits_{k = 0}^{n}C_{n}^{k}B_k$</li>
+</ul>
+
+<p>递推公式的含义是：对于第 $n + 1$ 个元素，考虑它和前 $n$ 个元素中任意 $n - k$ 个元素被分在同一个子集中，剩下的 $k$ 个元素则自成一种划分（其划分数为
+$B_k$）。</p>
+
+<h1 id="贝尔三角形">贝尔三角形</h1>
+<p>递推公式在计算上并不是最直观的，更实用的方法是构建一个贝尔三角形来递推计算：</p>
+<ul>
+  <li>第一行第一项是 $B_0 = 1$</li>
+  <li>每一行的第一项是上一行的最后一项</li>
+  <li>三角形中的其他项等于它左边项和左上方项之和</li>
+</ul>
+
+<p>我们用表格来构建前几项：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">$n$</th>
+      <th style="text-align: center">$B_n$</th>
+      <th style="text-align: left">贝尔三角形（每行的第一个数就是 $B_n$)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[1]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[1, 2]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[2, 3, 5]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[5, 7, 10, 15]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">15</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[15, 20, 27, 37, 52]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">52</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[52, 67, 87, 114, 151, 203]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">203</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">...</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>动态规划状态转移方程：</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="c1">// j &gt; 0</span>
+<span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+
+<span class="n">b_i</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>这种方法计算起来非常方便，无论是手算还是编程实现</p>]]></content><author><name>devil</name></author><category term="排列组合" /><summary type="html"><![CDATA[贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/64.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/64.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
 
@@ -729,181 +825,4 @@ pidin syspage | <span class="nb">grep </span>TAGID
 
 <p>第九特区</p>
 
-<p>眷思量</p>]]></content><author><name>pk</name></author><category term="动漫" /><summary type="html"><![CDATA[那些年，没追过女孩，只看过番]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/56.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/56.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">变参函数</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0.html" rel="alternate" type="text/html" title="变参函数" /><published>2025-05-17T00:00:00+00:00</published><updated>2025-05-17T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/cpp/2025/05/17/%E5%8F%98%E5%8F%82%E5%87%BD%E6%95%B0.html"><![CDATA[<h1 id="初识变参函数">初识变参函数</h1>
-<p>变参函数基本内容：</p>
-<ul>
-  <li>就是那个参数列表中有 … （即，<strong>变参列表</strong>）的函数；</li>
-  <li>变参函数的 <strong>参数个数</strong> 和 <strong>参数类型</strong> 都是不固定的，但它必须包含一个 <strong>固定参数</strong>；</li>
-</ul>
-
-<p>以下为一个变参函数原型示例：</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">super_add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...</span> <span class="p">);</span>
-</code></pre></div></div>
-
-<h1 id="简单变参函数实现">简单变参函数实现</h1>
-
-<p>以下为 n 个 int 类型数字求和的变参函数实现（大概看看长什么样子就够了）：</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//需要包含头文件 &lt;stdarg.h&gt;</span>
-<span class="c1">//这里 n 充当的就是上面所提到的 固定参数</span>
-<span class="kt">int</span> <span class="nf">super_add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span>
-    <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
-        <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-<p>ps：printf 和 scanf 函数毫无疑问是变参函数的代表作品，有兴趣可以详细了解。</p>
-
-<h2 id="va-一族">va 一族</h2>
-<p>上面实现中包含好几个以 va_ 开头的东西（通常被叫做 <strong>va 一族</strong>），下面对它们进行简单介绍：</p>
-<ul>
-  <li><strong>va_list:</strong> 用它来 声明一个 “变参指针”，我们可以通过该指针来获取变参列表中的内容；</li>
-  <li><strong>va_start:</strong> 用于初始化 变参指针，使其指向变参列表中第一个变量；第一个参数为 变参指针，第二个参数为 固定参数；</li>
-  <li><strong>va_arg:</strong> 用于获取 变参指针 当前所指的变量，并将 变参指针 指向下一个参数；第一个参数为 变参指针，第二个参数为 当前变参指针所指向变量的类型；</li>
-  <li><strong>va_end:</strong> 用于结束变参列表的读取；</li>
-</ul>
-
-<h2 id="变参列表以外的参数">变参列表以外的参数</h2>
-
-<p>要想正确的读取到变参列表里面的变量，变参列表以外的变量（包括固定参数）需要完成以下两个任务：</p>
-<ul>
-  <li><strong>暗示变参列表中参数的个数</strong>: 明确变参列表中有多少个参数</li>
-  <li><strong>暗示变参列表中每个参数的类型</strong>: 明确怎么读取变参列表中每个参数</li>
-  <li>scanf 和 printf 函数有明确以上两点么？</li>
-</ul>
-
-<h2 id="好奇心害死猫">好奇心害死猫</h2>
-<p>变参函数究竟是怎么实现的?</p>
-
-<p><strong>/usr/lib/gcc/x86_64-linux-gnu/9/include</strong> 路径下的 <strong>stdarg.h</strong> 中找到了 va 一族的相关内容：</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* Define the standard macros for the user,
-   if this invocation was from the user program.  */</span>
-<span class="cp">#ifdef _STDARG_H
-</span>
-<span class="cp">#define va_start(v,l)	__builtin_va_start(v,l)
-#define va_end(v)	__builtin_va_end(v)
-#define va_arg(v,l)	__builtin_va_arg(v,l)
-</span></code></pre></div></div>
-
-<p>奥，原来它们都是宏啊。这里显然一点有用的信息都没有，继续追踪 <strong>__builtin_va_start(v,l)</strong> 这些东西，然而找不到。</p>
-
-<h1 id="实践出真知">实践出真知</h1>
-
-<h2 id="一些背景">一些背景</h2>
-
-<blockquote>
-  <p>从i386到X86架构，函数调用约定发生了天翻地覆的变化：X86不再完全依赖栈进行传递参数，而是通过寄存器传参数，这给运运行库实现va_list、va_start、va_arg和va_end接口带来更大挑战。</p>
-</blockquote>
-
-<blockquote>
-  <p>X86有6个寄存器传递参数，每个寄存器位宽是8字节;</p>
-</blockquote>
-
-<blockquote>
-  <p>gcc是采用讨巧的办法，6个寄存器，传递可变参数的那些寄存器，全部压到称为参数保存区的栈空间上;</p>
-</blockquote>
-
-<h2 id="实验代码">实验代码</h2>
-<p>先不着急看它是干嘛的，就放这，后面再仔细分析。</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;stdarg.h&gt;</span><span class="cp">
-</span>
-<span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"&amp;n = %p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
-
-    <span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span>
-    <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
-
-	<span class="n">printf</span><span class="p">(</span><span class="s">"sizeof(ap) = %ld, &amp;ap = %p</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ap</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">ap</span><span class="p">);</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="s">"&amp;gp = %p, &amp;fp = %p, &amp;overflow = %p, &amp;reg = %p</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">gp_offset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">fp_offset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">overflow_arg_area</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">reg_save_area</span><span class="p">);</span>
-
-    <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="k">while</span><span class="p">(</span><span class="n">n</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"gp = %d, fp = %d, overflow = %p, reg = %p, "</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">gp_offset</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">fp_offset</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">overflow_arg_area</span><span class="p">,</span> <span class="n">ap</span><span class="o">-&gt;</span><span class="n">reg_save_area</span><span class="p">);</span>
-		<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
-		<span class="n">printf</span><span class="p">(</span><span class="s">"x = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
-	    <span class="n">res</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
-	<span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
-	<span class="n">printf</span><span class="p">(</span><span class="s">"sum(1...8) = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">//输出</span>
-<span class="o">&amp;</span><span class="n">n</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e3fc</span>
-<span class="k">sizeof</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ap</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e410</span>
-
-<span class="o">&amp;</span><span class="n">gp</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e410</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fp</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e414</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e418</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e420</span>
-
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f0</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">6</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e4f8</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">7</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e500</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e508</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e510</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e518</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">11</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span> <span class="n">overflow</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e520</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mh">0x7ffcfd09e430</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">...</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">78</span>
-</code></pre></div></div>
-
-<h2 id="va_list">va_list</h2>
-
-<p>理解 va_list 是个什么东西？</p>
-
-<p>终端执行以下命令，编译上面源码，并用 gdb 查看 va_list：</p>
-<ul>
-  <li>gcc -g main.c</li>
-  <li>gdb ./a.out</li>
-  <li>ptype va_list</li>
-</ul>
-
-<p>得到以下内容：</p>
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">type</span> <span class="o">=</span> <span class="k">struct</span> <span class="n">__va_list_tag</span> <span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">gp_offset</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">fp_offset</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="o">*</span><span class="n">overflow_arg_area</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="o">*</span><span class="n">reg_save_area</span><span class="p">;</span>
-<span class="p">}</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</code></pre></div></div>
-<p>成员含义：</p>
-<ul>
-  <li>gp_offset：通用寄存器偏移量，是指下个va_arg(ap, xxx)调用要获取的参数，在参数保存区的offset；</li>
-  <li>fp_offset：浮点寄存器偏移量；</li>
-  <li>overflow_arg_area：其它参数保存区，是个指针，指向栈传递的参数区；</li>
-  <li>reg_save_area：寄存器保存区，是个指针，指向prologue指令建好的参数保存区；</li>
-</ul>
-
-<p>对比代码输出，有规律：</p>
-<ul>
-  <li>总体上，先取寄存器里面的变量，后取参数保存区里的变量</li>
-  <li>取第几个寄存器中的变量由 寄存器基地址 + 寄存器偏移量决定</li>
-  <li>取参数保存区哪个变量由 overflow 指针决定</li>
-</ul>
-
-<!--此处应该有一张图-->
-
-<h2 id="其它">其它</h2>
-
-<p>为变参列表中每个变量所申请的内存空间都是 8 字节，无论实际传进去的是 char / int / long；</p>
-
-<p>参数保存区的到小固定，为 6 * 8 = 48 字节；</p>
-
-<h1 id="参考">参考</h1>
-<p><a href="https://zhuanlan.zhihu.com/p/94036267">揭秘X86架构C可变参数函数实现原理</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="cpp" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/54.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/54.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>眷思量</p>]]></content><author><name>pk</name></author><category term="动漫" /><summary type="html"><![CDATA[那些年，没追过女孩，只看过番]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/56.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/56.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

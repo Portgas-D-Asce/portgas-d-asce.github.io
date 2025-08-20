@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>贝尔数（Bell Numbers） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="贝尔数（Bell Numbers）" />
+<meta name="author" content="devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划" />
+<meta property="og:description" content="贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划" />
+<link rel="canonical" href="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html" />
+<meta property="og:url" content="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/64.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/64.jpeg" />
+<meta property="twitter:title" content="贝尔数（Bell Numbers）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"devil"},"dateModified":"2025-08-19T00:00:00+00:00","datePublished":"2025-08-19T00:00:00+00:00","description":"贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划","headline":"贝尔数（Bell Numbers）","image":"https://xdevil.top/assets/image/64.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"},"url":"https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 贝尔数（Bell Numbers） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="贝尔数">贝尔数</h1>
+<p>贝尔数 ($Bell \ numbers$) 是一个在组合数学中非常重要的数列，记为 $B_n$，它表示的是 <strong>一个有 $n$ 个元素的集合，能够划分成非空子集的全部方法的数量</strong>。</p>
+
+<p>贝尔数确实有一个非常经典且实用的递推公式，它依赖于另一个重要的概念: <strong>第二类斯特林数（Stirling numbers of the second kind）</strong>。</p>
+
+<p>$B_3 = 5$ 其划分方案如下：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[1]</code>, <code class="language-plaintext highlighter-rouge">[2]</code>, <code class="language-plaintext highlighter-rouge">[3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1]</code>, <code class="language-plaintext highlighter-rouge">[2, 3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[2]</code>, <code class="language-plaintext highlighter-rouge">[1, 3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[3]</code>, <code class="language-plaintext highlighter-rouge">[1, 2]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1, 2, 3]</code></li>
+</ul>
+
+<h1 id="贝尔数列">贝尔数列</h1>
+
+<p>由贝尔数构成的数列称为贝尔数列</p>
+<ul>
+  <li>$B_0 = 1$</li>
+  <li>$B_1= 1$</li>
+  <li>$B_2 = 2$</li>
+  <li>$B_3 = 5$</li>
+  <li>$B_4 = 15$</li>
+  <li>$B_5 = 52$</li>
+  <li>…</li>
+  <li>$B_{n + 1} = \sum\limits_{k = 0}^{n}C_{n}^{n - k}B_k = \sum\limits_{k = 0}^{n}C_{n}^{k}B_k$</li>
+</ul>
+
+<p>递推公式的含义是：对于第 $n + 1$ 个元素，考虑它和前 $n$ 个元素中任意 $n - k$ 个元素被分在同一个子集中，剩下的 $k$ 个元素则自成一种划分（其划分数为
+$B_k$）。</p>
+
+<h1 id="贝尔三角形">贝尔三角形</h1>
+<p>递推公式在计算上并不是最直观的，更实用的方法是构建一个贝尔三角形来递推计算：</p>
+<ul>
+  <li>第一行第一项是 $B_0 = 1$</li>
+  <li>每一行的第一项是上一行的最后一项</li>
+  <li>三角形中的其他项等于它左边项和左上方项之和</li>
+</ul>
+
+<p>我们用表格来构建前几项：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">$n$</th>
+      <th style="text-align: center">$B_n$</th>
+      <th style="text-align: left">贝尔三角形（每行的第一个数就是 $B_n$)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[1]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[1, 2]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[2, 3, 5]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[5, 7, 10, 15]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">15</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[15, 20, 27, 37, 52]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">52</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[52, 67, 87, 114, 151, 203]</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">203</td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">...</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>动态规划状态转移方程：</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+<span class="c1">// j &gt; 0</span>
+<span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+
+<span class="n">b_i</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>这种方法计算起来非常方便，无论是手算还是编程实现</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
