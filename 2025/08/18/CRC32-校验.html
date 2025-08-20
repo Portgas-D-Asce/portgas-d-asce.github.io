@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>CRC32 校验 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="CRC32 校验" />
+<meta name="author" content="devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" />
+<meta property="og:url" content="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/60.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-18T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/60.jpeg" />
+<meta property="twitter:title" content="CRC32 校验" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"devil"},"dateModified":"2025-08-18T00:00:00+00:00","datePublished":"2025-08-18T00:00:00+00:00","description":"xxxxxx","headline":"CRC32 校验","image":"https://xdevil.top/assets/image/60.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"},"url":"https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> CRC32 校验 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="概述">概述</h1>
+
+<p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
+
+<h1 id="正向-crc-320x04c11db7">正向 CRC-32（0x04C11DB7）</h1>
+
+<h2 id="bitwise">bitwise</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h2 id="look-table">look table</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h1 id="反向-crc-320xedb88320">反向 CRC-32（0xEDB88320）</h1>
+
+<p>常用在 ZIP/GZIP/PNG 等格式中</p>
+
+<h2 id="bitwise-1">bitwise</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span>
+<span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">crc32_bitwise</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">uint32_t</span> <span class="n">crc</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">crc</span> <span class="o">^=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">crc</span> <span class="o">=</span> <span class="p">(</span><span class="n">crc</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">^</span> <span class="p">((</span><span class="n">crc</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="mh">0xEDB88320</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">crc</span> <span class="o">^</span> <span class="mh">0xFFFFFFFF</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%02X "</span><span class="p">,</span> <span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">crc32_bitwise</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"CRC32（十进制）: "</span> <span class="o">&lt;&lt;</span> <span class="n">crc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"CRC32（十六进制）: "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">crc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="look-table-1">look table</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">CRC32</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">static</span> <span class="kt">uint32_t</span> <span class="n">calculate</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">initial</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="p">,</span> <span class="mi">256</span><span class="o">&gt;</span> <span class="n">table</span> <span class="o">=</span> <span class="p">[]()</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="p">,</span> <span class="mi">256</span><span class="o">&gt;</span> <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="p">,</span> <span class="mi">256</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">{};</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kt">uint32_t</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">crc</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span> <span class="o">^</span> <span class="p">((</span><span class="n">crc</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="mh">0xEDB88320</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+                <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">crc</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">nums</span><span class="p">;</span>
+        <span class="p">}();</span>
+
+        <span class="kt">uint32_t</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">initial</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">crc</span> <span class="o">=</span> <span class="p">(</span><span class="n">crc</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">^</span> <span class="n">table</span><span class="p">[(</span><span class="n">crc</span> <span class="o">^</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">crc</span> <span class="o">^</span> <span class="mh">0xFFFFFFFF</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">calculate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">initial</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">calculate</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">initial</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="kt">size_t</span> <span class="n">N</span><span class="p">&gt;</span>
+    <span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">calculate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span> <span class="n">N</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">initial</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">calculate</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">N</span><span class="p">,</span> <span class="n">initial</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%02X "</span><span class="p">,</span> <span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">CRC32</span><span class="o">::</span><span class="n">calculate</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"CRC32（十进制）: "</span> <span class="o">&lt;&lt;</span> <span class="n">crc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"CRC32（十六进制）: "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">crc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="理论">理论</h1>
+
+<p>？？？？？</p>
+
+<h1 id="链接">链接</h1>
+
+<p><a href="https://www.lddgo.net/encrypt/crc">CRC 在线计算</a></p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
