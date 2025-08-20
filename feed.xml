@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:22:23+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-20T06:44:40+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
 
@@ -117,7 +117,199 @@
 
 <h1 id="链接">链接</h1>
 
-<p><a href="https://www.lddgo.net/encrypt/crc">CRC 在线计算</a></p>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/60.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/60.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">内存检查工具</title><link href="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="内存检查工具" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="valgrind">Valgrind</h1>
+<p><a href="https://www.lddgo.net/encrypt/crc">CRC 在线计算</a></p>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/60.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/60.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Kanzi QNX 交叉编译环境搭建</title><link href="https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate" type="text/html" title="Kanzi QNX 交叉编译环境搭建" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/Kanzi%20QNX%20%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA</id><content type="html" xml:base="https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"><![CDATA[<h1 id="交叉编译工具">交叉编译工具</h1>
+
+<h2 id="qnx710">QNX710</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /opt/qnx710_3/
+total 32
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 bsp
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 docs
+drwxrwxr-x 6 pk pk 4096 Oct 23  2022 host
+<span class="nt">-rwxrwxr-x</span> 1 pk pk  972 Oct 23  2022 qnxsdp-env.bat
+<span class="nt">-rwxrwxr-x</span> 1 pk pk 1676 Oct 23  2022 qnxsdp-env.sh
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 <span class="nb">source
+</span>drwxrwxr-x 3 pk pk 4096 Oct 23  2022 target
+drwxrwxr-x 3 pk pk 4096 Oct 23  2022 targetImages
+</code></pre></div></div>
+
+<h2 id="kanzi-交叉编译链">Kanzi 交叉编译链</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /opt/Kanzi-3.9.0-qnx710_screen_aarch64_cxx-es3-freetype-static_libc++/
+total 4
+drwxr-xr-x 8 root root 4096 Sep 13  2024 Engine
+</code></pre></div></div>
+
+<h1 id="clion">CLion</h1>
+
+<p>本文 IDE 使用 CLion 进行开发环境搭建</p>
+
+<h1 id="toolchains">Toolchains</h1>
+
+<p>Settings -&gt; Build, Execution, Deployment -&gt; Toolchains -&gt; + -&gt; System</p>
+
+<ul>
+  <li><strong>Name:</strong> QNX710</li>
+  <li><strong>Environment file:</strong> /opt/qnx710_3/qnxsdp-env.sh</li>
+  <li><strong>CMake:</strong> Bundled
+    <ul>
+      <li><strong>Build Tool:</strong> Detected ninja</li>
+      <li><strong>C Compiler:</strong> /opt/qnx710_3/host/linux/x86_64/usr/bin/ntoaarch64-gcc</li>
+      <li><strong>C++ Compiler:</strong> /opt/qnx710_3/host/linux/x86_64/usr/bin/ntoaarch64-g++</li>
+    </ul>
+  </li>
+  <li><strong>Debugger:</strong> Bundled GDB</li>
+</ul>
+
+<p><img src="/assets/content/21.png" alt="21.png" /></p>
+
+<h1 id="cmake-profiles">CMake Profiles</h1>
+
+<p>Settings -&gt; Settings -&gt; Build, Execution, Deployment -&gt; CMake-&gt; +</p>
+
+<ul>
+  <li><strong>Name:</strong> Release-QNX710</li>
+  <li><strong>Build type:</strong> Release</li>
+  <li><strong>Toolchain:</strong> QNX710</li>
+  <li><strong>Generator:</strong> Use default Ninja</li>
+  <li><strong>CMake options:</strong> -DKANZIDIR=/opt/Kanzi-3.9.0-qnx710_screen_aarch64_cxx-es3-freetype-static_libc++</li>
+  <li><strong>Build directory:</strong> build</li>
+  <li><strong>Build options:</strong> -j 2</li>
+</ul>
+
+<p><img src="/assets/content/20.png" alt="20.png" /></p>
+
+<h1 id="cmakelists">CMakeLists</h1>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.10<span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span>www LANGUAGES C CXX<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 14<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD_REQUIRED ON<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_FLAGS <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_CXX_FLAGS</span><span class="si">}</span><span class="s2"> -std=gnu++14 -stdlib=libc++"</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_INSTALL_PREFIX <span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/output/<span class="si">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">add_definitions</span><span class="p">(</span>-DQNX<span class="p">)</span>
+
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/<span class="p">)</span>
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/xxx<span class="p">)</span>
+
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/xxx/<span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span> <span class="p">(</span>VERSION 3.10<span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span>demo<span class="p">)</span>
+
+<span class="nb">add_definitions</span><span class="p">(</span>
+    -DQNX_SCREEN
+    -DKANZI_FEATURE_3D
+    -DKZ_RUNTIME_GRAPHICS_BACKEND=1
+    -DKZ_DLOAD_GL_SYMBOLS=12
+    -DKZ_SUPPORT_GRAPHICS_API_OPENGL=1
+    -DKZ_SUPPORT_GRAPHICS_API_GLES=1
+    -DKZ_SUPPORT_GRAPHICS_CONTEXT_API_WGL=1
+    -DKZ_SUPPORT_GRAPHICS_CONTEXT_API_EGL=1
+    -DKZ_DLOAD_GLES_SYMBOLS=32
+    -DKZ_DLOAD_EGL_SYMBOLS=1
+    -D_CRT_SECURE_NO_WARNINGS
+    -DKZ_INLINE=inline
+    <span class="c1">#-D _GLIBCXX_USE_CXX11_ABI=0</span>
+    -DWSEGL
+<span class="p">)</span>
+
+<span class="nb">add_subdirectory</span> <span class="p">(</span>kanzi<span class="p">)</span>
+
+<span class="nb">file</span><span class="p">(</span>GLOB_RECURSE sources
+        *.cpp
+        *.h
+<span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">sources</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/include
+<span class="p">)</span>
+
+<span class="nb">target_link_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/lib/qnx710_screen_aarch64_cxx/ES3_Release
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/icu/lib
+<span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        kzappfw
+        kzcore
+        kzcoreui
+        kzui
+        kzfreetypeplugin
+        screen
+        sicuuc
+        sicudata
+        kanzi
+<span class="p">)</span>
+
+<span class="nb">install</span><span class="p">(</span>TARGETS <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> RUNTIME DESTINATION apps<span class="p">)</span>
+<span class="nb">install</span><span class="p">(</span>FILES
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/xxx.kzb
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/datasource.json
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/config.json DESTINATION apps<span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">project</span><span class="p">(</span>kanzi<span class="p">)</span>
+
+<span class="nb">option</span><span class="p">(</span>KANZIPlugin_BUILD_SHARED_LIBS <span class="s2">"Build using shared libraries"</span> OFF<span class="p">)</span>
+
+<span class="nb">file</span><span class="p">(</span>GLOB sources *.h *.hpp *.cpp<span class="p">)</span>
+
+<span class="nb">add_library</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> STATIC <span class="si">${</span><span class="nv">sources</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/common/boost/include
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/include
+<span class="p">)</span>
+
+<span class="nb">target_link_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/lib/qnx710_screen_aarch64_cxx/ES3_Release
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libunibreak/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/harfbuzz/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libpng/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libjpeg/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/freetype/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/zlib/lib
+<span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+        slog2
+        kzappfw
+        kzcore
+        kzcoreui
+        kzui
+        unibreak
+        harfbuzz
+        png
+        jpeg
+        freetype
+        GLESv2
+        EGL
+        z
+<span class="p">)</span>
+
+</code></pre></div></div>
+
+<h1 id="rundebug-configurations">Run/Debug Configurations</h1>
+
+<p>点击运行时，由于是交叉编译，程序是无法运行起来的，但编译产物还是要生成并进行打包的，以便推送到运行环境中执行</p>
+
+<p>Run/Debug Configurations -&gt; Before launch -&gt; +</p>
+
+<ul>
+  <li><strong>install:</strong> 运行前执行 make install 命令拷贝编译产物到输出路径</li>
+  <li><strong>CMake Target: package:</strong> 打包命令，将输出路径下编译产物打包为压缩文件</li>
+</ul>
+
+<p><img src="/assets/content/19.png" alt="19.png" /></p>]]></content><author><name>devil</name></author><category term="kanzi" /><category term="qnx" /><summary type="html"><![CDATA[xxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">内存检查工具</title><link href="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html" rel="alternate" type="text/html" title="内存检查工具" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7</id><content type="html" xml:base="https://xdevil.top/2025/08/18/%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7.html"><![CDATA[<h1 id="valgrind">Valgrind</h1>
 
 <h2 id="apt">apt</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 版本老, 存在 valgrind: the 'impossible' happened: Unsupported arch_prctl option 问题</span>
@@ -146,7 +338,7 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 </code></pre></div></div>
 
-<h1 id="sanitizer">Sanitizer</h1>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[Valgrind, Sanitizer 等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/61.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/61.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linux 常用命令</title><link href="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="Linux 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/Linux%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="cloc">cloc</h1>
+<h1 id="sanitizer">Sanitizer</h1>]]></content><author><name>devil</name></author><category term="linux" /><summary type="html"><![CDATA[Valgrind, Sanitizer 等]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/62.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/62.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linux 常用命令</title><link href="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="Linux 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/Linux%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="cloc">cloc</h1>
 <p>代码统计工具</p>
 <h2 id="安装">安装</h2>
 
@@ -914,52 +1106,4 @@ pidin syspage | <span class="nb">grep </span>TAGID
 <p><a href="https://leetcode.com/problems/longest-palindromic-substring/">LeetCode 5. Longest Palindromic Substring</a>
 <a href="https://leetcode.com/problems/palindromic-substrings/">LeetCode 647. Palindromic Substrings</a></p>
 
-<p><a href="https://codeforces.com/contest/1943/problem/B">B. Non-Palindromic Substring</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="字符串" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/53.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/53.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Pick 定理</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick-%E5%AE%9A%E7%90%86.html" rel="alternate" type="text/html" title="Pick 定理" /><published>2025-04-07T00:00:00+00:00</published><updated>2025-04-07T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick%20%E5%AE%9A%E7%90%86</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/Pick-%E5%AE%9A%E7%90%86.html"><![CDATA[<h1 id="pick-定理">Pick 定理</h1>
-
-<p>顶点均为整点的简单多边形，其面积 $A$，内部整点数目 $i$，边上整点数目 $b$ 之间具有如下关系：
-\(A = i + b / 2 - 1\)</p>
-
-<h2 id="证明">证明</h2>
-
-<h2 id="推广">推广</h2>
-
-<h3 id="平行四边形格点">平行四边形格点</h3>
-
-<p>皮克定理依然成立。</p>
-
-<p>证明？？？？</p>
-
-<h3 id="三角形格点">三角形格点</h3>
-
-<p>皮克定理如下：
-\(A = 2 * i + b - 2\)
-证明？？？？？</p>
-
-<h3 id="非简单多边形">非简单多边形</h3>
-
-<p>皮克定理如下，$\chi(P)$ 表示 $P$ 的 <strong>欧拉特征数</strong>：
-\(A = i + b / 2 - \chi(P)\)
-欧拉特征数？？？？</p>
-
-<p>证明？？？？</p>
-
-<h3 id="高维推广">高维推广</h3>
-
-<p>Ehrhart 多项式</p>
-
-<h1 id="实现">实现</h1>
-
-<h2 id="多边形的面积">多边形的面积</h2>
-
-<p>顶点均为整点的多边形面积一定为 $1/2$ 的倍数</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
-
-<h2 id="边上整点个数">边上整点个数</h2>
-
-<p>以整点开始和结束的线短，经过的格点数为：
-\(gcd(dx, dy) + 1\)</p>
-
-<h2 id="多边形内整点数">多边形内整点数</h2>
-
-<p>根据 Pick 定理，计算出简单多边形内整点个数</p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/52.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/52.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p><a href="https://codeforces.com/contest/1943/problem/B">B. Non-Palindromic Substring</a></p>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="字符串" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/53.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/53.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

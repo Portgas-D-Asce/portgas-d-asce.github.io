@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kanzi QNX 交叉编译环境搭建 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Kanzi QNX 交叉编译环境搭建" />
+<meta name="author" content="devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxx" />
+<meta property="og:description" content="xxxxx" />
+<link rel="canonical" href="https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" />
+<meta property="og:url" content="https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/61.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-18T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/61.jpeg" />
+<meta property="twitter:title" content="Kanzi QNX 交叉编译环境搭建" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"devil"},"dateModified":"2025-08-18T00:00:00+00:00","datePublished":"2025-08-18T00:00:00+00:00","description":"xxxxx","headline":"Kanzi QNX 交叉编译环境搭建","image":"https://xdevil.top/assets/image/61.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"},"url":"https://xdevil.top/2025/08/18/Kanzi-QNX-%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> Kanzi QNX 交叉编译环境搭建 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="交叉编译工具">交叉编译工具</h1>
+
+<h2 id="qnx710">QNX710</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /opt/qnx710_3/
+total 32
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 bsp
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 docs
+drwxrwxr-x 6 pk pk 4096 Oct 23  2022 host
+<span class="nt">-rwxrwxr-x</span> 1 pk pk  972 Oct 23  2022 qnxsdp-env.bat
+<span class="nt">-rwxrwxr-x</span> 1 pk pk 1676 Oct 23  2022 qnxsdp-env.sh
+drwxrwxr-x 2 pk pk 4096 Oct 23  2022 <span class="nb">source
+</span>drwxrwxr-x 3 pk pk 4096 Oct 23  2022 target
+drwxrwxr-x 3 pk pk 4096 Oct 23  2022 targetImages
+</code></pre></div></div>
+
+<h2 id="kanzi-交叉编译链">Kanzi 交叉编译链</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /opt/Kanzi-3.9.0-qnx710_screen_aarch64_cxx-es3-freetype-static_libc++/
+total 4
+drwxr-xr-x 8 root root 4096 Sep 13  2024 Engine
+</code></pre></div></div>
+
+<h1 id="clion">CLion</h1>
+
+<p>本文 IDE 使用 CLion 进行开发环境搭建</p>
+
+<h1 id="toolchains">Toolchains</h1>
+
+<p>Settings -&gt; Build, Execution, Deployment -&gt; Toolchains -&gt; + -&gt; System</p>
+
+<ul>
+  <li><strong>Name:</strong> QNX710</li>
+  <li><strong>Environment file:</strong> /opt/qnx710_3/qnxsdp-env.sh</li>
+  <li><strong>CMake:</strong> Bundled
+    <ul>
+      <li><strong>Build Tool:</strong> Detected ninja</li>
+      <li><strong>C Compiler:</strong> /opt/qnx710_3/host/linux/x86_64/usr/bin/ntoaarch64-gcc</li>
+      <li><strong>C++ Compiler:</strong> /opt/qnx710_3/host/linux/x86_64/usr/bin/ntoaarch64-g++</li>
+    </ul>
+  </li>
+  <li><strong>Debugger:</strong> Bundled GDB</li>
+</ul>
+
+<p><img src="/assets/content/21.png" alt="21.png" /></p>
+
+<h1 id="cmake-profiles">CMake Profiles</h1>
+
+<p>Settings -&gt; Settings -&gt; Build, Execution, Deployment -&gt; CMake-&gt; +</p>
+
+<ul>
+  <li><strong>Name:</strong> Release-QNX710</li>
+  <li><strong>Build type:</strong> Release</li>
+  <li><strong>Toolchain:</strong> QNX710</li>
+  <li><strong>Generator:</strong> Use default Ninja</li>
+  <li><strong>CMake options:</strong> -DKANZIDIR=/opt/Kanzi-3.9.0-qnx710_screen_aarch64_cxx-es3-freetype-static_libc++</li>
+  <li><strong>Build directory:</strong> build</li>
+  <li><strong>Build options:</strong> -j 2</li>
+</ul>
+
+<p><img src="/assets/content/20.png" alt="20.png" /></p>
+
+<h1 id="cmakelists">CMakeLists</h1>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.10<span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span>www LANGUAGES C CXX<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 14<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD_REQUIRED ON<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_FLAGS <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_CXX_FLAGS</span><span class="si">}</span><span class="s2"> -std=gnu++14 -stdlib=libc++"</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_INSTALL_PREFIX <span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/output/<span class="si">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">add_definitions</span><span class="p">(</span>-DQNX<span class="p">)</span>
+
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/<span class="p">)</span>
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/xxx<span class="p">)</span>
+
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/xxx/<span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span> <span class="p">(</span>VERSION 3.10<span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span>demo<span class="p">)</span>
+
+<span class="nb">add_definitions</span><span class="p">(</span>
+    -DQNX_SCREEN
+    -DKANZI_FEATURE_3D
+    -DKZ_RUNTIME_GRAPHICS_BACKEND=1
+    -DKZ_DLOAD_GL_SYMBOLS=12
+    -DKZ_SUPPORT_GRAPHICS_API_OPENGL=1
+    -DKZ_SUPPORT_GRAPHICS_API_GLES=1
+    -DKZ_SUPPORT_GRAPHICS_CONTEXT_API_WGL=1
+    -DKZ_SUPPORT_GRAPHICS_CONTEXT_API_EGL=1
+    -DKZ_DLOAD_GLES_SYMBOLS=32
+    -DKZ_DLOAD_EGL_SYMBOLS=1
+    -D_CRT_SECURE_NO_WARNINGS
+    -DKZ_INLINE=inline
+    <span class="c1">#-D _GLIBCXX_USE_CXX11_ABI=0</span>
+    -DWSEGL
+<span class="p">)</span>
+
+<span class="nb">add_subdirectory</span> <span class="p">(</span>kanzi<span class="p">)</span>
+
+<span class="nb">file</span><span class="p">(</span>GLOB_RECURSE sources
+        *.cpp
+        *.h
+<span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">sources</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/include
+<span class="p">)</span>
+
+<span class="nb">target_link_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/lib/qnx710_screen_aarch64_cxx/ES3_Release
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/icu/lib
+<span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        kzappfw
+        kzcore
+        kzcoreui
+        kzui
+        kzfreetypeplugin
+        screen
+        sicuuc
+        sicudata
+        kanzi
+<span class="p">)</span>
+
+<span class="nb">install</span><span class="p">(</span>TARGETS <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> RUNTIME DESTINATION apps<span class="p">)</span>
+<span class="nb">install</span><span class="p">(</span>FILES
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/xxx.kzb
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/datasource.json
+        <span class="si">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="si">}</span>/config.json DESTINATION apps<span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">project</span><span class="p">(</span>kanzi<span class="p">)</span>
+
+<span class="nb">option</span><span class="p">(</span>KANZIPlugin_BUILD_SHARED_LIBS <span class="s2">"Build using shared libraries"</span> OFF<span class="p">)</span>
+
+<span class="nb">file</span><span class="p">(</span>GLOB sources *.h *.hpp *.cpp<span class="p">)</span>
+
+<span class="nb">add_library</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> STATIC <span class="si">${</span><span class="nv">sources</span><span class="si">}</span><span class="p">)</span>
+
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/common/boost/include
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/include
+<span class="p">)</span>
+
+<span class="nb">target_link_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/lib/qnx710_screen_aarch64_cxx/ES3_Release
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libunibreak/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/harfbuzz/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libpng/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/libjpeg/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/freetype/lib
+        <span class="si">${</span><span class="nv">KANZIDIR</span><span class="si">}</span>/Engine/libraries/platforms/qnx710-aarch64-cxx/zlib/lib
+<span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+        slog2
+        kzappfw
+        kzcore
+        kzcoreui
+        kzui
+        unibreak
+        harfbuzz
+        png
+        jpeg
+        freetype
+        GLESv2
+        EGL
+        z
+<span class="p">)</span>
+
+</code></pre></div></div>
+
+<h1 id="rundebug-configurations">Run/Debug Configurations</h1>
+
+<p>点击运行时，由于是交叉编译，程序是无法运行起来的，但编译产物还是要生成并进行打包的，以便推送到运行环境中执行</p>
+
+<p>Run/Debug Configurations -&gt; Before launch -&gt; +</p>
+
+<ul>
+  <li><strong>install:</strong> 运行前执行 make install 命令拷贝编译产物到输出路径</li>
+  <li><strong>CMake Target: package:</strong> 打包命令，将输出路径下编译产物打包为压缩文件</li>
+</ul>
+
+<p><img src="/assets/content/19.png" alt="19.png" /></p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
