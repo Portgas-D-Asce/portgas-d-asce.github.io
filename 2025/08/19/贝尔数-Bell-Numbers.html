@@ -69,9 +69,9 @@
     margin-bottom: 12px;
 }
 </style><h1 id="贝尔数">贝尔数</h1>
-<p>贝尔数 ($Bell \ numbers$) 是一个在组合数学中非常重要的数列，记为 $B_n$，它表示的是 <strong>一个有 $n$ 个元素的集合，能够划分成非空子集的全部方法的数量</strong>。</p>
+<p>贝尔数($Bell \ numbers$)是组合数学中一个非常重要且优美的数列，它以数学家埃里克·坦普尔·贝尔（Eric Temple Bell）的名字命名。</p>
 
-<p>贝尔数确实有一个非常经典且实用的递推公式，它依赖于另一个重要的概念: <strong>第二类斯特林数（Stirling numbers of the second kind）</strong>。</p>
+<p>记为 $B_n$，它表示的是 <strong>一个有 $n$ 个元素的集合，能够划分成非空子集的全部方法的数量</strong></p>
 
 <p>$B_3 = 5$ 其划分方案如下：</p>
 <ul>
@@ -81,6 +81,10 @@
   <li><code class="language-plaintext highlighter-rouge">[3]</code>, <code class="language-plaintext highlighter-rouge">[1, 2]</code></li>
   <li><code class="language-plaintext highlighter-rouge">[1, 2, 3]</code></li>
 </ul>
+
+<p>贝尔数确实有一个非常经典且实用的递推公式，它依赖于另一个重要的概念: <strong>第二类斯特林数（Stirling numbers of the second kind）</strong>。</p>
+
+\[B_n = \sum\limits_{k = 0}^{n}S(n, k)\]
 
 <h1 id="贝尔数列">贝尔数列</h1>
 
