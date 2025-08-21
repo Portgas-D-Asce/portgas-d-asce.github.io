@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-21T12:25:00+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">贝尔数（Bell Numbers）</title><link href="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html" rel="alternate" type="text/html" title="贝尔数（Bell Numbers）" /><published>2025-08-19T00:00:00+00:00</published><updated>2025-08-19T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0%EF%BC%88Bell%20Numbers%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"><![CDATA[<h1 id="贝尔数">贝尔数</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-21T15:58:22+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">斯特林数（Stirling Numbers）</title><link href="https://xdevil.top/2025/08/19/%E6%96%AF%E7%89%B9%E6%9E%97%E6%95%B0-Stirling-Numbers.html" rel="alternate" type="text/html" title="斯特林数（Stirling Numbers）" /><published>2025-08-19T00:00:00+00:00</published><updated>2025-08-19T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/19/%E6%96%AF%E7%89%B9%E6%9E%97%E6%95%B0%EF%BC%88Stirling%20Numbers%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/19/%E6%96%AF%E7%89%B9%E6%9E%97%E6%95%B0-Stirling-Numbers.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p>斯特林数是组合数学中的一类重要整数，因数学家詹姆斯·斯特林（James Stirling）而得名
+它们用于描述集合的划分和排列方式，主要分为 <strong>第一类斯特林数</strong> 和 <strong>第二类斯特林数</strong> 两种</p>
+<ul>
+  <li><strong>第二类</strong>：划分集合（集合内部无序）。</li>
+  <li><strong>第一类</strong>：排列成循环（循环内部旋转等价，但不同循环之间无序）</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">$n$</th>
+      <th style="text-align: center">$k$</th>
+      <th style="text-align: center">$S(n,k)$（第二类）</th>
+      <th style="text-align: center">$s(n,k)$（无符号第一类）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">2</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">3</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">11</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="第二类斯特林数stirling-numbers-of-the-second-kind">第二类斯特林数（Stirling numbers of the second kind）</h1>
+
+<h2 id="定义">定义</h2>
+<p>表示将 $n$ 个 <strong>不同元素</strong> 划分成 $k$ 个 <strong>非空无标号集合（盒子不可区分）</strong> 的方案数，记作 $S(n, k)$</p>
+
+<p>示例：将3个元素 <code class="language-plaintext highlighter-rouge">[a,b,c]</code> 划分成 2 个非空集合，$S(3, 2) = 3$</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[a,b]</code>, <code class="language-plaintext highlighter-rouge">[c]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[a,c]</code>, <code class="language-plaintext highlighter-rouge">[b]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[b,c]</code>, <code class="language-plaintext highlighter-rouge">[a]</code></li>
+</ul>
+
+<h2 id="递推公式">递推公式</h2>
+<p>\(S(n, k) = S(n - 1, k - 1) + k \cdot S(n - 1, k)\)</p>
+
+<p>边界条件：</p>
+<ul>
+  <li>$S(n, 0) = 0, (n \geq 1)$</li>
+  <li>$S(n, 1) = 1$</li>
+  <li>$S(n, n) = 1$</li>
+  <li>$S(n, k) = 0,(k \gt n)$</li>
+</ul>
+
+<p>递推公式含义：对于第 $n$ 个数</p>
+<ul>
+  <li>将其单独分配到一个集合中时，有 $S(n - 1, k - 1)$ 种划分方式</li>
+  <li>将其与其他原元素分配到一个集合时，有 $k \cdot S(n - 1, k)$ 种划分方式</li>
+</ul>
+
+<h2 id="通项公式">通项公式??????????????</h2>
+
+\[S(n, k) = \frac{1}{k!} \sum_{i=0}^{k} (-1)^i \binom{k}{i} (k-i)^n\]
+
+<h2 id="应用">应用</h2>
+<p>集合划分计数（如球放入不可区分盒子且非空）。</p>
+
+<p>与贝尔数相关。</p>
+
+<h1 id="第一类斯特林数stirling-numbers-of-the-first-kind">第一类斯特林数（Stirling numbers of the first kind）</h1>
+<h2 id="定义-1">定义</h2>
+<p>表示将 $n$ 个 <strong>不同元素</strong> 排成 $k$ 个 <strong>循环排列</strong>（圆排列）的方案数，记作 s(n, k)</p>
+
+<p>有符号和无符号两种，通常无符号更常用</p>
+<ul>
+  <li><strong>无符号第一类斯特林数</strong>（常用）：记作 $c(n, k)$ 表示循环排列数</li>
+  <li><strong>有符号第一类斯特林数</strong>：包含正负号，与下降幂相关??????????</li>
+</ul>
+
+<p>例子：将3个元素排成2个循环排列方案 $s(3,2) = 3$（无符号）:</p>
+<ul>
+  <li>(a)(b c)</li>
+  <li>(b)(a c)</li>
+  <li>(c)(a b)</li>
+</ul>
+
+<h2 id="递推公式-1">递推公式</h2>
+<p>\(s(n, k) = s(n - 1, k - 1) + (n - 1) \cdot s(n - 1, k)\)</p>
+
+<p>边界条件：</p>
+<ul>
+  <li>$s(n, 0) = 0, (n \geq 1)$</li>
+  <li>$s(n, 1) = (n - 1)!$</li>
+  <li>$s(n, n) = 1$</li>
+</ul>
+
+<p>递推公式理解：对于第 $n$ 个元素来说</p>
+<ul>
+  <li>独自成环时，有 $s(n - 1, k - 1)$ 种方案</li>
+  <li>非独自成环时，将其分别放在 $n - 1$ 个元素旁边，有 $(n - 1) \cdot s(n - 1, k)$ 种方案</li>
+</ul>
+
+<h2 id="应用-1">应用</h2>
+<p>循环排列计数（如轮换分解）</p>
+
+<p>多项式系数（上升幂/下降幂展开）</p>
+
+<h1 id="生成函数">生成函数??????????</h1>
+<p>第二类斯特林数的生成函数：
+\(\sum_{n=k}^{\infty} S(n,k) \frac{x^n}{n!} = \frac{(e^x - 1)^k}{k!}\)</p>
+
+<p>第一类斯特林数的生成函数（上升阶乘幂）：
+\(x(x+1)(x+2)\cdots(x+n-1) = \sum_{k=0}^{n} s(n,k) x^k\)</p>]]></content><author><name>devil</name></author><category term="排列组合" /><summary type="html"><![CDATA[第一类斯特林数、第二类斯特林数]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/64.png" /><media:content medium="image" url="https://xdevil.top/assets/image/64.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">贝尔数（Bell Numbers）</title><link href="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html" rel="alternate" type="text/html" title="贝尔数（Bell Numbers）" /><published>2025-08-19T00:00:00+00:00</published><updated>2025-08-19T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0%EF%BC%88Bell%20Numbers%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/19/%E8%B4%9D%E5%B0%94%E6%95%B0-Bell-Numbers.html"><![CDATA[<h1 id="贝尔数">贝尔数</h1>
 <p>贝尔数($Bell \ numbers$)是组合数学中一个非常重要且优美的数列，它以数学家埃里克·坦普尔·贝尔（Eric Temple Bell）的名字命名。</p>
 
 <p>记为 $B_n$，它表示的是 <strong>一个有 $n$ 个元素的集合，能够划分成非空子集的全部方法的数量</strong></p>
@@ -98,7 +243,7 @@ $B_k$）。</p>
 <span class="n">b_i</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </code></pre></div></div>
 
-<p>这种方法计算起来非常方便，无论是手算还是编程实现</p>]]></content><author><name>devil</name></author><category term="排列组合" /><summary type="html"><![CDATA[贝尔数、贝尔数列、贝尔三角形、第二类斯特林数、动态规划]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/64.png" /><media:content medium="image" url="https://xdevil.top/assets/image/64.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
+<p>这种方法计算起来非常方便，无论是手算还是编程实现</p>]]></content><author><name>devil</name></author><category term="排列组合" /><summary type="html"><![CDATA[贝尔数、贝尔数列、贝尔三角形、第二类斯特林数]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/65.png" /><media:content medium="image" url="https://xdevil.top/assets/image/65.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CRC32 校验</title><link href="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html" rel="alternate" type="text/html" title="CRC32 校验" /><published>2025-08-18T00:00:00+00:00</published><updated>2025-08-18T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/18/CRC32%20%E6%A0%A1%E9%AA%8C</id><content type="html" xml:base="https://xdevil.top/2025/08/18/CRC32-%E6%A0%A1%E9%AA%8C.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <p>CRC32 算法有多种变体，主要区别在于 <strong>多项式表示方式（Normal vs Reversed/Reflected）</strong> 和 <strong>初始值、输出异或值等参数</strong>。<code class="language-plaintext highlighter-rouge">0x04C11DB7</code> 和 <code class="language-plaintext highlighter-rouge">0xEDB88320</code> 是同一个多项式的两种不同表示形式，分别用于 <strong>正向 CRC-32</strong> 和 <strong>反向 CRC-32</strong>。</p>
 
@@ -792,41 +937,4 @@ pidin syspage | <span class="nb">grep </span>TAGID
 
 <p>人生就像一场戏，有些人入戏太深！</p>
 
-<p>世界的本质就是一帮草台班子，除了老子，谁也不认！</p>]]></content><author><name>pk</name></author><category term="活着" /><summary type="html"><![CDATA[那些无法说出口，说出来又无人能懂的话]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/55.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/55.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">中二患者</title><link href="https://xdevil.top/%E5%8A%A8%E6%BC%AB/2025/08/15/%E4%B8%AD%E4%BA%8C%E6%82%A3%E8%80%85.html" rel="alternate" type="text/html" title="中二患者" /><published>2025-08-15T00:00:00+00:00</published><updated>2025-08-15T00:00:00+00:00</updated><id>https://xdevil.top/%E5%8A%A8%E6%BC%AB/2025/08/15/%E4%B8%AD%E4%BA%8C%E6%82%A3%E8%80%85</id><content type="html" xml:base="https://xdevil.top/%E5%8A%A8%E6%BC%AB/2025/08/15/%E4%B8%AD%E4%BA%8C%E6%82%A3%E8%80%85.html"><![CDATA[<h1 id="日漫">日漫</h1>
-<p>火影忍者</p>
-
-<p>死神</p>
-
-<p>进击的巨人</p>
-
-<p>海贼王</p>
-
-<p>东京喰种</p>
-
-<p>罪恶皇冠</p>
-
-<p>鲁鲁修</p>
-
-<p>灌篮高手</p>
-
-<p>妖精的尾巴</p>
-
-<p>鬼灭之刃</p>
-
-<p>犬夜叉</p>
-
-<h1 id="国漫">国漫</h1>
-
-<p>魁拔</p>
-
-<p>灵笼</p>
-
-<p>仙逆</p>
-
-<p>完美世界</p>
-
-<p>紫川</p>
-
-<p>第九特区</p>
-
-<p>眷思量</p>]]></content><author><name>pk</name></author><category term="动漫" /><summary type="html"><![CDATA[那些年，没追过女孩，只看过番]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/56.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/56.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>世界的本质就是一帮草台班子，除了老子，谁也不认！</p>]]></content><author><name>pk</name></author><category term="活着" /><summary type="html"><![CDATA[那些无法说出口，说出来又无人能懂的话]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/55.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/55.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
