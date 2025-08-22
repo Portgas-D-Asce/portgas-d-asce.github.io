@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="多源最短路径、动态规划">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>弗洛伊德（Floyd） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="弗洛伊德（Floyd）" />
+<meta name="author" content="devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="多源最短路径、动态规划" />
+<meta property="og:description" content="多源最短路径、动态规划" />
+<link rel="canonical" href="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html" />
+<meta property="og:url" content="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/68.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-21T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/68.jpeg" />
+<meta property="twitter:title" content="弗洛伊德（Floyd）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"devil"},"dateModified":"2025-08-21T00:00:00+00:00","datePublished":"2025-08-21T00:00:00+00:00","description":"多源最短路径、动态规划","headline":"弗洛伊德（Floyd）","image":"https://xdevil.top/assets/image/68.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html"},"url":"https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 弗洛伊德（Floyd） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>Floyd 算法（也称为 Floyd-Warshall 算法）是一种非常经典且优雅的<strong>动态规划</strong>算法，用于解决<strong>图中所有顶点对之间的最短路径问题</strong>。它的核心思想是通过逐步扩展允许经过的中间顶点集，来动态地更新任意两点间的最短距离。</p>
+
+<h1 id="动态规划原理">动态规划原理</h1>
+
+<p>算法使用一个三重循环来不断更新一个距离矩阵 <code class="language-plaintext highlighter-rouge">dist</code>。</p>
+<h2 id="状态定义">状态定义</h2>
+<p><code class="language-plaintext highlighter-rouge">dist[k][i][j]</code>：表示从顶点 <code class="language-plaintext highlighter-rouge">i</code> 到顶点 <code class="language-plaintext highlighter-rouge">j</code> 的路径，经过的中间点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1}</code> （不包括起点和终点）时的最短路径长度。</p>
+
+<h2 id="状态转移">状态转移</h2>
+<p>对于每一个中间顶点 <code class="language-plaintext highlighter-rouge">k</code>，我们考虑是否通过这个新顶点 <code class="language-plaintext highlighter-rouge">k</code> 能让路径 <code class="language-plaintext highlighter-rouge">i -&gt; j</code> 变得更短 <code class="language-plaintext highlighter-rouge">dist[k][i][j] = min(dist[k-1][i][j], dist[k-1][i][k] + dist[k-1][k][j])</code></p>
+<ul>
+  <li><strong>不经过 <code class="language-plaintext highlighter-rouge">k</code></strong>：保持上一阶段的最短路径 <code class="language-plaintext highlighter-rouge">dist[k-1][i][j]</code>。</li>
+  <li><strong>经过 <code class="language-plaintext highlighter-rouge">k</code></strong>：将路径分解为 <code class="language-plaintext highlighter-rouge">i -&gt; k</code> 和 <code class="language-plaintext highlighter-rouge">k -&gt; j</code> 两段。这两段路径在上一阶段 (<code class="language-plaintext highlighter-rouge">k-1</code>) 已经被计算过，并且它们只使用了 <code class="language-plaintext highlighter-rouge">{0, 1, ..., k-1}</code> 中的顶点作为中间点。</li>
+</ul>
+
+<blockquote>
+  <p>注意，为啥不是 <code class="language-plaintext highlighter-rouge">dist[k][i][k] + dist[k][k][j]</code> 呢？
+-<code class="language-plaintext highlighter-rouge">i -&gt; k</code> 经过点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1}</code> 的最短路径 和 经过点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1, k}</code> 的最短路径有啥区别呢，没区别！</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">dist[k][i][k] = dist[k - 1][i][k]</code> , <code class="language-plaintext highlighter-rouge">dist[k][k][j] = dist[k - 1][k][j]</code></li>
+  </ul>
+</blockquote>
+
+<h2 id="优化空间复杂度">优化空间复杂度</h2>
+<p>由于 <code class="language-plaintext highlighter-rouge">dist[k][i][j]</code> 只依赖于 <code class="language-plaintext highlighter-rouge">dist[k-1][...]</code>，我们可以使用一个二维数组 <code class="language-plaintext highlighter-rouge">dist[i][j]</code>，通过<strong>就地更新</strong>（in-place）来节省空间，将三维DP表“压扁”成二维。这就是我们通常见到的形式。</p>
+
+<p>最终的状态转移方程变为：<code class="language-plaintext highlighter-rouge">if (dist[i][k] + dist[k][j] &lt; dist[i][j]) { dist[i][j] = dist[i][k] + dist[k][j]; }</code></p>
+
+<blockquote>
+  <p>注意: 此处的 <code class="language-plaintext highlighter-rouge">dist[i][k]</code> 和 <code class="language-plaintext highlighter-rouge">dist[k][j]</code> 不一定都是第 <code class="language-plaintext highlighter-rouge">k - 1</code> 阶段的，但不影响计算及过（详见状态转移部分的注意）</p>
+</blockquote>
+
+<h2 id="复杂度">复杂度</h2>
+<p><strong>时间复杂度</strong>：<code class="language-plaintext highlighter-rouge">O(|V|³)</code>。三重循环，非常直观。
+<strong>空间复杂度</strong>：<code class="language-plaintext highlighter-rouge">O(|V|²)</code>。只需要存储一个距离矩阵。</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>初始化</strong>：</p>
+<ul>
+  <li>创建一个 <code class="language-plaintext highlighter-rouge">n x n</code> 的矩阵 <code class="language-plaintext highlighter-rouge">dist</code>（<code class="language-plaintext highlighter-rouge">n</code> 为顶点数）</li>
+  <li>如果存在边 <code class="language-plaintext highlighter-rouge">i -&gt; j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j]</code> 初始化为该边的权重</li>
+  <li>如果 <code class="language-plaintext highlighter-rouge">i == j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j] = 0</code>（自身到自身的距离为0）</li>
+  <li>如果不存在边 <code class="language-plaintext highlighter-rouge">i -&gt; j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j]</code> 初始化为一个<strong>极大值</strong>（例如 <code class="language-plaintext highlighter-rouge">Infinity</code>），代表无穷大/不可达</li>
+</ul>
+
+<p><strong>三重循环更新</strong>：</p>
+<ul>
+  <li>最外层循环：中间顶点 <code class="language-plaintext highlighter-rouge">k</code>，从 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">n-1</code></li>
+  <li>内层两层循环：起点 <code class="language-plaintext highlighter-rouge">i</code> 和终点 <code class="language-plaintext highlighter-rouge">j</code>，都从 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">n-1</code></li>
+  <li>对于每一对 <code class="language-plaintext highlighter-rouge">(i, j)</code>，检查 <code class="language-plaintext highlighter-rouge">i -&gt; k -&gt; j</code> 这条路径是否比当前已知的 <code class="language-plaintext highlighter-rouge">i -&gt; j</code> 路径更短。如果是，则更新 <code class="language-plaintext highlighter-rouge">dist[i][j]</code></li>
+</ul>
+
+<p><strong>结果</strong>： 算法结束后，<code class="language-plaintext highlighter-rouge">dist[i][j]</code> 中存储的就是顶点 <code class="language-plaintext highlighter-rouge">i</code> 到顶点 <code class="language-plaintext highlighter-rouge">j</code> 的<strong>最短路径距离</strong>。</p>
+
+<h1 id="应用场景">应用场景</h1>
+<p>可以处理<strong>有向图</strong>和<strong>无向图</strong>。</p>
+
+<p>可以处理<strong>负权边</strong>。</p>
+
+<p><strong>不能处理包含负权回路（Negative Cycle）的图</strong>。因为负权回路可以让路径长度无限减小，不存在最短路径。</p>
+
+<h1 id="代码">代码</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//初始化</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">));</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//w[i][j] 为权重</span>
+        <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//计算最短距离</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//默认值设为 INT_MAX / 2 防止这里溢出</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">((</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="重构最短路径">重构最短路径??????????</h1>
+
+<p>如果需要知道具体路径而不仅仅是距离，可以维护一个 <code class="language-plaintext highlighter-rouge">next</code> 矩阵。</p>
+<ol>
+  <li><strong>初始化 <code class="language-plaintext highlighter-rouge">next</code> 矩阵</strong>：
+    <ul>
+      <li>如果 <code class="language-plaintext highlighter-rouge">i</code> 和 <code class="language-plaintext highlighter-rouge">j</code> 之间有边，则 <code class="language-plaintext highlighter-rouge">next[i][j] = j</code>。</li>
+      <li>否则，<code class="language-plaintext highlighter-rouge">next[i][j] = None</code>。</li>
+    </ul>
+  </li>
+  <li><strong>在更新距离时同步更新 <code class="language-plaintext highlighter-rouge">next</code> 矩阵</strong>：
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+    <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>  <span class="c1"># 路径走向：i -&gt; ... -&gt; k -&gt; ... -&gt; j
+</span></code></pre></div>    </div>
+  </li>
+  <li><strong>重构路径</strong>：
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="nb">next</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">path</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

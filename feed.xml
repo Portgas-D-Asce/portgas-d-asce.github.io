@@ -1,4 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-22T14:42:34+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">格雷码（Gray Code）</title><link href="https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81-Gray-Code.html" rel="alternate" type="text/html" title="格雷码（Gray Code）" /><published>2025-08-20T00:00:00+00:00</published><updated>2025-08-20T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81%EF%BC%88Gray%20Code%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81-Gray-Code.html"><![CDATA[<h1 id="格雷码">格雷码</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2025-08-22T16:36:53+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">弗洛伊德（Floyd）</title><link href="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html" rel="alternate" type="text/html" title="弗洛伊德（Floyd）" /><published>2025-08-21T00:00:00+00:00</published><updated>2025-08-21T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7%EF%BC%88Floyd%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html"><![CDATA[<p>Floyd 算法（也称为 Floyd-Warshall 算法）是一种非常经典且优雅的<strong>动态规划</strong>算法，用于解决<strong>图中所有顶点对之间的最短路径问题</strong>。它的核心思想是通过逐步扩展允许经过的中间顶点集，来动态地更新任意两点间的最短距离。</p>
+
+<h1 id="动态规划原理">动态规划原理</h1>
+
+<p>算法使用一个三重循环来不断更新一个距离矩阵 <code class="language-plaintext highlighter-rouge">dist</code>。</p>
+<h2 id="状态定义">状态定义</h2>
+<p><code class="language-plaintext highlighter-rouge">dist[k][i][j]</code>：表示从顶点 <code class="language-plaintext highlighter-rouge">i</code> 到顶点 <code class="language-plaintext highlighter-rouge">j</code> 的路径，经过的中间点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1}</code> （不包括起点和终点）时的最短路径长度。</p>
+
+<h2 id="状态转移">状态转移</h2>
+<p>对于每一个中间顶点 <code class="language-plaintext highlighter-rouge">k</code>，我们考虑是否通过这个新顶点 <code class="language-plaintext highlighter-rouge">k</code> 能让路径 <code class="language-plaintext highlighter-rouge">i -&gt; j</code> 变得更短 <code class="language-plaintext highlighter-rouge">dist[k][i][j] = min(dist[k-1][i][j], dist[k-1][i][k] + dist[k-1][k][j])</code></p>
+<ul>
+  <li><strong>不经过 <code class="language-plaintext highlighter-rouge">k</code></strong>：保持上一阶段的最短路径 <code class="language-plaintext highlighter-rouge">dist[k-1][i][j]</code>。</li>
+  <li><strong>经过 <code class="language-plaintext highlighter-rouge">k</code></strong>：将路径分解为 <code class="language-plaintext highlighter-rouge">i -&gt; k</code> 和 <code class="language-plaintext highlighter-rouge">k -&gt; j</code> 两段。这两段路径在上一阶段 (<code class="language-plaintext highlighter-rouge">k-1</code>) 已经被计算过，并且它们只使用了 <code class="language-plaintext highlighter-rouge">{0, 1, ..., k-1}</code> 中的顶点作为中间点。</li>
+</ul>
+
+<blockquote>
+  <p>注意，为啥不是 <code class="language-plaintext highlighter-rouge">dist[k][i][k] + dist[k][k][j]</code> 呢？
+-<code class="language-plaintext highlighter-rouge">i -&gt; k</code> 经过点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1}</code> 的最短路径 和 经过点集 <code class="language-plaintext highlighter-rouge">{0, 1, 2, ..., k-1, k}</code> 的最短路径有啥区别呢，没区别！</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">dist[k][i][k] = dist[k - 1][i][k]</code> , <code class="language-plaintext highlighter-rouge">dist[k][k][j] = dist[k - 1][k][j]</code></li>
+  </ul>
+</blockquote>
+
+<h2 id="优化空间复杂度">优化空间复杂度</h2>
+<p>由于 <code class="language-plaintext highlighter-rouge">dist[k][i][j]</code> 只依赖于 <code class="language-plaintext highlighter-rouge">dist[k-1][...]</code>，我们可以使用一个二维数组 <code class="language-plaintext highlighter-rouge">dist[i][j]</code>，通过<strong>就地更新</strong>（in-place）来节省空间，将三维DP表“压扁”成二维。这就是我们通常见到的形式。</p>
+
+<p>最终的状态转移方程变为：<code class="language-plaintext highlighter-rouge">if (dist[i][k] + dist[k][j] &lt; dist[i][j]) { dist[i][j] = dist[i][k] + dist[k][j]; }</code></p>
+
+<blockquote>
+  <p>注意: 此处的 <code class="language-plaintext highlighter-rouge">dist[i][k]</code> 和 <code class="language-plaintext highlighter-rouge">dist[k][j]</code> 不一定都是第 <code class="language-plaintext highlighter-rouge">k - 1</code> 阶段的，但不影响计算及过（详见状态转移部分的注意）</p>
+</blockquote>
+
+<h2 id="复杂度">复杂度</h2>
+<p><strong>时间复杂度</strong>：<code class="language-plaintext highlighter-rouge">O(|V|³)</code>。三重循环，非常直观。
+<strong>空间复杂度</strong>：<code class="language-plaintext highlighter-rouge">O(|V|²)</code>。只需要存储一个距离矩阵。</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>初始化</strong>：</p>
+<ul>
+  <li>创建一个 <code class="language-plaintext highlighter-rouge">n x n</code> 的矩阵 <code class="language-plaintext highlighter-rouge">dist</code>（<code class="language-plaintext highlighter-rouge">n</code> 为顶点数）</li>
+  <li>如果存在边 <code class="language-plaintext highlighter-rouge">i -&gt; j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j]</code> 初始化为该边的权重</li>
+  <li>如果 <code class="language-plaintext highlighter-rouge">i == j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j] = 0</code>（自身到自身的距离为0）</li>
+  <li>如果不存在边 <code class="language-plaintext highlighter-rouge">i -&gt; j</code>，则 <code class="language-plaintext highlighter-rouge">dist[i][j]</code> 初始化为一个<strong>极大值</strong>（例如 <code class="language-plaintext highlighter-rouge">Infinity</code>），代表无穷大/不可达</li>
+</ul>
+
+<p><strong>三重循环更新</strong>：</p>
+<ul>
+  <li>最外层循环：中间顶点 <code class="language-plaintext highlighter-rouge">k</code>，从 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">n-1</code></li>
+  <li>内层两层循环：起点 <code class="language-plaintext highlighter-rouge">i</code> 和终点 <code class="language-plaintext highlighter-rouge">j</code>，都从 <code class="language-plaintext highlighter-rouge">0</code> 到 <code class="language-plaintext highlighter-rouge">n-1</code></li>
+  <li>对于每一对 <code class="language-plaintext highlighter-rouge">(i, j)</code>，检查 <code class="language-plaintext highlighter-rouge">i -&gt; k -&gt; j</code> 这条路径是否比当前已知的 <code class="language-plaintext highlighter-rouge">i -&gt; j</code> 路径更短。如果是，则更新 <code class="language-plaintext highlighter-rouge">dist[i][j]</code></li>
+</ul>
+
+<p><strong>结果</strong>： 算法结束后，<code class="language-plaintext highlighter-rouge">dist[i][j]</code> 中存储的就是顶点 <code class="language-plaintext highlighter-rouge">i</code> 到顶点 <code class="language-plaintext highlighter-rouge">j</code> 的<strong>最短路径距离</strong>。</p>
+
+<h1 id="应用场景">应用场景</h1>
+<p>可以处理<strong>有向图</strong>和<strong>无向图</strong>。</p>
+
+<p>可以处理<strong>负权边</strong>。</p>
+
+<p><strong>不能处理包含负权回路（Negative Cycle）的图</strong>。因为负权回路可以让路径长度无限减小，不存在最短路径。</p>
+
+<h1 id="代码">代码</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//初始化</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">));</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//w[i][j] 为权重</span>
+        <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//计算最短距离</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//默认值设为 INT_MAX / 2 防止这里溢出</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">((</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="重构最短路径">重构最短路径??????????</h1>
+
+<p>如果需要知道具体路径而不仅仅是距离，可以维护一个 <code class="language-plaintext highlighter-rouge">next</code> 矩阵。</p>
+<ol>
+  <li><strong>初始化 <code class="language-plaintext highlighter-rouge">next</code> 矩阵</strong>：
+    <ul>
+      <li>如果 <code class="language-plaintext highlighter-rouge">i</code> 和 <code class="language-plaintext highlighter-rouge">j</code> 之间有边，则 <code class="language-plaintext highlighter-rouge">next[i][j] = j</code>。</li>
+      <li>否则，<code class="language-plaintext highlighter-rouge">next[i][j] = None</code>。</li>
+    </ul>
+  </li>
+  <li><strong>在更新距离时同步更新 <code class="language-plaintext highlighter-rouge">next</code> 矩阵</strong>：
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+    <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>  <span class="c1"># 路径走向：i -&gt; ... -&gt; k -&gt; ... -&gt; j
+</span></code></pre></div>    </div>
+  </li>
+  <li><strong>重构路径</strong>：
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="nb">next</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">next</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">path</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+</code></pre></div>    </div>
+  </li>
+</ol>]]></content><author><name>devil</name></author><category term="图论" /><summary type="html"><![CDATA[多源最短路径、动态规划]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/68.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/68.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">格雷码（Gray Code）</title><link href="https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81-Gray-Code.html" rel="alternate" type="text/html" title="格雷码（Gray Code）" /><published>2025-08-20T00:00:00+00:00</published><updated>2025-08-20T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81%EF%BC%88Gray%20Code%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/20/%E6%A0%BC%E9%9B%B7%E7%A0%81-Gray-Code.html"><![CDATA[<h1 id="格雷码">格雷码</h1>
 
 <p>格雷码，又称<strong>循环码</strong>或<strong>反射码</strong>，是一种<strong>二进制数字系统</strong>。
 在这个系统中，两个连续数值的二进制表示<strong>仅有一位不同</strong>。这种特性使得它在数字电路、错误校正和通信等领域非常有用。</p>
@@ -823,30 +935,4 @@ bt
 
 <span class="c"># rar 压缩</span>
 rar a xxx.rar dir_xxx
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="linux" /><summary type="html"><![CDATA[实用工具汇总]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/57.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/57.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">QNX 常用命令</title><link href="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html" rel="alternate" type="text/html" title="QNX 常用命令" /><published>2025-08-17T00:00:00+00:00</published><updated>2025-08-17T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/17/QNX%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4</id><content type="html" xml:base="https://xdevil.top/2025/08/17/QNX-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4.html"><![CDATA[<h1 id="pidin">pidin</h1>
-
-<p>查看进程信息</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pidin | grep hud</span>
-16322605   1 nt/bin/hud_ArCyber  10r NANOSLEEP                              
-16322605   2 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x10f9d17e38<span class="o">)</span>             
-16322605   3 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54b5d920<span class="o">)</span>             
-16322605   4 nt/bin/hud_ArCyber  10r RECEIVE     4                          
-16322605   5 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54c03d10<span class="o">)</span>             
-16322605   6 nt/bin/hud_ArCyber  10r CONDVAR     <span class="o">(</span>0x4f54c03d10<span class="o">)</span>
-</code></pre></div></div>
-
-<h1 id="hogs">hogs</h1>
-
-<p>进程号，进程名称，距离上一次采样到现在 cpu 占用多少 ms，多核 cpu 占用率，单核 cpu 占用率，内存占用大小，内存占用率</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># hogs | grep hud</span>
- 16322605  /mnt/bin/hud_    92   0%   3%  19592k   0%
- 16322605  /mnt/bin/hud_    89   0%   2%  19592k   0%
- 16322605  /mnt/bin/hud_    87   0%   2%  19592k   0%
- 
-<span class="c"># 杀进程</span>
-<span class="nb">kill</span> <span class="nt">-9</span> pid
-
-slay <span class="nt">-9</span> process_name
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="qnx" /><summary type="html"><![CDATA[常用命令记录]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/58.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/58.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</code></pre></div></div>]]></content><author><name>pk</name></author><category term="linux" /><summary type="html"><![CDATA[实用工具汇总]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/57.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/57.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
