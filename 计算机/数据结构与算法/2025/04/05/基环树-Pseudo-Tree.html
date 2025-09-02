@@ -68,28 +68,43 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="概述">概述</h1>
+</style><p>基环树是数据结构与算法竞赛和面试中常考的一个知识点，尤其在需要处理具有“一环多树”特性的图问题时非常有用。</p>
 
-<p>“$n$ 个节点 $n$ 条边” 的图不都是基环树！你能想到哪些例子？</p>
+<h1 id="基环树">基环树</h1>
 
-<p>基环树长啥样子：一个环 + 多个以环上节点为根节点的子树</p>
+<h2 id="定义">定义</h2>
 
-<p>基环树通常以一维数组的方式给出。</p>
+<p><strong>基环树</strong>，顾名思义，是基于一个环、环上每个节点都挂着一棵（可能为空的）树的<strong>连通无向图</strong>。</p>
 
-<h1 id="分类">分类</h1>
+<p>更严谨的定义：基环树是一种连通图，它<strong>有且仅有一个环</strong>，并且整个图的结构可以看作是由一个环和以环上节点为根的若干棵（方向向外的）树组成。</p>
 
-<h2 id="基环树">基环树</h2>
+<h2 id="性质">性质</h2>
+<p>关键特性</p>
+<ul>
+  <li><strong>节点数 = 边数</strong>：一个具有 <code class="language-plaintext highlighter-rouge">n</code> 个节点和 <code class="language-plaintext highlighter-rouge">n</code> 条边的连通图一定是基环树。</li>
+  <li><strong>只有一个环</strong>：这是它最核心的特征。整个图只有一个简单环，其余部分都是树。</li>
+  <li><strong>树的部分</strong>：环上的每个节点都可以作为一棵树的根节点，这些树称为“树枝”或“外向树”。这些树内部是树结构，彼此之间通过环来连接。</li>
+</ul>
 
-<p>基环树：$n$ 个节点 $n$ 条边，无向连通图</p>
+<h2 id="结构">结构</h2>
+
+<p>你可以把它想象成一个钥匙串或者一个群岛：</p>
+<ul>
+  <li><strong>环</strong>：钥匙环或者连接群岛的环形堤坝。</li>
+  <li><strong>树</strong>：挂在钥匙环上的每一把钥匙，或者从环形堤坝延伸出去的每一个半岛/岛屿。</li>
+</ul>
+
+<h2 id="存储">存储</h2>
+<p>**基环树通常以一维数组的方式给出。
+**基环树：$n$ 个节点 $n$ 条边，无向连通图</p>
 
 <ul>
   <li>叶子节点：度数均为 1，转移到了代表节点上</li>
-  <li>代表节点：度数大于等于 1</li>
+  <li>代表节点：度数大于 2</li>
   <li>其余节点：度数均为 2</li>
 </ul>
 
-<h2 id="内基环树">内基环树</h2>
-
+<h1 id="内基环树">内基环树</h1>
 <p>内基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
 
 <ul>
@@ -98,8 +113,7 @@
   <li>其余节点：出度为 1，入度为 1</li>
 </ul>
 
-<h2 id="外基环树">外基环树</h2>
-
+<h1 id="外基环树">外基环树</h1>
 <p>外基环树：$n$ 个节点 $n$ 条边，有向连通图</p>
 
 <ul>
@@ -107,6 +121,76 @@
   <li>代表节点：入度为 1，出度大于等于 1</li>
   <li>其余节点：入度为 1，出度为 1</li>
 </ul>
+
+<h1 id="基环森林">基环森林</h1>
+
+<h2 id="定义-1">定义</h2>
+
+<p><strong>基环森林</strong> 是由多棵<strong>基环树</strong>组成的集合。它是一个<strong>不连通</strong>的图，其中的每一个连通分量都是一棵基环树。</p>
+
+<h2 id="性质-1">性质</h2>
+
+<p>关键特性：</p>
+<ul>
+  <li><strong>多连通分量</strong>：整个图由多个互不连通的子图（连通分量）组成。</li>
+  <li><strong>每个分量都是基环树</strong>：每一个连通分量都满足基环树的定义——有且仅有一个环，环上挂着树。</li>
+  <li><strong>边数与节点数的关系</strong>：对于一个有 <code class="language-plaintext highlighter-rouge">n</code> 个节点、<code class="language-plaintext highlighter-rouge">m</code> 条边的基环森林，满足公式：<code class="language-plaintext highlighter-rouge">n = m</code>。</li>
+</ul>
+
+<h2 id="结构-1">结构</h2>
+<p><strong>类比</strong>：
+基环森林就像多个独立的<strong>钥匙串</strong>，每个钥匙串自身是一个基环树结构，但串与串之间没有任何连接。</p>
+
+<h1 id="问题思路">问题思路</h1>
+
+<p>处理基环树/森林问题的算法框架通常非常固定，核心在于<strong>找环</strong>。以下是通用的解题步骤：</p>
+
+<h2 id="步骤一判断图是否为基环树森林">步骤一：判断图是否为基环树/森林</h2>
+<p>通常题目会给出定义，或者通过节点和边的数量关系判断：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">n</code> 个节点 <code class="language-plaintext highlighter-rouge">n</code> 条边 -&gt; 基环树（连通）或基环森林（不连通，但每个分量是基环树）。</li>
+  <li><code class="language-plaintext highlighter-rouge">n</code> 个节点 <code class="language-plaintext highlighter-rouge">n-1</code> 条边 -&gt; 树。</li>
+  <li><code class="language-plaintext highlighter-rouge">n</code> 个节点 <code class="language-plaintext highlighter-rouge">&gt;n</code> 条边 -&gt; 可能包含多个环的更复杂的图。</li>
+</ul>
+
+<h2 id="步骤二找环find-the-cycle">步骤二：找环（Find the Cycle）</h2>
+<p>这是所有问题的核心和起点。常用方法有：</p>
+<h3 id="拓扑排序kahn算法">拓扑排序（Kahn算法）</h3>
+<p><strong>适用场景</strong>：无向图。
+<strong>过程</strong>：</p>
+<ul>
+  <li>计算每个节点的度（degree）。</li>
+  <li>将度为 1 的节点入队（这些节点肯定是树叶，不属于环）。</li>
+  <li>执行拓扑排序：不断从队列中取出节点，将其从图中“删除”（将其邻居的度减一），如果邻居的度减为 1，则入队。
+<strong>结果</strong>：最后所有<strong>度 ≥ 2</strong> 的节点就是环上的节点（因为环上的每个节点至少连接环上的两个节点，度不会减到1）。
+<strong>优点</strong>：简单高效，时间复杂度为 O(n)。</li>
+</ul>
+
+<h3 id="深度优先搜索dfs">深度优先搜索（DFS）</h3>
+<p><strong>过程</strong>：通过 DFS 遍历，记录每个节点的父节点（防止回退）。如果遍历到一个节点 <code class="language-plaintext highlighter-rouge">v</code>，它已经被访问过且不是当前节点 <code class="language-plaintext highlighter-rouge">u</code> 的父节点，则说明找到了一个环。然后可以通过记录的父节点信息回溯找到整个环。
+<strong>优点</strong>：可以记录环的具体路径。</p>
+
+<h3 id="并查集union-find">并查集（Union-Find）</h3>
+<p><strong>过程</strong>：在遍历边连接两个节点时，如果发现这两个节点已经在同一个集合中，那么连接这条边就会形成一个环。这条边就是<strong>环边</strong>。
+<strong>优点</strong>：在构建图的过程中就能快速找到一条关键的环边。</p>
+
+<h2 id="步骤三处理问题">步骤三：处理问题</h2>
+<p>找到环之后，问题就转化为在环和树的结构上求解。常见思路是：
+<strong>断环成链</strong>：将环上的任意一条边断开，这样整个图就变成了一棵树。然后就可以在这棵树上运用标准的树形动态规划（DP）或深度优先遍历来解决问题。最后需要额外考虑被断开的边所产生的影响。
+<strong>分类讨论</strong>：很多问题需要对环上的节点和树上的节点分别处理。
+<strong>环形处理</strong>：有时需要将环展成一个双倍长度的链，以便于处理环形结构上的问题。</p>
+
+<h1 id="经典问题">经典问题</h1>
+<h2 id="基环树直径">基环树直径</h2>
+
+<p>一棵基环树的直径（最长路径）有两种情况：
+        1.  直径完全在某一棵外向树内部。
+        2.  直径经过环，由环上两点各自树中的最长链加上环上两段路径组成。
+<strong>解法</strong>：先找到环。对于情况1，在每棵外向树内部求直径。对于情况2，可以断环成链，在链上用单调队列等算法求解。</p>
+
+<h2 id="基环树dp">基环树DP</h2>
+<p>例如“没有上司的舞会”的基环树版本。
+<strong>解法</strong>：找到环后，断开环上的一条边 <code class="language-plaintext highlighter-rouge">(u, v)</code>，分别以 <code class="language-plaintext highlighter-rouge">u</code> 为根和以 <code class="language-plaintext highlighter-rouge">v</code> 为根做两次树形DP，并且在DP过程中强制要求 <code class="language-plaintext highlighter-rouge">u</code> 和 <code class="language-plaintext highlighter-rouge">v</code> 不能同时被选（因为断开的边实际上存在），取两次结果的最大值。</p>
 
 <h1 id="练习">练习</h1>
 
