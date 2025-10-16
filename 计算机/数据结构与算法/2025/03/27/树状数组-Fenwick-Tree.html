@@ -535,108 +535,104 @@
 </code></pre></div></div>
 
 <h1 id="再再次封装">再再次封装</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">max</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">&gt;</span> <span class="n">rhs</span> <span class="o">?</span> <span class="n">lhs</span> <span class="o">:</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 最小值函数对象</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">min</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">&lt;</span> <span class="n">rhs</span> <span class="o">?</span> <span class="n">lhs</span> <span class="o">:</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 位与 (AND) 函数对象</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">bit_and</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">&amp;</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 位或 (OR) 函数对象</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">bit_or</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">|</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 位异或 (XOR) 函数对象</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">bit_xor</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">^</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Op</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="p">;</span>
+
+<span class="c1">// 特化时自动推导类型</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{};</span>
+
+<span class="c1">// 加法特化</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// 乘法特化</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// 位与的 identity</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">bit_and</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="o">~</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>  <span class="c1">// 全1</span>
+<span class="p">};</span>
+
+<span class="c1">// 位或的 identity</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">bit_or</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// 位或的 identity</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">bit_xor</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">min</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">IdentityValue</span><span class="o">&lt;</span><span class="n">max</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">()</span> <span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="c1">// 使用</span>
+<span class="k">auto</span> <span class="n">identity</span> <span class="o">=</span> <span class="n">IdentityValue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">value</span><span class="p">;</span>  <span class="c1">// 0</span>
+</code></pre></div></div>
+
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
 #include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
 #include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp">
 </span>
-<span class="cm">/*
-template&lt;typename T = void&gt;
-struct max {
-    constexpr T operator()(const T&amp; lhs, const T&amp; rhs) const {
-        return lhs &gt; rhs ? lhs : rhs;
-    }
-};
-
-// 最小值函数对象
-template&lt;typename T = void&gt;
-struct min {
-    constexpr T operator()(const T&amp; lhs, const T&amp; rhs) const {
-        return lhs &lt; rhs ? lhs : rhs;
-    }
-};
-
-// 位与 (AND) 函数对象
-template&lt;typename T = void&gt;
-struct bit_and {
-    constexpr T operator()(const T&amp; lhs, const T&amp; rhs) const {
-        return lhs &amp; rhs;
-    }
-};
-
-// 位或 (OR) 函数对象
-template&lt;typename T = void&gt;
-struct bit_or {
-    constexpr T operator()(const T&amp; lhs, const T&amp; rhs) const {
-        return lhs | rhs;
-    }
-};
-
-// 位异或 (XOR) 函数对象
-template&lt;typename T = void&gt;
-struct bit_xor {
-    constexpr T operator()(const T&amp; lhs, const T&amp; rhs) const {
-        return lhs ^ rhs;
-    }
-};
-
-
-template&lt;typename Op&gt;
-struct IdentityValue;
-
-// 特化时自动推导类型
-template&lt;template&lt;typename&gt; class Op, typename T&gt;
-struct IdentityValue&lt;Op&lt;T&gt;&gt; {};
-
-// 加法特化
-template&lt;typename T&gt;
-struct IdentityValue&lt;std::plus&lt;T&gt;&gt; {
-    static constexpr T value = T(0);
-};
-
-// 乘法特化
-template&lt;typename T&gt;
-struct IdentityValue&lt;std::multiplies&lt;T&gt;&gt; {
-    static constexpr T value = T(1);
-};
-
-// 位与的 identity
-template&lt;typename T&gt;
-struct IdentityValue&lt;bit_and&lt;T&gt;&gt; {
-    static constexpr T value = ~T(0);  // 全1
-};
-
-// 位或的 identity
-template&lt;typename T&gt;
-struct IdentityValue&lt;bit_or&lt;T&gt;&gt; {
-    static constexpr T value = T(0);
-};
-
-// 位或的 identity
-template&lt;typename T&gt;
-struct IdentityValue&lt;bit_xor&lt;T&gt;&gt; {
-    static constexpr T value = T(0);
-};
-
-template&lt;typename T&gt;
-struct IdentityValue&lt;min&lt;T&gt;&gt; {
-    static constexpr T value = std::numeric_limits&lt;T&gt;::max();
-};
-
-template&lt;typename T&gt;
-struct IdentityValue&lt;max&lt;T&gt;&gt; {
-    static constexpr T value = std::numeric_limits&lt;T&gt;::min() ;
-};
-
-
-// 使用
-auto identity = IdentityValue&lt;std::plus&lt;int&gt;&gt;::value;  // 0
-*/</span>
-
-
-
-<span class="c1">// 主模板声明</span>
+<span class="c1">// if you like this code, don't delete this, thanks  --from pk</span>
+<span class="c1">// 变量模板声明(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 
@@ -660,11 +656,6 @@ auto identity = IdentityValue&lt;std::plus&lt;int&gt;&gt;::value;  // 0
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// template&lt;typename T&gt;</span>
-<span class="c1">// std::function&lt;T(T, T)&gt; min_func = std::min&lt;T&gt;;</span>
-<span class="c1">//</span>
-<span class="c1">// template&lt;typename T&gt;</span>
-<span class="c1">// using std_min = decltype(min_func&lt;T&gt;);</span>
 <span class="c1">// 为 std::min/std::max 创建模板别名</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">maximum</span>  <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
@@ -680,28 +671,32 @@ auto identity = IdentityValue&lt;std::plus&lt;int&gt;&gt;::value;  // 0
 <span class="c1">// 最小值特化</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
 
+<span class="c1">// gcd ?????????</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">ori</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{}</span>
 
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">bool</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        
         <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
         <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
             <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
             <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
         <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="c1">// 0-indexed [1, idx]</span>
+    <span class="c1">// 0-indexed [0, idx]</span>
     <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// change to 1-indexed</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="c1">// 数组访问越界是未定义行为</span>
-        <span class="c1">// assert(idx &lt; ft.size());</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
         <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
             <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
@@ -713,14 +708,20 @@ auto identity = IdentityValue&lt;std::plus&lt;int&gt;&gt;::value;  // 0
     <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// change to 1-indexed</span>
         <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="c1">// r &lt; p &lt; 0 will lead to fault result if without this line!!!!</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+        
+        <span class="c1">// 防止访问越界</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">r</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
         <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
                 <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ori</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ori</span><span class="p">[</span><span class="o">--</span><span class="n">r</span><span class="p">]);</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
@@ -728,7 +729,6 @@ auto identity = IdentityValue&lt;std::plus&lt;int&gt;&gt;::value;  // 0
 
 <span class="k">private</span><span class="o">:</span>
     <span class="k">static</span> <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span> <span class="p">}</span>
-
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ori</span><span class="p">;</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
     <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">op</span><span class="p">;</span>
