@@ -535,6 +535,7 @@
 </code></pre></div></div>
 
 <h1 id="再再次封装">再再次封装</h1>
+
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
 <span class="k">struct</span> <span class="nc">max</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -627,6 +628,10 @@
 <span class="k">auto</span> <span class="n">identity</span> <span class="o">=</span> <span class="n">IdentityValue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">value</span><span class="p">;</span>  <span class="c1">// 0</span>
 </code></pre></div></div>
 
+<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装时 0-indexed 使用起来更方便！！！</p>
+
+<p>关于单点更新：是一个更新操作，在原来数字的基础上进行更新，有些操作中是移除不掉旧有元素影响的！！！</p>
+
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
 #include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
 #include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
@@ -679,7 +684,8 @@
     <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">ori</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{}</span>
 
     <span class="kt">bool</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
         
         <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
@@ -762,6 +768,19 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<p>在实现单点查询、区间查询时，需要注意：</p>
+<ul>
+  <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
+    <ul>
+      <li>单点查询 <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
+    </ul>
+  </li>
+  <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
+    <ul>
+      <li>单点查询 <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
+    </ul>
+  </li>
+</ul>
 
 <h1 id="练习">练习</h1>
 
