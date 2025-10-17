@@ -68,7 +68,7 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="原数组--前缀和数组--差分数组">原数组 &amp; 前缀和数组 &amp; 差分数组</h1>
+</style><h1 id="原数组--前缀和数组--差分数组--树状数组">原数组 &amp; 前缀和数组 &amp; 差分数组 &amp; 树状数组</h1>
 
 <p>设有原数组 $nums$:</p>
 <ul>
@@ -88,8 +88,6 @@
   <li>原数组 是 差分数组 的前缀和数组！！！</li>
   <li>原数组 是 前缀和数组 的差分数组！！！</li>
 </ul>
-
-<h1 id="树状数组">树状数组</h1>
 
 <p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
@@ -113,26 +111,11 @@
   <p>树状数组是一种 “兼顾单点修改与区间查询平衡的一种数据结构”</p>
 </blockquote>
 
-<h2 id="lowbit-函数">lowbit 函数</h2>
-
-<p>$lowbit$ 是什么？</p>
-<ul>
-  <li>$lowbit(x)$：$x$ 的二进制表示最后一位 $1$ 的位权</li>
-  <li>$lowbit(x) = x\ \&amp;\ (-x)$</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="err">的二进制表示为：</span><span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
-<span class="n">x</span> <span class="err">的反码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.0111111</span>
-<span class="n">x</span> <span class="err">的补码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.1000000</span><span class="err">（也就是</span> <span class="o">-</span><span class="n">x</span> <span class="err">的二进制表示）</span>
-<span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="err">：</span>      <span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
-</code></pre></div></div>
-<h2 id="实现">实现</h2>
-
+<h1 id="原理">原理</h1>
 <p>先上代码，然后再根据代码反向理解：</p>
-
 <ul>
+  <li>$lowbit(x)$ 是什么，其作用又是什么？</li>
   <li>树状数组中每个元素 $ft[i]$ 的含义？</li>
-  <li>$lowbit(x)$ 在这期间的作用？</li>
 </ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums 表示原数组，ft 表示 nums 的树状数组</span>
@@ -168,7 +151,23 @@
 <span class="p">};</span>
 </code></pre></div></div>
 
+<h2 id="lowbit-函数">lowbit 函数</h2>
+
+<p>$lowbit$ 是什么？</p>
+<ul>
+  <li>$lowbit(x)$：$x$ 的二进制表示最后一位 $1$ 的位权</li>
+  <li>$lowbit(x) = x\ \&amp;\ (-x)$</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="err">的二进制表示为：</span><span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
+<span class="n">x</span> <span class="err">的反码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.0111111</span>
+<span class="n">x</span> <span class="err">的补码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.1000000</span><span class="err">（也就是</span> <span class="o">-</span><span class="n">x</span> <span class="err">的二进制表示）</span>
+<span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="err">：</span>      <span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
+</code></pre></div></div>
+
 <h2 id="理解">理解</h2>
+
+<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装时 0-indexed 使用起来更方便！！！</p>
 
 <p>树状数组中每个元素 $ft[i]$ 的含义？模拟求和（为了方便描述，这里假设原数组 $nums$ 下标也从 $1$ 开始）：</p>
 
@@ -190,15 +189,10 @@
 </ul>
 
 <p>$lowbit(x)$ 在这期间的作用？</p>
-
 <ul>
   <li>求和期间：从上到下，快速跳转到下一个求和区间</li>
   <li>更新期间：从下到上，快速跳转到下一受影响的区间</li>
 </ul>
-
-<hr />
-
-<hr />
 
 <h1 id="区间最值">区间最值</h1>
 
@@ -213,7 +207,7 @@
   <li>接着更新下 $nums[5] = 99$，按道理 $ft[5]$，$ft[6]$，$ft[8]$ 均应更新为 $99$，但实际是不会更新的，这正是问题所在！</li>
 </ul>
 
-<h2 id="实现-1">实现</h2>
+<h2 id="实现">实现</h2>
 
 <p>这里以求区间最大值为例，核心思想：</p>
 
@@ -236,51 +230,6 @@
   <li>$ft[3]$ 管理的范围是 $[3, 3]$，完全在查询范围内</li>
   <li>$max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])$</li>
 </ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums is 1-indexed in logical but 0-indexed in fact</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">nums</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-        <span class="n">ft</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="c1">// require x &gt;= nums[idx]</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// update origin array</span>
-        <span class="n">nums</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-        
-        <span class="c1">// update ft array</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">int</span> <span class="nf">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">INT_MIN</span><span class="p">;</span>
-        
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
 
 <h1 id="离散化">离散化</h1>
 
@@ -319,22 +268,15 @@
 </code></pre></div></div>
 
 <h1 id="封装">封装</h1>
+<p>支持区间 和、与和、或和、异或和、最大/小值（gcd？？？？）等场景的 单点更新，区间查询操作。</p>
 
-<h2 id="使用说明">使用说明</h2>
-
-<p>支持区间和查询、区间最大值查询、区间最小值查询（前缀  &amp; 任意区间）。前面理论已经介绍过，使用需注意以下情况</p>
-
+<p>单点更新的输入不是 “修改后的新值”，而是是 “变化值“ 是在原来数字的基础上进行更新，有些操作中（除了和、异或和场景）是移除不掉旧有元素影响的，使用起来具有约束，以最值场景为例:</p>
 <ul>
-  <li>任意区间查询由于实现手段特殊，效率可能会有所降低</li>
-  <li>用于区间最大/小值查询时，单点更新只能朝着固定方向更新：
-    <ul>
-      <li>最大值查询：新值大于等于旧值</li>
-      <li>最小值查询：新值小于等于旧值</li>
-    </ul>
-  </li>
+  <li>最大值查询：更新值必须大于等于旧值</li>
+  <li>最小值查询：更新值必须小于等于旧值</li>
 </ul>
 
-<h2 id="实现-2">实现</h2>
+<h2 id="first-version">first version</h2>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">typename</span> <span class="nc">FT</span> <span class="o">=</span> <span class="n">plus</span><span class="p">,</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="n">allocator</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="k">typename</span> <span class="n">CT</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&gt;</span>
@@ -386,11 +328,8 @@
         <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">};</span>
-</code></pre></div></div>
 
-<h2 id="示例">示例</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -418,19 +357,7 @@
 <span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Max</span><span class="o">&gt;</span> <span class="n">ft_max</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
 </code></pre></div></div>
 
-<p>未验证</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 区间乘积</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">multiplies</span><span class="o">&gt;</span> <span class="n">ft_mul</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-
-<span class="c1">// 区间位运算</span>
-<span class="n">bit_and</span><span class="p">;</span>
-<span class="n">bit_or</span><span class="p">;</span>
-<span class="n">bit_xor</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h1 id="构建">构建</h1>
-
+<p>构建</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">Cont</span><span class="o">&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span> <span class="o">=</span> <span class="n">T</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">init_value</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
     <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
@@ -446,11 +373,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h1 id="再次封装">再次封装</h1>
-
-<p>min、max 单向增长</p>
-
-<p>需要满足交换律</p>
+<h2 id="second-version">second version</h2>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
     <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
@@ -534,8 +457,95 @@
 <span class="p">};</span>
 </code></pre></div></div>
 
-<h1 id="再再次封装">再再次封装</h1>
+<h2 id="third-version">third version</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
 
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Min</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
+    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
+<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">Calculate</span> <span class="n">value_calculate</span><span class="p">;</span>
+<span class="nl">protected:</span>
+    <span class="k">const</span> <span class="n">value_type</span> <span class="n">_init_val</span><span class="p">;</span>
+    <span class="n">container_type</span> <span class="n">_raw</span><span class="p">,</span> <span class="n">_ft</span><span class="p">;</span>
+    <span class="n">value_calculate</span> <span class="n">_cal</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">container_type</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">_raw</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_raw</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+            <span class="n">size_type</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
+                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_raw</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kr">inline</span> <span class="kt">size_t</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="xxx">xxx</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
 <span class="k">struct</span> <span class="nc">max</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -628,9 +638,7 @@
 <span class="k">auto</span> <span class="n">identity</span> <span class="o">=</span> <span class="n">IdentityValue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">value</span><span class="p">;</span>  <span class="c1">// 0</span>
 </code></pre></div></div>
 
-<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装时 0-indexed 使用起来更方便！！！</p>
-
-<p>关于单点更新：是一个更新操作，在原来数字的基础上进行更新，有些操作中是移除不掉旧有元素影响的！！！</p>
+<h1 id="正式版本">正式版本</h1>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
 #include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
@@ -661,7 +669,7 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// 为 std::min/std::max 创建模板别名</span>
+<span class="c1">// 最大值函数对象</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">maximum</span>  <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
 <span class="p">};</span>
@@ -675,8 +683,6 @@
 <span class="p">};</span>
 <span class="c1">// 最小值特化</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
-
-<span class="c1">// gcd ?????????</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
@@ -701,7 +707,9 @@
         <span class="c1">// change to 1-indexed</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="c1">// special scene should return identity</span>
         <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+        <span class="c1">// avoid Out-of-bounds access</span>
         <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
         <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
@@ -716,10 +724,10 @@
         <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
-        <span class="c1">// r &lt; p &lt; 0 will lead to fault result if without this line!!!!</span>
+        <span class="c1">// special scene should return identity</span>
         <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
         
-        <span class="c1">// 防止访问越界</span>
+        <span class="c1">// void Out-of-bounds access</span>
         <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">if</span><span class="p">(</span><span class="n">r</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
         <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
@@ -768,16 +776,19 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
 <p>在实现单点查询、区间查询时，需要注意：</p>
 <ul>
   <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
     <ul>
-      <li>单点查询 <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
+      <li>区间查询: <code class="language-plaintext highlighter-rouge">p &gt; r || r &lt; 0 || p &gt;= ori.size()</code> 时都应该返回单位元</li>
     </ul>
   </li>
   <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
     <ul>
-      <li>单点查询 <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
+      <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
     </ul>
   </li>
 </ul>
@@ -791,156 +802,6 @@
 <p><a href="https://leetcode.cn/problems/count-of-range-sum/">LeetCode 327. 区间和的个数</a></p>
 
 <p><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/">LeetCode 1649. Create Sorted Array through Instructions</a></p>
-
-<h1 id="第三次封装">第三次封装</h1>
-
-<p>更新运算？维护运算</p>
-
-<p>基本支持所有 “单点修改，区间查询“</p>
-
-<p>除了最大值，最小值，单向增长。</p>
-
-<p>0-indexed</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Min</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
-    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
-    <span class="k">typedef</span> <span class="n">Calculate</span> <span class="n">value_calculate</span><span class="p">;</span>
-<span class="nl">protected:</span>
-    <span class="k">const</span> <span class="n">value_type</span> <span class="n">_init_val</span><span class="p">;</span>
-    <span class="n">container_type</span> <span class="n">_raw</span><span class="p">,</span> <span class="n">_ft</span><span class="p">;</span>
-    <span class="n">value_calculate</span> <span class="n">_cal</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">container_type</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">init</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
-        <span class="o">:</span> <span class="n">_init_val</span><span class="p">(</span><span class="n">init</span><span class="p">),</span> <span class="n">_raw</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">_raw</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_raw</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-            <span class="n">size_type</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_raw</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">value_type</span> <span class="n">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">_init_val</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
-                <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">_cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_raw</span><span class="p">[</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-                <span class="n">r</span><span class="o">--</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kr">inline</span> <span class="kt">size_t</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p>缺点，更新仅仅是但方向的，线段树单点更新全能搞得定</p>
-
-<ul>
-  <li>min/max 仅支持单调更新。</li>
-  <li><strong>更新运算</strong> 与 <strong>维护性质运算</strong> 相同。</li>
-</ul>
-
-<p>优点：轻量级，速度快。</p>
-
-<h2 id="plus">plus</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="multiplies">multiplies</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="min">min</h2>
-
-<p>仅支持递减更新</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MAX</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="max">max</h2>
-
-<p>仅支持递增更新</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">INT_MIN</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_and">bit_and</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_or">bit_or</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="bit_xor">bit_xor</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</code></pre></div></div>
-
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
