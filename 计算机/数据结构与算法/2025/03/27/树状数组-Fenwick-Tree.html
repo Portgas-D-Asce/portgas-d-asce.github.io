@@ -167,8 +167,6 @@
 
 <h2 id="理解">理解</h2>
 
-<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装时 0-indexed 使用起来更方便！！！</p>
-
 <p>树状数组中每个元素 $ft[i]$ 的含义？模拟求和（为了方便描述，这里假设原数组 $nums$ 下标也从 $1$ 开始）：</p>
 
 <ul>
@@ -268,58 +266,59 @@
 </code></pre></div></div>
 
 <h1 id="封装">封装</h1>
-<p>支持区间 和、与和、或和、异或和、最大/小值（gcd？？？？）等场景的 单点更新，区间查询操作。</p>
+<p>支持区间 和、积、与和、或和、异或和、最大/小值（gcd？？？？）等场景的单点更新，区间查询操作。</p>
 
-<p>单点更新的输入不是 “修改后的新值”，而是是 “变化值“ 是在原来数字的基础上进行更新，有些操作中（除了和、异或和场景）是移除不掉旧有元素影响的，使用起来具有约束，以最值场景为例:</p>
+<p>单点更新的输入不是 “修改后的新值(set)”，而是 “变化值(update)“ 是在原来数字的基础上进行更新，有些操作中（与和、或和、最大/小值场景）是移除不掉旧有元素影响的，使用起来具有约束，以最值场景为例:</p>
 <ul>
   <li>最大值查询：更新值必须大于等于旧值</li>
   <li>最小值查询：更新值必须小于等于旧值</li>
 </ul>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;limits&gt;</span><span class="cp">
-</span>
+<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装都是 0-indexed 使用起来更方便！！！</p>
 
-<span class="c1">// if you like this code, don't delete this, thanks  --from pk</span>
-<span class="c1">// 单位元变量模板声明(C++14)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 pk. All rights reserved.</span>
+<span class="c1">// Use of this source code is governed by a MIT license</span>
+<span class="c1">// if you like this code, don't delete this, thanks.</span>
+
+
+<span class="c1">// identity variable template(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 
-<span class="c1">// 加法特化</span>
+<span class="c1">// std::plus partial variable template specialization</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// 乘法特化</span>
+<span class="c1">// std::multiplies partial variable template specialization</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 
-<span class="c1">// 按位与特化</span>
+<span class="c1">// std::bit_and partial variable template specialization</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_and</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">~</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// 按位或特化</span>
+<span class="c1">// std::bit_or partial variable template specialization</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_or</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// 按位异或特化</span>
+<span class="c1">// std::bit_xor partial variable template specialization</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-<span class="c1">// 最大值函数对象</span>
+<span class="c1">// maximum partial variable template specialization</span>
+<span class="c1">// std::maximum is function template, not types of functors</span>
+<span class="c1">// float type should use lowest() instead of min()</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">maximum</span>  <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
 <span class="p">};</span>
-<span class="c1">// 最大值特化, 浮点型用 lowest()</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span>
     <span class="n">std</span><span class="o">::</span><span class="n">is_floating_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">()</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
 
-<span class="c1">// 最小值函数对象</span>
+<span class="c1">// minimum partial variable template specialization</span>
+<span class="c1">// std::min is function template, not types of functors</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">minimum</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
 <span class="p">};</span>
-<span class="c1">// 最小值特化</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
@@ -332,10 +331,21 @@
     <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">ori</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">linear_init</span><span class="p">();</span>
     <span class="p">}</span>
+    
+    <span class="c1">// 0-indexed</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
 
     <span class="kt">bool</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+        <span class="p">}</span>
         
         <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
@@ -399,33 +409,30 @@
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
     <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">op</span><span class="p">;</span>
 <span class="p">};</span>
+</code></pre></div></div>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<p>使用示例</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-    <span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 
-    <span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-    <span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-    <span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 </code></pre></div></div>
 
 <p>在实现单点查询、区间查询时，需要注意：</p>
@@ -445,7 +452,6 @@
 </ul>
 
 <h1 id="练习">练习</h1>
-
 <p>std::plus:</p>
 <ul>
   <li><a href="https://leetcode.cn/problems/peaks-in-array/">LeetCode 3187. 数组中的峰值</a></li>
@@ -470,8 +476,6 @@
 <ul>
   <li><a href="https://leetcode.cn/problems/find-a-value-of-a-mysterious-function-closest-to-target/">LeetCode 1521. 找到最接近目标值的函数值</a></li>
 </ul>
-
-<p><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/">LeetCode 1649. Create Sorted Array through Instructions</a></p>
 
 <div id="giscus">
     <script src="https://giscus.app/client.js"
