@@ -79,39 +79,71 @@
 <p>典型应用当属 Kruskal 算法，优化方式：</p>
 <ul>
   <li><strong>路径压缩：</strong> 让查找路径上的所有节点均指向根节点，提高下一次查找效率；</li>
-  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。</li>
+  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。 “秩”（rank）可以理解为树高度的上界（并不是精确高度，但用于指导合并）</li>
 </ul>
 
 <h1 id="实现">实现</h1>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">uf</span><span class="p">;</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 pk. All rights reserved.</span>
+<span class="c1">// Use of this source code is governed by a MIT license</span>
+<span class="c1">// if you like this code, don't delete this, thanks.</span>
+
+<span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">UnionFind</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="n">_count</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_rank</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_parent</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="c1">// return _parent[x] == x ? x : _parent[x] = find(_parent[x])</span><span class="p">;</span>
+
+        <span class="c1">// firstly, find root</span>
+        <span class="kt">int</span> <span class="n">root</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">root</span> <span class="o">!=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">root</span><span class="p">])</span> <span class="n">root</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">root</span><span class="p">];</span>
+
+        <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="c1">// secondly, path reduce</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">cur</span><span class="p">];</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">uf</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+    <span class="kt">bool</span> <span class="nf">unite</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">pu</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pu</span> <span class="o">==</span> <span class="n">pv</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">_rank</span><span class="p">[</span><span class="n">pv</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">pu</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_rank</span><span class="p">[</span><span class="n">pv</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">pu</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">];</span>
+            <span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">_count</span><span class="o">--</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kt">void</span> <span class="nf">union1</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">uf</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
-    <span class="p">}</span>
+    <span class="c1">// u and v belong same set?</span>
+    <span class="kt">bool</span> <span class="nf">connected</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span> <span class="p">}</span>
+
+    <span class="c1">// count of components</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_count</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// the set's size u belong to</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)];</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">_count</span><span class="p">;</span> <span class="c1">// cnt of set</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_parent</span><span class="p">;</span> <span class="c1">// array of parent node</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_rank</span><span class="p">;</span> <span class="c1">// rank, tree's height</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_size</span><span class="p">;</span> <span class="c1">// set's size</span>
 <span class="p">};</span>
-</code></pre></div></div>
-
-<p><strong>注意：</strong> 刚合并完成时，并不是每个元素都知道自己所在的集合的代表是谁！在使用之前，先要确保所有元素都指向自己所在的集合的代表。</p>
-
-<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//确保所有元素都知道自己所在的集合的代表是谁</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">uf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="c1">//统计 uf 中不同元素个数即可知道最终不相交集合个数</span>
 </code></pre></div></div>
 
 <h1 id="封装">封装</h1>
