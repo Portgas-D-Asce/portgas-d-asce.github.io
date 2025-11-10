@@ -73,14 +73,16 @@
 <p>并查集：用于处理不相交集合问题的一种数据结构。定义在其上的两个操作：</p>
 <ul>
   <li><strong>Find：</strong> 查找节点所属于的集合</li>
-  <li><strong>Union：</strong> 合并两个不相交的集合</li>
+  <li><strong>Unite：</strong> 合并两个不相交的集合</li>
 </ul>
 
 <p>典型应用当属 Kruskal 算法，优化方式：</p>
 <ul>
   <li><strong>路径压缩：</strong> 让查找路径上的所有节点均指向根节点，提高下一次查找效率；</li>
-  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。 “秩”（rank）可以理解为树高度的上界（并不是精确高度，但用于指导合并）</li>
+  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。 （）</li>
 </ul>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">update</code> 操作显然会改变秩的大小，但代码并没有更新，“秩”（rank）可以理解为树高度的上界，并不是精确高度，仅用于指导合并！！！</p>
 
 <h1 id="实现">实现</h1>
 
