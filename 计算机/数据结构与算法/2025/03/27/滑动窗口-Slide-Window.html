@@ -96,6 +96,43 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">ForwardIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Window</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ForwardIterator</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">slide_window_max</span><span class="p">(</span><span class="n">ForwardIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">ForwardIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">Window</span> <span class="n">win</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">RandomAccessIterator</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">last</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">first</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 将第 i 个元素添加到窗口里面</span>
+        <span class="n">win</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">);</span> <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+        
+        <span class="c1">// 添加新元素到窗口后可能会使窗口条件遭到破坏</span>
+        <span class="c1">// 不断地从窗口左侧移出元素，直至窗口条件重新成立</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">win</span><span class="p">.</span><span class="n">check</span><span class="p">())</span> <span class="p">{</span> <span class="n">win</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="o">*</span><span class="n">j</span><span class="o">++</span><span class="p">);</span> <span class="n">len</span><span class="o">--</span><span class="p">;</span> <span class="p">}</span>
+        
+        <span class="c1">// 更新最大窗口</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">mx</span><span class="p">)</span> <span class="p">{</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ForwardIterator</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">mx</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">ForwardIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Window</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ForwardIterator</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">slide_window_min</span><span class="p">(</span><span class="n">ForwardIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">ForwardIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">Window</span> <span class="n">win</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">RandomAccessIterator</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">last</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mn</span> <span class="o">=</span> <span class="n">INT_MAX</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">first</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 将第 i 个元素加入窗口</span>
+        <span class="n">win</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">);</span> <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+        
+        <span class="c1">// 新元素加入可能会导致窗口性质成立，但当前不一定是最小窗口</span>
+        <span class="c1">// 不断地从窗口左侧移出元素，直到性质不成立</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">win</span><span class="p">.</span><span class="n">check</span><span class="p">())</span> <span class="p">{</span> <span class="n">win</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="o">*</span><span class="n">j</span><span class="o">++</span><span class="p">);</span> <span class="n">len</span><span class="o">--</span><span class="p">;</span> <span class="p">}</span>
+        
+        <span class="c1">// 更新最小窗口</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">mn</span><span class="p">)</span> <span class="p">{</span> <span class="n">mn</span> <span class="o">=</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ForwardIterator</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">mn</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
 <h1 id="最小窗口">最小窗口</h1>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 窗口初始位置及长度</span>
