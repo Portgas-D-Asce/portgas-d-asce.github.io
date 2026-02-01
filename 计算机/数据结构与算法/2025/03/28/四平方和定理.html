@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="xxxxxxxxxxxxxxxxxx">
         <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
-        <link rel="stylesheet" href="/assets/css/main.css"/>
         <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
         <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>四平方和定理 | Devil’s blog</title>
@@ -31,11 +30,26 @@
 
     </head>
     <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+        </style>
+    
         <div id="header">
     <div class="fontsz36 font-bold"> 四平方和定理 </div>
 </div>
 
-<div id="article" class="article-container">
+<div id="article">
 <div id="copyright">
     <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
     <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
@@ -153,7 +167,7 @@
 #header {
     height: 35.8vh;
     padding-top: 26vh;
-    background-size: cover;
+    background-size: 100vw;
     background: url(/assets/image/article.jpg) no-repeat right top;
     margin: 0 auto;
     text-align: center;
@@ -161,19 +175,100 @@
     overflow: hidden;
 }
 
-#header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5));
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
 }
 
-#header > div {
-    position: relative;
-    z-index: 1;
+#article {
+    margin: 0 auto;
+    width: 61.8vw;
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 </style>
 <div id="music">
