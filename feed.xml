@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-02T16:06:12+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-02T16:26:37+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
 
 <p>上大学的时候，学姐说看着好小啊</p>
 
@@ -314,7 +314,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <h2 id="参考">参考</h2>
 <p><a href="https://www.cnblogs.com/endlesscoding/p/10033527.html">https://www.cnblogs.com/endlesscoding/p/10033527.html</a></p>
 
-<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>pk</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">线段树（Segment Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html" rel="alternate" type="text/html" title="线段树（Segment Tree）" /><published>2025-10-28T00:00:00+00:00</published><updated>2025-10-28T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91%EF%BC%88Segment%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html"><![CDATA[<h1 id="概述">概述</h1>
+<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">线段树（Segment Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html" rel="alternate" type="text/html" title="线段树（Segment Tree）" /><published>2025-10-28T00:00:00+00:00</published><updated>2025-10-28T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91%EF%BC%88Segment%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html"><![CDATA[<h1 id="概述">概述</h1>
 <h2 id="应用场景">应用场景</h2>
 
 <p>线段树是一种二叉树数据结构，主要用于处理区间查询和区间更新问题。</p>
@@ -356,7 +356,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 
 <p>未使用的叶子节点应该被初始化为单位元，否则可能会导致内部节点初始化错误</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 pk. All rights reserved.</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
 <span class="c1">// if you like this code, don't delete this, thanks.</span>
 
@@ -489,7 +489,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 
 <h2 id="递归线段树不推荐">递归线段树（不推荐）</h2>
 <p>除了效率低点，其它跟迭代线段树没有任何区别</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 pk. All rights reserved.</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
 <span class="c1">// if you like this code, don't delete this, thanks.</span>
 
@@ -654,7 +654,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 
 <p>支持区间和、区间最大/小值</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 pk. All rights reserved.</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
 <span class="c1">// if you like this code, don't delete this, thanks.</span>
 
@@ -1206,7 +1206,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
         <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
-</code></pre></div></div>]]></content><author><name>pk</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="树" /><category term="rmq" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/69.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/69.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">弗洛伊德（Floyd）</title><link href="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html" rel="alternate" type="text/html" title="弗洛伊德（Floyd）" /><published>2025-08-21T00:00:00+00:00</published><updated>2025-08-21T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7%EF%BC%88Floyd%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html"><![CDATA[<p>Floyd 算法（也称为 Floyd-Warshall 算法）是一种非常经典且优雅的<strong>动态规划</strong>算法，用于解决<strong>图中所有顶点对之间的最短路径问题</strong>。它的核心思想是通过逐步扩展允许经过的中间顶点集，来动态地更新任意两点间的最短距离。</p>
+</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="树" /><category term="rmq" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/69.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/69.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">弗洛伊德（Floyd）</title><link href="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html" rel="alternate" type="text/html" title="弗洛伊德（Floyd）" /><published>2025-08-21T00:00:00+00:00</published><updated>2025-08-21T00:00:00+00:00</updated><id>https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7%EF%BC%88Floyd%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/2025/08/21/%E5%BC%97%E6%B4%9B%E4%BC%8A%E5%BE%B7-Floyd.html"><![CDATA[<p>Floyd 算法（也称为 Floyd-Warshall 算法）是一种非常经典且优雅的<strong>动态规划</strong>算法，用于解决<strong>图中所有顶点对之间的最短路径问题</strong>。它的核心思想是通过逐步扩展允许经过的中间顶点集，来动态地更新任意两点间的最短距离。</p>
 
 <h1 id="动态规划原理">动态规划原理</h1>
 
