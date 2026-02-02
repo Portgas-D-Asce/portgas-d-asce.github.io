@@ -863,6 +863,36 @@
 }
 </style>
 <style>
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #abstracts {
+        margin: 0 auto;
+        width: 96%;
+        min-height: 80vmin;
+        padding-top: 25px;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #abstracts {
+        margin: 0 auto;
+        width: 61.8%;
+        min-height: 80vmin;
+        padding-top: 25px;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #abstracts {
+        margin: 0 auto;
+        width: 61.8%;
+        min-height: 80vmin;
+        padding-top: 25px;
+    }
+}
+
 #header {
     height: 35.8vh;
     padding-top: 26vh;
@@ -872,13 +902,6 @@
     text-align: center;
     color: white;
     overflow: hidden;
-}
-
-#abstracts {
-    margin: 0 auto;
-    width: 61.8%;
-    min-height: 80vmin;
-    padding-top: 25px;
 }
 
 #abstracts .abstract {
