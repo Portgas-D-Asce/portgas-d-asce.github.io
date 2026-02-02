@@ -45,8 +45,8 @@
         <div class="container wh100">
     <div class="motto color-white fontsz28">
         <p>错的不是我，是这个世界</p>
-        <p>没有光明不幸吗？需要光明才是真正的不幸</p>
-        <p>一切不幸都是由自身能力不足造成的, 我再也不想当那个无能为力的自己了 ......</p>
+        <p class="mobile_hidden">没有光明不幸吗？需要光明才是真正的不幸</p>
+        <p class="mobile_hidden">一切不幸都是由自身能力不足造成的, 我再也不想当那个无能为力的自己了 ......</p>
         <br><br><br><br>
         Let's
         <span><a class="destory" href="/tags.html">destory</a></span>
@@ -66,6 +66,13 @@
 .motto {
     padding: 30vh 5vw 0 5vw;
     width: 50%;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    .mobile_hidden {
+        display: none;
+    }
 }
 
 .destory {
