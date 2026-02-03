@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-03T07:56:39+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-03T08:08:50+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
 
 <p>上大学的时候，学姐说看着好小啊</p>
 
@@ -314,27 +314,22 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <h2 id="参考">参考</h2>
 <p><a href="https://www.cnblogs.com/endlesscoding/p/10033527.html">https://www.cnblogs.com/endlesscoding/p/10033527.html</a></p>
 
-<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">线段树（Segment Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html" rel="alternate" type="text/html" title="线段树（Segment Tree）" /><published>2025-10-28T00:00:00+00:00</published><updated>2025-10-28T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91%EF%BC%88Segment%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html"><![CDATA[<p>在解决 rmq 问题的数据结构中，线段树属于是 <strong>重武器：</strong> 效率略低，但功能强大，常用于解决复杂的 “单点更新 + 区间查询” 和 “区间查询 + 区间更新” 问题。</p>
+<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">线段树（Segment Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html" rel="alternate" type="text/html" title="线段树（Segment Tree）" /><published>2025-10-28T00:00:00+00:00</published><updated>2025-10-28T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91%EF%BC%88Segment%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html"><![CDATA[<p>在解决 rmq 问题的数据结构中，线段树属于是 <strong>重武器：</strong> 效率略低，但功能强大，常用于解决复杂的 “单点更新 + 区间查询” 和 “区间查询 + 区间更新” 问题，不要杀鸡用牛刀。</p>
 
 <h1 id="线段树类型">线段树类型</h1>
-<p>有 <strong>递归线段树</strong> 和 <strong>迭代线段树</strong> 两种类型</p>
-
 <h2 id="递归线段树">递归线段树</h2>
 <p>自顶向下，也就是我们常说的线段树，大概是这样子的:</p>
 <ul>
   <li>一棵满二叉树下，稀疏地挂着好多小脚（非连续）</li>
   <li>原数据存储在倒数两层的叶子节点当中</li>
+  <li>每个内部节点都有左右子节点</li>
   <li>倒数第二层一定是满的？为什么？？？？？？？？？？</li>
 </ul>
 
 <p><img src="/assets/content/22.png" alt="/assets/content/22.png" /></p>
 
 <h2 id="迭代线段树">迭代线段树</h2>
-<p>自底向上，支持懒标记下沉操作困难，大概样子是这样的:</p>
-<ul>
-  <li>永远是一棵 <strong>满二叉树</strong></li>
-  <li>原数据在最后一层从左往右存储，剩余用不到的必须用单位元填充</li>
-</ul>
+<p>自底向上，支持懒标记下沉操作困难，大概样子是这样的:永远是一棵 <strong>满二叉树</strong>，原数据在最后一层从左往右存储，剩余用不到的必须用单位元填充</p>
 
 <p><img src="/assets/content/23.png" alt="/assets/content/23.png" /></p>
 
@@ -1006,54 +1001,6 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
     </table>
   </li>
 </ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Accumulate</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">Tp</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="plus">plus</h2>
-
-<p>懒标记 x + y + z = x + (y + z)</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Accumulate</span><span class="o">&lt;</span><span class="n">plus</span><span class="o">&lt;</span><span class="n">Tp</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">Tp</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">val</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="bit_xor">bit_xor</h2>
-
-<p>懒标记 x ^ y ^ z = x ^ (y ^ z)</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Accumulate</span><span class="o">&lt;</span><span class="n">bit_xor</span><span class="o">&lt;</span><span class="n">Tp</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">Tp</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">val</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="multiplies">multiplies</h2>
-
-<p>懒标记 x * y * z = x * (y * z)</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Accumulate</span><span class="o">&lt;</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">Tp</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">Tp</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tp</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="c1">//return qpow(val, x);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
 
 <h1 id="第三次封装">第三次封装</h1>
 
