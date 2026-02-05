@@ -111,84 +111,76 @@
 
 <p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
-<h1 id="树状数组普通版">树状数组（普通版）</h1>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums 表示原数组，ft 表示 nums 的树状数组</span>
-<span class="c1">//同前缀和数组，树状数组也需要补充一个前置 0</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">ft</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="c1">//第 idx 个元素 + x</span>
-    <span class="c1">//nums[idx] + x when 1-indexed</span>
-    <span class="c1">//nums[idx - 1] + x when 0-indexed</span>
-    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="c1">//前缀和查询</span>
-    <span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">+=</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
-            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-<p>先上代码，然后再根据代码反向理解：</p>
+<p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> 的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code>(此处把 <code class="language-plaintext highlighter-rouge">nums</code> 想成 1-indexed 看起来会更舒服)</p>
 <ul>
-  <li>$lowbit(x)$ 是什么，其作用又是什么？</li>
-  <li>树状数组中每个元素 $ft[i]$ 的含义？</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[0] = 0</code>，用于辅助计算，不存储原数组的信息</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[1] = nums[0]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[2] = nums[1] + nums[0]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[3] = nums[2]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[4] = nums[3] + ft[3] + ft[2] = nums[3] + nums[2] + nums[1] + nums[0]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[5] = nums[4]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[6] = nums[5] + nums[4]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[7] = nums[6]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[8] = nums[7] + ft[7] + ft[6] + ft[4] = nums[7] + nums[6] + ... + nums[0]</code></li>
+  <li>……</li>
 </ul>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums 表示原数组，ft 表示 nums 的树状数组</span>
-<span class="c1">//同前缀和数组，树状数组也需要补充一个前置 0</span>
-<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
-<span class="nl">private:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">ft</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="c1">//第 idx 个元素 + x</span>
-    <span class="c1">//nums[idx] + x when 1-indexed</span>
-    <span class="c1">//nums[idx - 1] + x when 0-indexed</span>
-    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+<p>根据树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 显然也能还原出原数组 <code class="language-plaintext highlighter-rouge">nums</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nums[0] = ft[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[1] = ft[2] - ft[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[2] = ft[3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[3] = ft[4] - ft[3] - ft[2]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[4] = ft[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[5] = ft[6] - ft[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[6] = ft[7]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[7] = ft[8] - ft[7] - ft[6] - ft[4]</code></li>
+  <li>……</li>
+</ul>
+
+<h1 id="树状数组普通版">树状数组（普通版）</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">_ft</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{}</span>
+    
+    <span class="c1">// 0-indexed nums[idx] += x</span>
+    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
             <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-    <span class="c1">//前缀和查询</span>
-    <span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="c1">// 0-indexed prefix sum [0, idx]</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">+=</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
             <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
+    
+    <span class="c1">// 0-indexed range sum [p, r]</span>
+    <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">prefix</span><span class="p">(</span><span class="o">++</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">prefix</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_ft</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
-<h2 id="lowbit-函数">lowbit 函数</h2>
+<h2 id="lowbit-函数"><code class="language-plaintext highlighter-rouge">lowbit</code> 函数</h2>
 
-<p>$lowbit$ 是什么？</p>
+<p><code class="language-plaintext highlighter-rouge">lowbit</code> 是什么？</p>
 <ul>
-  <li>$lowbit(x)$：$x$ 的二进制表示最后一位 $1$ 的位权</li>
-  <li>$lowbit(x) = x\ \&amp;\ (-x)$</li>
+  <li><code class="language-plaintext highlighter-rouge">lowbit(x)</code>：<code class="language-plaintext highlighter-rouge">x</code> 的二进制表示最后一位 <code class="language-plaintext highlighter-rouge">1</code> 的位权</li>
+  <li><code class="language-plaintext highlighter-rouge">lowbit(x) = x &amp; (-x)</code></li>
 </ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="err">的二进制表示为：</span><span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
@@ -197,7 +189,7 @@
 <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="err">：</span>      <span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
 </code></pre></div></div>
 
-<h2 id="理解">理解</h2>
+<h2 id="fti-的含义是什么"><code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义是什么</h2>
 
 <p>树状数组中每个元素 $ft[i]$ 的含义？模拟求和（为了方便描述，这里假设原数组 $nums$ 下标也从 $1$ 开始）：</p>
 
