@@ -112,7 +112,7 @@
 
 <p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
-<p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> 的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code>(此处把 <code class="language-plaintext highlighter-rouge">nums</code> 想成 1-indexed 看起来会更舒服)</p>
+<p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> 的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code>，此处把 <code class="language-plaintext highlighter-rouge">nums</code> 看作是 1-indexed 理解起来更方便</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ft[0] = 0</code>，用于辅助计算，不存储原数组的信息</li>
   <li><code class="language-plaintext highlighter-rouge">ft[1] = nums[1]</code></li>
@@ -176,13 +176,9 @@
 <span class="p">};</span>
 </code></pre></div></div>
 
-<h2 id="lowbit-函数"><code class="language-plaintext highlighter-rouge">lowbit</code> 函数</h2>
+<h2 id="lowbit-函数是什么"><code class="language-plaintext highlighter-rouge">lowbit</code> 函数是什么？</h2>
 
-<p><code class="language-plaintext highlighter-rouge">lowbit</code> 是什么？</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">lowbit(x)</code>：<code class="language-plaintext highlighter-rouge">x</code> 的二进制表示最后一位 <code class="language-plaintext highlighter-rouge">1</code> 的位权</li>
-  <li><code class="language-plaintext highlighter-rouge">lowbit(x) = x &amp; (-x)</code></li>
-</ul>
+<p><code class="language-plaintext highlighter-rouge">lowbit(x)</code> 表示 <code class="language-plaintext highlighter-rouge">x</code> 的二进制表示最后一位 <code class="language-plaintext highlighter-rouge">1</code> 的位权</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="err">的二进制表示为：</span><span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
 <span class="n">x</span> <span class="err">的反码为：</span>     <span class="mf">1.</span><span class="p">.</span><span class="mf">.0111111</span>
@@ -190,28 +186,28 @@
 <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="err">：</span>      <span class="mf">0.</span><span class="p">.</span><span class="mf">.1000000</span>
 </code></pre></div></div>
 
-<h2 id="fti-的含义是什么"><code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义是什么</h2>
+<h2 id="fti-的含义是什么"><code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义是什么？</h2>
 
-<p>树状数组中每个元素 $ft[i]$ 的含义？模拟求和（为了方便描述，这里假设原数组 $nums$ 下标也从 $1$ 开始）：</p>
+<p>树状数组中每个元素 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义？模拟求和（为了方便描述，这里假设原数组 <code class="language-plaintext highlighter-rouge">nums</code> 下标也从 <code class="language-plaintext highlighter-rouge">1</code> 开始）：</p>
 
 <ul>
-  <li>$sum[7] = ft[7] + ft[6] + ft[4]$
+  <li><code class="language-plaintext highlighter-rouge">sum[7] = ft[7] + ft[6] + ft[4]</code>
     <ul>
-      <li>7 的二进制表示 $111$</li>
-      <li>实际上，$ft[7] = nums[7]$</li>
-      <li>实际上，$ft[6] = nums[5] + nums[6]$</li>
-      <li>实际上，$ft[4] = nums[1] + nums[2] + nums[3] + nums[4]$</li>
+      <li>7 的二进制表示 <code class="language-plaintext highlighter-rouge">111</code></li>
+      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[7] = nums[7]</code></li>
+      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[6] = nums[5] + nums[6]</code></li>
+      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[4] = nums[1] + nums[2] + nums[3] + nums[4]</code></li>
     </ul>
   </li>
-  <li>看了上面例子，对于 $ft[i]$ 的本质基本有感觉了吧 🤔🤔
+  <li>看了上面例子，对于 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的本质基本有感觉了吧 🤔🤔
     <ul>
-      <li>$ft[i]$ 表示的是 $nums[i - lowbit(i) + 1] + … + nums[i]$ 的和！！！</li>
-      <li>$ft[i]$ 维护的是区间 $[i - lowbit(i) + 1, i]$ 的性质</li>
+      <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 表示的是 <code class="language-plaintext highlighter-rouge">nums[i - lowbit(i) + 1] + ... + nums[i]</code> 的和！！！</li>
+      <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 维护的是区间 <code class="language-plaintext highlighter-rouge">[i - lowbit(i) + 1, i]</code> 的性质</li>
     </ul>
   </li>
 </ul>
 
-<p>$lowbit(x)$ 在这期间的作用？</p>
+<p><code class="language-plaintext highlighter-rouge">lowbit(x)</code> 在这期间的作用？</p>
 <ul>
   <li>求和期间：从上到下，快速跳转到下一个求和区间</li>
   <li>更新期间：从下到上，快速跳转到下一受影响的区间</li>
