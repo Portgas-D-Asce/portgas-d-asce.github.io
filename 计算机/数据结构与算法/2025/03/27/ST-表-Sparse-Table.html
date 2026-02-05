@@ -78,13 +78,7 @@
 }
 </style><p>在解决 rmq 问题的数据结构中，ST 表属于是 <strong>专属武器</strong>： <strong>不支持更新</strong> 且要求 <strong>可重复贡献</strong>，区间查询的时间复杂度为 <strong>常数</strong>。</p>
 
-<p>常见的可重复贡献问题；</p>
-<ul>
-  <li>最大/小值</li>
-  <li>按位与</li>
-  <li>按位或</li>
-  <li>GCD/LCM</li>
-</ul>
+<p>常见的可重复贡献问题: 最大/小值、按位与、按位或、GCD/LCM</p>
 
 <h1 id="构造">构造</h1>
 
@@ -127,8 +121,6 @@
 <p>故，查询结果定义为：</p>
 
 \[max(dp[p][s], dp[r - 2^s + 1][s])\]
-
-<p>_op(_dp[p][s], _dp[r + 1 - (1 « s)][s]);</p>
 
 <h1 id="实现">实现</h1>
 
