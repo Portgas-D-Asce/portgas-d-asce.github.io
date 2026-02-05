@@ -76,7 +76,7 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><p>树状数组原本是均衡版的前缀和数组，改造后在 rmq 问题中扮演着重要角色，属于是 <strong>轻武器</strong>： 虽然使用受限，但效率高，常用于解决简单的的 “单点更新 + 区间查询” 问题。</p>
+</style><p>树状数组原本是均衡版的前缀和数组，改造后在 rmq 问题中扮演着重要角色，属于是<strong>轻武器</strong>： 虽然使用受限，但效率高，常用于解决简单的的 “单点更新 + 区间查询” 问题。</p>
 
 <h1 id="原数组--前缀和数组--差分数组--树状数组">原数组 &amp; 前缀和数组 &amp; 差分数组 &amp; 树状数组</h1>
 
@@ -92,8 +92,9 @@
   <li>原数组 是 前缀和数组 的差分数组！！！</li>
 </ul>
 
-<p>前缀和数组、差分数组、树状数组本质上都是原数组的某种变换或表示，通过适当的操作可以相互转换
-<img src="/assets/content/51.png" alt="/assets/content/51.png" /></p>
+<p>前缀和数组、差分数组、树状数组本质上都是原数组的某种变换或表示，通过适当的操作可以相互转换</p>
+
+<p><img src="/assets/content/51.png" alt="/assets/content/51.png" /></p>
 
 <p>前缀和数组： 直接存储了前缀和信息，查询效率高，更新效率低，是一种 “极端” 的数据结构</p>
 <ul>
@@ -114,27 +115,27 @@
 <p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> 的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code>(此处把 <code class="language-plaintext highlighter-rouge">nums</code> 想成 1-indexed 看起来会更舒服)</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ft[0] = 0</code>，用于辅助计算，不存储原数组的信息</li>
-  <li><code class="language-plaintext highlighter-rouge">ft[1] = nums[0]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[2] = nums[1] + nums[0]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[3] = nums[2]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[4] = nums[3] + ft[3] + ft[2] = nums[3] + nums[2] + nums[1] + nums[0]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[5] = nums[4]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[6] = nums[5] + nums[4]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[7] = nums[6]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">ft[8] = nums[7] + ft[7] + ft[6] + ft[4] = nums[7] + nums[6] + ... + nums[0]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[1] = nums[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[2] = nums[2] + nums[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[3] = nums[3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[4] = nums[4] + ft[3] + ft[2] = nums[4] + nums[3] + nums[2] + nums[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[5] = nums[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[6] = nums[6] + nums[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[7] = nums[7]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ft[8] = nums[8] + ft[7] + ft[6] + ft[4] = nums[8] + nums[7] + ... + nums[1]</code></li>
   <li>……</li>
 </ul>
 
 <p>根据树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 显然也能还原出原数组 <code class="language-plaintext highlighter-rouge">nums</code>:</p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">nums[0] = ft[1]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[1] = ft[2] - ft[1]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[2] = ft[3]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[3] = ft[4] - ft[3] - ft[2]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[4] = ft[5]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[5] = ft[6] - ft[5]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[6] = ft[7]</code></li>
-  <li><code class="language-plaintext highlighter-rouge">nums[7] = ft[8] - ft[7] - ft[6] - ft[4]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[1] = ft[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[2] = ft[2] - ft[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[3] = ft[3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[4] = ft[4] - ft[3] - ft[2]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[5] = ft[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[6] = ft[6] - ft[5]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[7] = ft[7]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nums[8] = ft[8] - ft[7] - ft[6] - ft[4]</code></li>
   <li>……</li>
 </ul>
 
