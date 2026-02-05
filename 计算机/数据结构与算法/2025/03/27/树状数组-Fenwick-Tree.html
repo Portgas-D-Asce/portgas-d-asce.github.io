@@ -80,11 +80,10 @@
 
 <h1 id="原数组--前缀和数组--差分数组--树状数组">原数组 &amp; 前缀和数组 &amp; 差分数组 &amp; 树状数组</h1>
 
-<p>设有原数组 $nums$，可以在常数时间内访问任意元素:</p>
+<p>设有原数组（常数时间内访问任意元素） $nums$:</p>
 <ul>
-  <li>数组 $sum[i] = nums[0] + nums[1] + … + nums[i]$ 称为 $nums$ 的前缀和数组，可以在常数时间获取任意区间的元素和</li>
-  <li>数组 $dif[i] = nums[i] - nums[i - 1]$ 称为 $nums$ 的差分数组，可以在常数时间内对任意区间内元素增加/减少固定数值</li>
-  <li>前缀和数组、差分数组 只不过是原数组的不同表示形式（可以还原回原数组）</li>
+  <li>数组 $sum[i] = nums[0] + nums[1] + … + nums[i]$ 称为 $nums$ 的前缀和数组（常数时间获取任意区间的元素和）</li>
+  <li>数组 $dif[i] = nums[i] - nums[i - 1]$ 称为 $nums$ 的差分数组（常数时间内对任意区间内元素增加/减少固定数值）</li>
 </ul>
 
 <p>前缀和、差分互为逆运算：</p>
@@ -93,7 +92,8 @@
   <li>原数组 是 前缀和数组 的差分数组！！！</li>
 </ul>
 
-<p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
+<p>前缀和数组、差分数组、树状数组本质上都是原数组的某种变换或表示，通过适当的操作可以相互转换
+<img src="/assets/content/51.png" alt="/assets/content/51.png" /></p>
 
 <p>前缀和数组：</p>
 <ul>
@@ -110,6 +110,8 @@
   <li><strong>查询原数组任意区间内元素的和：</strong> 实际上是查询两次前缀和，然后作差；时间复杂度 $O(logn)$；</li>
   <li><strong>修改原数组中某个元素的值需要对树状数组进行维护：</strong> 时间复杂度为 $O(logn)$；</li>
 </ul>
+
+<p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
 <h1 id="树状数组普通版">树状数组（普通版）</h1>
 <p>先上代码，然后再根据代码反向理解：</p>
