@@ -95,25 +95,55 @@
 <p>前缀和数组、差分数组、树状数组本质上都是原数组的某种变换或表示，通过适当的操作可以相互转换
 <img src="/assets/content/51.png" alt="/assets/content/51.png" /></p>
 
-<p>前缀和数组：</p>
+<p>前缀和数组： 直接存储了前缀和信息，查询效率高，更新效率低，是一种 “极端” 的数据结构</p>
 <ul>
-  <li>直接存储了前缀和信息；</li>
-  <li><strong>构建时间复杂度：</strong> $O(n)$；</li>
-  <li><strong>查询原数组任意区间内元素的和：</strong> 时间复杂度 $O(1)$；</li>
-  <li><strong>修改原数组中某个元素的值需要对前缀和数组进行维护：</strong> 时间复杂度为 $O(n)$；</li>
+  <li>构建时间复杂度：$O(n)$；</li>
+  <li>查询原数组任意区间内元素的和： 两个前缀和作差，时间复杂度 $O(1)$；</li>
+  <li>修改原数组中某个元素的值需要对前缀和数组进行维护： 时间复杂度为 $O(n)$；</li>
 </ul>
 
-<p>树状数组：</p>
+<p>树状数组： 间接存储了前缀和信息，被分为连续的多段，查询效率略低，更新效率较高，是一种</p>
 <ul>
-  <li>间接存储了前缀和信息，被分为连续的多段</li>
-  <li><strong>构建时间复杂度：</strong> $O(n)$；</li>
-  <li><strong>查询原数组任意区间内元素的和：</strong> 实际上是查询两次前缀和，然后作差；时间复杂度 $O(logn)$；</li>
-  <li><strong>修改原数组中某个元素的值需要对树状数组进行维护：</strong> 时间复杂度为 $O(logn)$；</li>
+  <li>构建时间复杂度： $O(n)$；</li>
+  <li>查询原数组任意区间内元素的和： 两个前缀和作差，时间复杂度 $O(logn)$；</li>
+  <li>修改原数组中某个元素的值需要对树状数组进行维护： 时间复杂度为 $O(logn)$；</li>
 </ul>
 
 <p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
 <h1 id="树状数组普通版">树状数组（普通版）</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//nums 表示原数组，ft 表示 nums 的树状数组</span>
+<span class="c1">//同前缀和数组，树状数组也需要补充一个前置 0</span>
+<span class="k">class</span> <span class="nc">FenwickTree</span><span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">lowbit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FenwickTree</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ft</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">//第 idx 个元素 + x</span>
+    <span class="c1">//nums[idx] + x when 1-indexed</span>
+    <span class="c1">//nums[idx - 1] + x when 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">//前缀和查询</span>
+    <span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+            <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
 <p>先上代码，然后再根据代码反向理解：</p>
 <ul>
   <li>$lowbit(x)$ 是什么，其作用又是什么？</li>
