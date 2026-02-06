@@ -224,11 +224,11 @@
 
 <p>通过这种方式避免了 “逆运算” 操作，扩展了树状数组的应用场景</p>
 
-<p>以查询区间 $[3, 7]$ 最大值为例：</p>
+<p>以查询区间 <code class="language-plaintext highlighter-rouge">[3, 7]</code> 最大值为例：</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ft[7]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[7, 7]</code>，完全在查询范围内</li>
   <li><code class="language-plaintext highlighter-rouge">ft[6]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[5, 6]</code>，完全在查询范围内</li>
-  <li><code class="language-plaintext highlighter-rouge">ft[4]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[1, 4]</code>，不完全在查询范围内，无法使用，先使用原数组元素代表 $nums[4]$</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[4]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[1, 4]</code>，不完全在查询范围内，无法使用，先使用原数组元素代表 <code class="language-plaintext highlighter-rouge">nums[4]</code></li>
   <li><code class="language-plaintext highlighter-rouge">ft[3]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[3, 3]</code>，完全在查询范围内</li>
   <li><code class="language-plaintext highlighter-rouge">max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])</code></li>
 </ul>
@@ -268,9 +268,6 @@
 </ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
-<span class="c1">// Use of this source code is governed by a MIT license</span>
-
-<span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
 
 
