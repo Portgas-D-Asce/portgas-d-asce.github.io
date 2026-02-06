@@ -78,6 +78,8 @@
 }
 </style><p>树状数组原本是均衡版的前缀和数组，改造后在 rmq 问题中扮演着重要角色，属于是<strong>轻武器</strong>： 虽然使用受限，但效率高，常用于解决简单的的 “单点更新 + 区间查询” 问题。</p>
 
+<p>注意：本文在对于原数组 <code class="language-plaintext highlighter-rouge">nums</code>，理解原理时，是 <code class="language-plaintext highlighter-rouge">1-indexed</code> 的，代码实现时，是 <code class="language-plaintext highlighter-rouge">0-indexed</code> 的（毕竟作为 api，要好用）</p>
+
 <h1 id="原数组--前缀和数组--差分数组--树状数组">原数组 &amp; 前缀和数组 &amp; 差分数组 &amp; 树状数组</h1>
 
 <p>设有原数组（常数时间内访问任意元素） $nums$:</p>
@@ -112,7 +114,7 @@
 
 <p><img src="/assets/content/1.png" alt="/assets/content/1.png" /></p>
 
-<p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> 的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code>，此处把 <code class="language-plaintext highlighter-rouge">nums</code> 看作是 1-indexed 理解起来更方便</p>
+<p>如上图所示，树状数组 <code class="language-plaintext highlighter-rouge">ft</code> 的长度与原数组 <code class="language-plaintext highlighter-rouge">nums</code> （<code class="language-plaintext highlighter-rouge">1-indexed</code>）的长度关系：<code class="language-plaintext highlighter-rouge">ft.length() = nums.length() + 1</code></p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ft[0] = 0</code>，用于辅助计算，不存储原数组的信息</li>
   <li><code class="language-plaintext highlighter-rouge">ft[1] = nums[1]</code></li>
@@ -188,23 +190,20 @@
 
 <h2 id="fti-的含义是什么"><code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义是什么？</h2>
 
-<p>树状数组中每个元素 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义？模拟求和（为了方便描述，这里假设原数组 <code class="language-plaintext highlighter-rouge">nums</code> 下标也从 <code class="language-plaintext highlighter-rouge">1</code> 开始）：</p>
+<p>树状数组中每个元素 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的含义？模拟求和，以求 <code class="language-plaintext highlighter-rouge">[0, 6]</code>（<code class="language-plaintext highlighter-rouge">nums</code> 是 <code class="language-plaintext highlighter-rouge">1-indexed</code> 的，也就是 <code class="language-plaintext highlighter-rouge">[1, 7]</code>）前缀和为例：</p>
 
+<p><code class="language-plaintext highlighter-rouge">sum[1, 7] = ft[7] + ft[6] + ft[4]</code></p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">sum[7] = ft[7] + ft[6] + ft[4]</code>
-    <ul>
-      <li>7 的二进制表示 <code class="language-plaintext highlighter-rouge">111</code></li>
-      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[7] = nums[7]</code></li>
-      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[6] = nums[5] + nums[6]</code></li>
-      <li>实际上，<code class="language-plaintext highlighter-rouge">ft[4] = nums[1] + nums[2] + nums[3] + nums[4]</code></li>
-    </ul>
-  </li>
-  <li>看了上面例子，对于 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的本质基本有感觉了吧 🤔🤔
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 表示的是 <code class="language-plaintext highlighter-rouge">nums[i - lowbit(i) + 1] + ... + nums[i]</code> 的和！！！</li>
-      <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 维护的是区间 <code class="language-plaintext highlighter-rouge">[i - lowbit(i) + 1, i]</code> 的性质</li>
-    </ul>
-  </li>
+  <li>7 的二进制表示 <code class="language-plaintext highlighter-rouge">111</code></li>
+  <li>实际上，<code class="language-plaintext highlighter-rouge">ft[7] = nums[7]</code></li>
+  <li>实际上，<code class="language-plaintext highlighter-rouge">ft[6] = nums[5] + nums[6]</code></li>
+  <li>实际上，<code class="language-plaintext highlighter-rouge">ft[4] = nums[1] + nums[2] + nums[3] + nums[4]</code></li>
+</ul>
+
+<p>看了上面例子，对于 <code class="language-plaintext highlighter-rouge">ft[i]</code> 的本质基本有感觉了吧 🤔🤔</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 表示的是 <code class="language-plaintext highlighter-rouge">nums[i - lowbit(i) + 1] + ... + nums[i]</code> 的和！！！</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[i]</code> 维护的是区间 <code class="language-plaintext highlighter-rouge">[i - lowbit(i) + 1, i]</code> 的性质</li>
 </ul>
 
 <p><code class="language-plaintext highlighter-rouge">lowbit(x)</code> 在这期间的作用？</p>
@@ -214,80 +213,37 @@
 </ul>
 
 <h1 id="树状数组改造版">树状数组（改造版）</h1>
+<h2 id="问题一">问题一</h2>
+<p>通过 “两次前缀和 + 减法” 的方式，树状数组可以查询任意区间所有元素和。 类似，任意区间所有元素的积也可以通过 “两次前缀积 + 除法” 的方式获得。</p>
 
-<p>What？？？树状数组可以求任意区间和是可以理解的：求两次前缀和，做差即可得到区间和。树状数组求任意区间最值？！！</p>
+<p>但对于<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等操作，由于没有第二步 “逆运算” 操作，导致无法对任意区间进行查询！！！</p>
 
-<p>一开始也是不相信的，然而事实是，在特定场景下是可行的，而且效果还不错。</p>
+<p>对于上面这些操作，树状数组真的就无能为力，只能到此为止了吗？别慌，接着往下看！</p>
 
-<p>特定场景：求区间最小/大值时，要求修改方向只能朝着变小/大的方向修改（线段树是没有这要求的），考虑区间最大值：</p>
+<p>树状数组中，每个元素存储的是它附近一段区间的和，将查询区间拆分成多个这样连续区间的，再将这些区间的和加起来就得到了查询区间的和。</p>
 
+<p>通过这种方式避免了 “逆运算” 操作，扩展了树状数组的应用场景</p>
+
+<p>以查询区间 $[3, 7]$ 最大值为例：</p>
 <ul>
-  <li>单点更新下 $nums[5] = 100$，$ft[5]$，$ft[6]$，$ft[8]$ 均受到影响，更新为 $100$，这没问题</li>
-  <li>接着更新下 $nums[5] = 99$，按道理 $ft[5]$，$ft[6]$，$ft[8]$ 均应更新为 $99$，但实际是不会更新的，这正是问题所在！</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[7]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[7, 7]</code>，完全在查询范围内</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[6]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[5, 6]</code>，完全在查询范围内</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[4]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[1, 4]</code>，不完全在查询范围内，无法使用，先使用原数组元素代表 $nums[4]$</li>
+  <li><code class="language-plaintext highlighter-rouge">ft[3]</code> 维护的范围是 <code class="language-plaintext highlighter-rouge">[3, 3]</code>，完全在查询范围内</li>
+  <li><code class="language-plaintext highlighter-rouge">max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])</code></li>
 </ul>
 
-<h2 id="实现">实现</h2>
-
-<p>这里以求区间最大值为例，核心思想：</p>
-
+<h2 id="问题二">问题二</h2>
+<p>考虑求区间最小/大值场景下，进行以下两次单点更新：</p>
 <ul>
-  <li>更新的时候不仅要维护树状数组 $ft$，还要维护原数组 $nums$</li>
-  <li>查询的时候 $[p, r]$ 最值朴素做法：从起点到终点逐个遍历，取最大值即可，可以使用 $ft$ 对其进行优化
-    <ul>
-      <li>若 $ft[i]$ 所管理的区间在查询区间范围内：用 $ft[i]$ 代表其所管理的区间即可</li>
-      <li>如果 $ft[i]$ 所管理的区间并没有完全在查询区间内，回到朴素做法即可，用原是数组中的元素做比较即可</li>
-    </ul>
-  </li>
+  <li>单点更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 100</code>，<code class="language-plaintext highlighter-rouge">ft[5]</code>、<code class="language-plaintext highlighter-rouge">ft[6]</code>、<code class="language-plaintext highlighter-rouge">ft[8]</code> 均受到影响，更新为 <code class="language-plaintext highlighter-rouge">100</code>，这没问题</li>
+  <li>接着更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 99</code>，按道理 <code class="language-plaintext highlighter-rouge">ft[5]</code>，<code class="language-plaintext highlighter-rouge">ft[6]</code>，<code class="language-plaintext highlighter-rouge">ft[8]</code> 均应更新为 <code class="language-plaintext highlighter-rouge">99</code>，但实际是不会更新的，这正是问题所在！</li>
 </ul>
 
-<p>示例：查询区间 $[3, 7]$</p>
+<p>本质：是因为树状数组只支持 “增量更新”，不支持 “设置更新”，这进一步导致了最大/小值场景，要求更新方向只能朝着变大/小的方向修改！</p>
 
-<ul>
-  <li>$ft[7]$ 管理的范围是 $[7, 7]$，完全在查询范围内</li>
-  <li>$ft[6]$ 管理的范围是 $[5, 6]$，完全在查询范围内</li>
-  <li>$ft[4]$ 管理的范围是 $[1, 4]$，不完全在查询范围内，使用原数组元素代表 $nums[4]$</li>
-  <li>$ft[3]$ 管理的范围是 $[3, 3]$，完全在查询范围内</li>
-  <li>$max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])$</li>
-</ul>
-
-<h1 id="离散化">离散化</h1>
-
-<h2 id="维护离散区间">维护离散区间</h2>
-
-<p>常规：下标区间是连续的，维护区间 [5, 6] 之间的最值/和</p>
-
-<p>如果下标区间不连续呢：</p>
-
-<ul>
-  <li>范围小的话，声明一个数组，当成连续的就可以了</li>
-  <li>范围特别大，就没办法声明数组了</li>
-</ul>
-
-<p>解决办法：</p>
-
-<ul>
-  <li>对出现过的下标进行排序，排完序后，去重</li>
-  <li>每次先用二分查找，查找到对应的连续下标</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//排序</span>
-<span class="n">sort</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="c1">//去重</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
-<span class="n">Fenwick</span> <span class="nf">fw</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-
-<span class="kt">long</span> <span class="kt">long</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">LLONG_MIN</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//离散下标转化为连续下标</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">fw</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="n">fw</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-    <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="封装">封装</h1>
-<p>支持区间 和、积、与和、或和、异或和、最大/小值（gcd？？？？）等场景的单点更新，区间查询操作。</p>
+<h2 id="封装及使用">封装及使用</h2>
+<p>支持区间 <code class="language-plaintext highlighter-rouge">plus</code>、<code class="language-plaintext highlighter-rouge">multiple</code>、<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等场景的单点更新，区间查询操作。</p>
 
 <p>只支持“增量更新（update）”，不支持 “设置更新（set）” 即使支持设置更新，也是通过增量更新实现的，如 和、乘积、异或和。其他场景是移除不掉旧有元素影响的，使用起来具有约束，以最值场景为例:</p>
 <ul>
@@ -295,11 +251,27 @@
   <li>最小值查询：更新值必须小于等于旧值</li>
 </ul>
 
-<p>原理 + 实现的时候基于 1-indexed 更好理解，接口封装都是 0-indexed 使用起来更方便！！！</p>
+<p>在实现单点查询、区间查询时，需要注意：</p>
+<ul>
+  <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
+    <ul>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
+      <li>区间查询: <code class="language-plaintext highlighter-rouge">p &gt; r || r &lt; 0 || p &gt;= ori.size()</code> 时都应该返回单位元</li>
+    </ul>
+  </li>
+  <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
+    <ul>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
+      <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
+    </ul>
+  </li>
+</ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
-<span class="c1">// if you like this code, don't delete this, thanks.</span>
+
+<span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
+<span class="c1">// Use of this source code is governed by a MIT license</span>
 
 
 <span class="c1">// identity variable template(C++14)</span>
@@ -329,18 +301,33 @@
 <span class="c1">// maximum partial variable template specialization</span>
 <span class="c1">// std::maximum is function template, not types of functors</span>
 <span class="c1">// float type should use lowest() instead of min()</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">maximum</span>  <span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Max</span>  <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
 <span class="p">};</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">is_floating_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">()</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+<span class="c1">// template&lt;typename T&gt; constexpr auto identity_value&lt;Max , T&gt; = std::is_floating_point_v&lt;T&gt; ? std::numeric_limits&lt;T&gt;::lowest() : std::numeric_limits&lt;T&gt;::min();</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Max</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
 
 <span class="c1">// minimum partial variable template specialization</span>
 <span class="c1">// std::min is function template, not types of functors</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">minimum</span> <span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Min</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
 <span class="p">};</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Min</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+
+<span class="c1">// gcd partial variable template specialization</span>
+<span class="c1">// std::gcd(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Gcd</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">gcd</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Gcd</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// lcm partial variable template specialization</span>
+<span class="c1">// std::lcm(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Lcm</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">lcm</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Lcm</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
@@ -456,21 +443,41 @@
 <span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 </code></pre></div></div>
 
-<p>在实现单点查询、区间查询时，需要注意：</p>
+<h1 id="离散化">离散化</h1>
+
+<h2 id="维护离散区间">维护离散区间</h2>
+
+<p>常规：下标区间是连续的，维护区间 [5, 6] 之间的最值/和</p>
+
+<p>如果下标区间不连续呢：</p>
+
 <ul>
-  <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
-    <ul>
-      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
-      <li>区间查询: <code class="language-plaintext highlighter-rouge">p &gt; r || r &lt; 0 || p &gt;= ori.size()</code> 时都应该返回单位元</li>
-    </ul>
-  </li>
-  <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
-    <ul>
-      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
-      <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
-    </ul>
-  </li>
+  <li>范围小的话，声明一个数组，当成连续的就可以了</li>
+  <li>范围特别大，就没办法声明数组了</li>
 </ul>
+
+<p>解决办法：</p>
+
+<ul>
+  <li>对出现过的下标进行排序，排完序后，去重</li>
+  <li>每次先用二分查找，查找到对应的连续下标</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//排序</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">//去重</span>
+<span class="n">diff</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+<span class="n">Fenwick</span> <span class="nf">fw</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+<span class="kt">long</span> <span class="kt">long</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">LLONG_MIN</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//离散下标转化为连续下标</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">fw</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">fw</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
+    <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h1 id="练习">练习</h1>
 <p>std::plus:</p>
