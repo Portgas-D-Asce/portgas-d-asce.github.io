@@ -82,10 +82,10 @@
 
 <h1 id="原数组--前缀和数组--差分数组--树状数组">原数组 &amp; 前缀和数组 &amp; 差分数组 &amp; 树状数组</h1>
 
-<p>设有原数组（常数时间内访问任意元素） $nums$:</p>
+<p>设有原数组（常数时间内访问任意元素） <code class="language-plaintext highlighter-rouge">nums</code>:</p>
 <ul>
-  <li>数组 $sum[i] = nums[0] + nums[1] + … + nums[i]$ 称为 $nums$ 的前缀和数组（常数时间获取任意区间的元素和）</li>
-  <li>数组 $dif[i] = nums[i] - nums[i - 1]$ 称为 $nums$ 的差分数组（常数时间内对任意区间内元素增加/减少固定数值）</li>
+  <li>数组 <code class="language-plaintext highlighter-rouge">sum[i] = nums[0] + nums[1] + ... + nums[i]</code> 称为 <code class="language-plaintext highlighter-rouge">nums</code> 的前缀和数组（常数时间获取任意区间的元素和）</li>
+  <li>数组 <code class="language-plaintext highlighter-rouge">dif[i] = nums[i] - nums[i - 1]</code> 称为 <code class="language-plaintext highlighter-rouge">nums</code> 的差分数组（常数时间内对任意区间内元素增加/减少固定数值）</li>
 </ul>
 
 <p>前缀和、差分互为逆运算：</p>
@@ -263,6 +263,12 @@
       <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
     </ul>
   </li>
+</ul>
+
+<p>成员变量原数组 <code class="language-plaintext highlighter-rouge">_ori</code> 是必须的吗？</p>
+<ul>
+  <li>对于 <code class="language-plaintext highlighter-rouge">std::plus</code>、<code class="language-plaintext highlighter-rouge">std::multiple</code> 这类存在 “逆运算” 的操作，可以从树状数组还原出原数组，也就不是必须的</li>
+  <li>对于其它不存在 “逆运算” 的操作，无法还原出原数组，故是必须的</li>
 </ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
