@@ -434,38 +434,40 @@
 
 <h1 id="离散化">离散化</h1>
 
-<h2 id="维护离散区间">维护离散区间</h2>
-
-<p>常规：下标区间是连续的，维护区间 [5, 6] 之间的最值/和</p>
-
-<p>如果下标区间不连续呢：</p>
-
+<p>给定一个数组 <code class="language-plaintext highlighter-rouge">nums</code>，<code class="language-plaintext highlighter-rouge">0 &lt;= nums[i] &lt;= 10000</code>，统计 <code class="language-plaintext highlighter-rouge">[p, r]</code> 区间内元素的个数？一种可行方案如下:</p>
 <ul>
-  <li>范围小的话，声明一个数组，当成连续的就可以了</li>
-  <li>范围特别大，就没办法声明数组了</li>
+  <li>创建一个长度为 10001 的一一映射数组 <code class="language-plaintext highlighter-rouge">cnt</code>，数字 <code class="language-plaintext highlighter-rouge">x</code> 出现的次数存储在 <code class="language-plaintext highlighter-rouge">cnt[x]</code> 中</li>
+  <li>查询在区间 <code class="language-plaintext highlighter-rouge">[p, r]</code> 内的元素个数也就是 <code class="language-plaintext highlighter-rouge">cnt[p] + cnt[p + 1] + ... + cnt[r]</code></li>
 </ul>
 
-<p>解决办法：</p>
+<p>如果元素的取值范围是 <code class="language-plaintext highlighter-rouge">0 &lt;= nums[i] &lt;= 1000000000000</code> 呢？开这么大的数组显然不现实！</p>
 
+<p>在这个问题中，我们 <strong>只关注数值的相对大小，不关注具体数值</strong>，可以对数组进行 “排序 + 去重” 操作，然后用它们的下标代表原数字</p>
+
+<p>以上便是离散化：将无限空间中的有限个体映射到有限空间中的技术</p>
 <ul>
-  <li>对出现过的下标进行排序，排完序后，去重</li>
-  <li>每次先用二分查找，查找到对应的连续下标</li>
+  <li>保持原数据相对大小关系</li>
+  <li>将数据映射到更小的连续区间</li>
+  <li>常用于处理值域大但数据量小的情况</li>
 </ul>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//排序</span>
-<span class="n">sort</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="c1">//去重</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
-<span class="n">Fenwick</span> <span class="nf">fw</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<p>示例：</p>
+<ul>
+  <li>原始数据： <code class="language-plaintext highlighter-rouge">[1000, 20000, 300, 1000, 50000]</code></li>
+  <li>离散化后： <code class="language-plaintext highlighter-rouge">[1,    2,     0,    1,    3]</code></li>
+</ul>
 
-<span class="kt">long</span> <span class="kt">long</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">LLONG_MIN</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//离散下标转化为连续下标</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">diff</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">diff</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">fw</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="n">fw</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-    <span class="n">mx</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">temp</span><span class="p">);</span>
-<span class="p">}</span>
+<p>使用时，先将 “原始的查询区间” 通过二分查找映射到 “离散后的查询区间”，然后在统计元素出现次数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 排序</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// 去重</span>
+<span class="n">nums</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">-</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// 查询区间离散化</span>
+<span class="kt">int</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
 </code></pre></div></div>
 
 <h1 id="练习">练习</h1>
