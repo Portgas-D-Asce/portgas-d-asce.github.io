@@ -213,7 +213,7 @@
 </ul>
 
 <h1 id="树状数组改造版">树状数组（改造版）</h1>
-<h2 id="问题一">问题一</h2>
+<h2 id="实现原理">实现原理</h2>
 <p>通过 “两次前缀和 + 减法” 的方式，树状数组可以查询任意区间所有元素和。 类似，任意区间所有元素的积也可以通过 “两次前缀积 + 除法” 的方式获得。</p>
 
 <p>但对于<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等操作，由于没有第二步 “逆运算” 操作，导致无法对任意区间进行查询！！！</p>
@@ -233,43 +233,8 @@
   <li><code class="language-plaintext highlighter-rouge">max([3, 7]) = max(ft[7], ft[6], nums[4], ft[3])</code></li>
 </ul>
 
-<h2 id="问题二">问题二</h2>
-<p>考虑求区间最小/大值场景下，进行以下两次单点更新：</p>
-<ul>
-  <li>单点更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 100</code>，<code class="language-plaintext highlighter-rouge">ft[5]</code>、<code class="language-plaintext highlighter-rouge">ft[6]</code>、<code class="language-plaintext highlighter-rouge">ft[8]</code> 均受到影响，更新为 <code class="language-plaintext highlighter-rouge">100</code>，这没问题</li>
-  <li>接着更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 99</code>，按道理 <code class="language-plaintext highlighter-rouge">ft[5]</code>，<code class="language-plaintext highlighter-rouge">ft[6]</code>，<code class="language-plaintext highlighter-rouge">ft[8]</code> 均应更新为 <code class="language-plaintext highlighter-rouge">99</code>，但实际是不会更新的，这正是问题所在！</li>
-</ul>
-
-<p>本质：是因为树状数组只支持 “增量更新”，不支持 “设置更新”，这进一步导致了最大/小值场景，要求更新方向只能朝着变大/小的方向修改！</p>
-<ul>
-  <li>最大值查询：更新值必须大于等于旧值</li>
-  <li>最小值查询：更新值必须小于等于旧值</li>
-</ul>
-
 <h2 id="封装及使用">封装及使用</h2>
 <p>支持区间 <code class="language-plaintext highlighter-rouge">plus</code>、<code class="language-plaintext highlighter-rouge">multiple</code>、<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等场景的单点更新，区间查询操作。</p>
-
-<p>在实现单点查询、区间查询时，需要注意：</p>
-<ul>
-  <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
-    <ul>
-      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
-      <li>区间查询: <code class="language-plaintext highlighter-rouge">p &gt; r || r &lt; 0 || p &gt;= ori.size()</code> 时都应该返回单位元</li>
-    </ul>
-  </li>
-  <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
-    <ul>
-      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
-      <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
-    </ul>
-  </li>
-</ul>
-
-<p>成员变量原数组 <code class="language-plaintext highlighter-rouge">_ori</code> 是必须的吗？</p>
-<ul>
-  <li>对于 <code class="language-plaintext highlighter-rouge">std::plus</code>、<code class="language-plaintext highlighter-rouge">std::multiple</code> 这类存在 “逆运算” 的操作，可以从树状数组还原出原数组，也就不是必须的</li>
-  <li>对于其它不存在 “逆运算” 的操作，无法还原出原数组，故是必须的</li>
-</ul>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
 <span class="c1">// Use of this source code is governed by a MIT license</span>
@@ -408,6 +373,28 @@
 <span class="p">};</span>
 </code></pre></div></div>
 
+<p>在实现单点查询、区间查询时，需要注意：</p>
+<ul>
+  <li>不要着急直接使用 clamp 处理边界，应该先判断特殊场景
+    <ul>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == -2</code> 时，实际应该返回单位元，如果先 clamp 到 <code class="language-plaintext highlighter-rouge">idx == 0</code>, 返回的并不是单位元</li>
+      <li>区间查询: <code class="language-plaintext highlighter-rouge">p &gt; r || r &lt; 0 || p &gt;= ori.size()</code> 时都应该返回单位元</li>
+    </ul>
+  </li>
+  <li>判断完特殊场景之后，需要进行 clamp，防止访问越界同时保证计算结果
+    <ul>
+      <li>单点查询: <code class="language-plaintext highlighter-rouge">idx == ori.size() + 3</code> 时，计算前应该 clamp 到 <code class="language-plaintext highlighter-rouge">idx == ori.size() - 1</code> 防止访问越界</li>
+      <li>区间查询: 特殊场景判断完之后，还有可能是 <code class="language-plaintext highlighter-rouge">p &lt; 0 &amp;&amp; r &gt;= ori.size()</code> 等场景，所以还是要做 clamp 的</li>
+    </ul>
+  </li>
+</ul>
+
+<p>成员变量原数组 <code class="language-plaintext highlighter-rouge">_ori</code> 是必须的吗？</p>
+<ul>
+  <li>对于 <code class="language-plaintext highlighter-rouge">std::plus</code>、<code class="language-plaintext highlighter-rouge">std::multiple</code> 这类存在 “逆运算” 的操作，可以从树状数组还原出原数组，也就不是必须的</li>
+  <li>对于其它不存在 “逆运算” 的操作，无法还原出原数组，故是必须的</li>
+</ul>
+
 <p>使用示例</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">maximum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
@@ -432,6 +419,22 @@
 <span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">Max</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 </code></pre></div></div>
 
+<h2 id="场景约束">场景约束</h2>
+
+<p>树状数组只支持 “增量更新（update）”，不支持 “设置更新（set）” ！！！</p>
+
+<p>考虑求区间最大值场景下，进行以下两次单点更新：</p>
+<ul>
+  <li>单点更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 100</code>，<code class="language-plaintext highlighter-rouge">ft[5]</code>、<code class="language-plaintext highlighter-rouge">ft[6]</code>、<code class="language-plaintext highlighter-rouge">ft[8]</code> 均受到影响，更新为 <code class="language-plaintext highlighter-rouge">100</code>，这没问题</li>
+  <li>接着更新下 <code class="language-plaintext highlighter-rouge">nums[5] = 99</code>，按道理 <code class="language-plaintext highlighter-rouge">ft[5]</code>，<code class="language-plaintext highlighter-rouge">ft[6]</code>，<code class="language-plaintext highlighter-rouge">ft[8]</code> 均应更新为 <code class="language-plaintext highlighter-rouge">99</code>，但实际是不会更新的，这正是问题所在！</li>
+</ul>
+
+<p>在最大/小值场景，要求更新方向只能朝着变大/小的方向修改！</p>
+<ul>
+  <li>最大值查询：更新值必须大于等于旧值</li>
+  <li>最小值查询：更新值必须小于等于旧值</li>
+</ul>
+
 <h1 id="离散化">离散化</h1>
 
 <p>给定一个数组 <code class="language-plaintext highlighter-rouge">nums</code>，<code class="language-plaintext highlighter-rouge">0 &lt;= nums[i] &lt;= 10000</code>，统计 <code class="language-plaintext highlighter-rouge">[p, r]</code> 区间内元素的个数？一种可行方案如下:</p>
@@ -442,9 +445,7 @@
 
 <p>如果元素的取值范围是 <code class="language-plaintext highlighter-rouge">0 &lt;= nums[i] &lt;= 1000000000000</code> 呢？开这么大的数组显然不现实！</p>
 
-<p>在这个问题中，我们 <strong>只关注数值的相对大小，不关注具体数值</strong>，可以对数组进行 “排序 + 去重” 操作，然后用它们的下标代表原数字</p>
-
-<p>以上便是离散化：将无限空间中的有限个体映射到有限空间中的技术</p>
+<p>在这个问题中，我们 <strong>只关注数值的相对大小，不关注具体数值</strong>，可以对数组进行 “排序 + 去重” 操作，然后用它们的下标代表原数字，这便是离散化：<strong>将无限空间中的有限个体映射到有限空间中的技术</strong></p>
 <ul>
   <li>保持原数据相对大小关系</li>
   <li>将数据映射到更小的连续区间</li>
