@@ -241,15 +241,13 @@
 </ul>
 
 <p>本质：是因为树状数组只支持 “增量更新”，不支持 “设置更新”，这进一步导致了最大/小值场景，要求更新方向只能朝着变大/小的方向修改！</p>
-
-<h2 id="封装及使用">封装及使用</h2>
-<p>支持区间 <code class="language-plaintext highlighter-rouge">plus</code>、<code class="language-plaintext highlighter-rouge">multiple</code>、<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等场景的单点更新，区间查询操作。</p>
-
-<p>只支持“增量更新（update）”，不支持 “设置更新（set）” 即使支持设置更新，也是通过增量更新实现的，如 和、乘积、异或和。其他场景是移除不掉旧有元素影响的，使用起来具有约束，以最值场景为例:</p>
 <ul>
   <li>最大值查询：更新值必须大于等于旧值</li>
   <li>最小值查询：更新值必须小于等于旧值</li>
 </ul>
+
+<h2 id="封装及使用">封装及使用</h2>
+<p>支持区间 <code class="language-plaintext highlighter-rouge">plus</code>、<code class="language-plaintext highlighter-rouge">multiple</code>、<code class="language-plaintext highlighter-rouge">bit_and</code>、<code class="language-plaintext highlighter-rouge">bit_or</code>、<code class="language-plaintext highlighter-rouge">bit_xor</code>、<code class="language-plaintext highlighter-rouge">max</code>、<code class="language-plaintext highlighter-rouge">min</code>、<code class="language-plaintext highlighter-rouge">gcd</code>、<code class="language-plaintext highlighter-rouge">lcm</code> 等场景的单点更新，区间查询操作。</p>
 
 <p>在实现单点查询、区间查询时，需要注意：</p>
 <ul>
@@ -296,7 +294,7 @@
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
 <span class="c1">// maximum partial variable template specialization</span>
-<span class="c1">// std::maximum is function template, not types of functors</span>
+<span class="c1">// std::maximum is function template, not type of functor</span>
 <span class="c1">// float type should use lowest() instead of min()</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Max</span>  <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
@@ -305,21 +303,21 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Max</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
 
 <span class="c1">// minimum partial variable template specialization</span>
-<span class="c1">// std::min is function template, not types of functors</span>
+<span class="c1">// std::min is function template, not type of functor</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Min</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
 <span class="p">};</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Min</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
 
 <span class="c1">// gcd partial variable template specialization</span>
-<span class="c1">// std::gcd(c++17) is function template, not types of functors</span>
+<span class="c1">// std::gcd(c++17) is function template, not type of functor</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Gcd</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">gcd</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
 <span class="p">};</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Gcd</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
 <span class="c1">// lcm partial variable template specialization</span>
-<span class="c1">// std::lcm(c++17) is function template, not types of functors</span>
+<span class="c1">// std::lcm(c++17) is function template, not type of functor</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Lcm</span> <span class="p">{</span>
     <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">lcm</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
 <span class="p">};</span>
@@ -329,90 +327,78 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">FenwickTree</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">ori</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init_value</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">explicit</span> <span class="n">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">_ori</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">init_value</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">linear_init</span><span class="p">();</span>
-    <span class="p">}</span>
-    
-    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">ori</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="n">ft</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">linear_init</span><span class="p">();</span>
-    <span class="p">}</span>
-    
-    <span class="c1">// 0-indexed</span>
-    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
-        <span class="p">}</span>
-        
-        <span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
+    <span class="k">explicit</span> <span class="nf">FenwickTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">_ori</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="n">_ft</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">linear_init</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed noexcept</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ori</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span> <span class="p">}</span>
+    <span class="c1">// 0-indexed with exception</span>
+    <span class="c1">// const T&amp; at(size_t idx) const { return ori.at(idx); }</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="kt">bool</span> <span class="nf">update</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+        <span class="n">_ori</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_ori</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">x</span><span class="p">);</span>
             <span class="n">idx</span> <span class="o">+=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed [0, idx]</span>
-    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// change to 1-indexed</span>
         <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
-        <span class="c1">// special scene should return identity</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
         <span class="c1">// avoid Out-of-bounds access</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_ori</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
         <span class="k">while</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
             <span class="n">idx</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed [p, r]</span>
-    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// change to 1-indexed</span>
         <span class="n">p</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
-        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
         <span class="c1">// special scene should return identity</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-        
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">_ori</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+
         <span class="c1">// void Out-of-bounds access</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">r</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">_ori</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
         <span class="k">while</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ft</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
                 <span class="n">r</span> <span class="o">-=</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">ori</span><span class="p">[</span><span class="o">--</span><span class="n">r</span><span class="p">]);</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">_ori</span><span class="p">[</span><span class="o">--</span><span class="n">r</span><span class="p">]);</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
 
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">lowbit</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">);</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">lowbit</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="o">-</span><span class="n">x</span><span class="p">;</span> <span class="p">}</span>
     <span class="kt">void</span> <span class="nf">linear_init</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ori</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_ori</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+            <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">lowbit</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">_ft</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_ft</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">_ft</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ori</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ft</span><span class="p">;</span>
-    <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">op</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_ori</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_ft</span><span class="p">;</span>
+    <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_op</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -437,7 +423,7 @@
 <span class="n">ft</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ft</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">minimum</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">FenwickTree</span><span class="o">&lt;</span><span class="n">Max</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">ft1</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 </code></pre></div></div>
 
 <h1 id="离散化">离散化</h1>
@@ -484,6 +470,7 @@
   <li><a href="https://leetcode.cn/problems/number-of-pairs-satisfying-inequality/">LeetCode 2426. 满足不等式的数对数目</a></li>
   <li><a href="https://leetcode.cn/problems/count-good-triplets-in-an-array/">LeetCode 2179. 统计数组中好三元组数目</a></li>
   <li><a href="https://leetcode.cn/problems/count-of-range-sum/">LeetCode 327. 区间和的个数</a></li>
+  <li><a href="https://leetcode.cn/problems/create-sorted-array-through-instructions/description/?envType=problem-list-v2&amp;envId=binary-indexed-tree">LeetCod 1649. 通过指令创建有序数组</a></li>
 </ul>
 
 <p>maximum:</p>
