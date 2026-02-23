@@ -115,12 +115,7 @@
 
 <p>未使用的叶子节点应该被初始化为单位元，否则可能会导致内部节点初始化错误</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
-<span class="c1">// Use of this source code is governed by a MIT license</span>
-<span class="c1">// if you like this code, don't delete this, thanks.</span>
-
-
-<span class="c1">// identity variable template(C++14)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 
@@ -194,15 +189,12 @@
     <span class="p">}</span>
 
     <span class="c1">// only support const version, non const version maybe destroy inner structure</span>
-    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">_n</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">idx</span><span class="p">];</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed setting update</span>
-    <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">_n</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"set index out of bounds"</span><span class="p">);</span>
-
+    <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span> <span class="o">+=</span> <span class="n">base</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
 
         <span class="c1">// update form bottom to top idx [2, x)</span>
@@ -210,7 +202,7 @@
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed incremental update</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_op</span><span class="p">(</span><span class="k">operator</span><span class="p">[](</span><span class="n">idx</span><span class="p">),</span> <span class="n">value</span><span class="p">));</span>
     <span class="p">}</span>
 
@@ -234,8 +226,8 @@
     <span class="p">}</span>
 
 <span class="k">private</span><span class="o">:</span>
-    <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="kt">int</span> <span class="n">base</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">base</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_n</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">static</span> <span class="kt">int</span> <span class="nf">base</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="n">base</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">base</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">return</span> <span class="n">base</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">static</span> <span class="kt">int</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">static</span> <span class="kt">int</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
@@ -248,11 +240,7 @@
 
 <h2 id="递归线段树不推荐">递归线段树（不推荐）</h2>
 <p>除了效率低点，其它跟迭代线段树没有任何区别</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
-<span class="c1">// Use of this source code is governed by a MIT license</span>
-
-
-<span class="c1">// identity variable template(C++14)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 
@@ -412,12 +400,7 @@
 
 <p>支持区间和、区间最大/小值</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
-<span class="c1">// Use of this source code is governed by a MIT license</span>
-<span class="c1">// if you like this code, don't delete this, thanks.</span>
-
-
-<span class="c1">// identity variable template(C++14)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 
