@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-23T14:48:43+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-02-24T03:13:44+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
 
 <p>上大学的时候，学姐说看着好小啊</p>
 
@@ -302,9 +302,18 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
   <li>倒数第二层一定是满的？为什么？？？？？？？？？？</li>
 </ul>
 
+<p>原理：对于长度为 <code class="language-plaintext highlighter-rouge">n</code> 的原数组 <code class="language-plaintext highlighter-rouge">nums</code>，递归线段树</p>
+<ul>
+  <li>1 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[0, n - 1]</code> 的属性值</li>
+  <li>2 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[0, mid]</code> 的属性值, <code class="language-plaintext highlighter-rouge">mid = (0 + (n - 1)) / 2</code></li>
+  <li>3 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[mid, n - 1]</code> 的属性值, <code class="language-plaintext highlighter-rouge">mid = (0 + (n - 1)) / 2</code></li>
+  <li>……</li>
+</ul>
+
 <p><img src="/assets/content/22.png" alt="/assets/content/22.png" /></p>
 
 <h2 id="迭代线段树">迭代线段树</h2>
+
 <p>自底向上，支持懒标记下沉操作困难:永远是一棵 <strong>满二叉树</strong>，原数据在最后一层从左往右存储，剩余用不到的必须用单位元填充</p>
 
 <p><img src="/assets/content/23.png" alt="/assets/content/23.png" /></p>
@@ -317,17 +326,8 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <p>支持 “设置更新（set）” 和 “增量更新（update）” 两种操作（树状数组只支持前者，故应用场景受限）</p>
 <ul>
   <li>设置更新：使用一个新值替换旧值，完全移除旧有元素影响</li>
-  <li>增量更新：在旧值的基础上更新为新值，旧有元素的影响没有被移除</li>
+  <li>增量更新：在旧值的基础上更新为新值，旧有元素的影响没有被移</li>
 </ul>
-
-<p>假设数组的长度是 10, 对于 [9, 3], [-5, 4], [1, 20], [-5, 30] 这些异常区间查询如何处理</p>
-<ul>
-  <li>默认处理：[9, 3] 这种，返回单位元即可；对于 [-5, 30] 这种，处理成 [0, 9] 即可，其他位置的元素都可以看作是单位元</li>
-  <li>抛出异常：用户需要提前识别异常查询区间，并自定义该场景下的返回值，作为接口使用起来体验不佳</li>
-  <li>总结：默认处理的实现是合理的，且也可以提前识别异常区间自定义返回结果，故实现采用默认处理</li>
-</ul>
-
-<p>未使用的叶子节点应该被初始化为单位元，否则可能会导致内部节点初始化错误</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
@@ -386,29 +386,29 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_n</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_tree</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_n</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_tree</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// init leaf nodes</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_value</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_value</span><span class="p">;</span>
 
         <span class="c1">// init inner nodes</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
     <span class="p">}</span>
 
     <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">_n</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">_tree</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// init leaf nodes</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 
         <span class="c1">// init inner nodes</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
     <span class="p">}</span>
 
     <span class="c1">// only support const version, non const version maybe destroy inner structure</span>
-    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">idx</span><span class="p">];</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed setting update</span>
-    <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="kt">int</span> <span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span> <span class="o">+=</span> <span class="n">base</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
 
         <span class="c1">// update form bottom to top idx [2, x)</span>
@@ -416,17 +416,17 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed incremental update</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
         <span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_op</span><span class="p">(</span><span class="k">operator</span><span class="p">[](</span><span class="n">idx</span><span class="p">),</span> <span class="n">value</span><span class="p">));</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed range query [p, r]</span>
-    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// special scene should return identity</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">_n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">_n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
 
         <span class="c1">// void Out-of-bounds access</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
 
         <span class="n">T</span> <span class="n">res_left</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">res_right</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">+=</span> <span class="n">base</span><span class="p">(),</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">base</span><span class="p">();</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">;</span> <span class="n">p</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
@@ -440,17 +440,26 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
     <span class="p">}</span>
 
 <span class="k">private</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="n">base</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_n</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">base</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="n">base</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">base</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">return</span> <span class="n">base</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">base</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">base</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="kt">size_t</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="n">base</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">base</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">return</span> <span class="n">base</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="kt">int</span> <span class="n">_n</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">size_t</span> <span class="n">_n</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_tree</span><span class="p">;</span>
     <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_op</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
+
+<p>假设数组的长度是 10, 对于 [9, 3], [-5, 4], [1, 20], [-5, 30] 这些异常区间查询如何处理</p>
+<ul>
+  <li>默认处理：[9, 3] 这种，返回单位元即可；对于 [-5, 30] 这种，处理成 [0, 9] 即可，其他位置的元素都可以看作是单位元</li>
+  <li>抛出异常：用户需要提前识别异常查询区间，并自定义该场景下的返回值，作为接口使用起来体验不佳</li>
+  <li>总结：默认处理的实现是合理的，且也可以提前识别异常区间自定义返回结果，故实现采用默认处理</li>
+</ul>
+
+<p>未使用的叶子节点应该被初始化为单位元，否则可能会导致内部节点初始化错误</p>
 
 <h2 id="递归线段树不推荐">递归线段树（不推荐）</h2>
 <p>除了效率低点，其它跟迭代线段树没有任何区别</p>
@@ -511,7 +520,7 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
 <span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">init_value</span><span class="p">);</span>
     <span class="p">}</span>
 
@@ -520,53 +529,47 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
     <span class="p">}</span>
     
     <span class="c1">// only support const version</span>
-    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">T</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">query</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed</span>
-    <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// 线段树 1 号节点，维护整个数组信息</span>
-        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">"index out of range"</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// 线段树 1 号节点，维护整个数组信息</span>
-        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="c1">// 0-indexed</span>
-    <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
+    <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
         <span class="c1">// special scene should return identity</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
 
         <span class="c1">// void Out-of-bounds access</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
         
         <span class="k">return</span> <span class="nf">query</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">static</span> <span class="kt">int</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
 
     <span class="c1">//idx 线段树节点下标, [p, r] 维护区间, x 更新位置 0-indexed, val 增量/修改后的值</span>
-    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">is_set</span> <span class="o">=</span> <span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">is_set</span> <span class="o">=</span> <span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// 到达叶节点</span>
         <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_set</span> <span class="o">?</span> <span class="n">val</span> <span class="o">:</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
             <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
 
-        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kt">size_t</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// 更新位置与左半维护区间有交集</span>
             <span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">is_set</span><span class="p">);</span>
@@ -579,11 +582,11 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
     <span class="p">}</span>
 
     <span class="c1">//idx 线段树节点下标, [p, r] 维护区间, [x, y]查询区间 0-indexed</span>
-    <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// 维护区间在查询区间范围内</span>
         <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
 
-        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kt">size_t</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
         <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
         <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// 查询区间与左半维护区间存在交集</span>
@@ -934,53 +937,9 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 
 </code></pre></div></div>
 
-<h2 id="default">default</h2>
+<p>第三次封装</p>
 
-<p>默认累积函数：适用于 min、max</p>
-
-<p>bit_and、bit_or ？？？？</p>
-
-<p>懒标记：</p>
-
-<ul>
-  <li>max(x, y, z) = max(x, max(y, z))</li>
-  <li>x &amp; y &amp; z = x &amp; (y &amp; z)</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>x</td>
-          <td>y</td>
-          <td>z = x</td>
-          <td>(y</td>
-          <td>z)</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-</ul>
-
-<h1 id="第三次封装">第三次封装</h1>
-
-<h2 id="区间更新">区间更新</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Max</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">Min</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
     <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">Max</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
 <span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
 <span class="nl">public:</span>
