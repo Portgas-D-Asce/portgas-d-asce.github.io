@@ -76,31 +76,33 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="简介">简介</h1>
+</style><h1 id="概述">概述</h1>
 
 <p>并查集：用于处理不相交集合问题的一种数据结构。定义在其上的两个操作：</p>
 <ul>
-  <li><strong>Find：</strong> 查找节点所属于的集合</li>
-  <li><strong>Unite：</strong> 合并两个不相交的集合</li>
+  <li><code class="language-plaintext highlighter-rouge">find</code>: 查找节点所属于的集合</li>
+  <li><code class="language-plaintext highlighter-rouge">unite</code>: 合并两个不相交的集合</li>
 </ul>
 
-<p>典型应用当属 Kruskal 算法，优化方式：</p>
+<p>典型应用当属 Kruskal 算法。</p>
+
+<p>优化方式：</p>
 <ul>
   <li><strong>路径压缩：</strong> 让查找路径上的所有节点均指向根节点，提高下一次查找效率；</li>
-  <li><strong>启发式合并：</strong> 基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。 （）</li>
+  <li><strong>启发式合并：</strong>
+    <ul>
+      <li>基本没啥用，把 “秩” 小的集合合并到 “秩” 大的集合，使得合并后集合的 “秩” 处于较小状态，有利于查找。</li>
+      <li><code class="language-plaintext highlighter-rouge">update</code> 操作显然会改变秩的大小，但代码并没有更新，“秩”（rank）可以理解为树高度的上界，并不是精确高度，仅用于指导合并！！！</li>
+    </ul>
+  </li>
 </ul>
 
-<p>注意：<code class="language-plaintext highlighter-rouge">update</code> 操作显然会改变秩的大小，但代码并没有更新，“秩”（rank）可以理解为树高度的上界，并不是精确高度，仅用于指导合并！！！</p>
-
 <h1 id="实现">实现</h1>
+<p><code class="language-plaintext highlighter-rouge">domain</code> 参数用于支持扩展域名并查集，普通并查集合使用默认参数 1 就可以了</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Copyright (c) 2025 Devil. All rights reserved.</span>
-<span class="c1">// Use of this source code is governed by a MIT license</span>
-<span class="c1">// if you like this code, don't delete this, thanks.</span>
-
-<span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">domain</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="n">_count</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span>
+    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">domain</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="n">_components</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span>
         <span class="n">_rank</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_parent</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
@@ -137,7 +139,7 @@
             <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">];</span>
             <span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="n">_count</span><span class="o">--</span><span class="p">;</span>
+        <span class="n">_components</span><span class="o">--</span><span class="p">;</span>
         <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
 
@@ -145,12 +147,12 @@
     <span class="kt">bool</span> <span class="nf">connected</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span> <span class="p">}</span>
 
     <span class="c1">// count of components</span>
-    <span class="kt">int</span> <span class="n">count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_count</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_components</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="c1">// the set's size u belong to</span>
+    <span class="c1">// the component's size u belong to</span>
     <span class="kt">int</span> <span class="n">size</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)];</span> <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="n">_count</span><span class="p">;</span> <span class="c1">// cnt of set</span>
+    <span class="kt">int</span> <span class="n">_components</span><span class="p">;</span> <span class="c1">// cnt of components</span>
     <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_parent</span><span class="p">;</span> <span class="c1">// array of parent node</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_rank</span><span class="p">;</span> <span class="c1">// rank, tree's height</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_size</span><span class="p">;</span> <span class="c1">// set's size</span>
