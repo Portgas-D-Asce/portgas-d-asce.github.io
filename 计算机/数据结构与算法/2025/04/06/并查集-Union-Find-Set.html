@@ -97,13 +97,13 @@
   </li>
 </ul>
 
-<h1 id="实现">实现</h1>
-<p><code class="language-plaintext highlighter-rouge">domain</code> 参数用于支持扩展域名并查集，普通并查集合使用默认参数 1 就可以了</p>
+<h1 id="普通并查集">普通并查集</h1>
+
+<h2 id="代码封装">代码封装</h2>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">domain</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="n">_components</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span>
-        <span class="n">_rank</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">domain</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">_components</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_rank</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_parent</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
 
@@ -160,201 +160,119 @@
 </code></pre></div></div>
 
 <h1 id="扩展域并查集">扩展域并查集</h1>
-<p>普通并查集维护的是同域关系，扩展并查集还支持敌对关系</p>
+<p>代码复用普通并查集即可</p>
 
-<p>经典题目：</p>
+<h2 id="问题背景">问题背景</h2>
+<p>扩展域并查集（也称为种类并查集或关系并查集）是普通并查集的强力扩展，用于处理元素之间具有多种可能关系的问题。它不仅告诉你两个元素是否“在同一个集合”，还能表达它们之间的具体关系（如朋友、敌人、捕食者、被捕食者等），并自动维护关系的传递性</p>
+
+<h2 id="核心原理">核心原理</h2>
+
+<p>核心思想：扩展域并查集的核心是将元素拆分为多个状态节点（域划分），通过合并节点来表达关系（建立关系）</p>
+
+<p>合并规则与冲突检测：</p>
 <ul>
-  <li>关押罪犯</li>
-  <li></li>
+  <li>扩展域并查集的关键是根据给定的关系，确定哪些域应该被合并。合并规则必须保证关系的对称性和传递性。</li>
+  <li>同时，在合并前要检查是否与已有信息矛盾，也就是同一元素的不同状态被连接在一起了。</li>
 </ul>
 
-<p>关押罪犯：</p>
+<p>扩展域并查集不要求关系一定要闭环：每条关系只是添加一些节点之间的连通性约束，并不会强制要求所有可能的关系必须出现</p>
+
+<h2 id="域的数量与编号">域的数量与编号</h2>
+
+<p>域的数量取决于关系种类的个数。若关系构成一个k元环（即关系可循环传递），则通常需要k个域。一般地，对于有k种可能状态的问题，每个元素拆成k个节点。</p>
+
+<p>编号方式：常用方法是将第i个域的第j个元素（0 ≤ i &lt; k）映射为全局唯一整数：</p>
 <ul>
-  <li>合并 (a, b + 1n), (a + 1n, b) 表示建立敌对关系</li>
+  <li>初始化：并查集大小为 n * k，每个节点的父节点指向自己。</li>
+  <li>[0, n - 1]个位置表示第一个域的所有节点</li>
+  <li>[n, 2n - 1] 个位置表示第二个域的所有节点</li>
+  <li>…</li>
 </ul>
 
-<p>食物链</p>
-<ul>
-  <li>合并 (a, b + 1n), (a + 1n, b) 表示建立捕食关系</li>
-  <li>合并 (a, b + 2n), (a + 2n, b) 表示建立天敌关系</li>
-</ul>
-
-<h3 id="1-核心思想从关系到集合">1. 核心思想：从“关系”到“集合”</h3>
-
-<p>普通并查集擅长维护 <strong>“朋友的朋友是朋友”</strong> 这种无冲突的连通性关系。</p>
-
-<p>但当问题中出现了 <strong>对立关系</strong>（比如“敌人”、“不同性别”、“不同颜色”）时，仅仅一个集合就不够用了。扩展域并查集的核心思想是：</p>
-
-<p><strong>将每个实体拆分成多个逻辑上的点，用这些点之间的关系来代表实体的复杂关系。</strong></p>
-
-<p>最经典的情况是处理 <strong>只有两种对立关系</strong> 的问题（例如：是/否、真/假、A队/B队）。这时，我们为每个实体 <code class="language-plaintext highlighter-rouge">i</code> 创建 <strong>两个</strong> 逻辑点：</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">i_A</code>：表示 <strong>“i 属于 A 类”</strong></li>
-  <li><code class="language-plaintext highlighter-rouge">i_B</code>：表示 <strong>“i 属于 B 类”</strong></li>
-</ul>
-
-<p>这两个点是互斥的，不能同时成立。</p>
-
-<h3 id="2-它如何工作">2. 它如何工作？</h3>
-
-<p>并查集的作用是 <strong>将必须同时发生的事件（逻辑点）合并到同一个集合中</strong>。</p>
-
-<p>我们通过一个具体的例子来说明。假设有一个江湖，我们要处理侠客之间的朋友和敌人关系。</p>
-
-<ul>
-  <li><strong>规则1：朋友的朋友是朋友。</strong></li>
-  <li><strong>规则2：敌人的敌人是朋友。</strong></li>
-</ul>
-
-<p>我们为每个侠客 <code class="language-plaintext highlighter-rouge">x</code> 创建两个域（逻辑点）：</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">x_friend</code>：表示 <code class="language-plaintext highlighter-rouge">x</code> 是朋友阵营的</li>
-  <li><code class="language-plaintext highlighter-rouge">x_enemy</code>：表示 <code class="language-plaintext highlighter-rouge">x</code> 是敌人阵营的</li>
-</ul>
-
-<p><strong>(注意：在实际编程中，我们用数字来表示这些点。例如，对于侠客 <code class="language-plaintext highlighter-rouge">i</code>，<code class="language-plaintext highlighter-rouge">i</code> 本身代表 <code class="language-plaintext highlighter-rouge">i_friend</code>，<code class="language-plaintext highlighter-rouge">i + n</code> 代表 <code class="language-plaintext highlighter-rouge">i_enemy</code>，其中 <code class="language-plaintext highlighter-rouge">n</code> 是总人数。)</strong></p>
-
-<h4 id="场景一建立朋友关系">场景一：建立朋友关系</h4>
-
-<p><strong>操作：</strong> <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是朋友。</p>
-
-<p><strong>逻辑推导：</strong></p>
-<ol>
-  <li>如果 <code class="language-plaintext highlighter-rouge">x</code> 是朋友阵营的，那么 <code class="language-plaintext highlighter-rouge">y</code> 也必须是朋友阵营的。
-=&gt; 合并 <code class="language-plaintext highlighter-rouge">x_friend</code> 和 <code class="language-plaintext highlighter-rouge">y_friend</code></li>
-  <li>如果 <code class="language-plaintext highlighter-rouge">x</code> 是敌人阵营的，那么 <code class="language-plaintext highlighter-rouge">y</code> 也必须是敌人阵营的。
-=&gt; 合并 <code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code></li>
-</ol>
-
-<p><strong>代码：</strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">union</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>          <span class="c1"># 合并 friend 域
-</span><span class="nf">union</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>  <span class="c1"># 合并 enemy 域
-</span></code></pre></div></div>
-
-<h4 id="场景二建立敌人关系">场景二：建立敌人关系</h4>
-
-<p><strong>操作：</strong> <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是敌人。</p>
-
-<p><strong>逻辑推导：</strong></p>
-<ol>
-  <li>如果 <code class="language-plaintext highlighter-rouge">x</code> 是朋友阵营的，那么 <code class="language-plaintext highlighter-rouge">y</code> 必须是敌人阵营的。
-=&gt; 合并 <code class="language-plaintext highlighter-rouge">x_friend</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code></li>
-  <li>如果 <code class="language-plaintext highlighter-rouge">x</code> 是敌人阵营的，那么 <code class="language-plaintext highlighter-rouge">y</code> 必须是朋友阵营的。（敌人的敌人是朋友）
-=&gt; 合并 <code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_friend</code></li>
-</ol>
-
-<p><strong>代码：</strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">union</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>  <span class="c1"># x是朋友 =&gt; y是敌人
-</span><span class="nf">union</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># x是敌人 =&gt; y是朋友
-</span></code></pre></div></div>
-
-<h3 id="3-如何检测矛盾">3. 如何检测矛盾？</h3>
-
-<p>矛盾发生在 <strong>两个本应互斥的逻辑点被合并到了同一个集合</strong>。</p>
-
-<p>继续上面的例子，当我们处理一条新关系时：</p>
-
-<ul>
-  <li>
-    <p>如果声明 <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是朋友，我们需要检查：
-<code class="language-plaintext highlighter-rouge">x_friend</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是否在同一个集合？或者 <code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_friend</code> 是否在同一个集合？
-如果是，就说明产生了矛盾。因为“是朋友”和“是敌人”不能同时成立。</p>
-  </li>
-  <li>
-    <p>如果声明 <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是敌人，我们需要检查：
-<code class="language-plaintext highlighter-rouge">x_friend</code> 和 <code class="language-plaintext highlighter-rouge">y_friend</code> 是否在同一个集合？或者 <code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是否在同一个集合？
-如果是，就说明产生了矛盾。</p>
-  </li>
-</ul>
-
-<p><strong>代码检查（以敌人关系为例）：</strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nf">find</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nf">find</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">find</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="nf">find</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">n</span><span class="p">):</span>
-    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">矛盾！这条敌人关系不成立。</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="n">j</span>
 </code></pre></div></div>
 
-<h3 id="4-经典例题食物链">4. 经典例题：食物链</h3>
-
-<p>这是理解扩展域的最佳题目。有三种动物 A, B, C，构成一个循环食物链：A吃B，B吃C，C吃A。</p>
-
-<p>我们用 <strong>三个域</strong> 来表示每个动物 <code class="language-plaintext highlighter-rouge">i</code> 的三种可能身份：</p>
-
+<h2 id="典型示例">典型示例</h2>
+<p>朋友/敌人关系：</p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">i_self</code> (域 1)：表示 <code class="language-plaintext highlighter-rouge">i</code> 是 A 类</li>
-  <li><code class="language-plaintext highlighter-rouge">i_food</code> (域 2)：表示 <code class="language-plaintext highlighter-rouge">i</code> 是 B 类 (A的食物)</li>
-  <li><code class="language-plaintext highlighter-rouge">i_enemy</code> (域 3)：表示 <code class="language-plaintext highlighter-rouge">i</code> 是 C 类 (B的食物，同时吃A)</li>
-</ul>
-
-<p><strong>规则：</strong></p>
-
-<ol>
-  <li><strong>如果 <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是同类：</strong>
+  <li>划分出两个域：朋友域 <code class="language-plaintext highlighter-rouge">friend</code> 和 敌人域 <code class="language-plaintext highlighter-rouge">enemy</code>，对于元素 <code class="language-plaintext highlighter-rouge">a</code>，拆分出两个节点 <code class="language-plaintext highlighter-rouge">a_friend</code> 和 <code class="language-plaintext highlighter-rouge">a_enemy</code>，两个节点隐含冲突关系</li>
+  <li>建立等价关系：<code class="language-plaintext highlighter-rouge">a</code> 和 <code class="language-plaintext highlighter-rouge">b</code> 是朋友，则 <code class="language-plaintext highlighter-rouge">unite(a_friend, b_friend), unite(a_enemy, b_enemy)</code></li>
+  <li>建立敌人关系：<code class="language-plaintext highlighter-rouge">b</code> 和 <code class="language-plaintext highlighter-rouge">c</code> 是敌人，
     <ul>
-      <li>那么 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_self</code> 是同类。</li>
-      <li><code class="language-plaintext highlighter-rouge">x_food</code> 和 <code class="language-plaintext highlighter-rouge">y_food</code> 是同类。</li>
-      <li><code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是同类。</li>
-      <li><code class="language-plaintext highlighter-rouge">union(x_self, y_self)</code>, <code class="language-plaintext highlighter-rouge">union(x_food, y_food)</code>, <code class="language-plaintext highlighter-rouge">union(x_enemy, y_enemy)</code></li>
+      <li>对称性：<code class="language-plaintext highlighter-rouge">b</code> 是 <code class="language-plaintext highlighter-rouge">c</code> 的敌人，<code class="language-plaintext highlighter-rouge">c</code> 也是 <code class="language-plaintext highlighter-rouge">b</code> 的敌人，<code class="language-plaintext highlighter-rouge">unite(b_friend, c_enemy), unite(c_friend, b_enemy)</code></li>
+      <li>传递性：<code class="language-plaintext highlighter-rouge">a</code> 和 <code class="language-plaintext highlighter-rouge">c</code> 也是敌人</li>
     </ul>
   </li>
-  <li><strong>如果 <code class="language-plaintext highlighter-rouge">x</code> 吃 <code class="language-plaintext highlighter-rouge">y</code>：</strong>
-    <ul>
-      <li>那么 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_food</code> 是同类 (A吃B)。</li>
-      <li><code class="language-plaintext highlighter-rouge">x_food</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是同类 (B吃C)。</li>
-      <li><code class="language-plaintext highlighter-rouge">x_enemy</code> 和 <code class="language-plaintext highlighter-rouge">y_self</code> 是同类 (C吃A)。</li>
-      <li><code class="language-plaintext highlighter-rouge">union(x_self, y_food)</code>, <code class="language-plaintext highlighter-rouge">union(x_food, y_enemy)</code>, <code class="language-plaintext highlighter-rouge">union(x_enemy, y_self)</code></li>
-    </ul>
-  </li>
-</ol>
-
-<p><strong>矛盾检测：</strong></p>
-
-<ul>
-  <li>当说 <code class="language-plaintext highlighter-rouge">x</code> 和 <code class="language-plaintext highlighter-rouge">y</code> 是同类时，检查 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_food</code> 或 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是否在同一集合。如果是，则矛盾（因为x是A，y就不能是B或C）。</li>
-  <li>当说 <code class="language-plaintext highlighter-rouge">x</code> 吃 <code class="language-plaintext highlighter-rouge">y</code> 时，检查 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_self</code> 或 <code class="language-plaintext highlighter-rouge">x_self</code> 和 <code class="language-plaintext highlighter-rouge">y_enemy</code> 是否在同一集合。如果是，则矛盾（因为A不能吃A，也不能吃C）。</li>
 </ul>
 
-<h3 id="总结">总结</h3>
+<p><img src="/assets/content/52.png" alt="/assets/content/52.png" /></p>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">特性</th>
-      <th style="text-align: left">普通并查集</th>
-      <th style="text-align: left">扩展域并查集</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><strong>核心</strong></td>
-      <td style="text-align: left">维护连通性</td>
-      <td style="text-align: left">维护逻辑关系（相容、互斥）</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>元素</strong></td>
-      <td style="text-align: left">每个实体一个点</td>
-      <td style="text-align: left">每个实体拆成 k 个逻辑点 (k是关系种类数)</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>操作</strong></td>
-      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">union(a, b)</code></td>
-      <td style="text-align: left">同时进行多个 <code class="language-plaintext highlighter-rouge">union</code>，将相容的逻辑点连接</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>矛盾检测</strong></td>
-      <td style="text-align: left">通常不直接处理</td>
-      <td style="text-align: left">检查互斥的逻辑点是否被意外连接</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>适用场景</strong></td>
-      <td style="text-align: left">图连通性、无向图环检测</td>
-      <td style="text-align: left">种类并查集、二分图判断、逻辑推理问题</td>
-    </tr>
-  </tbody>
-</table>
+<p>捕食链关系：A 吃 B，B 吃 C，C 吃 A</p>
+<ul>
+  <li>划分出三个域：自身域 <code class="language-plaintext highlighter-rouge">self</code>、天敌域 <code class="language-plaintext highlighter-rouge">predator</code>、猎物域 <code class="language-plaintext highlighter-rouge">prey</code></li>
+  <li>建立等价关系：<code class="language-plaintext highlighter-rouge">a</code> 和 <code class="language-plaintext highlighter-rouge">b</code> 是同一物种，则 <code class="language-plaintext highlighter-rouge">unite(a_self, b_self), unite(a_predator, b_predator), unite(a_prey, b_prey)</code></li>
+  <li>建立捕食关系：<code class="language-plaintext highlighter-rouge">b</code> 吃 <code class="language-plaintext highlighter-rouge">c</code>
+    <ul>
+      <li>对称性：<code class="language-plaintext highlighter-rouge">b</code> 吃 <code class="language-plaintext highlighter-rouge">c</code>, <code class="language-plaintext highlighter-rouge">c</code> 被 <code class="language-plaintext highlighter-rouge">b</code> 吃，<code class="language-plaintext highlighter-rouge">unite(b_self, c_predator), unite(c_self, b_prey), unite(c_prey, b_predator)</code></li>
+      <li>传递性：<code class="language-plaintext highlighter-rouge">a</code> 也吃 <code class="language-plaintext highlighter-rouge">c</code></li>
+    </ul>
+  </li>
+</ul>
 
-<p><strong>一句话理解扩展域并查集：</strong> 它通过为每个实体创建多个“平行世界”（域），并在这些世界之间建立“如果…那么…”的链接，从而推理出复杂的关系和矛盾。</p>
+<p><img src="/assets/content/53.png" alt="/assets/content/53.png" /></p>
+
+<p>闭环条件场景，连通分量的个数一定是域的倍数。</p>
+
+<h2 id="数学本质群作用与等价关系">数学本质：群作用与等价关系</h2>
+
+<p>将每个元素的k个域看作集合 S = {0,1,…,k-1}。关系 x R y 可以定义为一个置换 f: S → S，表示若x处于状态p，则y必须处于状态f(p)。那么扩展域并查集本质上是在维护一个无向图，节点是 (元素, 状态)。合并操作相当于添加边 (x,p) — (y, f(p))（对所有p）。由于并查集是无向的，添加一条边意味着两个节点连通，因此所有受约束的状态都被绑定在一起。</p>
+
+<p>当加入多条关系后，每个连通分量代表一组“兼容”的状态赋值。如果某个元素的两个不同状态出现在同一连通分量中（例如 (x, p) 和 (x, q) 连通），则说明存在矛盾，因为同一个元素不能同时处于两种状态。</p>
+
+<p>因此，冲突检测就是检查是否存在某个元素的不同状态被连在了一起。</p>
+
+<h2 id="动态开点与稀疏场景">动态开点与稀疏场景</h2>
+
+<p>当k很大（如k=10^5）但n较小，或者关系数量很少时，直接开 n*k 数组可能内存爆炸。此时可以用哈希表或动态分配来存储并查集节点。每次需要用到某个域时才创建节点，并记录其父节点。但注意，动态开点会带来常数增加，且需要自己管理节点映射。</p>
+
+<p>一种常用技巧是将 (x, t) 对映射为一个唯一整数（如用 pair&lt;int,int&gt; 作为key），然后用 unordered_map 存储其父节点。合并时只涉及实际出现的节点。</p>
+
+<h2 id="与带权并查集的关系">与带权并查集的关系</h2>
+
+<p>带权并查集为每个节点维护一个到根节点的权值（通常是一个模数），表示该节点与根的关系。例如在食物链问题中，权值0表示同类，1表示吃根，2表示被根吃。通过路径压缩时更新权值，同样能解决问题。</p>
+
+<p>对比：</p>
+
+<p>扩展域：思路直观，无需复杂的权值运算，实现简单，但空间占用较大（O(kn)）。
+带权并查集：空间节省（O(n)），但需要推导权值运算法则（模加法/减法），容易出错，尤其在关系复杂时。
+本质联系：实际上，扩展域并查集可以看作带权并查集的一种“显式”展开。每个元素的不同域对应带权并查集中该元素可能具有的权值。当合并时，扩展域合并的是具体状态节点，而带权并查集则通过调整权值来保持一致性。二者在数学上是等价的，可以互相转换。</p>
+
+<h2 id="扩展域在2-sat问题中的类比">扩展域在2-SAT问题中的类比</h2>
+
+<p>2-SAT问题中，每个变量有两个状态（真/假），约束是子句形式。扩展域并查集可以处理一些特殊的2-SAT变体，特别是当约束为“x与y同值”或“x与y异值”时，可以转化为二域模型。实际上，二域并查集就是2-SAT的一种特例解法。</p>
+
+<p>但2-SAT更一般，需要强连通分量；而扩展域并查集只能处理具有传递性的关系（即关系构成等价类），不能处理任意布尔表达式。</p>
+
+<h2 id="复杂关系的合并规则推导">复杂关系的合并规则推导</h2>
+
+<p>当问题不是简单的循环关系时，如何推导合并规则？例如，有四种状态，关系“x和y是同类”合并相同域，“x和y是敌对”则合并 x_i 与 y_j 其中 j = i xor 1？这种可能需要根据问题的定义仔细分析。</p>
+
+<p>一般方法：将每种关系看作一个二元约束，写出所有可能的对应情况，然后合并所有对应的节点对。同时要保证合并后不出现某个元素的两个不同状态连通。这实际上是在构建一个约束图，然后检查是否可满足。</p>
 
 <h1 id="加权并查集">加权并查集</h1>
+
+<h1 id="练习">练习</h1>
+
+<p>扩展域并查集：</p>
+<ul>
+  <li>关押罪犯（Luogu P1525）</li>
+  <li>食物链（POJ 1182）</li>
+  <li>团伙（Luogu P1892）</li>
+  <li>2-SAT</li>
+  <li>带约束的k染色问题</li>
+</ul>
+
+<p>有n个点，m条边，每条边表示两端点颜色相同或不同。用k种颜色染色，问是否可行。解法：k域并查集。相同关系合并对应域；不同关系合并 x_i 与 y_j（i≠j 的所有组合？）。但若k较大，复杂度高。实际上，不同关系只需合并 x_i 与 y_i 的互补？更高效的是用2-SAT或二分图判定，但扩展域也可，只是合并所有 i≠j 会导致大量合并，可能超时。因此k不宜过大</p>
 
 <div id="giscus">
     <script src="https://giscus.app/client.js"
