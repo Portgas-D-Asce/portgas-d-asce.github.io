@@ -160,10 +160,10 @@
 </code></pre></div></div>
 
 <h1 id="扩展域并查集">扩展域并查集</h1>
-<p>代码复用普通并查集即可</p>
 
-<h2 id="问题背景">问题背景</h2>
 <p>扩展域并查集（也称为种类并查集或关系并查集）是普通并查集的强力扩展，用于处理元素之间具有多种可能关系的问题。它不仅告诉你两个元素是否“在同一个集合”，还能表达它们之间的具体关系（如朋友、敌人、捕食者、被捕食者等），并自动维护关系的传递性</p>
+
+<p>代码复用普通并查集即可</p>
 
 <h2 id="核心原理">核心原理</h2>
 
@@ -191,6 +191,13 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="n">j</span>
 </code></pre></div></div>
+
+<p>动态开点与稀疏场景</p>
+<ul>
+  <li>当k很大（如k=10^5）但n较小，或者关系数量很少时，直接开 n*k 
+数组可能内存爆炸。此时可以用哈希表或动态分配来存储并查集节点。每次需要用到某个域时才创建节点，并记录其父节点。但注意，动态开点会带来常数增加，且需要自己管理节点映射。</li>
+  <li>一种常用技巧是将 (x, t) 对映射为一个唯一整数（如用 pair&lt;int,int&gt; 作为key），然后用 unordered_map 存储其父节点。合并时只涉及实际出现的节点。</li>
+</ul>
 
 <h2 id="典型示例">典型示例</h2>
 <p>朋友/敌人关系：</p>
@@ -231,35 +238,124 @@
 
 <p>因此，冲突检测就是检查是否存在某个元素的不同状态被连在了一起。</p>
 
-<h2 id="动态开点与稀疏场景">动态开点与稀疏场景</h2>
-
-<p>当k很大（如k=10^5）但n较小，或者关系数量很少时，直接开 n*k 数组可能内存爆炸。此时可以用哈希表或动态分配来存储并查集节点。每次需要用到某个域时才创建节点，并记录其父节点。但注意，动态开点会带来常数增加，且需要自己管理节点映射。</p>
-
-<p>一种常用技巧是将 (x, t) 对映射为一个唯一整数（如用 pair&lt;int,int&gt; 作为key），然后用 unordered_map 存储其父节点。合并时只涉及实际出现的节点。</p>
-
-<h2 id="与带权并查集的关系">与带权并查集的关系</h2>
-
-<p>带权并查集为每个节点维护一个到根节点的权值（通常是一个模数），表示该节点与根的关系。例如在食物链问题中，权值0表示同类，1表示吃根，2表示被根吃。通过路径压缩时更新权值，同样能解决问题。</p>
-
-<p>对比：</p>
-
-<p>扩展域：思路直观，无需复杂的权值运算，实现简单，但空间占用较大（O(kn)）。
-带权并查集：空间节省（O(n)），但需要推导权值运算法则（模加法/减法），容易出错，尤其在关系复杂时。
-本质联系：实际上，扩展域并查集可以看作带权并查集的一种“显式”展开。每个元素的不同域对应带权并查集中该元素可能具有的权值。当合并时，扩展域合并的是具体状态节点，而带权并查集则通过调整权值来保持一致性。二者在数学上是等价的，可以互相转换。</p>
-
-<h2 id="扩展域在2-sat问题中的类比">扩展域在2-SAT问题中的类比</h2>
-
-<p>2-SAT问题中，每个变量有两个状态（真/假），约束是子句形式。扩展域并查集可以处理一些特殊的2-SAT变体，特别是当约束为“x与y同值”或“x与y异值”时，可以转化为二域模型。实际上，二域并查集就是2-SAT的一种特例解法。</p>
-
-<p>但2-SAT更一般，需要强连通分量；而扩展域并查集只能处理具有传递性的关系（即关系构成等价类），不能处理任意布尔表达式。</p>
-
-<h2 id="复杂关系的合并规则推导">复杂关系的合并规则推导</h2>
-
-<p>当问题不是简单的循环关系时，如何推导合并规则？例如，有四种状态，关系“x和y是同类”合并相同域，“x和y是敌对”则合并 x_i 与 y_j 其中 j = i xor 1？这种可能需要根据问题的定义仔细分析。</p>
-
-<p>一般方法：将每种关系看作一个二元约束，写出所有可能的对应情况，然后合并所有对应的节点对。同时要保证合并后不出现某个元素的两个不同状态连通。这实际上是在构建一个约束图，然后检查是否可满足。</p>
-
 <h1 id="加权并查集">加权并查集</h1>
+<p>带权并查集（也称为加权并查集）是普通并查集的进阶版本。它在维护集合关系的同时，还记录了集合内元素之间的相对关系（如距离、差值、比例等）。</p>
+
+<h2 id="核心原理-1">核心原理</h2>
+
+<p>带权并查集在普通并查集的基础上，为每个节点增加一个权值 <code class="language-plaintext highlighter-rouge">_weight[x]</code>，表示节点 <code class="language-plaintext highlighter-rouge">x</code> 到其父节点 <code class="language-plaintext highlighter-rouge">_parent[x]</code> 的权值（含义根据问题而定，可以是距离、差值、逻辑关系等）。</p>
+
+<h2 id="权值合并">权值合并</h2>
+<p>路径压缩阶段</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>true_val(x) - true_val(px) = _weight(x)
+
+true_val(px) - true_val(ppx) = _weight(px)
+
+true_val(x) - true_val(ppx) = _weight(x) + _weight(px)
+</code></pre></div></div>
+
+<p>节点合并阶段：假设将 <code class="language-plaintext highlighter-rouge">px</code> 合并到 <code class="language-plaintext highlighter-rouge">py</code>，关系推导如下：</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x 与 y 的关系：true_val(x) - true_val(y) = d
+
+px = find(x), py = find(y)
+
+true_val(x) = true_val(px) + _weight(x)
+
+true_val(y) = true_val(py) + _weight(y)
+
+true_val(px) + _weight(x) - true_val(py) - _weight(y) = d
+
+true_val(px) - true_val(py) = d - _weight(x) + _weight(y)
+
+_weight(px) = d - _weight(x) + _weight(y)
+</code></pre></div></div>
+
+<h2 id="代码封装-1">代码封装</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnionFind</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">UnionFind</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">_components</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_parent</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_rank</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">_weight</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_parent</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="c1">// firstly, find root</span>
+        <span class="kt">int</span> <span class="n">root</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">root</span> <span class="o">!=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">root</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">_weight</span><span class="p">[</span><span class="n">root</span><span class="p">];</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">root</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="c1">// secondly, path reduce</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">[</span><span class="n">cur</span><span class="p">];</span>
+            <span class="c1">// 路径压缩</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>
+            <span class="c1">// 相对权重更新</span>
+            <span class="n">total</span> <span class="o">-=</span> <span class="n">weight</span><span class="p">[</span><span class="n">cur</span><span class="p">];</span>
+            <span class="n">_weight</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">+=</span> <span class="n">total</span><span class="p">;</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="nf">unite</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">pu</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pu</span> <span class="o">==</span> <span class="n">pv</span><span class="p">)</span> <span class="k">return</span> <span class="n">_weight</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">-</span> <span class="n">_weight</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="n">d</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">_rank</span><span class="p">[</span><span class="n">pv</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">pu</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">];</span>
+            <span class="n">_weight</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">_weight</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+</span> <span class="n">_weight</span><span class="p">[</span><span class="n">u</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_rank</span><span class="p">[</span><span class="n">pv</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">];</span>
+            <span class="n">_weight</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">_weight</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">+</span> <span class="n">_weight</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">_parent</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">pu</span><span class="p">;</span>
+            <span class="n">_size</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_size</span><span class="p">[</span><span class="n">pv</span><span class="p">];</span>
+            <span class="n">_weight</span><span class="p">[</span><span class="n">pv</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">_weight</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+</span> <span class="n">_weight</span><span class="p">[</span><span class="n">u</span><span class="p">];</span>
+            <span class="n">_rank</span><span class="p">[</span><span class="n">pu</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">_components</span><span class="o">--</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// u and v belong same set?</span>
+    <span class="kt">bool</span> <span class="nf">connected</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span> <span class="p">}</span>
+    
+    <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">distance</span><span class="p">(</span><span class="n">cont</span> <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">pu</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pu</span> <span class="o">!=</span> <span class="n">pv</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="nb">false</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+        <span class="k">return</span> <span class="p">{</span><span class="nb">true</span><span class="p">,</span> <span class="n">_weight</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">-</span> <span class="n">_weight</span><span class="p">[</span><span class="n">v</span><span class="p">]};</span>
+    <span class="p">}</span>
+
+    <span class="c1">// count of components</span>
+    <span class="kt">int</span> <span class="n">components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_components</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// the component's size u belong to</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">u</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">[</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">)];</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">_components</span><span class="p">;</span> <span class="c1">// cnt of components</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_parent</span><span class="p">;</span> <span class="c1">// array of parent node</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_rank</span><span class="p">;</span> <span class="c1">// rank, tree's height</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_size</span><span class="p">;</span> <span class="c1">// set's size</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_weight</span><span class="p">;</span> <span class="c1">// set's size</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h1 id="扩展域并查集-vs-加权并查集">扩展域并查集 vs 加权并查集</h1>
+
+<p>结论 1：能用扩展域并查集解决的问题，一定可以用带权并查集解决。</p>
+
+<p>结论 2：能用带权并查集解决的问题，不一定能用扩展域并查集解决。</p>
+
+<p>简单来说：带权并查集是扩展域并查集的超集（更一般化的工具），扩展域并查集是带权并查集的特例。</p>
+
+<p>实际上，扩展域并查集可以看作带权并查集的一种“显式”展开。每个元素的不同域对应带权并查集中该元素可能具有的权值。
+当合并时，扩展域合并的是具体状态节点，而带权并查集则通过调整权值来保持一致性。</p>
 
 <h1 id="练习">练习</h1>
 
@@ -269,10 +365,16 @@
   <li>食物链（POJ 1182）</li>
   <li>团伙（Luogu P1892）</li>
   <li>2-SAT</li>
-  <li>带约束的k染色问题</li>
+  <li>带约束的k染色问题：有n个点，m条边，每条边表示两端点颜色相同或不同。用k种颜色染色，问是否可行。解法：k域并查集。相同关系合并对应域；不同关系合并 x_i 与 y_j（i≠j 
+的所有组合？）。但若k较大，复杂度高。实际上，不同关系只需合并 x_i 与 y_i 的互补？更高效的是用2-SAT或二分图判定，但扩展域也可，只是合并所有 i≠j 会导致大量合并，可能超时。因此k不宜过大</li>
 </ul>
 
-<p>有n个点，m条边，每条边表示两端点颜色相同或不同。用k种颜色染色，问是否可行。解法：k域并查集。相同关系合并对应域；不同关系合并 x_i 与 y_j（i≠j 的所有组合？）。但若k较大，复杂度高。实际上，不同关系只需合并 x_i 与 y_i 的互补？更高效的是用2-SAT或二分图判定，但扩展域也可，只是合并所有 i≠j 会导致大量合并，可能超时。因此k不宜过大</p>
+<p>加权并查集：</p>
+<ul>
+  <li>食物链（POJ 1182 / 洛谷 P2024）</li>
+  <li>区间和问题（HDU 3038）</li>
+  <li>相对重量问题</li>
+</ul>
 
 <div id="giscus">
     <script src="https://giscus.app/client.js"
