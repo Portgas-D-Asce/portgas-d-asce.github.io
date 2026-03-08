@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxxxxxxxxxxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>二维凸包 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="二维凸包" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxxxxxxxxxxxxxx" />
+<meta property="og:description" content="xxxxxxxxxxxxxxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E4%BA%8C%E7%BB%B4%E5%87%B8%E5%8C%85.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E4%BA%8C%E7%BB%B4%E5%87%B8%E5%8C%85.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/47.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-04-07T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/47.jpeg" />
+<meta property="twitter:title" content="二维凸包" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2025-04-07T00:00:00+00:00","datePublished":"2025-04-07T00:00:00+00:00","description":"xxxxxxxxxxxxxxxxxx","headline":"二维凸包","image":"https://xdevil.top/assets/image/47.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E4%BA%8C%E7%BB%B4%E5%87%B8%E5%8C%85.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/04/07/%E4%BA%8C%E7%BB%B4%E5%87%B8%E5%8C%85.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 二维凸包 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>想象一块钉着许多钉子的木板，如果拿一根橡皮筋，让它把所有钉子都围在内部，然后松手，橡皮筋收缩后会紧紧绷在最外围的某些钉子上。这根橡皮筋最终形成的形状，就是这些钉子（点集）的凸包。</p>
+
+<h1 id="定义">定义</h1>
+<p>凸集：一个集合中，任意两点连成的线段完全落在此集合内。</p>
+
+<p>凸多边形：所有内角大小都在 $[0, \pi]$ 范围内的简单多边形。</p>
+
+<p>凸包：平面上能包含所有给定点的最小凸多边形叫做凸包。</p>
+<ul>
+  <li>在包含所有点的多边形中（可能是凸多边形，也可能不是凸多边形），凸包的周长是最短的</li>
+  <li>小于 4 个点直接就是凸包，点和线短可以看作是特殊的凸包</li>
+</ul>
+
+<h1 id="算法">算法</h1>
+<h2 id="gift-wrapping算法-jarvis步进法">Gift Wrapping算法 (Jarvis步进法)</h2>
+
+<p>这是最符合直觉的算法，就像用双手包裹礼物。</p>
+
+<p>算法步骤：</p>
+<ul>
+  <li>从一个必然在凸包上的点（例如最左边的点）开始。</li>
+  <li>然后，寻找下一个点，使得所有其他点都在当前点与这个点的右侧（叉积判断），这个点就是新的凸包顶点。</li>
+  <li>重复这个过程，直到回到起点。</li>
+</ul>
+
+<p>复杂度：$O(n·h)$，其中 $n$ 是总点数，$h$ 是凸包顶点数</p>
+
+<h2 id="graham-scan算法">Graham Scan算法</h2>
+
+<p>这是最经典的算法，巧妙利用了排序和栈结构</p>
+
+<p>算法步骤：</p>
+<ul>
+  <li>找基点：找到y坐标最小的点（如果相同取最左），记为 $p_0$</li>
+  <li>排序：将其余所有点按相对于P0的极角从小到大排序。
+扫描：维护一个栈。将 $p_0$ 和排序后的前两个点压栈。然后依次处理每个点，检查栈顶两点与当前点构成的转向。
+    <ul>
+      <li>如果是左转（叉积&gt;0），则将当前点压栈；</li>
+      <li>如果是右转（叉积&lt;0），则说明栈顶点是“凹”的，需要弹出，继续检查，直到可以左转为止。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>时间复杂度：$O(nlog(n))$，主要耗时在排序上。这是最优的复杂度下限。</p>
+
+<p>空间复杂度：空间复杂度：$O(n)$</p>
+
+<h2 id="andrews-monotone-chain算法">Andrew‘s Monotone Chain算法</h2>
+
+<p>这是Graham Scan的改进版，更简洁、数值稳定性更好。</p>
+
+<h3 id="核心原理">核心原理</h3>
+
+<p>将凸包分为 “上凸壳” 和 “下凸壳” 分别构造，最后合并起来。</p>
+
+<p>算法步骤：</p>
+<ul>
+  <li>排序：将所有点按 x 坐标升序（x 相同按 y 升序）排列，第一个点和最后一个点一定在凸包上</li>
+  <li>构造下凸壳：从左到右扫描，同样利用栈和左转/右转判定（对于下凸壳，我们维护一种转向一致性）</li>
+  <li>构造上凸壳：从右到左扫描</li>
+  <li>合并：将上下凸壳合并（注意去除重复的端点）</li>
+</ul>
+
+<h3 id="实现">实现</h3>
+
+<p>当前点与栈顶两个点的外积小于 0 时，需要不断弹出栈顶，直到剩下一个元素为止</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// (o, a) x (o, b)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">o</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">o</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">-</span>
+           <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">first</span> <span class="o">-</span> <span class="n">o</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">second</span> <span class="o">-</span> <span class="n">o</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">andrew</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">pts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 点数 ≤2 时手动构造闭合形式</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="k">return</span> <span class="p">{};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]};</span>               <span class="c1">// [p, p]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]};</span>       <span class="c1">// [p0, p1, p0]</span>
+
+    <span class="c1">// 按 x 升序，x 相同时按 y 升序</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">pts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">pts</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">hull</span><span class="p">;</span>
+    
+    <span class="k">auto</span> <span class="n">push_convex</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">hull</span><span class="p">](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">lower_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">pt</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">hull</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">lower_size</span> <span class="o">&amp;&amp;</span> <span class="n">cross</span><span class="p">(</span><span class="n">hull</span><span class="p">[</span><span class="n">hull</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">],</span> <span class="n">hull</span><span class="p">.</span><span class="n">back</span><span class="p">(),</span> <span class="n">pt</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">hull</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+        <span class="n">hull</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pt</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="c1">// 下凸壳 (从左到右)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">push_convex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+    <span class="c1">// 上凸壳 (从右到左)，保留下凸壳部分不被弹出</span>
+    <span class="kt">size_t</span> <span class="n">lower_size</span> <span class="o">=</span> <span class="n">hull</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;)</span> <span class="n">push_convex</span><span class="p">(</span><span class="n">lower_size</span><span class="p">,</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+    <span class="c1">// 此时 hull 的最后一个点与第一个点相同，直接返回（闭合凸包）</span>
+    <span class="k">return</span> <span class="n">hull</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="复杂度">复杂度</h3>
+
+<p>时间复杂度：$O(nlog(n))$</p>
+
+<p>空间复杂度：$O(O(n))$</p>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://www.luogu.com.cn/problem/P2742">P2742 [USACO5.1] 圈奶牛Fencing the Cows /【模板】二维凸包</a></p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
