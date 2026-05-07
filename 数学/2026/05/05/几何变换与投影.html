@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>几何变换与投影 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="几何变换与投影" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/80.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://xdevil.top/assets/image/80.jpeg" />
+<meta property="twitter:title" content="几何变换与投影" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-05-05T00:00:00+00:00","datePublished":"2026-05-05T00:00:00+00:00","description":"xxxxxx","headline":"几何变换与投影","image":"https://xdevil.top/assets/image/80.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 几何变换与投影 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="几何变换">几何变换</h1>
+<p>几何变换是指对几何图形（点、线、面）进行位置、大小、形状、方向等改变的操作。它本质上是一个从二维/三维空间到自身的映射。</p>
+
+<p>几何变换可根据自由度和保持的属性（如距离、角度、平行性、共线性）进行分类。常见的几何变换按照从特殊到一般（约束由强到弱）排列为：</p>
+<ul>
+  <li>刚体变换：旋转+平移，保持距离和角度（6自由度）。</li>
+  <li>相似变换：刚体+均匀缩放，保持角度（7自由度）。</li>
+  <li>仿射变换：一般线性变换+平移，保持平行性（12自由度）。</li>
+  <li>射影变换：最一般的齐次线性变换，保持共线性（15自由度）。</li>
+</ul>
+
+<h1 id="刚体变换rigid-transformation--euclidean-transformation">刚体变换（Rigid Transformation / Euclidean Transformation）</h1>
+
+<p>又称欧式变换</p>
+
+<h2 id="定义">定义</h2>
+<p>保持点之间<strong>距离</strong>和<strong>夹角</strong>（即形状和大小）不变，且<strong>保持定向</strong>（无镜像）。只有旋转和平移组成。</p>
+
+<h2 id="模型">模型</h2>
+<p>点 $\mathbf{p} = [x, y, z]^T$ 变换后：
+\(\mathbf{p}' = \mathbf{R} \mathbf{p} + \mathbf{t}\)</p>
+
+<p>其中：</p>
+<ul>
+  <li>$\mathbf{R}$ 是 3×3 旋转矩阵，满足 $\mathbf{R}^T \mathbf{R} = \mathbf{I}$，$\det(\mathbf{R}) = +1$。</li>
+  <li>$\mathbf{t}$ 是 3×1 平移向量。</li>
+</ul>
+
+<p>齐次坐标形式：
+\(\begin{bmatrix} \mathbf{p}' \\ 1 \end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{R} &amp; \mathbf{t} \\
+\mathbf{0}^T &amp; 1
+\end{bmatrix}
+\begin{bmatrix} \mathbf{p} \\ 1 \end{bmatrix}\)</p>
+
+<p>矩阵记为：
+\(T_{\text{rigid}} =
+\begin{pmatrix}
+r_{11} &amp; r_{12} &amp; r_{13} &amp; t_x \\
+r_{21} &amp; r_{22} &amp; r_{23} &amp; t_y \\
+r_{31} &amp; r_{32} &amp; r_{33} &amp; t_z \\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}\)</p>
+
+<h2 id="自由度">自由度</h2>
+<ul>
+  <li>旋转：3 个自由度（例如欧拉角或轴角）</li>
+  <li>平移：3 个自由度</li>
+  <li><strong>合计 6 个自由度</strong></li>
+</ul>
+
+<h2 id="不变性质">不变性质</h2>
+<ul>
+  <li>两点间的距离</li>
+  <li>直线间的夹角</li>
+  <li>体积（有符号体积保持不变）</li>
+  <li>曲面的高斯曲率</li>
+</ul>
+
+<h2 id="典型应用">典型应用</h2>
+<ul>
+  <li>机器人运动学（末端执行器位姿）</li>
+  <li>三维点云配准（ICP 算法中的刚性运动）</li>
+  <li>骨骼动画中的刚体骨骼变换</li>
+</ul>
+
+<h1 id="相似变换similarity-transformation">相似变换（Similarity Transformation）</h1>
+<h2 id="定义-1">定义</h2>
+<p><strong>旋转 + 平移 + 均匀缩放</strong>。保持形状（角度）不变，但大小可以改变。</p>
+
+<h2 id="模型-1">模型</h2>
+<p>\(\mathbf{p}' = s \mathbf{R} \mathbf{p} + \mathbf{t}\)
+其中 $s &gt; 0$ 是均匀缩放因子。</p>
+
+<p>齐次矩阵：
+\(T_{\text{sim}} =
+\begin{bmatrix}
+s\mathbf{R} &amp; \mathbf{t} \\
+\mathbf{0}^T &amp; 1
+\end{bmatrix}\)</p>
+
+<h2 id="自由度-1">自由度</h2>
+<ul>
+  <li>旋转：3</li>
+  <li>平移：3</li>
+  <li>缩放：1</li>
+  <li><strong>合计 7 个自由度</strong></li>
+</ul>
+
+<h2 id="不变性质-1">不变性质</h2>
+<ul>
+  <li>角度（两条直线间的夹角）</li>
+  <li>形状（圆映射为圆，球映射为球）</li>
+  <li>平行性</li>
+  <li>交比（四点的交比不变）</li>
+</ul>
+
+<h2 id="典型应用-1">典型应用</h2>
+<ul>
+  <li>三维物体在图像中的尺度变化（同一物体远近不同）</li>
+  <li>多视图三维重建中的相似变换（尺度模糊）</li>
+  <li>三维模型归一化（缩放至单位大小）</li>
+</ul>
+
+<h2 id="注意">注意</h2>
+<p>与刚体变换相比，相似变换允许物体整体放大/缩小，但不允许各向异性缩放或错切。</p>
+
+<h1 id="仿射变换affine-transformation">仿射变换（Affine Transformation）</h1>
+
+<h2 id="定义-2">定义</h2>
+<p>保持<strong>平行性</strong>和<strong>共线性</strong>，但可以不保持长度和角度。包括：旋转、平移、均匀缩放、非均匀缩放、错切（剪切）、反射。</p>
+
+<h2 id="模型-2">模型</h2>
+<p>\(\mathbf{p}' = \mathbf{A} \mathbf{p} + \mathbf{t}\)
+其中 $\mathbf{A}$ 是 3×3 可逆矩阵（不必正交）。</p>
+
+<p>齐次矩阵：
+\(T_{\text{affine}} =
+\begin{bmatrix}
+a_{11} &amp; a_{12} &amp; a_{13} &amp; t_x \\
+a_{21} &amp; a_{22} &amp; a_{23} &amp; t_y \\
+a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}\)</p>
+
+<h2 id="自由度-2">自由度</h2>
+<p>$\mathbf{A}$ 有 9 个分量，平移 3 个，共 12 个参数，但 $\mathbf{A}$ 可逆（一般无进一步约束），自由度 <strong>12</strong>（齐次矩阵最后一行固定为 (0,0,0,1)）。</p>
+
+<h2 id="不变性质-2">不变性质</h2>
+<ul>
+  <li>平行性（平行线变换后仍平行）</li>
+  <li>共线性（共线的点仍共线）</li>
+  <li>直线上的线段比例</li>
+  <li>体积比（变换后体积与原来体积之比 = $\det(\mathbf{A})$，常数）</li>
+  <li>重心坐标</li>
+</ul>
+
+<h2 id="典型应用-2">典型应用</h2>
+<ul>
+  <li>三维形变（非刚性配准中的仿射近似）</li>
+  <li>医学图像配准（CT/MR 中的线性配准）</li>
+  <li>三维错切效果（歪斜造型）</li>
+</ul>
+
+<h2 id="示例沿-x-方向的错切">示例：沿 X 方向的错切</h2>
+<p>\(\mathbf{A}_{\text{shear}} =
+\begin{bmatrix}
+1 &amp; k &amp; 0 \\
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}\)
+效果：$y$ 坐标不变，$x’ = x + k y$。</p>
+
+<h1 id="投影变换--射影变换projective-transformation--homography-in-3d">投影变换 / 射影变换（Projective Transformation / Homography in 3D）</h1>
+
+<h2 id="定义-3">定义</h2>
+<p>三维空间中最一般的可逆线性变换（在齐次坐标意义下）。它不保持平行性，但保持共线性和<strong>交比</strong>（四点的交比不变）。</p>
+
+<h2 id="模型-3">模型</h2>
+<p>在齐次坐标下：
+\(\begin{bmatrix} X' \\ Y' \\ Z' \\ W' \end{bmatrix}
+=
+\mathbf{H}_{4\times4}
+\begin{bmatrix} X \\ Y \\ Z \\ W \end{bmatrix}\)</p>
+
+<p>其中 $\mathbf{H}$ 是一个 4×4 可逆矩阵（非奇异）。真实三维坐标为：
+\(x' = \frac{X'}{W'},\quad y' = \frac{Y'}{W'},\quad z' = \frac{Z'}{W'}\)</p>
+
+<h2 id="自由度-3">自由度</h2>
+<p>4×4 矩阵有 16 个元素，整体尺度无关（齐次性），所以自由度为 <strong>15</strong>。</p>
+
+<h2 id="不变性质-3">不变性质</h2>
+<ul>
+  <li>共线性（直线映射为直线）</li>
+  <li>交比（四个共线点的交比不变）</li>
+  <li>接触阶（曲面间的相切关系）</li>
+</ul>
+
+<h2 id="与透视投影的区别">与“透视投影”的区别</h2>
+<ul>
+  <li>图形学中的<strong>透视投影</strong>通常指 <strong>三维到二维</strong> 的映射（用 3×4 或 4×4 矩阵，最后一行 (0,0,-1,0) 等），结果是二维图像。</li>
+  <li>这里的<strong>三维射影变换</strong>是 <strong>三维空间到自身</strong> 的一般可逆映射（有时也称为三维单应变换）。它可以模拟任意中心投影（包括从三维空间某点投影到另一平面，然后再反投回三维空间引起的全局变形）。</li>
+</ul>
+
+<h2 id="典型应用-3">典型应用</h2>
+<ul>
+  <li>多视图几何中，同一个三维平面在不同相机图像间的变换是二维射影变换（平面单应性）。</li>
+  <li>三维重建中的<strong>射影重建</strong>（仅满足射影变换等价性）。</li>
+  <li>计算机图形学效果：模拟复杂的镜头畸变、投影变形。</li>
+</ul>
+
+<h2 id="矩阵结构">矩阵结构</h2>
+<p>\(\mathbf{H}_{4\times4} =
+\begin{bmatrix}
+\mathbf{A}_{3\times3} &amp; \mathbf{t}_{3\times1} \\
+\mathbf{v}^T_{1\times3} &amp; v_{44}
+\end{bmatrix}\)</p>
+
+<ul>
+  <li>$\mathbf{A}$：仿射部分</li>
+  <li>$\mathbf{t}$：平移</li>
+  <li>$\mathbf{v}^T$：透视部分（引起透视变形）</li>
+  <li>$v_{44}$：整体缩放因子</li>
+</ul>
+
+<p>当 $\mathbf{v} = \mathbf{0}$ 且 $v_{44} \neq 0$ 时，退化为仿射变换（最后一行 (0,0,0,1) 可归一化得到）。</p>
+
+<h1 id="正交投影orthographic-projection">正交投影（Orthographic Projection）</h1>
+
+<h2 id="在变换谱系中的位置">在变换谱系中的位置</h2>
+<p><strong>属于仿射变换</strong>（且是平行投影中投影方向垂直于投影面的情况）。</p>
+
+<h2 id="为什么">为什么？</h2>
+<p>矩阵形式为：
+\(P_{\text{ortho}} =
+  \begin{bmatrix}
+  \frac{2}{r-l} &amp; 0 &amp; 0 &amp; -\frac{r+l}{r-l} \\
+  0 &amp; \frac{2}{t-b} &amp; 0 &amp; -\frac{t+b}{t-b} \\
+  0 &amp; 0 &amp; \frac{-2}{f-n} &amp; -\frac{f+n}{f-n} \\
+  0 &amp; 0 &amp; 0 &amp; 1
+  \end{bmatrix}\)</p>
+<ul>
+  <li>最后一行固定为 $(0,0,0,1)$ → <strong>无透视项</strong>（仿射变换的标志）。</li>
+  <li>左上角 3×3 子矩阵是对角矩阵（线性部分为缩放和平移，无旋转后可视为刚体+缩放的特殊情况）。</li>
+  <li>它保持了平行线和平行平面（因为仿射变换的性质）。</li>
+  <li>不保持角度（除非缩放均匀，但正交投影通常各向异性缩放不同坐标轴）。</li>
+</ul>
+
+<h2 id="与其他变换的关系">与其他变换的关系</h2>
+<ul>
+  <li>可以看作是<strong>刚体变换</strong>之后跟着一个<strong>缩放</strong>（将观察体映射到 NDC 立方体），再平移。整体是一个<strong>仿射变换</strong>。</li>
+  <li>它没有透视效果，因此不属于射影变换（虽然射影变换包含仿射，但此处强调其仿射属性）。</li>
+</ul>
+
+<h1 id="斜投影oblique-projection">斜投影（Oblique Projection）</h1>
+
+<h2 id="在变换谱系中的位置-1">在变换谱系中的位置</h2>
+<p><strong>也属于仿射变换</strong>（平行投影中投影方向不垂直于投影面）。</p>
+
+<h2 id="为什么-1">为什么？</h2>
+<p>典型斜投影矩阵（投影到 z=0 平面）：
+\(P_{\text{oblique}} =
+  \begin{bmatrix}
+  1 &amp; 0 &amp; L_x &amp; 0 \\
+  0 &amp; 1 &amp; L_y &amp; 0 \\
+  0 &amp; 0 &amp; 0 &amp; 0 \\
+  0 &amp; 0 &amp; 0 &amp; 1
+  \end{bmatrix}\)
+  或者更常见的是将它嵌入到 4×4 齐次矩阵中（保留深度时第三行不为零）。</p>
+<ul>
+  <li>最后一行 $(0,0,0,1)$，无透视项。</li>
+  <li>线性部分包含<strong>错切项</strong>$L_x, L_y$，属于仿射变换中的<strong>剪切</strong>。</li>
+  <li>仍保持平行性，但角度和长度不保持。</li>
+</ul>
+
+<h2 id="与其他变换的关系-1">与其他变换的关系</h2>
+<ul>
+  <li>它是仿射变换的一个特例，且是<strong>平行投影</strong>的一种。</li>
+  <li>如果投影方向垂直于投影面，则退化为正交投影。</li>
+  <li>没有近大远小效果，因此不属于射影变换中的“透视”类。</li>
+</ul>
+
+<hr />
+
+<h1 id="透视投影perspective-projection">透视投影（Perspective Projection）</h1>
+
+<h2 id="在变换谱系中的位置-2">在变换谱系中的位置</h2>
+<p><strong>属于射影变换（非仿射）</strong>。</p>
+
+<h2 id="为什么-2">为什么？</h2>
+<p>标准透视投影矩阵（以 OpenGL 为例）：
+  \(P_{\text{persp}} =
+  \begin{bmatrix}
+  \frac{2n}{r-l} &amp; 0 &amp; \frac{r+l}{r-l} &amp; 0 \\
+  0 &amp; \frac{2n}{t-b} &amp; \frac{t+b}{t-b} &amp; 0 \\
+  0 &amp; 0 &amp; -\frac{f+n}{f-n} &amp; -\frac{2fn}{f-n} \\
+  0 &amp; 0 &amp; -1 &amp; 0
+  \end{bmatrix}\)</p>
+<ul>
+  <li>最后一行不再是 $(0,0,0,1)$，而是 $(0,0,-1,0)$ → <strong>透视项</strong>。</li>
+  <li>这个矩阵将视锥体（frustum）映射到 NDC 立方体。经过透视除法后，实现近大远小。</li>
+  <li>它保持了共线性（直线映射为直线），但不保持平行性（平行线在透视下可能交于灭点）。</li>
+  <li>它是一般射影变换（15自由度）的一个特例，其中某些元素被固定为0或特定值，自由度约为5~6。</li>
+</ul>
+
+<h2 id="与其他变换的关系-2">与其他变换的关系</h2>
+<ul>
+  <li>当透视项为零时（即最后一行变成 (0,0,0,1)），退化为仿射变换（但通常无法直接退化，因为需要修改其他行）。</li>
+  <li>透视投影矩阵不是仿射变换，因为它的线性部分与平移部分结合后，不再保证平行线映射为平行线。</li>
+</ul>
+
+<h1 id="倾斜透视投影oblique-perspective--off-axis-perspective">倾斜透视投影（Oblique Perspective / Off-Axis Perspective）</h1>
+
+<h2 id="在变换谱系中的位置-3">在变换谱系中的位置</h2>
+<p><strong>仍然属于射影变换</strong>，是透视投影的一个不对称特例。</p>
+
+<h2 id="为什么-3">为什么？</h2>
+<ul>
+  <li>其矩阵形式与透视投影矩阵<strong>完全相同</strong>，但参数 (l, r, b, t) 不是对称的（即 (l \neq -r) 或 (b \neq -t)）。</li>
+  <li>例如，对于左眼视图，(l) 和 (r) 相对于视点不对称。</li>
+  <li>它同样具有最后一行 ((0,0,-1,0)) 的形式（假定视线方向沿 -Z），因此属于射影变换。</li>
+  <li>它产生的视觉效果与透视投影一致（近大远小），但视锥体的中心轴不垂直于投影平面（或视点不在投影平面中心）。</li>
+</ul>
+
+<h2 id="与其他变换的关系-3">与其他变换的关系</h2>
+<ul>
+  <li>它是透视投影矩阵的一般化：当 (l = -r) 且 (b = -t) 时，退化为标准的对称透视投影。</li>
+  <li>同样是非仿射的射影变换。</li>
+</ul>
+
+<h2 id="关键点">关键点</h2>
+<ul>
+  <li><strong>仿射变换</strong>（正交、斜投影）保持平行性，适合CAD和2.5D游戏。</li>
+  <li><strong>射影变换</strong>（透视类）不保持平行性，但提供了真实感。</li>
+  <li>所有投影矩阵都是4×4齐次矩阵，是射影变换或仿射变换在<strong>降维约束</strong>下的特例。</li>
+</ul>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
