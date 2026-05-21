@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-05-07T16:43:31+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">几何变换与投影</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" rel="alternate" type="text/html" title="几何变换与投影" /><published>2026-05-05T00:00:00+00:00</published><updated>2026-05-05T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"><![CDATA[<h1 id="几何变换">几何变换</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-05-21T17:35:23+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">几何变换与投影</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" rel="alternate" type="text/html" title="几何变换与投影" /><published>2026-05-05T00:00:00+00:00</published><updated>2026-05-05T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"><![CDATA[<h1 id="几何变换">几何变换</h1>
 <p>几何变换是指对几何图形（点、线、面）进行位置、大小、形状、方向等改变的操作。它本质上是一个从二维/三维空间到自身的映射。</p>
 
 <p>几何变换可根据自由度和保持的属性（如距离、角度、平行性、共线性）进行分类。常见的几何变换按照从特殊到一般（约束由强到弱）排列为：</p>
@@ -331,21 +331,8 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 
 <p>其它</p>
 <ul>
-  <li>墨镜、摄像机、防晒霜</li>
+  <li>墨镜、摄像机、防晒</li>
 </ul>
-
-<h2 id="路线">路线</h2>
-<p>凌晨乌鲁木齐机场到达，下飞机租车交接，去酒店住一晚</p>
-
-<p>一大早出发，途径独山子大峡谷</p>
-
-<p>晚上 19 点到达赛里木湖，十里长梯边玩边看日落，出景区住宿，第二天早上 6 点多排队直接去点将台看日出</p>
-
-<p>剩下慢慢逛，逛完南门出去果子沟大桥瞅一眼</p>
-
-<p>恰西</p>
-
-<p>那拉提</p>
 
 <h2 id="注意">注意</h2>
 <p>安全第一！！！</p>
@@ -367,6 +354,11 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 <p>假期避开高峰期，最好提前一天去逛，人少，体验更好点</p>
 
 <p>逆时针（逆光） or 顺时针（绕路），逆时针个人感觉挺好的：</p>
+<ul>
+  <li>晚上 19 点到达赛里木湖，十里长梯边玩边看日落，出景区住宿</li>
+  <li>第二天早上 6 点多排队直接去点将台看日出（7 点开门）</li>
+  <li>剩下慢慢逛，逛完南门出去果子沟大桥瞅一眼</li>
+</ul>
 
 <h1 id="天山天池">天山天池</h1>
 
@@ -376,13 +368,12 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 
 <h1 id="那拉提">那拉提</h1>
 
+<h1 id="恰西">恰西</h1>
 <p><img src="/assets/content/57.jpg" alt="/assets/content/57.jpg" /></p>
 
-<p>去那拉提途中，饶点路顺便瞅眼，近距离看雪山</p>
+<p>去那拉提途中，饶点路顺便瞅眼，瞅瞅草原，近距离看雪山</p>
 
 <p>找个合适位置，拍个旱地拔葱</p>
-
-<h1 id="恰西">恰西</h1>
 
 <h1 id="喀纳斯">喀纳斯</h1>
 
@@ -402,49 +393,25 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 <h1 id="独山子大峡谷">独山子大峡谷</h1>
 <p><img src="/assets/content/60.jpg" alt="/assets/content/60.jpg" /></p>
 
-<p>在外面吹吹风，拍拍雪山就可以撤了，进去转两圈也行，景区项目不建议</p>
+<p>在外面吹吹风，远距离拍拍雪山就可以撤了，进去转两圈也行，景区项目不建议</p>
 
 <h1 id="果子沟大桥">果子沟大桥</h1>
 
-<p>赛里木湖南门出来就是</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[青春没有售价，新疆就在脚下]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/79.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/79.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">少说话，多读书</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html" rel="alternate" type="text/html" title="少说话，多读书" /><published>2026-02-28T00:00:00+00:00</published><updated>2026-02-28T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D%EF%BC%8C%E5%A4%9A%E8%AF%BB%E4%B9%A6</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html"><![CDATA[<h1 id="平凡的世界">平凡的世界</h1>
+<p>赛里木湖南门出来就是</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[青春没有售价，新疆就在脚下（等我做足攻略，会再战的）]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/79.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/79.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">少说话，多读书</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html" rel="alternate" type="text/html" title="少说话，多读书" /><published>2026-02-28T00:00:00+00:00</published><updated>2026-02-28T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D%EF%BC%8C%E5%A4%9A%E8%AF%BB%E4%B9%A6</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html"><![CDATA[<h1 id="平凡的世界">平凡的世界</h1>
 
-<h1 id="活着">活着</h1>
+<h1 id="兄弟">兄弟</h1>
 
-<h1 id="围城">围城</h1>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[见多识广，面对这世界时便会多一份游刃有余]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/78.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/78.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>上幼儿班报道的时候，老师说，看着好小啊，明年再来吧，省得在学校里受欺负</p>
+<h1 id="许三观卖血记">许三观卖血记</h1>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[见多识广，面对这世界时便会多一份游刃有余]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/78.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/78.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Who is a little boy, this is an old man</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html" rel="alternate" type="text/html" title="Who is a little boy, this is an old man" /><published>2026-01-26T00:00:00+00:00</published><updated>2026-01-26T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who%20is%20a%20little%20boy,%20this%20is%20an%20old%20man</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/26/Who-is-a-little-boy,-this-is-an-old-man.html"><![CDATA[<p>在进入棺材之前，不对,在化为骨灰前，记得回忆下这失败的一生吧</p>
 
-<p>上大学的时候，学姐说看着好小啊</p>
+<p>To be continued!</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/77.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/77.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">你想要的黑历史都在这了</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86.html" rel="alternate" type="text/html" title="你想要的黑历史都在这了" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86.html"><![CDATA[<p>太多了，写不过来，还是选择性忘记吧，就不一遍遍地加深那些社死画面的印象了，只要我忘掉了，就没人会记得了，嘿嘿</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/72.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/72.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">朋友说我干啥都是两三天</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9.html" rel="alternate" type="text/html" title="朋友说我干啥都是两三天" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9.html"><![CDATA[<p>贪心如我</p>
 
-<p>线下面基，你看着挺小的</p>
+<p>如果我是歌手，……</p>
 
-<p>朋友婚礼上，看着你好小啊，一开始还以为你是谁的弟弟呢</p>
-
-<p>公司同事，你看着好小 ……</p>
-
-<p>都说谁呢？老夫已经奔四好久了，马上就要奔五了！！！！！！！</p>
-
-<hr />
-
-<p>等这位牛马熬到退休了，在进入棺材之前，不对,在化为骨灰前，会在这记录下这失败的一生吧</p>
-
-<p>To be continued!</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/77.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/77.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">你想要的黑历史都在这了</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86.html" rel="alternate" type="text/html" title="你想要的黑历史都在这了" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E9%BB%91%E5%8E%86%E5%8F%B2%E9%83%BD%E5%9C%A8%E8%BF%99%E4%BA%86.html"><![CDATA[<p>太多了，写不过来，还是选择性忘记吧，就不一遍编地加深那些社死画面的印象了，只要我忘掉了，就没人会记得了，哈哈</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/72.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/72.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">冥冥之中自有天意，可我却一次都没能抓得住</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E5%86%A5%E5%86%A5%E4%B9%8B%E4%B8%AD%E8%87%AA%E6%9C%89%E5%A4%A9%E6%84%8F-%E5%8F%AF%E6%88%91%E5%8D%B4%E4%B8%80%E6%AC%A1%E9%83%BD%E6%B2%A1%E8%83%BD%E6%8A%93%E5%BE%97%E4%BD%8F.html" rel="alternate" type="text/html" title="冥冥之中自有天意，可我却一次都没能抓得住" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E5%86%A5%E5%86%A5%E4%B9%8B%E4%B8%AD%E8%87%AA%E6%9C%89%E5%A4%A9%E6%84%8F%EF%BC%8C%E5%8F%AF%E6%88%91%E5%8D%B4%E4%B8%80%E6%AC%A1%E9%83%BD%E6%B2%A1%E8%83%BD%E6%8A%93%E5%BE%97%E4%BD%8F</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E5%86%A5%E5%86%A5%E4%B9%8B%E4%B8%AD%E8%87%AA%E6%9C%89%E5%A4%A9%E6%84%8F-%E5%8F%AF%E6%88%91%E5%8D%B4%E4%B8%80%E6%AC%A1%E9%83%BD%E6%B2%A1%E8%83%BD%E6%8A%93%E5%BE%97%E4%BD%8F.html"><![CDATA[<p>上学第一次报道，印象中只是扫了一眼，自己分到的那个班，有个女孩的名字被划掉了，之前学校打电话让提前交学费(后来才知道是重点班)，以为是诈骗(实则是因为穷)就没交……故事应该是我想的那样吧</p>
-
-<p>偶然间发现，她跟我有一样的牙齿耶</p>
-
-<hr />
-
-<p>真的很奇怪，跟有些人打交道时，不会觉得有丝毫压力，好像上辈子就是兄弟一样。</p>
-
-<p>不是一家人，不进一家门，三观不合，没有必要强行牵扯过深，强扭的瓜不甜，何必相互折麽，放过彼此不好吗？</p>
-
-<hr />]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/73.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/73.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">朋友说我干啥都是两三天</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9.html" rel="alternate" type="text/html" title="朋友说我干啥都是两三天" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E6%9C%8B%E5%8F%8B%E8%AF%B4%E6%88%91%E5%B9%B2%E5%95%A5%E9%83%BD%E6%98%AF%E4%B8%A4%E4%B8%89%E5%A4%A9.html"><![CDATA[<p>贪心如我</p>
-
-<p>如果我是歌手，我想大声唱出心中压抑的情感，想唱一首父亲送给我的父亲</p>
-
-<p>如果我是画家，我想画出最美好的画面</p>
-
-<p>如果我是摄影师，我想拍下最震撼人心的大自然美景</p>
+<p>如果我是画家，……</p>
 
 <p>如果我是作家，……</p>
+
+<p>……</p>
 
 <hr />]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/74.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/74.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">重生之有人在逼我写BUG</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E9%87%8D%E7%94%9F%E4%B9%8B%E6%9C%89%E4%BA%BA%E5%9C%A8%E9%80%BC%E6%88%91%E5%86%99BUG.html" rel="alternate" type="text/html" title="重生之有人在逼我写BUG" /><published>2026-01-25T00:00:00+00:00</published><updated>2026-01-25T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E9%87%8D%E7%94%9F%E4%B9%8B%E6%9C%89%E4%BA%BA%E5%9C%A8%E9%80%BC%E6%88%91%E5%86%99BUG</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/25/%E9%87%8D%E7%94%9F%E4%B9%8B%E6%9C%89%E4%BA%BA%E5%9C%A8%E9%80%BC%E6%88%91%E5%86%99BUG.html"><![CDATA[<p>敬畏每一行代码</p>
 
@@ -463,7 +430,12 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 <p>不，这句话说得不太对，太保守了，应该是 99.9% 的设计模式都在滥用，<em>**</em>之禅，名字倒是起得不错，可惜内容还真不咋地</p>
 
 <hr />
-<p>想想你的导师，掂量掂量你的领导，你还觉得现在的 AI 是智障吗？</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/76.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/76.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">北京北京</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC.html" rel="alternate" type="text/html" title="北京北京" /><published>2026-01-18T00:00:00+00:00</published><updated>2026-01-18T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC.html"><![CDATA[<p>记得第一次来北京是在高中的时候，也是印象中第一次坐火车，摇摇晃晃地就到了</p>
+
+<p>刷题有什么用，工作中压根就用不到</p>
+
+<p>活着有什么意义，反正都是要死的，不要在无趣的人身上浪费一丁点时间</p>
+
+<hr />]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/76.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/76.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">北京北京</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC.html" rel="alternate" type="text/html" title="北京北京" /><published>2026-01-18T00:00:00+00:00</published><updated>2026-01-18T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/01/18/%E5%8C%97%E4%BA%AC%E5%8C%97%E4%BA%AC.html"><![CDATA[<p>记得第一次来北京是在高中的时候，也是印象中第一次坐火车，摇摇晃晃地就到了</p>
 <ul>
   <li>由于对什么都充满了新奇感，12 个小时的硬座也没有那么难熬</li>
   <li>刚下火车，就被借了几十大洋，真是天真烂漫 😭</li>
@@ -705,4 +677,786 @@ d_1u_1v_1^T + d_2u_2v_2^T + ... + d_nu_nv_n^T\\
 <h2 id="参考">参考</h2>
 <p><a href="https://www.cnblogs.com/endlesscoding/p/10033527.html">https://www.cnblogs.com/endlesscoding/p/10033527.html</a></p>
 
-<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p><a href="https://cosx.org/2014/02/svd-and-image-compression">https://cosx.org/2014/02/svd-and-image-compression</a></p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><category term="奇异值分解" /><category term="图像处理" /><summary type="html"><![CDATA[xxxxxxxxxxxxxxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/70.png" /><media:content medium="image" url="https://xdevil.top/assets/image/70.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">线段树（Segment Tree）</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html" rel="alternate" type="text/html" title="线段树（Segment Tree）" /><published>2025-10-28T00:00:00+00:00</published><updated>2025-10-28T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91%EF%BC%88Segment%20Tree%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2025/10/28/%E7%BA%BF%E6%AE%B5%E6%A0%91-Segment-Tree.html"><![CDATA[<p>在解决 rmq 问题的数据结构中，线段树属于是 <strong>重武器：</strong> 效率略低，但功能强大，常用于解决复杂的 “单点更新 + 区间查询” 和 “区间更新 + 区间查询” 问题，切勿杀鸡用牛刀。</p>
+
+<h1 id="线段树类型">线段树类型</h1>
+<h2 id="递归线段树">递归线段树</h2>
+<p>自顶向下，也就是我们常说的线段树，大概是这样子的:</p>
+<ul>
+  <li>一棵满二叉树下，稀疏地挂着好多小脚（非连续）</li>
+  <li>原数据存储在倒数两层的叶子节点当中</li>
+  <li>每个内部节点都有左右子节点</li>
+  <li>倒数第二层一定是满的？为什么？？？？？？？？？？</li>
+</ul>
+
+<p>原理：对于长度为 <code class="language-plaintext highlighter-rouge">n</code> 的原数组 <code class="language-plaintext highlighter-rouge">nums</code>，递归线段树</p>
+<ul>
+  <li>1 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[0, n - 1]</code> 的属性值</li>
+  <li>2 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[0, mid]</code> 的属性值, <code class="language-plaintext highlighter-rouge">mid = (0 + (n - 1)) / 2</code></li>
+  <li>3 号节点维护的是区间 <code class="language-plaintext highlighter-rouge">[mid, n - 1]</code> 的属性值, <code class="language-plaintext highlighter-rouge">mid = (0 + (n - 1)) / 2</code></li>
+  <li>……</li>
+</ul>
+
+<p><img src="/assets/content/22.png" alt="/assets/content/22.png" /></p>
+
+<h2 id="迭代线段树">迭代线段树</h2>
+
+<p>自底向上，支持懒标记下沉操作困难:永远是一棵 <strong>满二叉树</strong>，原数据在最后一层从左往右存储，剩余用不到的必须用单位元填充</p>
+
+<p><img src="/assets/content/23.png" alt="/assets/content/23.png" /></p>
+
+<h1 id="单点修改--区间查询">单点修改 + 区间查询</h1>
+<h2 id="迭代线段树推荐">迭代线段树（推荐）</h2>
+
+<p>支持 plus, multiple, min, max, and, or, xor, gcd, lcm 等操作, 前四者也支持浮点类型</p>
+
+<p>支持 “设置更新（set）” 和 “增量更新（update）” 两种操作（树状数组只支持前者，故应用场景受限）</p>
+<ul>
+  <li>设置更新：使用一个新值替换旧值，完全移除旧有元素影响</li>
+  <li>增量更新：在旧值的基础上更新为新值，旧有元素的影响没有被移</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="c1">// std::plus partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::multiplies partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// std::bit_and partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_and</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">~</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_or partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_or</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_xor partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// maximum partial variable template specialization</span>
+<span class="c1">// std::maximum is function template, not types of functors</span>
+<span class="c1">// float type should use lowest() instead of min()</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Max</span>  <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// template&lt;typename T&gt; constexpr auto identity_value&lt;Max , T&gt; = std::is_floating_point_v&lt;T&gt; ? std::numeric_limits&lt;T&gt;::lowest() : std::numeric_limits&lt;T&gt;::min();</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Max</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+
+<span class="c1">// minimum partial variable template specialization</span>
+<span class="c1">// std::min is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Min</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Min</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+
+<span class="c1">// gcd partial variable template specialization</span>
+<span class="c1">// std::gcd(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Gcd</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">gcd</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Gcd</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// lcm partial variable template specialization</span>
+<span class="c1">// std::lcm(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Lcm</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">lcm</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Lcm</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_n</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">_tree</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// init leaf nodes</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_value</span><span class="p">;</span>
+
+        <span class="c1">// init inner nodes</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">_n</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">_tree</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// init leaf nodes</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+        <span class="c1">// init inner nodes</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">base</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">i</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// only support const version, non const version maybe destroy inner structure</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">base</span><span class="p">()</span> <span class="o">+</span> <span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed setting update</span>
+    <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="kt">int</span> <span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span> <span class="o">+=</span> <span class="n">base</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+
+        <span class="c1">// update form bottom to top idx [2, x)</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">idx</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed incremental update</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+        <span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_op</span><span class="p">(</span><span class="k">operator</span><span class="p">[](</span><span class="n">idx</span><span class="p">),</span> <span class="n">value</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed range query [p, r]</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="c1">// special scene should return identity</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">_n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+        <span class="c1">// void Out-of-bounds access</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="n">T</span> <span class="n">res_left</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">res_right</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">+=</span> <span class="n">base</span><span class="p">(),</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">base</span><span class="p">();</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">;</span> <span class="n">p</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// p is right child node</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">res_left</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res_left</span><span class="p">,</span> <span class="n">_tree</span><span class="p">[</span><span class="n">p</span><span class="o">++</span><span class="p">]);</span>
+            <span class="c1">// r is left child node</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">r</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span> <span class="n">res_right</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">r</span><span class="o">--</span><span class="p">],</span> <span class="n">res_right</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nf">_op</span><span class="p">(</span><span class="n">res_left</span><span class="p">,</span> <span class="n">res_right</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">size_t</span> <span class="n">base</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">base</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="kt">size_t</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="n">base</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">base</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">return</span> <span class="n">base</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">size_t</span> <span class="n">_n</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_tree</span><span class="p">;</span>
+    <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_op</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>假设数组的长度是 10, 对于 [9, 3], [-5, 4], [1, 20], [-5, 30] 这些异常区间查询如何处理</p>
+<ul>
+  <li>默认处理：[9, 3] 这种，返回单位元即可；对于 [-5, 30] 这种，处理成 [0, 9] 即可，其他位置的元素都可以看作是单位元</li>
+  <li>抛出异常：用户需要提前识别异常查询区间，并自定义该场景下的返回值，作为接口使用起来体验不佳</li>
+  <li>总结：默认处理的实现是合理的，且也可以提前识别异常区间自定义返回结果，故实现采用默认处理</li>
+</ul>
+
+<p>未使用的叶子节点应该被初始化为单位元，否则可能会导致内部节点初始化错误</p>
+
+<h2 id="递归线段树不推荐">递归线段树（不推荐）</h2>
+<p>除了效率低点，其它跟迭代线段树没有任何区别</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="c1">// std::plus partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::multiplies partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// std::bit_and partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_and</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">~</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_or partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_or</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_xor partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// maximum partial variable template specialization</span>
+<span class="c1">// std::maximum is function template, not types of functors</span>
+<span class="c1">// float type should use lowest() instead of min()</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Max</span>  <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// template&lt;typename T&gt; constexpr auto identity_value&lt;Max , T&gt; = std::is_floating_point_v&lt;T&gt; ? std::numeric_limits&lt;T&gt;::lowest() : std::numeric_limits&lt;T&gt;::min();</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Max</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+
+<span class="c1">// minimum partial variable template specialization</span>
+<span class="c1">// std::min is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Min</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Min</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+
+<span class="c1">// gcd partial variable template specialization</span>
+<span class="c1">// std::gcd(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Gcd</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">gcd</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Gcd</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// lcm partial variable template specialization</span>
+<span class="c1">// std::lcm(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Lcm</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">lcm</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Lcm</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">init_value</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// only support const version</span>
+    <span class="k">const</span> <span class="n">T</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">query</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 线段树 1 号节点，维护整个数组信息</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 线段树 1 号节点，维护整个数组信息</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
+        <span class="c1">// special scene should return identity</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+        <span class="c1">// void Out-of-bounds access</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        
+        <span class="k">return</span> <span class="nf">query</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">//idx 线段树节点下标, [p, r] 维护区间, x 更新位置 0-indexed, val 增量/修改后的值</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">is_set</span> <span class="o">=</span> <span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 到达叶节点</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_set</span> <span class="o">?</span> <span class="n">val</span> <span class="o">:</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kt">size_t</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新位置与左半维护区间有交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">is_set</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// 更新位置与右半维护区间有交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">is_set</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// 回溯</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//idx 线段树节点下标, [p, r] 维护区间, [x, y]查询区间 0-indexed</span>
+    <span class="n">T</span> <span class="n">query</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="c1">// 维护区间在查询区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+
+        <span class="kt">size_t</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间与左半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间与右半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_tree</span><span class="p">;</span>
+    <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_op</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h1 id="区间修改--区间查询">区间修改 + 区间查询</h1>
+<h2 id="递归线段树推荐to-check">递归线段树（推荐）（to check）</h2>
+
+<p>为了支持快速区间修改，线短树引入 <strong>懒标记</strong></p>
+
+<ul>
+  <li>懒标记：区间修改时，只是进行简单标记，并不将修改实际生效到每个元素；在查询前，会将标记下沉，使得修改生效。</li>
+  <li>不使用懒标记的区间修改时间复杂度为线性，使用后可达到 $O(log(n))$</li>
+</ul>
+
+<p>支持区间和、区间最大/小值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// identity variable template(C++14)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="c1">// std::plus partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::multiplies partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// std::bit_and partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_and</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">~</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_or partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_or</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// std::bit_xor partial variable template specialization</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// maximum partial variable template specialization</span>
+<span class="c1">// std::maximum is function template, not types of functors</span>
+<span class="c1">// float type should use lowest() instead of min()</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Max</span>  <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// template&lt;typename T&gt; constexpr auto identity_value&lt;Max , T&gt; = std::is_floating_point_v&lt;T&gt; ? std::numeric_limits&lt;T&gt;::lowest() : std::numeric_limits&lt;T&gt;::min();</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Max</span> <span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+
+<span class="c1">// minimum partial variable template specialization</span>
+<span class="c1">// std::min is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Min</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Min</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+
+<span class="c1">// gcd partial variable template specialization</span>
+<span class="c1">// std::gcd(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Gcd</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">gcd</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Gcd</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// lcm partial variable template specialization</span>
+<span class="c1">// std::lcm(c++17) is function template, not types of functors</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">Lcm</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">lcm</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Lcm</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">Magic</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">T</span> <span class="n">merge</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">Magic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">T</span> <span class="n">merge</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">val</span> <span class="o">*</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">Magic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">T</span> <span class="n">merge</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pow</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">Magic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">bit_xor</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">T</span> <span class="n">merge</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">len</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">val</span> <span class="o">:</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">&gt;</span> <span class="k">class</span> <span class="nc">Op</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">init_value</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_tag</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">init_value</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">_tree</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_tag</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">_op</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 0-indexed</span>
+    <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">size</span><span class="p">();</span>
+        <span class="k">return</span> <span class="n">query</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">left</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">right</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">mid</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// 懒标记下沉, idx 线段树节点下标 [p, r] 维护区间 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">down</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="c1">// 左维护区间下沉</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">Magic</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">merge</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">q</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="n">_tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="c1">// 右维护区间下沉</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">Magic</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">merge</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">r</span> <span class="o">-</span> <span class="n">q</span><span class="p">));</span>
+        <span class="n">_tag</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//idx 线段树节点下标 [p, r] 维护区间, [x, y] 更新区间 0-indexed z 增量</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在更新区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">Magic</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">merge</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">r</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和左半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和右半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// 回溯</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">_tree</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">_tree</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="n">T</span> <span class="nf">query</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在查询区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">_tree</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">T</span> <span class="n">res</span> <span class="o">=</span> <span class="n">identity_value</span><span class="o">&lt;</span><span class="n">Op</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和左半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和右半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_op</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_tree</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_tag</span><span class="p">;</span>
+    <span class="n">Op</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_op</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>为什么在 <code class="language-plaintext highlighter-rouge">update</code> 的时候也需要懒标记下沉？？</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">update</code> 回溯的时候会更新区间信息。为什么回溯的时候需要 <code class="language-plaintext highlighter-rouge">update</code> ？？？</li>
+  <li>没有下沉会导致左右子树的信息缺失，最终导致回溯到父节点信息缺失。</li>
+</ul>
+
+<h2 id="迭代线段树不推荐">迭代线段树（不推荐）</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h1 id="练习">练习</h1>
+
+<p><a href="https://leetcode.cn/problems/longest-increasing-subsequence-ii">LeetCode 2407. 最长递增子序列 II</a></p>
+
+<p><a href="https://www.luogu.com.cn/problem/P3372">P3372 【模板】线段树 1</a></p>
+
+<p><a href="https://leetcode.cn/problems/handling-sum-queries-after-update/">2569. 更新数组后处理求和查询</a></p>
+
+<h1 id="封装">封装</h1>
+
+<p>0 indexed</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
+    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">plus</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="k">typename</span> <span class="n">Accumulate</span> <span class="o">=</span> <span class="n">Accumulate</span><span class="o">&lt;</span><span class="n">Calculate</span><span class="o">&gt;&gt;</span>
+<span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">Calculate</span> <span class="n">value_calculate</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="k">const</span> <span class="n">value_type</span> <span class="n">init_val</span><span class="p">;</span>
+    <span class="c1">//懒标记</span>
+    <span class="n">container_type</span> <span class="n">tag</span><span class="p">;</span>
+    <span class="c1">//线段树</span>
+    <span class="n">container_type</span> <span class="n">seg</span><span class="p">;</span>
+    <span class="n">Calculate</span> <span class="n">cal</span><span class="p">;</span>
+    <span class="n">Accumulate</span> <span class="n">acc</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">seg</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">Sequence</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">seg</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">InputIterator</span><span class="p">&gt;</span>
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span>
+        <span class="n">seg</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">first</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">,</span> <span class="o">++</span><span class="n">first</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="o">*</span><span class="n">first</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">seg</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="nf">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">seg</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">query</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">left</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">right</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">mid</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// idx 线段树节点下标</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 懒标记下沉, idx 线段树节点下标 [p, r] 维护区间 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">down</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="n">init_val</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="c1">// 左维护区间下沉</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">acc</span><span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]));</span>
+        <span class="n">tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="c1">// 右维护区间下沉</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">acc</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">q</span><span class="p">,</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]));</span>
+        <span class="n">tag</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//idx 线段树节点下标 [p, r] 维护区间, [x, y] 更新区间 0-indexed z 增量</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">x</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">y</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在更新区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">acc</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="p">));</span>
+            <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和左半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和右半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// 回溯</span>
+        <span class="n">update</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="nf">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">x</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在查询区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="n">size_type</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和左半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和右半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+
+<p>第三次封装</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Sequence</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Tp</span><span class="p">&gt;,</span>
+    <span class="k">typename</span> <span class="n">Calculate</span> <span class="o">=</span> <span class="n">Max</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span>
+<span class="k">class</span> <span class="nc">SegmentTree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">const_reference</span> <span class="n">const_reference</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Sequence</span><span class="o">::</span><span class="n">size_type</span> <span class="n">size_type</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">Sequence</span> <span class="n">container_type</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="k">const</span> <span class="n">value_type</span> <span class="n">init_val</span><span class="p">;</span>
+    <span class="c1">//懒标记</span>
+    <span class="n">container_type</span> <span class="n">tag</span><span class="p">;</span>
+    <span class="c1">//线段树</span>
+    <span class="n">container_type</span> <span class="n">seg</span><span class="p">;</span>
+    <span class="n">Calculate</span> <span class="n">cal</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">seg</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="k">const</span> <span class="n">Sequence</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">seg</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">size_type</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">InputIterator</span><span class="p">&gt;</span>
+    <span class="k">explicit</span> <span class="nf">SegmentTree</span><span class="p">(</span><span class="n">InputIterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">InputIterator</span> <span class="n">last</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">())</span>
+        <span class="o">:</span> <span class="n">init_val</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">tag</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span>
+        <span class="n">seg</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">size_type</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">first</span> <span class="o">!=</span> <span class="n">last</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">,</span> <span class="o">++</span><span class="n">first</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="o">*</span><span class="n">first</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">seg</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="nf">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">seg</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">query</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">left</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">right</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kr">inline</span> <span class="k">static</span> <span class="n">size_type</span> <span class="nf">mid</span><span class="p">(</span><span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// idx 线段树节点下标</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 懒标记下沉, idx 线段树节点下标 [p, r] 维护区间 0-indexed</span>
+    <span class="kt">void</span> <span class="nf">down</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="n">init_val</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="c1">// 左维护区间下沉</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">update_seg</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">);</span>
+        <span class="n">tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">update_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="c1">// 右维护区间下沉</span>
+        <span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">update_seg</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">tag</span><span class="p">[</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">update_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">)],</span> <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+
+        <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//idx 线段树节点下标 [p, r] 维护区间, [x, y] 更新区间 0-indexed z 增量</span>
+    <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">x</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">y</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在更新区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_seg</span><span class="p">(</span><span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+            <span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">val</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和左半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 更新区间和右半维护区间存在交集</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// 回溯</span>
+        <span class="n">update</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">value_type</span> <span class="nf">query</span><span class="p">(</span><span class="n">size_type</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">x</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 节点维护区间在查询区间范围内</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">seg</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+
+        <span class="c1">// 懒标记下沉</span>
+        <span class="n">down</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+        <span class="n">size_type</span> <span class="n">q</span> <span class="o">=</span> <span class="n">mid</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="n">value_type</span> <span class="n">res</span> <span class="o">=</span> <span class="n">init_val</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和左半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 查询区间和右半维护区间存在交集</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">query</span><span class="p">(</span><span class="n">right</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">static</span> <span class="kr">inline</span> <span class="n">Tp</span> <span class="nf">update_tag</span><span class="p">(</span><span class="n">const_reference</span> <span class="n">old</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">nw</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 累积类型: sum, bit_xor, bit_and, bit_or</span>
+        <span class="c1">// return cal(old, nw);</span>
+        <span class="c1">// 设置类型: max, min</span>
+        <span class="k">return</span> <span class="n">nw</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">static</span> <span class="kr">inline</span> <span class="n">Tp</span> <span class="nf">update_seg</span><span class="p">(</span><span class="n">const_reference</span> <span class="n">old</span><span class="p">,</span> <span class="n">const_reference</span> <span class="n">val</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// sum</span>
+        <span class="c1">// return cal(old, (r - p + 1) * val);</span>
+        <span class="c1">// bit_xor</span>
+        <span class="c1">// return cal(old, ((r - p + 1) &amp; 1) ? val, 0);</span>
+        <span class="c1">// bit_and, bit_or</span>
+        <span class="c1">// 设置类型: max, min</span>
+        <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="计算机" /><category term="数据结构与算法" /><category term="树" /><category term="rmq" /><summary type="html"><![CDATA[重武器，效率略低，但功能强大，常用于解决复杂的 “单点更新 + 区间查询” 和 “区间更新 + 区间查询” 问题。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/69.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/69.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
