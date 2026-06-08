@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-08T14:45:09+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Ubuntu 安装 CLion</title><link href="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" rel="alternate" type="text/html" title="Ubuntu 安装 CLion" /><published>2026-06-06T00:00:00+00:00</published><updated>2026-06-06T00:00:00+00:00</updated><id>https://xdevil.top/skill/2026/06/06/Ubuntu%20%E5%AE%89%E8%A3%85%20CLion</id><content type="html" xml:base="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"><![CDATA[<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-08T15:38:25+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Ubuntu 安装 CLion</title><link href="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" rel="alternate" type="text/html" title="Ubuntu 安装 CLion" /><published>2026-06-06T00:00:00+00:00</published><updated>2026-06-06T00:00:00+00:00</updated><id>https://xdevil.top/skill/2026/06/06/Ubuntu%20%E5%AE%89%E8%A3%85%20CLion</id><content type="html" xml:base="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"><![CDATA[<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
 Version=1.0
 Type=Application
 Name=CLion
@@ -514,7 +514,8 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
 \end{bmatrix}\)
 效果：$y$ 坐标不变，$x’ = x + k y$。</p>
 
-<h1 id="投影变换--射影变换projective-transformation--homography-in-3d">投影变换 / 射影变换（Projective Transformation / Homography in 3D）</h1>
+<h1 id="投影变换projective-transformation">投影变换（Projective Transformation）</h1>
+<p>射影变换</p>
 
 <h2 id="定义-3">定义</h2>
 <p>三维空间中最一般的可逆线性变换（在齐次坐标意义下）。它不保持平行性，但保持共线性和<strong>交比</strong>（四点的交比不变）。</p>
@@ -652,7 +653,7 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
   <li>透视投影矩阵不是仿射变换，因为它的线性部分与平移部分结合后，不再保证平行线映射为平行线。</li>
 </ul>
 
-<h1 id="倾斜透视投影oblique-perspective--off-axis-perspective">倾斜透视投影（Oblique Perspective / Off-Axis Perspective）</h1>
+<h1 id="倾斜透视投影oblique-perspective">倾斜透视投影（Oblique Perspective）</h1>
 
 <h2 id="在变换谱系中的位置-3">在变换谱系中的位置</h2>
 <p><strong>仍然属于射影变换</strong>，是透视投影的一个不对称特例。</p>
