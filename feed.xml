@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-08T09:03:48+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Ubuntu 安装 CLion</title><link href="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" rel="alternate" type="text/html" title="Ubuntu 安装 CLion" /><published>2026-06-06T00:00:00+00:00</published><updated>2026-06-06T00:00:00+00:00</updated><id>https://xdevil.top/skill/2026/06/06/Ubuntu%20%E5%AE%89%E8%A3%85%20CLion</id><content type="html" xml:base="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"><![CDATA[<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-08T14:45:09+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Ubuntu 安装 CLion</title><link href="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" rel="alternate" type="text/html" title="Ubuntu 安装 CLion" /><published>2026-06-06T00:00:00+00:00</published><updated>2026-06-06T00:00:00+00:00</updated><id>https://xdevil.top/skill/2026/06/06/Ubuntu%20%E5%AE%89%E8%A3%85%20CLion</id><content type="html" xml:base="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"><![CDATA[<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
 Version=1.0
 Type=Application
 Name=CLion
@@ -370,9 +370,9 @@ npm <span class="nt">--version</span>
   <li>射影变换：最一般的齐次线性变换，保持共线性（15自由度）。</li>
 </ul>
 
-<h1 id="刚体变换rigid-transformation--euclidean-transformation">刚体变换（Rigid Transformation / Euclidean Transformation）</h1>
+<h1 id="刚体变换rigid-transformation">刚体变换（Rigid Transformation）</h1>
 
-<p>又称欧式变换</p>
+<p>又称欧式变换（Euclidean Transformation）</p>
 
 <h2 id="定义">定义</h2>
 <p>保持点之间<strong>距离</strong>和<strong>夹角</strong>（即形状和大小）不变，且<strong>保持定向</strong>（无镜像）。只有旋转和平移组成。</p>
