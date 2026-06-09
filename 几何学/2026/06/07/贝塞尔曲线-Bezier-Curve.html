@@ -8,25 +8,25 @@
         <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
         <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
         <!-- Begin Jekyll SEO tag v2.9.0 -->
-<title>Ubuntu 安装 CLion | Devil’s blog</title>
+<title>贝塞尔曲线（Bezier Curve） | Devil’s blog</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="Ubuntu 安装 CLion" />
+<meta property="og:title" content="贝塞尔曲线（Bezier Curve）" />
 <meta name="author" content="Devil" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="xxxxxx" />
 <meta name="twitter:description" property="og:description" content="xxxxxx" />
-<link rel="canonical" href="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" />
-<meta property="og:url" content="https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html" />
+<link rel="canonical" href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html" />
+<meta property="og:url" content="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html" />
 <meta property="og:site_name" content="Devil’s blog" />
-<meta property="og:image" content="https://xdevil.top/assets/image/83.jpeg" />
+<meta property="og:image" content="https://xdevil.top/assets/image/86.jpeg" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2026-06-06T00:00:00+00:00" />
-<meta property="article:modified_time" content="2026-06-06T00:00:00+00:00" />
+<meta property="article:published_time" content="2026-06-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-06-07T00:00:00+00:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://xdevil.top/assets/image/83.jpeg" />
-<meta name="twitter:title" content="Ubuntu 安装 CLion" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/86.jpeg" />
+<meta name="twitter:title" content="贝塞尔曲线（Bezier Curve）" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-06-06T00:00:00+00:00","datePublished":"2026-06-06T00:00:00+00:00","description":"xxxxxx","headline":"Ubuntu 安装 CLion","image":"https://xdevil.top/assets/image/83.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"},"url":"https://xdevil.top/skill/2026/06/06/Ubuntu-%E5%AE%89%E8%A3%85-CLion.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-06-07T00:00:00+00:00","datePublished":"2026-06-07T00:00:00+00:00","description":"xxxxxx","headline":"贝塞尔曲线（Bezier Curve）","image":"https://xdevil.top/assets/image/86.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html"},"url":"https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -55,7 +55,7 @@
         </style>
     
         <div id="header">
-    <div class="fontsz36 font-bold"> Ubuntu 安装 CLion </div>
+    <div class="fontsz36 font-bold"> 贝塞尔曲线（Bezier Curve） </div>
 </div>
 
 <div id="article">
@@ -77,53 +77,86 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
-Version=1.0
-Type=Application
-Name=CLion
-Comment=Cross-platform IDE for C and C++
-Exec=/home/pk/Downloads/CLion-2026.1.2/clion-2026.1.2/bin/clion.sh
-Icon=/home/pk/Downloads/CLion-2026.1.2/clion-2026.1.2/bin/clion.png
-Terminal=false
-Categories=Development;IDE;
-</code></pre></div></div>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cd</span> /usr/share/applications
-vim clion.desktop
-<span class="c"># 保存以上文本</span>
-<span class="nb">chmod </span>a+x clion.desktop
-</code></pre></div></div>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 更新你的软件源列表，确保能下载到最新的软件</span>
-<span class="nb">sudo </span>apt update
-
-<span class="c"># 2. 安装核心工具集，这是一个一键安装的“大礼包”</span>
-<span class="nb">sudo </span>apt <span class="nb">install </span>build-essential
-</code></pre></div></div>
-
-<p>安装拼音引擎：打开系统终端，输入以下命令后按回车。</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ibus-libpinyin
-</code></pre></div></div>
-
-<p>确认输入法框架：</p>
+</style><h1 id="概述">概述</h1>
+<p>“有理”和“非有理”贝塞尔曲线在计算机图形学（如字体设计、CAD）和工业设计（如汽车建模）中非常核心的概念。</p>
 <ul>
-  <li>进入 系统设置 (Settings)</li>
-  <li>区域与语言 (Region &amp; Language)</li>
-  <li>管理已安装的语言 (Manage Installed Languages)</li>
-  <li>在弹出窗口的“键盘输入法系统”中，确保已选中 “IBus”</li>
-  <li>然后点击“应用到整个系统”。</li>
+  <li><strong>非有理贝塞尔曲线</strong>：是最基本、最常用的形式。它由控制点和伯恩斯坦基函数定义，<strong>无法精确地表示圆锥曲线</strong>（如圆、椭圆、抛物线）。</li>
+  <li><strong>有理贝塞尔曲线</strong>：是非有理形式的推广。它为每个控制点引入了一个新的参数——<strong>权重</strong>。通过调整权重，它可以<strong>精确地表示圆锥曲线</strong>，并对曲线形状提供更高级的控制。</li>
 </ul>
 
-<p>添加输入源：</p>
+<h1 id="非有理贝塞尔曲线">非有理贝塞尔曲线</h1>
+
+<p>这是大多数人最初学习的贝塞尔曲线形式。</p>
+
+<h2 id="定义">定义</h2>
+<p>一条 <em>n</em> 阶非有理贝塞尔曲线由 <em>n+1</em> 个控制点 $P_0, P_1, …, P_n$ 定义，其公式为，其中，$B_{i,n}(t)$ 是伯恩斯坦基函数： 
+\(C(t) = \sum_{i=0}^{n} B_{i,n}(t) P_i，B_{i,n}(t) = \binom{n}{i} t^i (1-t)^{n-i}\)</p>
+
+<p>伯恩斯坦基函数</p>
 <ul>
-  <li>回到 设置 (Settings)</li>
-  <li>键盘 (Keyboard)，在“输入源”部分点击 “+” 号。</li>
-  <li>选择 “汉语 (China)” 后，</li>
-  <li>在列表中选中 “中文 (智能拼音) (Chinese (Intelligent Pinyin))”</li>
-  <li>点击“添加</li>
+  <li>每个都是一个关于 $t$ 的 $n$ 次多项式</li>
+  <li>总共 $n + 1$ 个伯恩斯坦基函数构成了一组基底</li>
+  <li>所有伯恩斯坦基函数的和为 1</li>
 </ul>
 
+<h2 id="性质">性质</h2>
+
+<p><strong>简单性</strong>： 定义和计算都非常直观。
+<strong>仿射不变性</strong>： 对曲线进行旋转、平移、缩放等仿射变换，等价于直接对控制点进行相同的变换。
+<strong>凸包性</strong>： 曲线完全位于其控制点构成的凸包内。
+<strong>局限性</strong>：** 它无法精确地表示圆、椭圆、双曲线等圆锥曲线**。你只能用多段贝塞尔曲线来近似一个圆，但总会存在误差。</p>
+
+<h2 id="示例">示例</h2>
+<p><strong>线性贝塞尔曲线</strong>（1阶）：一条直线，$P_0$ 到 $P_1$。
+<strong>二次贝塞尔曲线</strong>（2阶）：一个抛物线片段，由 $P_0$, $P_1$, $P_2$ 定义。
+<strong>三次贝塞尔曲线</strong>（3阶）：最常用的类型，由 $P_0$, $P_1$, $P_2$, $P_3$ 定义，用于字体轮廓（TrueType字体）、UI设计等。</p>
+
+<h1 id="有理贝塞尔曲线">有理贝塞尔曲线</h1>
+
+<p>为了解决非有理形式无法表示圆锥曲线的根本性限制，有理贝塞尔曲线被引入。</p>
+
+<h2 id="定义-1">定义</h2>
+<p>一条 <em>n</em> 阶有理贝塞尔曲线同样由 <em>n+1</em> 个控制点 $P_0, P_1, …, P_n$ 定义，但每个控制点都有一个附加的<strong>权重</strong> $w_i$（通常为标量正实数）。其公式为：
+    \(C(t) = \frac{ \sum_{i=0}^{n} w_i B_{i,n}(t) P_i }{ \sum_{i=0}^{n} w_i B_{i,n}(t) }\)</p>
+
+<p>你可以把这个公式理解为：
+<strong>分子</strong>：一个加权的控制点求和（类似于非有理形式，但每个点乘了权重）。
+<strong>分母</strong>：一个权重的求和，其作用是<strong>将曲线“归一化”</strong>，确保计算结果是正确的。</p>
+
+<p><strong>权重的作用</strong>：
+权重 $w_i$ 控制了控制点 $P_i$ 对曲线形状的<strong>吸引力</strong>。
+增大某个控制点的权重 $w_i$，会使曲线被“拉向”该控制点 $P_i$。
+减小某个控制点的权重 $w_i$，会使曲线“远离”该控制点 $P_i$。
+当所有权重 $w_i$ 都相等时，分母是一个常数，有理贝塞尔曲线就<strong>退化</strong>为<strong>非有理贝塞尔曲线</strong>。</p>
+
+<p><strong>核心优势</strong>：</p>
+<ul>
+  <li><strong>精确表示圆锥曲线</strong>：这是它最重要的用途。通过精心选择控制点和权重，可以用一段有理二次贝塞尔曲线（只有3个控制点）<strong>精确地</strong>表示一段圆弧、椭圆弧或抛物线。
+      *   例如，一个90度的圆弧可以用一段权重为 $1, \frac{\sqrt{2}}{2}, 1$ 的有理二次贝塞尔曲线来精确表示。</li>
+  <li><strong>更强的造型能力</strong>：权重提供了除控制点位置之外的另一个控制维度，允许设计师更精细地调整曲线形状，而无需增加控制点。</li>
+</ul>
+
+<h2 id="示例-1">示例</h2>
+
+<p><strong>字体轮廓</strong>：OpenType字体中的 <strong>CFF（PostScript）轮廓</strong> 就使用有理贝塞尔曲线（更具体地说，是NURBS的一个子集）来定义，这使得它们能更精确地描述曲线。
+<strong>计算机辅助设计</strong>：几乎所有专业的CAD系统（如SolidWorks, CATIA, AutoCAD）都基于 <strong>NURBS</strong>（非均匀有理B样条），它是有理贝塞尔曲线更一般化的形式。汽车、飞机、轮船的复杂曲面都是用NURBS建模的。
+<strong>工业设计</strong>：任何需要精确表示圆形、圆角、过渡面的地方都会用到它。</p>
+
+<h1 id="拓展-nurbs">拓展 NURBS</h1>
+
+<p><strong>NURBS（Non-Uniform Rational B-Spline，非均匀有理B样条）</strong> 是贝塞尔曲线理论的最终集大成者。你可以这样理解它们的关系：</p>
+
+<p><strong>贝塞尔曲线</strong>是B样条的基础。
+<strong>有理贝塞尔曲线</strong>是NURBS的基础。
+<strong>NURBS = 非均匀（节点向量） + 有理（带权重） + B样条基函数</strong>。</p>
+
+<p>NURBS继承了有理贝塞尔曲线所有优点的同时，还解决了贝塞尔曲线局部修改性差（移动一个控制点会影响整条曲线）的问题。因此，它成为了工业建模领域事实上的标准。</p>
+
+<h1 id="结论">结论</h1>
+
+<p>如果你只是在设计一个UI图标或一个简单的矢量图形，<strong>非有理贝塞尔曲线</strong>（尤其是三次的）完全够用，且更简单高效。</p>
+
+<p>如果你需要精确地创建一个圆、一个汽车外壳或一个复杂的有机曲面，<strong>有理贝塞尔曲线</strong>（或其更通用的形式NURBS）是必不可少的工具，因为它提供了所需的数学精度和造型灵活性。</p>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
