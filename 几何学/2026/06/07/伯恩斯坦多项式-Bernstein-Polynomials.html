@@ -134,19 +134,6 @@
 <p><strong>对称性</strong>：
     \(B_{k,n}(t) = B_{n-k,n}(1-t)\)</p>
 
-<p>贝塞尔曲线是计算机图形学中描述平滑曲线的核心工具，它有许多重要且实用的性质。下面为你梳理了最关键的一些：</p>
-<ul>
-  <li>端点性质：曲线的起点和终点分别与特征多边形的第一个和最后一个顶点严格重合。同时，曲线在起点处与特征多边形第一条边相切，在终点处与最后一条边相切。切线的方向由相邻两个控制点的连线方向决定。</li>
-  <li>凸包性质：整条贝塞尔曲线会被完全包含在其所有控制点构成的凸包（能包含所有点的最小凸多边形）内部。这个性质对于曲线裁剪和碰撞检测很有帮助。</li>
-  <li>几何不变性：曲线的形状只取决于控制点之间的相对位置，而与它们所在的坐标系（绝对位置）无关。对曲线做旋转、平移等仿射变换，等价于直接对所有控制点做相同的变换。</li>
-  <li>变差缩减性：平面上任意一条直线与贝塞尔曲线的交点数量，不会多于该直线与特征多边形的交点数量。简单理解，就是曲线的“弯曲程度”不会比其控制多边形更剧烈，这让曲线显得更“光顺”。</li>
-  <li>递推与分割：贝塞尔曲线可以用德卡斯特里奥（de Casteljau）算法递推定义。这个算法不仅稳定，还能将一条曲线在参数 t 处精确地分割成两段子曲线，而这两段子曲线仍然是贝塞尔曲线。</li>
-  <li>对称性：保持所有控制点顺序颠倒（P0, P1,…, Pn 变为 Pn,…, P1, P0），得到的曲线与原曲线完全一致，只是参数 t 的方向相反。这意味着正向和反向绘制效果相同。</li>
-  <li>全局支撑性：改变任意一个控制点的位置，都会影响整条曲线的形状（从 t=0 到 t=1 都会发生变化）。这既是优点（控制直观），也是缺点（局部调整困难）。</li>
-  <li>仿射变换不变性：几何不变性的一个更精确的表述。即：要先对曲线做仿射变换，再计算其上的点；或者先计算曲线上的点，再对点做仿射变换，这两种方式得到的结果完全相同。</li>
-  <li>直线保持性：如果所有控制点共线，那么生成的贝塞尔曲线就是一条直线段。</li>
-</ul>
-
 <h1 id="重要应用">重要应用</h1>
 <h2 id="贝塞尔曲线">贝塞尔曲线</h2>
 
@@ -183,110 +170,6 @@
 <ul>
   <li><strong>收敛速度慢</strong>：需要非常高的次数 $n$ 才能达到较好的逼近精度，因此在实际的函数逼近中不如其他方法（如切比雪夫多项式）高效。但其理论意义极为重大。</li>
 </ul>
-
-<h1 id="实现">实现</h1>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef BEZIER_CURVE_HPP
-#define BEZIER_CURVE_HPP
-</span>
-<span class="cp">#include</span> <span class="cpf">"../3rd/eigen/Eigen/Dense"</span><span class="cp">
-</span>
-<span class="k">class</span> <span class="nc">BezierCurve</span> <span class="p">{</span>
-<span class="nl">private:</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">_control_points</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">_derivative_points</span><span class="p">;</span>
-<span class="nl">public:</span>
-        <span class="n">BezierCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">:</span> <span class="n">_control_points</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-                <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-                <span class="n">_derivative_points</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">_derivative_points</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">control_points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="c1">// 使用德卡斯特里奥算法计算贝塞尔曲线点</span>
-        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="nf">calculate_point</span><span class="p">(</span><span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-                <span class="k">return</span> <span class="n">calculate</span><span class="p">(</span><span class="n">_control_points</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// 计算一阶导数（切向量）</span>
-        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="nf">calculate_tangent</span><span class="p">(</span><span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-                 <span class="k">auto</span> <span class="n">tangent</span> <span class="o">=</span> <span class="n">calculate</span><span class="p">(</span><span class="n">_derivative_points</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
-                 <span class="c1">// 计算归一化切向量（单位切向量）</span>
-                 <span class="kt">double</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">tangent</span><span class="p">.</span><span class="n">norm</span><span class="p">();</span>
-                 <span class="k">constexpr</span> <span class="kt">double</span> <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">;</span>
-                 <span class="k">return</span> <span class="p">(</span><span class="n">tangent</span><span class="p">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">?</span> <span class="n">tangent</span><span class="p">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">:</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">::</span><span class="n">Zero</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="c1">// 均匀采样 UniformSampling</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">uniform_sampling</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
-                <span class="n">result</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">num_samples</span><span class="p">);</span>
-
-                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-                        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">point</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
-                        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">tangent</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
-                        <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">tangent</span><span class="p">);</span>
-                <span class="p">}</span>
-
-                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="c1">// 自适应采样（基于切向量角度变化）AdaptiveSampling</span>
-        <span class="c1">// angle_tolerance 角度容差（度）</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">adaptive_sampling</span><span class="p">(</span><span class="kt">double</span> <span class="n">angle_tolerance</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
-                <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">calculate_point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="mf">0.0</span><span class="p">));</span>
-
-                <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">angle_tolerance</span> <span class="o">*</span> <span class="n">M_PI</span> <span class="o">/</span> <span class="mf">180.0</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-
-                <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">calculate_point</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="mf">1.0</span><span class="p">));</span>
-
-                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-        <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-        <span class="c1">// 使用德卡斯特里奥算法计算贝塞尔曲线点</span>
-        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">calculate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">;</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">r</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-                                <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
-                        <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">return</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-        <span class="p">}</span>
-
-        <span class="kt">void</span> <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;&amp;</span> <span class="n">result</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t0</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t1</span><span class="p">,</span>
-                <span class="kt">double</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_depth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-
-                <span class="k">if</span> <span class="p">(</span><span class="n">depth</span> <span class="o">&gt;=</span> <span class="n">max_depth</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-
-                <span class="kt">double</span> <span class="n">mid_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">p0</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t0</span><span class="p">);</span>
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">mid_t</span><span class="p">);</span>
-
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">t0_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t0</span><span class="p">);</span>
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">t1_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>
-                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">tm_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">mid_t</span><span class="p">);</span>
-
-                <span class="c1">// 计算切向量之间的角度变化</span>
-                <span class="kt">double</span> <span class="n">angle_change1</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">t0_vec</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tm_vec</span><span class="p">));</span>
-                <span class="kt">double</span> <span class="n">angle_change2</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">tm_vec</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">t1_vec</span><span class="p">));</span>
-                <span class="kt">double</span> <span class="n">max_angle_change</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">angle_change1</span><span class="p">,</span> <span class="n">angle_change2</span><span class="p">);</span>
-
-                <span class="k">if</span> <span class="p">(</span><span class="n">max_angle_change</span> <span class="o">&gt;</span> <span class="n">angle_tolerance_rad</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">mid_t</span><span class="p">,</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-                        <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mid_t</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                        <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">tm_vec</span><span class="p">);</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="cp">#endif //BEZIER_CURVE_HPP
-</span></code></pre></div></div>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"

@@ -84,6 +84,19 @@
   <li><strong>有理贝塞尔曲线</strong>：是非有理形式的推广。它为每个控制点引入了一个新的参数——<strong>权重</strong>。通过调整权重，它可以<strong>精确地表示圆锥曲线</strong>，并对曲线形状提供更高级的控制。</li>
 </ul>
 
+<p>贝塞尔曲线是计算机图形学中描述平滑曲线的核心工具，它有许多重要且实用的性质。下面为你梳理了最关键的一些：</p>
+<ul>
+  <li>端点性质：曲线的起点和终点分别与特征多边形的第一个和最后一个顶点严格重合。同时，曲线在起点处与特征多边形第一条边相切，在终点处与最后一条边相切。切线的方向由相邻两个控制点的连线方向决定。</li>
+  <li>凸包性质：整条贝塞尔曲线会被完全包含在其所有控制点构成的凸包（能包含所有点的最小凸多边形）内部。这个性质对于曲线裁剪和碰撞检测很有帮助。</li>
+  <li>几何不变性：曲线的形状只取决于控制点之间的相对位置，而与它们所在的坐标系（绝对位置）无关。对曲线做旋转、平移等仿射变换，等价于直接对所有控制点做相同的变换。</li>
+  <li>变差缩减性：平面上任意一条直线与贝塞尔曲线的交点数量，不会多于该直线与特征多边形的交点数量。简单理解，就是曲线的“弯曲程度”不会比其控制多边形更剧烈，这让曲线显得更“光顺”。</li>
+  <li>递推与分割：贝塞尔曲线可以用德卡斯特里奥（de Casteljau）算法递推定义。这个算法不仅稳定，还能将一条曲线在参数 t 处精确地分割成两段子曲线，而这两段子曲线仍然是贝塞尔曲线。</li>
+  <li>对称性：保持所有控制点顺序颠倒（P0, P1,…, Pn 变为 Pn,…, P1, P0），得到的曲线与原曲线完全一致，只是参数 t 的方向相反。这意味着正向和反向绘制效果相同。</li>
+  <li>全局支撑性：改变任意一个控制点的位置，都会影响整条曲线的形状（从 t=0 到 t=1 都会发生变化）。这既是优点（控制直观），也是缺点（局部调整困难）。</li>
+  <li>仿射变换不变性：几何不变性的一个更精确的表述。即：要先对曲线做仿射变换，再计算其上的点；或者先计算曲线上的点，再对点做仿射变换，这两种方式得到的结果完全相同。</li>
+  <li>直线保持性：如果所有控制点共线，那么生成的贝塞尔曲线就是一条直线段。</li>
+</ul>
+
 <h1 id="非有理贝塞尔曲线">非有理贝塞尔曲线</h1>
 
 <p>这是大多数人最初学习的贝塞尔曲线形式。</p>
@@ -101,16 +114,198 @@
 
 <h2 id="性质">性质</h2>
 
-<p><strong>简单性</strong>： 定义和计算都非常直观。
-<strong>仿射不变性</strong>： 对曲线进行旋转、平移、缩放等仿射变换，等价于直接对控制点进行相同的变换。
-<strong>凸包性</strong>： 曲线完全位于其控制点构成的凸包内。
-<strong>局限性</strong>：** 它无法精确地表示圆、椭圆、双曲线等圆锥曲线**。你只能用多段贝塞尔曲线来近似一个圆，但总会存在误差。</p>
+<p><strong>简单性</strong>： 定义和计算都非常直观。</p>
+
+<p><strong>仿射不变性</strong>： 对曲线进行旋转、平移、缩放等仿射变换，等价于直接对控制点进行相同的变换。</p>
+
+<p><strong>凸包性</strong>： 曲线完全位于其控制点构成的凸包内。</p>
+
+<p><strong>局限性</strong>：** 它无法精确地表示圆、椭圆、双曲线等圆锥曲线**。你只能用多段贝塞尔曲线来近似一个圆，但总会存在误差。</p>
 
 <h2 id="示例">示例</h2>
 <p><strong>线性贝塞尔曲线</strong>（1阶）：一条直线，$P_0$ 到 $P_1$。
 <strong>二次贝塞尔曲线</strong>（2阶）：一个抛物线片段，由 $P_0$, $P_1$, $P_2$ 定义。
 <strong>三次贝塞尔曲线</strong>（3阶）：最常用的类型，由 $P_0$, $P_1$, $P_2$, $P_3$ 定义，用于字体轮廓（TrueType字体）、UI设计等。</p>
 
+<h2 id="实现">实现</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef BEZIER_CURVE_HPP
+#define BEZIER_CURVE_HPP
+</span>
+<span class="cp">#include</span> <span class="cpf">"../3rd/eigen/Eigen/Dense"</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">BezierCurve</span> <span class="p">{</span>
+<span class="nl">private:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">_control_points</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">_derivative_points</span><span class="p">;</span>
+<span class="nl">public:</span>
+        <span class="n">BezierCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">:</span> <span class="n">_control_points</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+                <span class="n">_derivative_points</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_derivative_points</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">control_points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 使用德卡斯特里奥算法计算贝塞尔曲线点</span>
+        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="nf">calculate_point</span><span class="p">(</span><span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">calculate</span><span class="p">(</span><span class="n">_control_points</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 计算一阶导数（切向量）</span>
+        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="nf">calculate_tangent</span><span class="p">(</span><span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                 <span class="k">auto</span> <span class="n">tangent</span> <span class="o">=</span> <span class="n">calculate</span><span class="p">(</span><span class="n">_derivative_points</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+                 <span class="c1">// 计算归一化切向量（单位切向量）</span>
+                 <span class="kt">double</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">tangent</span><span class="p">.</span><span class="n">norm</span><span class="p">();</span>
+                 <span class="k">constexpr</span> <span class="kt">double</span> <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">;</span>
+                 <span class="k">return</span> <span class="p">(</span><span class="n">tangent</span><span class="p">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">?</span> <span class="n">tangent</span><span class="p">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">:</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">::</span><span class="n">Zero</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 均匀采样 UniformSampling</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">uniform_sampling</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">num_samples</span><span class="p">);</span>
+
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+                        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">point</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+                        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">tangent</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+                        <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">tangent</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 自适应采样（基于切向量角度变化）AdaptiveSampling</span>
+        <span class="c1">// angle_tolerance 角度容差（度）</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">adaptive_sampling</span><span class="p">(</span><span class="kt">double</span> <span class="n">angle_tolerance</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">calculate_point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="mf">0.0</span><span class="p">));</span>
+
+                <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">angle_tolerance</span> <span class="o">*</span> <span class="n">M_PI</span> <span class="o">/</span> <span class="mf">180.0</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+                <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">calculate_point</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="mf">1.0</span><span class="p">));</span>
+
+                <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+        <span class="c1">// 使用德卡斯特里奥算法计算贝塞尔曲线点</span>
+        <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">calculate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">r</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+                        <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="kt">void</span> <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&gt;&amp;</span> <span class="n">result</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t0</span><span class="p">,</span> <span class="kt">double</span> <span class="n">t1</span><span class="p">,</span>
+                <span class="kt">double</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_depth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">depth</span> <span class="o">&gt;=</span> <span class="n">max_depth</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+                <span class="kt">double</span> <span class="n">mid_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">p0</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t0</span><span class="p">);</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">calculate_point</span><span class="p">(</span><span class="n">mid_t</span><span class="p">);</span>
+
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">t0_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t0</span><span class="p">);</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">t1_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span> <span class="n">tm_vec</span> <span class="o">=</span> <span class="n">calculate_tangent</span><span class="p">(</span><span class="n">mid_t</span><span class="p">);</span>
+
+                <span class="c1">// 计算切向量之间的角度变化</span>
+                <span class="kt">double</span> <span class="n">angle_change1</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">t0_vec</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tm_vec</span><span class="p">));</span>
+                <span class="kt">double</span> <span class="n">angle_change2</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">tm_vec</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">t1_vec</span><span class="p">));</span>
+                <span class="kt">double</span> <span class="n">max_angle_change</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">angle_change1</span><span class="p">,</span> <span class="n">angle_change2</span><span class="p">);</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">max_angle_change</span> <span class="o">&gt;</span> <span class="n">angle_tolerance_rad</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">mid_t</span><span class="p">,</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+                        <span class="n">adaptive_sampling_recursive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mid_t</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">angle_tolerance_rad</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="n">result</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">tm_vec</span><span class="p">);</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif //BEZIER_CURVE_HPP
+</span></code></pre></div></div>
+
+<p>多项式曲线</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef POLYNOMIAL_CURVE_HPP
+#define POLYNOMIAL_CURVE_HPP
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">"../3rd/eigen/Eigen/Dense"</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">PolynomialCurve</span> <span class="p">{</span>
+<span class="nl">private:</span>
+        <span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span> <span class="n">_coefficients</span><span class="p">;</span>
+<span class="nl">public:</span>
+        <span class="c1">// 直接通过系数描述多项式曲线</span>
+        <span class="n">PolynomialCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">coefficients</span><span class="p">)</span> <span class="o">:</span> <span class="n">_coefficients</span><span class="p">(</span><span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_coefficients</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 通过给定控制点及度数来拟合多项式曲线</span>
+        <span class="n">PolynomialCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span><span class="p">,</span> <span class="kt">int</span> <span class="n">degree</span><span class="p">)</span> <span class="o">:</span>
+                <span class="n">_coefficients</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span><span class="o">::</span><span class="n">Zero</span><span class="p">(</span><span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+
+                <span class="c1">// 构建Vandermonde矩阵X</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span> <span class="n">X</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span> <span class="n">Y</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span><span class="p">();</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">X</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>  <span class="c1">// 从高次到低次排列</span>
+                        <span class="p">}</span>
+                        <span class="n">Y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span><span class="p">();</span>
+                <span class="p">}</span>
+
+                <span class="c1">// 使用最小二乘法求解系数</span>
+                <span class="n">_coefficients</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">bdcSvd</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinU</span> <span class="o">|</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinV</span><span class="p">).</span><span class="n">solve</span><span class="p">(</span><span class="n">Y</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kt">float</span> <span class="n">calculate_y</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="kt">float</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">_coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">y</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kt">float</span> <span class="n">calculate_slope</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="kt">float</span> <span class="n">slope</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">degree</span> <span class="o">=</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">slope</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">_coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">degree</span> <span class="o">-</span> <span class="n">i</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">slope</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&gt;</span> <span class="n">sampling</span><span class="p">(</span><span class="kt">double</span> <span class="n">x_start</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x_end</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_samples</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&gt;</span> <span class="n">samples</span><span class="p">;</span>
+                <span class="n">samples</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">num_samples</span><span class="p">);</span>
+
+                <span class="kt">double</span> <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_end</span> <span class="o">-</span> <span class="n">x_start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+                        <span class="kt">float</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">calculate_slope</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+                        <span class="kt">float</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">slope</span><span class="p">);</span>
+                        <span class="n">samples</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span> <span class="n">x</span><span class="p">,</span> <span class="n">calculate_y</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dist</span><span class="p">,</span> <span class="n">slope</span> <span class="o">/</span> <span class="n">dist</span> <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="n">samples</span><span class="p">;</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif // POLYNOMIAL_CURVE_HPP
+</span></code></pre></div></div>
 <h1 id="有理贝塞尔曲线">有理贝塞尔曲线</h1>
 
 <p>为了解决非有理形式无法表示圆锥曲线的根本性限制，有理贝塞尔曲线被引入。</p>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-09T01:57:48+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">伯恩斯坦多项式（Bernstein Polynomials）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html" rel="alternate" type="text/html" title="伯恩斯坦多项式（Bernstein Polynomials）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F%EF%BC%88Bernstein%20Polynomials%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html"><![CDATA[<p>好的，我们来详细讲解一下<strong>伯恩斯坦多项式</strong>。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-09T02:08:11+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">伯恩斯坦多项式（Bernstein Polynomials）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html" rel="alternate" type="text/html" title="伯恩斯坦多项式（Bernstein Polynomials）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F%EF%BC%88Bernstein%20Polynomials%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html"><![CDATA[<p>好的，我们来详细讲解一下<strong>伯恩斯坦多项式</strong>。</p>
 
 <p>这是一个非常优美且实用的数学概念，它不仅是<strong>贝塞尔曲线</strong>的理论基础，也在函数逼近论中扮演着核心角色。</p>
 
@@ -55,19 +55,6 @@
 <p><strong>对称性</strong>：
     \(B_{k,n}(t) = B_{n-k,n}(1-t)\)</p>
 
-<p>贝塞尔曲线是计算机图形学中描述平滑曲线的核心工具，它有许多重要且实用的性质。下面为你梳理了最关键的一些：</p>
-<ul>
-  <li>端点性质：曲线的起点和终点分别与特征多边形的第一个和最后一个顶点严格重合。同时，曲线在起点处与特征多边形第一条边相切，在终点处与最后一条边相切。切线的方向由相邻两个控制点的连线方向决定。</li>
-  <li>凸包性质：整条贝塞尔曲线会被完全包含在其所有控制点构成的凸包（能包含所有点的最小凸多边形）内部。这个性质对于曲线裁剪和碰撞检测很有帮助。</li>
-  <li>几何不变性：曲线的形状只取决于控制点之间的相对位置，而与它们所在的坐标系（绝对位置）无关。对曲线做旋转、平移等仿射变换，等价于直接对所有控制点做相同的变换。</li>
-  <li>变差缩减性：平面上任意一条直线与贝塞尔曲线的交点数量，不会多于该直线与特征多边形的交点数量。简单理解，就是曲线的“弯曲程度”不会比其控制多边形更剧烈，这让曲线显得更“光顺”。</li>
-  <li>递推与分割：贝塞尔曲线可以用德卡斯特里奥（de Casteljau）算法递推定义。这个算法不仅稳定，还能将一条曲线在参数 t 处精确地分割成两段子曲线，而这两段子曲线仍然是贝塞尔曲线。</li>
-  <li>对称性：保持所有控制点顺序颠倒（P0, P1,…, Pn 变为 Pn,…, P1, P0），得到的曲线与原曲线完全一致，只是参数 t 的方向相反。这意味着正向和反向绘制效果相同。</li>
-  <li>全局支撑性：改变任意一个控制点的位置，都会影响整条曲线的形状（从 t=0 到 t=1 都会发生变化）。这既是优点（控制直观），也是缺点（局部调整困难）。</li>
-  <li>仿射变换不变性：几何不变性的一个更精确的表述。即：要先对曲线做仿射变换，再计算其上的点；或者先计算曲线上的点，再对点做仿射变换，这两种方式得到的结果完全相同。</li>
-  <li>直线保持性：如果所有控制点共线，那么生成的贝塞尔曲线就是一条直线段。</li>
-</ul>
-
 <h1 id="重要应用">重要应用</h1>
 <h2 id="贝塞尔曲线">贝塞尔曲线</h2>
 
@@ -103,9 +90,57 @@
 <p><strong>缺点</strong>：</p>
 <ul>
   <li><strong>收敛速度慢</strong>：需要非常高的次数 $n$ 才能达到较好的逼近精度，因此在实际的函数逼近中不如其他方法（如切比雪夫多项式）高效。但其理论意义极为重大。</li>
+</ul>]]></content><author><name>Devil</name></author><category term="几何学" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/85.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/85.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">贝塞尔曲线（Bezier Curve）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html" rel="alternate" type="text/html" title="贝塞尔曲线（Bezier Curve）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%EF%BC%88Bezier%20Curve%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html"><![CDATA[<h1 id="概述">概述</h1>
+<p>“有理”和“非有理”贝塞尔曲线在计算机图形学（如字体设计、CAD）和工业设计（如汽车建模）中非常核心的概念。</p>
+<ul>
+  <li><strong>非有理贝塞尔曲线</strong>：是最基本、最常用的形式。它由控制点和伯恩斯坦基函数定义，<strong>无法精确地表示圆锥曲线</strong>（如圆、椭圆、抛物线）。</li>
+  <li><strong>有理贝塞尔曲线</strong>：是非有理形式的推广。它为每个控制点引入了一个新的参数——<strong>权重</strong>。通过调整权重，它可以<strong>精确地表示圆锥曲线</strong>，并对曲线形状提供更高级的控制。</li>
 </ul>
 
-<h1 id="实现">实现</h1>
+<p>贝塞尔曲线是计算机图形学中描述平滑曲线的核心工具，它有许多重要且实用的性质。下面为你梳理了最关键的一些：</p>
+<ul>
+  <li>端点性质：曲线的起点和终点分别与特征多边形的第一个和最后一个顶点严格重合。同时，曲线在起点处与特征多边形第一条边相切，在终点处与最后一条边相切。切线的方向由相邻两个控制点的连线方向决定。</li>
+  <li>凸包性质：整条贝塞尔曲线会被完全包含在其所有控制点构成的凸包（能包含所有点的最小凸多边形）内部。这个性质对于曲线裁剪和碰撞检测很有帮助。</li>
+  <li>几何不变性：曲线的形状只取决于控制点之间的相对位置，而与它们所在的坐标系（绝对位置）无关。对曲线做旋转、平移等仿射变换，等价于直接对所有控制点做相同的变换。</li>
+  <li>变差缩减性：平面上任意一条直线与贝塞尔曲线的交点数量，不会多于该直线与特征多边形的交点数量。简单理解，就是曲线的“弯曲程度”不会比其控制多边形更剧烈，这让曲线显得更“光顺”。</li>
+  <li>递推与分割：贝塞尔曲线可以用德卡斯特里奥（de Casteljau）算法递推定义。这个算法不仅稳定，还能将一条曲线在参数 t 处精确地分割成两段子曲线，而这两段子曲线仍然是贝塞尔曲线。</li>
+  <li>对称性：保持所有控制点顺序颠倒（P0, P1,…, Pn 变为 Pn,…, P1, P0），得到的曲线与原曲线完全一致，只是参数 t 的方向相反。这意味着正向和反向绘制效果相同。</li>
+  <li>全局支撑性：改变任意一个控制点的位置，都会影响整条曲线的形状（从 t=0 到 t=1 都会发生变化）。这既是优点（控制直观），也是缺点（局部调整困难）。</li>
+  <li>仿射变换不变性：几何不变性的一个更精确的表述。即：要先对曲线做仿射变换，再计算其上的点；或者先计算曲线上的点，再对点做仿射变换，这两种方式得到的结果完全相同。</li>
+  <li>直线保持性：如果所有控制点共线，那么生成的贝塞尔曲线就是一条直线段。</li>
+</ul>
+
+<h1 id="非有理贝塞尔曲线">非有理贝塞尔曲线</h1>
+
+<p>这是大多数人最初学习的贝塞尔曲线形式。</p>
+
+<h2 id="定义">定义</h2>
+<p>一条 <em>n</em> 阶非有理贝塞尔曲线由 <em>n+1</em> 个控制点 $P_0, P_1, …, P_n$ 定义，其公式为，其中，$B_{i,n}(t)$ 是伯恩斯坦基函数： 
+\(C(t) = \sum_{i=0}^{n} B_{i,n}(t) P_i，B_{i,n}(t) = \binom{n}{i} t^i (1-t)^{n-i}\)</p>
+
+<p>伯恩斯坦基函数</p>
+<ul>
+  <li>每个都是一个关于 $t$ 的 $n$ 次多项式</li>
+  <li>总共 $n + 1$ 个伯恩斯坦基函数构成了一组基底</li>
+  <li>所有伯恩斯坦基函数的和为 1</li>
+</ul>
+
+<h2 id="性质">性质</h2>
+
+<p><strong>简单性</strong>： 定义和计算都非常直观。</p>
+
+<p><strong>仿射不变性</strong>： 对曲线进行旋转、平移、缩放等仿射变换，等价于直接对控制点进行相同的变换。</p>
+
+<p><strong>凸包性</strong>： 曲线完全位于其控制点构成的凸包内。</p>
+
+<p><strong>局限性</strong>：** 它无法精确地表示圆、椭圆、双曲线等圆锥曲线**。你只能用多段贝塞尔曲线来近似一个圆，但总会存在误差。</p>
+
+<h2 id="示例">示例</h2>
+<p><strong>线性贝塞尔曲线</strong>（1阶）：一条直线，$P_0$ 到 $P_1$。
+<strong>二次贝塞尔曲线</strong>（2阶）：一个抛物线片段，由 $P_0$, $P_1$, $P_2$ 定义。
+<strong>三次贝塞尔曲线</strong>（3阶）：最常用的类型，由 $P_0$, $P_1$, $P_2$, $P_3$ 定义，用于字体轮廓（TrueType字体）、UI设计等。</p>
+
+<h2 id="实现">实现</h2>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef BEZIER_CURVE_HPP
 #define BEZIER_CURVE_HPP
 </span>
@@ -207,40 +242,83 @@
 <span class="p">};</span>
 
 <span class="cp">#endif //BEZIER_CURVE_HPP
-</span></code></pre></div></div>]]></content><author><name>Devil</name></author><category term="几何学" /><category term="计算几何" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/85.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/85.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">贝塞尔曲线（Bezier Curve）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html" rel="alternate" type="text/html" title="贝塞尔曲线（Bezier Curve）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%EF%BC%88Bezier%20Curve%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF-Bezier-Curve.html"><![CDATA[<h1 id="概述">概述</h1>
-<p>“有理”和“非有理”贝塞尔曲线在计算机图形学（如字体设计、CAD）和工业设计（如汽车建模）中非常核心的概念。</p>
-<ul>
-  <li><strong>非有理贝塞尔曲线</strong>：是最基本、最常用的形式。它由控制点和伯恩斯坦基函数定义，<strong>无法精确地表示圆锥曲线</strong>（如圆、椭圆、抛物线）。</li>
-  <li><strong>有理贝塞尔曲线</strong>：是非有理形式的推广。它为每个控制点引入了一个新的参数——<strong>权重</strong>。通过调整权重，它可以<strong>精确地表示圆锥曲线</strong>，并对曲线形状提供更高级的控制。</li>
-</ul>
+</span></code></pre></div></div>
 
-<h1 id="非有理贝塞尔曲线">非有理贝塞尔曲线</h1>
+<p>多项式曲线</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifndef POLYNOMIAL_CURVE_HPP
+#define POLYNOMIAL_CURVE_HPP
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">"../3rd/eigen/Eigen/Dense"</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">PolynomialCurve</span> <span class="p">{</span>
+<span class="nl">private:</span>
+        <span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span> <span class="n">_coefficients</span><span class="p">;</span>
+<span class="nl">public:</span>
+        <span class="c1">// 直接通过系数描述多项式曲线</span>
+        <span class="n">PolynomialCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">coefficients</span><span class="p">)</span> <span class="o">:</span> <span class="n">_coefficients</span><span class="p">(</span><span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_coefficients</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
 
-<p>这是大多数人最初学习的贝塞尔曲线形式。</p>
+        <span class="c1">// 通过给定控制点及度数来拟合多项式曲线</span>
+        <span class="n">PolynomialCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="o">&gt;&amp;</span> <span class="n">control_points</span><span class="p">,</span> <span class="kt">int</span> <span class="n">degree</span><span class="p">)</span> <span class="o">:</span>
+                <span class="n">_coefficients</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span><span class="o">::</span><span class="n">Zero</span><span class="p">(</span><span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
 
-<h2 id="定义">定义</h2>
-<p>一条 <em>n</em> 阶非有理贝塞尔曲线由 <em>n+1</em> 个控制点 $P_0, P_1, …, P_n$ 定义，其公式为，其中，$B_{i,n}(t)$ 是伯恩斯坦基函数： 
-\(C(t) = \sum_{i=0}^{n} B_{i,n}(t) P_i，B_{i,n}(t) = \binom{n}{i} t^i (1-t)^{n-i}\)</p>
+                <span class="c1">// 构建Vandermonde矩阵X</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span> <span class="n">X</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+                <span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span> <span class="n">Y</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
 
-<p>伯恩斯坦基函数</p>
-<ul>
-  <li>每个都是一个关于 $t$ 的 $n$ 次多项式</li>
-  <li>总共 $n + 1$ 个伯恩斯坦基函数构成了一组基底</li>
-  <li>所有伯恩斯坦基函数的和为 1</li>
-</ul>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span><span class="p">();</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">X</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>  <span class="c1">// 从高次到低次排列</span>
+                        <span class="p">}</span>
+                        <span class="n">Y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">control_points</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span><span class="p">();</span>
+                <span class="p">}</span>
 
-<h2 id="性质">性质</h2>
+                <span class="c1">// 使用最小二乘法求解系数</span>
+                <span class="n">_coefficients</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">bdcSvd</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinU</span> <span class="o">|</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinV</span><span class="p">).</span><span class="n">solve</span><span class="p">(</span><span class="n">Y</span><span class="p">);</span>
+        <span class="p">}</span>
 
-<p><strong>简单性</strong>： 定义和计算都非常直观。
-<strong>仿射不变性</strong>： 对曲线进行旋转、平移、缩放等仿射变换，等价于直接对控制点进行相同的变换。
-<strong>凸包性</strong>： 曲线完全位于其控制点构成的凸包内。
-<strong>局限性</strong>：** 它无法精确地表示圆、椭圆、双曲线等圆锥曲线**。你只能用多段贝塞尔曲线来近似一个圆，但总会存在误差。</p>
+        <span class="kt">float</span> <span class="n">calculate_y</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="kt">float</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">_coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">y</span><span class="p">;</span>
+        <span class="p">}</span>
 
-<h2 id="示例">示例</h2>
-<p><strong>线性贝塞尔曲线</strong>（1阶）：一条直线，$P_0$ 到 $P_1$。
-<strong>二次贝塞尔曲线</strong>（2阶）：一个抛物线片段，由 $P_0$, $P_1$, $P_2$ 定义。
-<strong>三次贝塞尔曲线</strong>（3阶）：最常用的类型，由 $P_0$, $P_1$, $P_2$, $P_3$ 定义，用于字体轮廓（TrueType字体）、UI设计等。</p>
+        <span class="kt">float</span> <span class="n">calculate_slope</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+                <span class="kt">float</span> <span class="n">slope</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">degree</span> <span class="o">=</span> <span class="n">_coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">slope</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">_coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">degree</span> <span class="o">-</span> <span class="n">i</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">slope</span><span class="p">;</span>
+        <span class="p">}</span>
 
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&gt;</span> <span class="n">sampling</span><span class="p">(</span><span class="kt">double</span> <span class="n">x_start</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x_end</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_samples</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&gt;</span> <span class="n">samples</span><span class="p">;</span>
+                <span class="n">samples</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">num_samples</span><span class="p">);</span>
+
+                <span class="kt">double</span> <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_end</span> <span class="o">-</span> <span class="n">x_start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+                        <span class="kt">float</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">calculate_slope</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+                        <span class="kt">float</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">slope</span><span class="p">);</span>
+                        <span class="n">samples</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span> <span class="n">x</span><span class="p">,</span> <span class="n">calculate_y</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dist</span><span class="p">,</span> <span class="n">slope</span> <span class="o">/</span> <span class="n">dist</span> <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="n">samples</span><span class="p">;</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif // POLYNOMIAL_CURVE_HPP
+</span></code></pre></div></div>
 <h1 id="有理贝塞尔曲线">有理贝塞尔曲线</h1>
 
 <p>为了解决非有理形式无法表示圆锥曲线的根本性限制，有理贝塞尔曲线被引入。</p>
