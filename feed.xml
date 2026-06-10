@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-09T15:21:35+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">伯恩斯坦多项式（Bernstein Polynomials）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html" rel="alternate" type="text/html" title="伯恩斯坦多项式（Bernstein Polynomials）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F%EF%BC%88Bernstein%20Polynomials%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html"><![CDATA[<p>好的，我们来详细讲解一下<strong>伯恩斯坦多项式</strong>。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-06-10T03:57:48+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">伯恩斯坦多项式（Bernstein Polynomials）</title><link href="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html" rel="alternate" type="text/html" title="伯恩斯坦多项式（Bernstein Polynomials）" /><published>2026-06-07T00:00:00+00:00</published><updated>2026-06-07T00:00:00+00:00</updated><id>https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F%EF%BC%88Bernstein%20Polynomials%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E5%87%A0%E4%BD%95%E5%AD%A6/2026/06/07/%E4%BC%AF%E6%81%A9%E6%96%AF%E5%9D%A6%E5%A4%9A%E9%A1%B9%E5%BC%8F-Bernstein-Polynomials.html"><![CDATA[<p>好的，我们来详细讲解一下<strong>伯恩斯坦多项式</strong>。</p>
 
 <p>这是一个非常优美且实用的数学概念，它不仅是<strong>贝塞尔曲线</strong>的理论基础，也在函数逼近论中扮演着核心角色。</p>
 
@@ -717,14 +717,47 @@ npm <span class="nt">--version</span>
 
 <h1 id="ubuntu">ubuntu</h1>
 
-<p>右键虚拟机</p>
-
-<p>设置 -&gt; 选项 -&gt; 共享文件夹 -&gt; 总是启用 -&gt; 添加</p>
+<p>右键虚拟机 -&gt; 设置 -&gt; 选项 -&gt; 共享文件夹 -&gt; 总是启用 -&gt; 添加</p>
 
 <p>执行挂载命令</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount <span class="nt">-t</span> fuse.vmhgfs-fuse .host:/ /mnt/hgfs <span class="nt">-o</span> allow_other <span class="nt">-o</span> nonempty
 
 <span class="nb">cd</span> /mnt/hgfs/shared_vm
+</code></pre></div></div>
+
+<p>开机启动配置: 使用 systemd 服务, 这是最推荐的方法，可控性强，即使后续的网络或存储服务有问题也不会导致启动失败。</p>
+
+<p>创建一个 systemd 服务文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/systemd/system/vmware-share.service
+</code></pre></div></div>
+
+<p>写入服务配置： 将下面的内容复制到文件中，保存并退出 。</p>
+<ul>
+  <li>After 和 Wants 确保了网络相关服务已就绪，让挂载更稳定。</li>
+  <li>Type=oneshot 表示这是一个一次性任务。</li>
+  <li>RemainAfterExit=yes 会让服务在任务执行成功后仍保持激活状态。</li>
+</ul>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
+Description=Mount VMware Shared Folder
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/usr/bin/vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o nonempty'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre></div></div>
+
+<p>重新加载 systemd 并启用服务：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl daemon-reload
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>vmware-share.service
+<span class="nb">sudo </span>systemctl start vmware-share.service
 </code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/82.png" /><media:content medium="image" url="https://xdevil.top/assets/image/82.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">几何变换与投影</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" rel="alternate" type="text/html" title="几何变换与投影" /><published>2026-05-05T00:00:00+00:00</published><updated>2026-05-05T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"><![CDATA[<h1 id="几何变换">几何变换</h1>
 <p>几何变换是指对几何图形（点、线、面）进行位置、大小、形状、方向等改变的操作。它本质上是一个从二维/三维空间到自身的映射。</p>
 

@@ -84,14 +84,47 @@
 
 <h1 id="ubuntu">ubuntu</h1>
 
-<p>右键虚拟机</p>
-
-<p>设置 -&gt; 选项 -&gt; 共享文件夹 -&gt; 总是启用 -&gt; 添加</p>
+<p>右键虚拟机 -&gt; 设置 -&gt; 选项 -&gt; 共享文件夹 -&gt; 总是启用 -&gt; 添加</p>
 
 <p>执行挂载命令</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount <span class="nt">-t</span> fuse.vmhgfs-fuse .host:/ /mnt/hgfs <span class="nt">-o</span> allow_other <span class="nt">-o</span> nonempty
 
 <span class="nb">cd</span> /mnt/hgfs/shared_vm
+</code></pre></div></div>
+
+<p>开机启动配置: 使用 systemd 服务, 这是最推荐的方法，可控性强，即使后续的网络或存储服务有问题也不会导致启动失败。</p>
+
+<p>创建一个 systemd 服务文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/systemd/system/vmware-share.service
+</code></pre></div></div>
+
+<p>写入服务配置： 将下面的内容复制到文件中，保存并退出 。</p>
+<ul>
+  <li>After 和 Wants 确保了网络相关服务已就绪，让挂载更稳定。</li>
+  <li>Type=oneshot 表示这是一个一次性任务。</li>
+  <li>RemainAfterExit=yes 会让服务在任务执行成功后仍保持激活状态。</li>
+</ul>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
+Description=Mount VMware Shared Folder
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/usr/bin/vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o nonempty'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre></div></div>
+
+<p>重新加载 systemd 并启用服务：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl daemon-reload
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>vmware-share.service
+<span class="nb">sudo </span>systemctl start vmware-share.service
 </code></pre></div></div>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
