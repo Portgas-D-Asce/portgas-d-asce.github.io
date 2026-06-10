@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>libjpeg | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="libjpeg" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/library/2026/06/08/libjpeg.html" />
+<meta property="og:url" content="https://xdevil.top/library/2026/06/08/libjpeg.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/87.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-06-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-06-08T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/87.jpeg" />
+<meta name="twitter:title" content="libjpeg" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-06-08T00:00:00+00:00","datePublished":"2026-06-08T00:00:00+00:00","description":"xxxxxx","headline":"libjpeg","image":"https://xdevil.top/assets/image/87.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/library/2026/06/08/libjpeg.html"},"url":"https://xdevil.top/library/2026/06/08/libjpeg.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> libjpeg </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="概述">概述</h1>
+
+<h2 id="安装">安装</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>libjpeg-dev
+
+apt show libjpeg-dev
+<span class="c"># Package: libjpeg-dev</span>
+<span class="c"># Version: 8c-2ubuntu8</span>
+<span class="c"># Priority: optional</span>
+<span class="c"># Section: libdevel</span>
+<span class="c"># Source: libjpeg8-empty</span>
+<span class="c"># Origin: Ubuntu</span>
+<span class="c"># Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;</span>
+<span class="c"># Bugs: https://bugs.launchpad.net/ubuntu/+filebug</span>
+<span class="c"># Installed-Size: 26.6 kB</span>
+<span class="c"># Depends: libjpeg8-dev</span>
+<span class="c"># Supported: 5y</span>
+<span class="c"># Download-Size: 1,546 B</span>
+<span class="c"># APT-Sources: https://mirrors.tuna.tsinghua.edu.cn/ubuntu bionic/main amd64 Packages</span>
+<span class="c"># Description: Independent JPEG Group's JPEG runtime library (dependency package)</span>
+<span class="c">#  This package will always depend on the current default JPEG library</span>
+<span class="c">#  development package version.</span>
+
+
+<span class="nb">ls</span> <span class="nt">-l</span> /usr/lib/x86_64-linux-gnu/libjpeg.so<span class="k">*</span>
+<span class="c"># lrwxrwxrwx 1 root root     16 Sep 21  2022 /usr/lib/x86_64-linux-gnu/libjpeg.so.8 -&gt; libjpeg.so.8.2.2</span>
+<span class="c"># -rw-r--r-- 1 root root 539352 Sep 21  2022 /usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2</span>
+</code></pre></div></div>
+
+<p>核心数据结构
+库的核心是两种状态结构体：</p>
+
+<p>struct jpeg_decompress_struct：解压缩（读）状态。</p>
+
+<p>struct jpeg_compress_struct：压缩（写）状态。</p>
+
+<p>struct jpeg_error_mgr：错误管理器，必须由用户初始化并绑定到上述结构体，否则错误时将直接 exit()。</p>
+
+<p>所有操作都围绕这两个结构体展开。</p>
+
+<p>错误处理
+libjpeg 默认的错误处理方式是调用 exit() 终止程序。为了在函数中安全地捕获错误，必须自定义错误管理器，利用 setjmp/longjmp 实现异常风格的跳转。</p>
+
+<h2 id="libjpeg-turbo">libjpeg-turbo</h2>
+<p>libjpeg 和 libjpeg-turbo 是两个 JPEG 编解码库，功能目标相同但实现细节差异很大。简单说：libjpeg 是原始标准实现，libjpeg-turbo 是保持 API 兼容的高性能分支。</p>
+
+<p>如何选择</p>
+<ul>
+  <li>追求性能：优先选 libjpeg-turbo，尤其是服务器端处理大量图片、实时压缩等场景。</li>
+  <li>追求最小依赖或特殊平台：如果目标平台没有 SIMD 支持（如某些嵌入式 CPU），libjpeg 的纯 C 实现更省事。</li>
+  <li>兼容性顾虑：两者 API 兼容，但 ABI 可能不完全一致（如数据结构对齐），在编译阶段替换即可，不要混用不同库的二进制。</li>
+</ul>
+
+<h1 id="代码">代码</h1>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 4.2<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>libjpeg<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span>libjpeg main.cpp<span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span>libjpeg jpeg<span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;csetjmp&gt;</span><span class="c1">   // for setjmp/longjmp</span><span class="cp">
+#include</span> <span class="cpf">&lt;jpeglib.h&gt;</span><span class="cp">
+</span>
+<span class="k">struct</span> <span class="nc">error_mgr</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">jpeg_error_mgr</span> <span class="n">pub</span><span class="p">;</span>   <span class="cm">/* 公共字段 */</span>
+    <span class="kt">jmp_buf</span> <span class="n">jmp_buffer</span><span class="p">;</span>       <span class="cm">/* 用于跳转 */</span>
+<span class="p">};</span>
+
+<span class="c1">// #define METHODDEF(type)          static type</span>
+<span class="n">METHODDEF</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">error_exit</span><span class="p">(</span><span class="n">j_common_ptr</span> <span class="n">cinfo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">err</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">struct</span> <span class="nc">error_mgr</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">cinfo</span><span class="o">-&gt;</span><span class="n">err</span><span class="p">);</span>
+    <span class="cm">/* 可在此打印默认错误信息 */</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">cinfo</span><span class="o">-&gt;</span><span class="n">err</span><span class="o">-&gt;</span><span class="n">output_message</span><span class="p">)(</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="cm">/* 跳回调用点 */</span>
+    <span class="n">longjmp</span><span class="p">(</span><span class="n">err</span><span class="o">-&gt;</span><span class="n">jmp_buffer</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * 读取 JPEG 文件，返回 RGB24 像素数组。
+ * 调用者负责 free() 返回的缓冲区。
+ * 失败返回 NULL。
+ */</span>
+<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">read_jpeg_from_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">height</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">infile</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">infile</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"无法打开文件 %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">filename</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">struct</span> <span class="nc">jpeg_decompress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
+    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
+    <span class="cm">/* 1. 初始化错误管理器*/</span>
+    <span class="c1">// libjpeg 默认的错误处理方式是调用 exit() 终止程序。</span>
+    <span class="c1">// 为了在函数中安全地捕获错误，必须自定义错误管理器，利用 setjmp/longjmp 实现异常风格的跳转。</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
+    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
+
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="c1">// 设置跳跃点, 第一次调用 setjmp 时执行（返回值 0）</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
+        <span class="cm">/* 当 longjmp 跳回时执行（返回值 非零）,错误发生时会跳转到这里 */</span>
+        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">image_buffer</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* 2. 创建解压缩对象 */</span>
+    <span class="n">jpeg_create_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="cm">/* 3. 指定输入文件 */</span>
+    <span class="n">jpeg_stdio_src</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">infile</span><span class="p">);</span>
+
+    <span class="cm">/* 4. 读取 JPEG 头（必须） */</span>
+    <span class="c1">// (void) 这个强制类型转换告诉编译器：“我知道这个函数有返回值，但我故意不使用它，不要为此发出警告。</span>
+    <span class="c1">// jpeg_read_header 的返回值主要标识 JPEG 数据流的大致完整性，但在我们给出的示例中，已经安装了自定义错误管理器（setjmp/longjmp），</span>
+    <span class="c1">// 任何致命错误都会直接跳转到 setjmp 的错误处理分支，根本不会从函数返回。所以这个返回值在多数安全处理框架下没有意义，直接忽略反而更清晰。</span>
+    <span class="c1">// 但直接前置 (void) 是最简洁、最常用的“自文档化”手法——它向阅读代码的人表明：此处的返回值是经过考虑的，并非疏忽遗忘。</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_header</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="cm">/* 5. 开始解压缩 */</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_start_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="o">*</span><span class="n">width</span>  <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_width</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">height</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">num_channels</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_components</span><span class="p">;</span>  <span class="cm">/* 通常为 3 (RGB) 或 1 (灰度) */</span>
+
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_channels</span><span class="p">;</span>
+
+    <span class="cm">/* 6. 分配图像缓冲区（存放完整像素） */</span>
+    <span class="n">image_buffer</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">malloc</span><span class="p">(</span><span class="n">row_stride</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">height</span><span class="p">)));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"内存分配失败</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* 7. 逐行读取 */</span>
+    <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">output_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* 8. 完成解压缩 */</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_finish_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="cm">/* 9. 清理 */</span>
+    <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">image_buffer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * 如果 JPEG 数据已加载到内存，使用 jpeg_mem_src() 替代 jpeg_stdio_src()
+ * 从内存中解压 JPEG，参数 data 为完整 JPEG 数据，size 为其字节数。
+ * 返回 RGB 像素缓冲，调用者负责 free()。
+ */</span>
+<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">read_jpeg_from_memory</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">size</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">height</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">jpeg_decompress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
+    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
+    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">image_buffer</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_create_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="cm">/* 指定内存源 */</span>
+    <span class="n">jpeg_mem_src</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_header</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_start_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="o">*</span><span class="n">width</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_width</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">height</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_components</span><span class="p">;</span>
+
+    <span class="n">image_buffer</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">malloc</span><span class="p">(</span><span class="n">row_stride</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">height</span><span class="p">)));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">image_buffer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* 7. 逐行读取 */</span>
+    <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">output_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_finish_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">image_buffer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * 将 RGB24 像素写入 JPEG 文件。
+ * quality 范围 0..100。
+ * 成功返回 1，失败返回 0。
+ */</span>
+<span class="kt">int</span> <span class="nf">write_jpeg_to_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">quality</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">jpeg_compress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
+    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">outfile</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"无法创建文件 %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">filename</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
+    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">outfile</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_create_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_stdio_dest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">outfile</span><span class="p">);</span>
+
+    <span class="cm">/* 设置图像参数 */</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_width</span>      <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span>     <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">input_components</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>          <span class="cm">/* RGB = 3 通道 */</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">in_color_space</span>   <span class="o">=</span> <span class="n">JCS_RGB</span><span class="p">;</span>    <span class="cm">/* 颜色空间 */</span>
+
+    <span class="n">jpeg_set_defaults</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_set_quality</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span> <span class="cm">/* 第二个参数 TRUE 表示基线压缩 */</span>
+
+    <span class="n">jpeg_start_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">next_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_write_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_finish_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">fclose</span><span class="p">(</span><span class="n">outfile</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * 将 RGB 图像压缩到内存，返回 JPEG 数据缓冲区和大小。
+ * 调用者必须用 free() 释放返回的缓冲区。
+ * 返回 NULL 表示失败。
+ */</span>
+<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">write_jpeg_to_memory</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span><span class="p">,</span>
+                                    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">quality</span><span class="p">,</span>
+                                    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">outsize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="nc">jpeg_compress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
+    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">jpeg_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">outsize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
+    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">jpeg_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">jpeg_buffer</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_create_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="cm">/* 目标为内存 */</span>
+    <span class="n">jpeg_mem_dest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">jpeg_buffer</span><span class="p">,</span> <span class="n">outsize</span><span class="p">);</span>
+
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">input_components</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">cinfo</span><span class="p">.</span><span class="n">in_color_space</span> <span class="o">=</span> <span class="n">JCS_RGB</span><span class="p">;</span>
+
+    <span class="n">jpeg_set_defaults</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_set_quality</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="n">jpeg_start_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">next_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_write_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">jpeg_finish_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+    <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">jpeg_buffer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">rgb_ptr</span> <span class="o">=</span> <span class="n">read_jpeg_from_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">width</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">" vs "</span> <span class="o">&lt;&lt;</span> <span class="n">height</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">write_jpeg_to_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rgb_ptr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">len</span><span class="p">;</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">jpeg_ptr</span> <span class="o">=</span> <span class="n">write_jpeg_to_memory</span><span class="p">(</span><span class="n">rgb_ptr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">rgb_ptr_2</span> <span class="o">=</span> <span class="n">read_jpeg_from_memory</span><span class="p">(</span><span class="n">jpeg_ptr</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">width</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">" vs "</span> <span class="o">&lt;&lt;</span> <span class="n">height</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">write_jpeg_to_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">rgb_ptr_2</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
