@@ -305,6 +305,51 @@
 <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Singleton</span><span class="o">&gt;</span> <span class="n">Singleton</span><span class="o">::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 </code></pre></div></div>
 
+<h1 id="last">last</h1>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp">
+</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// 兼容 0 个，多个任意参数，同种类型仅有一个实例，即使传递参数不同</span>
+    <span class="c1">// _init_flag 不能在该泛型函数作用域内，否则会有多个不同的实例</span>
+    <span class="c1">// // 使用不同的参数构造单例，会导致多个局部静态变量，进而导致多例</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Args</span><span class="p">&gt;</span>
+    <span class="k">static</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">instance</span><span class="p">(</span><span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">call_once</span><span class="p">(</span><span class="n">_init_flag</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
+            <span class="c1">// 这块还有完美转发的必要么，lambda 表达式已经引用了？？？？？？？</span>
+            <span class="n">_instance</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">T</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Args</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">)...));</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="o">*</span><span class="n">_instance</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">once_flag</span> <span class="n">flag</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">call_once</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
+            <span class="n">_instance</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">_instance</span><span class="p">;</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">once_flag</span> <span class="n">_init_flag</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Singleton</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">once_flag</span> <span class="n">Singleton</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">_init_flag</span> <span class="o">=</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>使用</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 初始化，必须第一个执行参数才有效</span>
+<span class="n">Singleton</span><span class="o">&lt;</span><span class="n">XXX</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">);</span>
+
+<span class="c1">// 要求 XXX 具有无参构造函数</span>
+<span class="n">Singleton</span><span class="o">&lt;</span><span class="n">XXX</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span>
+</code></pre></div></div>
+
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
