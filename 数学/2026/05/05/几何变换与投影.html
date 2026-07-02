@@ -77,7 +77,16 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="几何变换">几何变换</h1>
+</style><h1 id="基础变换">基础变换</h1>
+<h2 id="平移translate">平移（translate）</h2>
+
+<h2 id="旋转rotate">旋转（rotate）</h2>
+
+<h2 id="缩放scale">缩放（scale）</h2>
+
+<h2 id="错切shear">错切（shear）</h2>
+
+<h1 id="几何变换">几何变换</h1>
 <p>几何变换是指对几何图形（点、线、面）进行位置、大小、形状、方向等改变的操作。它本质上是一个从二维/三维空间到自身的映射。</p>
 
 <p>几何变换可根据自由度和保持的属性（如距离、角度、平行性、共线性）进行分类。常见的几何变换按照从特殊到一般（约束由强到弱）排列为：</p>
@@ -144,6 +153,41 @@ r_{31} &amp; r_{32} &amp; r_{33} &amp; t_z \\
   <li>三维点云配准（ICP 算法中的刚性运动）</li>
   <li>骨骼动画中的刚体骨骼变换</li>
 </ul>
+
+<h2 id="rt-s-tr">RT s TR</h2>
+
+<p>先平移后旋转（RT）还是先旋转后平移（TR）？</p>
+
+<h3 id="rt">RT</h3>
+<p>旋转是基于世界坐标系的（绕世界圆点旋转），平移也是基于世界坐标系的</p>
+
+\[R \cdot T = \begin{bmatrix}
+r_{11} &amp; r_{12} &amp; r_{13} &amp; r_{11}dx + r_{12}dy + r_{13}dz \\
+r_{21} &amp; r_{22} &amp; r_{23} &amp; r_{21}dx + r_{22}dy + r_{23}dz \\
+r_{31} &amp; r_{32} &amp; r_{33} &amp; r_{31}dx + r_{32}dy + r_{33}dz \\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}\]
+
+<h3 id="tr正解">TR（正解）</h3>
+<p>平移是基于世界坐标系的，旋转是基于本地坐标系的（绕局部圆点旋转）</p>
+
+<p>更直观、形象，故常用</p>
+
+\[T \cdot R = \begin{bmatrix}
+r_{11} &amp; r_{12} &amp; r_{13} &amp; dx \\
+r_{21} &amp; r_{22} &amp; r_{23} &amp; dy \\
+r_{31} &amp; r_{32} &amp; r_{33} &amp; dz \\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}\]
+
+<h3 id="对比">对比</h3>
+<p>先平移后旋转（ RT）：平移向量被旋转，物体可能偏离预期的世界坐标方向。</p>
+
+<p>先旋转后平移（TR）：平移量纯粹沿着世界/父坐标轴，与物体自身朝向无关。</p>
+
+<p>所以，最终的朝向由 R 一锤定音，与顺序无关；但最终的位置，一个经过了 R 的旋转处理，一个则保持了平移向量的原始模样。</p>
+
+<p>最终物体的旋转姿态（朝向）是完全一致的，唯一改变的是它在世界空间中的位置（平移）</p>
 
 <h1 id="相似变换similarity-transformation">相似变换（Similarity Transformation）</h1>
 <h2 id="定义-1">定义</h2>
@@ -396,6 +440,7 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
   <li><strong>射影变换</strong>（透视类）不保持平行性，但提供了真实感。</li>
   <li>所有投影矩阵都是4×4齐次矩阵，是射影变换或仿射变换在<strong>降维约束</strong>下的特例。</li>
 </ul>
+
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
