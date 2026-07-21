@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>双缓冲区（Double Buffer） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="双缓冲区（Double Buffer）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html" />
+<meta property="og:url" content="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/86.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-07-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-07-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/86.jpeg" />
+<meta name="twitter:title" content="双缓冲区（Double Buffer）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-07-19T00:00:00+00:00","datePublished":"2026-07-19T00:00:00+00:00","description":"xxxxxx","headline":"双缓冲区（Double Buffer）","image":"https://xdevil.top/assets/image/86.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html"},"url":"https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 双缓冲区（Double Buffer） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>双缓冲区（Double Buffering）是一种经典的并发设计模式，核心思想是用空间换无锁读：维护两份数据副本，读者永远访问其中一份（读区），写者在另一份（写区）上修改，修改完成后通过原子操作瞬间交换两份缓冲区的角色</p>
+
+<h1 id="实现原理">实现原理</h1>
+<p>两个对象实例：buffer[0] 和 buffer[1]。 一个原子索引：std::atomic<int> read_index{0}，表示当前读者应该读取哪一个缓冲区（0 或 1）。</int></p>
+<ul>
+  <li>读规则：读者读取 read_index，然后直接访问对应的缓冲区，不加锁，不拷贝（拿到的是引用或指针，但要确保在读期间写者不会覆盖它——这是设计的核心）。</li>
+  <li>写规则：写者计算出“非当前读区”的索引（1 - read_index），在那个缓冲区上进行修改。修改完成后，原子地更新 read_index 为这个新索引，让后续读者看到新数据。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">DoubleBuffer</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// 读者通过 ReaderView 获取只读访问</span>
+    <span class="k">class</span> <span class="nc">ReaderView</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">ref_</span><span class="p">;</span>
+    <span class="nl">public:</span>
+        <span class="k">explicit</span> <span class="n">ReaderView</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">ref</span><span class="p">)</span> <span class="o">:</span> <span class="n">ref_</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="p">{}</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ref_</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ref_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">explicit</span> <span class="nf">DoubleBuffer</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">initial</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">buffers_</span><span class="p">{</span><span class="n">initial</span><span class="p">,</span> <span class="n">initial</span><span class="p">},</span> <span class="n">read_index_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">// 读操作：无锁，返回当前读区的只读视图</span>
+    <span class="n">ReaderView</span> <span class="nf">read</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">read_index_</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_acquire</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nf">ReaderView</span><span class="p">(</span><span class="n">buffers_</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 写操作：传入一个函数对象，在非当前读区上修改</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Func</span><span class="p">&gt;</span>
+    <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">Func</span><span class="o">&amp;&amp;</span> <span class="n">updater</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">curr_read</span> <span class="o">=</span> <span class="n">read_index_</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_acquire</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">write_idx</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">curr_read</span><span class="p">;</span>               <span class="c1">// 选择另一个缓冲区</span>
+        <span class="n">T</span><span class="o">&amp;</span> <span class="n">write_buf</span> <span class="o">=</span> <span class="n">buffers_</span><span class="p">[</span><span class="n">write_idx</span><span class="p">];</span>
+        <span class="n">updater</span><span class="p">(</span><span class="n">write_buf</span><span class="p">);</span>                          <span class="c1">// 修改它</span>
+        <span class="n">read_index_</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="n">write_idx</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">memory_order_release</span><span class="p">);</span> <span class="c1">// 切换</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">T</span> <span class="n">buffers_</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">read_index_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// 使用</span>
+<span class="k">struct</span> <span class="nc">Config</span> <span class="p">{</span> <span class="cm">/* 大对象，非平凡 */</span> <span class="p">};</span>
+<span class="n">DoubleBuffer</span><span class="o">&lt;</span><span class="n">Config</span><span class="o">&gt;</span> <span class="n">db</span><span class="p">(</span><span class="n">Config</span><span class="p">{...});</span>
+
+<span class="c1">// 读者</span>
+<span class="k">auto</span> <span class="n">view</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">view</span><span class="o">-&gt;</span><span class="n">some_field</span><span class="p">;</span>   <span class="c1">// 无锁读取</span>
+
+<span class="c1">// 写者</span>
+<span class="n">db</span><span class="p">.</span><span class="n">write</span><span class="p">([](</span><span class="n">Config</span><span class="o">&amp;</span> <span class="n">new_cfg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">new_cfg</span><span class="p">.</span><span class="n">some_field</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// 修改写区</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>注意：这里的 write 方法需要拷贝或赋值整个对象吗？</p>
+<ul>
+  <li>如果 updater 是直接修改写区，则无需全量拷贝，只需在原对象上修改（但写区当前必须是“过时的”或本身就是可覆盖的）。上面的例子是原地修改 buffers_[write_idx]。</li>
+  <li>但在很多实现中，写区需要在每次写之前从读区复制一份，然后再修改，因为写区可能已经被之前的写操作弄脏了，或者你希望基于最新数据更新。可以在 updater 调用前添加：buffers_[write_idx] = buffers_[curr_read]; 但这会导致一次全量拷贝。</li>
+  <li>是否拷贝取决于具体需求：如果写者每次都完整覆盖对象的所有字段，可以不拷贝；如果需要基于旧值修改，则必须拷贝。</li>
+</ul>
+
+<h1 id="多写者">多写者</h1>
+<p>标准的双缓冲区模式中，写操作通常是单线程的（或者通过锁串行化）。 原因如下：</p>
+<ul>
+  <li>写操作直接修改 buffers_[write_idx]，如果多个写者同时修改同一个写区，会发生数据竞争。</li>
+  <li>即使你“计算出各自的写区”，但写区的确定依赖于 read_index 的当前值，而 read_index 在写操作完成前不会被更新。如果两个写者同时执行：</li>
+  <li>写者 A 和 B 同时读到 curr_read = 0，都决定修改 write_idx = 1。 两者同时修改 buffer[1]，竞争。</li>
+</ul>
+
+<p>因此，标准的双缓冲区实现要求写者之间互斥，通常加一个 std::mutex</p>
+
+<p>有没有无锁的多写者双缓冲？ 理论上可以，但极其复杂，需要确保每个写者操作不同的缓冲区且索引更新不冲突，通常不值得，因为写操作本身就稀缺，加锁开销可忽略。</p>
+
+<h1 id="线程安全">线程安全</h1>
+
+<p>场景重现：</p>
+<ul>
+  <li>初始状态：read_index = 0，读者正在读 buffer[0]。</li>
+  <li>写者第一次：计算出写区为 1，修改 buffer[1]，完成后 read_index.store(1)。</li>
+  <li>此时新的读者会读 buffer[1]，但之前已经开始读的读者可能还抓着 buffer[0] 的引用。</li>
+  <li>写者第二次：因为现在 read_index = 1，写者选择写区为 buffer[0]，并开始修改它。</li>
+  <li>而如果那个“老读者”还握着 buffer[0] 的引用没有释放，写者和老读者就并发访问了同一个 buffer，产生数据竞争。</li>
+</ul>
+
+<p>总结出来就是：</p>
+<ul>
+  <li>在读者长时间持有旧缓冲区的条件下，读写竞争就会出现（三缓冲区只能缓解，不能彻底解决）</li>
+  <li>使用双缓冲的前提是读者不会长时间持有旧缓冲区</li>
+</ul>
+
+<p>为什么图形学中三缓冲能“彻底”消除撕裂？</p>
+<ul>
+  <li>在图形渲染中，读者（显示器）以固定频率（如 60Hz）读取前缓冲（front buffer），读取是持续不断的，每 16.6ms 刷新一帧。</li>
+  <li>写者（GPU）渲染速度不稳定。使用双缓冲（前+后）时，如果 GPU 渲染太快，它必须等待下一次垂直同步才能交换，否则会覆盖正在显示的缓冲导致撕裂。</li>
+  <li>三缓冲引入第三个缓冲区作为额外的后缓冲，允许 GPU 在显示器读取前缓冲时，渲染到后缓冲 1，完成后立即交换到后缓冲 2，而显示器仍然读前缓冲。</li>
+  <li>这样 GPU 不会因为等待显示器而闲置，并且保证被修改的缓冲区永远不会是当前正被显示器读取的那个。显示器读取的缓冲区始终是交换链中特定那个，而交换链管理确保了旧缓冲区在所有引用释放前不会被重新用作渲染目标（通常通过信号量或队列）。</li>
+  <li>这是硬件和驱动配合实现的，比单纯的软件三缓冲更健壮。</li>
+</ul>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

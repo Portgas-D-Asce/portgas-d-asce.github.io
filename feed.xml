@@ -1,4 +1,307 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-07-20T10:03:21+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">libjpeg</title><link href="https://xdevil.top/library/2026/06/08/libjpeg.html" rel="alternate" type="text/html" title="libjpeg" /><published>2026-06-08T00:00:00+00:00</published><updated>2026-06-08T00:00:00+00:00</updated><id>https://xdevil.top/library/2026/06/08/libjpeg</id><content type="html" xml:base="https://xdevil.top/library/2026/06/08/libjpeg.html"><![CDATA[<h1 id="概述">概述</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-07-21T07:36:00+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">shared_ptr 是线程安全的吗？</title><link href="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html" rel="alternate" type="text/html" title="shared_ptr 是线程安全的吗？" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/shared_ptr%20%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html"><![CDATA[<h1 id="实现原理">实现原理</h1>
+<p>一个典型的 shared_ptr<T> 对象内部，通常包含两个原始指针（32位系统各4字节，64位系统各8字节）：</T></p>
+<ul>
+  <li>对象指针：指向你实际管理的那个 T 类型的对象。</li>
+  <li>控制块指针：指向一个动态分配的“控制块”结构。控制块内部通常包含：
+    <ul>
+      <li>强引用计数 (shared_count) ：记录有多少个 shared_ptr 实例指向同一个对象。</li>
+      <li>弱引用计数 (weak_count) ：记录有多少个 weak_ptr 实例观察同一个控制块。</li>
+      <li>删除器 (deleter) ：知道如何销毁对象。</li>
+      <li>分配器 (allocator) ：内存分配器的副本（如果使用了自定义分配器）。</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="err">对象</span>
+<span class="o">+-------------------+</span>
+<span class="o">|</span>  <span class="err">对象指针</span>  <span class="p">(</span><span class="n">T</span><span class="o">*</span><span class="p">)</span>    <span class="o">|</span>  <span class="o">-----&gt;</span>  <span class="n">T</span> <span class="err">对象</span>
+<span class="o">+-------------------+</span>
+<span class="o">|</span> <span class="err">控制块指针</span> <span class="p">(</span><span class="n">Ctrl</span><span class="o">*</span><span class="p">)</span> <span class="o">|</span>  <span class="o">-----&gt;</span> <span class="err">控制块</span>
+<span class="o">+-------------------+</span>
+</code></pre></div></div>
+
+<h1 id="线程安全">线程安全</h1>
+
+<p>shared_ptr 引用计数控制块是线程安全的。 具体来说，C++ 标准保证：</p>
+<ul>
+  <li>多个线程可以同时对同一个 shared_ptr 对象的不同的拷贝（即各自持有的 shared_ptr 实例）进行拷贝构造、拷贝赋值、析构，而不会产生数据竞争。</li>
+  <li>引用计数的增减使用的是原子操作，因此即使多个线程同时增加或减少引用计数，也不会出现计数错乱。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">sp1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+
+<span class="c1">// 线程 A</span>
+<span class="k">auto</span> <span class="n">sp2</span> <span class="o">=</span> <span class="n">sp1</span><span class="p">;</span>   <span class="c1">// 拷贝：引用计数 +1</span>
+
+<span class="c1">// 线程 B</span>
+<span class="k">auto</span> <span class="n">sp3</span> <span class="o">=</span> <span class="n">sp1</span><span class="p">;</span>   <span class="c1">// 拷贝：引用计数 +1</span>
+
+<span class="c1">// 线程 A</span>
+<span class="n">sp2</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>      <span class="c1">// 析构：引用计数 -1</span>
+
+<span class="c1">// 线程 B</span>
+<span class="n">sp3</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>      <span class="c1">// 析构：引用计数 -1</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>为什么引用计数控制块是线程安全的，实现原理是怎样的？？？？？？？？？？？？？？？？？？？？？？？？？？？？</p>
+</blockquote>
+
+<p>shared_ptr 对象本身并不是线程安全的。这里 g_config 是一个普通的 shared_ptr 变量，问题在于：</p>
+<ul>
+  <li>g_config = new_cfg 内部会先增加 new_cfg 的引用计数，再修改 g_config 内部的两个指针（对象指针 + 控制块指针），然后减少旧对象的引用计数。</li>
+  <li>auto cfg = g_config 会读取 g_config 内部的两个指针，并增加引用计数。</li>
+  <li>这两个操作如果并发执行，读取者可能看到“撕裂”的状态：比如读到新对象指针和旧控制块指针的组合，导致未定义行为（悬垂指针、计数错乱等）。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Config</span><span class="o">&gt;</span> <span class="n">g_config</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Config</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="c1">// 线程 A（写）</span>
+<span class="kt">void</span> <span class="nf">update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">new_cfg</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Config</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">g_config</span> <span class="o">=</span> <span class="n">new_cfg</span><span class="p">;</span>  <span class="c1">// 直接赋值给 g_config</span>
+<span class="p">}</span>
+
+<span class="c1">// 线程 B（读）</span>
+<span class="kt">void</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">cfg</span> <span class="o">=</span> <span class="n">g_config</span><span class="p">;</span> <span class="c1">// 读取 g_config，拷贝构造</span>
+    <span class="n">cfg</span><span class="o">-&gt;</span><span class="n">do_something</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>如何保证 shared_ptr 的线程安全：</p>
+<ul>
+  <li>C++11/14/17 通过 atomic_load/stomic_store 等非成员函数保证 shared_ptr 的线程安全</li>
+  <li>C++20 通过 std::atomic&lt;std::shared_ptr<T>&gt; 的 load/store 等成员函数保证线程安全</T></li>
+</ul>
+
+<h1 id="atomic_loadstomic_storec111417">atomic_load/stomic_store(C++11/14/17)</h1>
+
+<p>std::atomic_load 和 std::atomic_store 正是为了让同一个 shared_ptr 变量的并发读写变得线程安全而存在的。只要你对这个变量的所有访问都通过这两个函数（以及配套的 atomic_exchange、atomic_compare_exchange 等），就不会出现撕裂读或数据竞争</p>
+
+<p>它们到底做了什么？</p>
+<ul>
+  <li>std::atomic_load(&amp;global_sp) 内部会保护 global_sp 的整个读取过程，确保你拿到的要么是修改前的完整 shared_ptr，要么是修改后的完整 shared_ptr，绝不会是两个指针（对象指针+控制块指针）的混合体。</li>
+  <li>std::atomic_store(&amp;global_sp, new_sp) 内部会保护 global_sp 的整个写入过程，确保在它修改内部两个指针的瞬间，没有其他线程能读到半更新的状态。
+换句话说，它们把同一个 shared_ptr 变量的读写变成了原子操作。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">global_sp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// 写线程</span>
+<span class="kt">void</span> <span class="nf">writer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">new_sp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">atomic_store</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global_sp</span><span class="p">,</span> <span class="n">new_sp</span><span class="p">);</span>  <span class="c1">// 原子替换</span>
+<span class="p">}</span>
+
+<span class="c1">// 读线程</span>
+<span class="kt">void</span> <span class="nf">reader</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">local_sp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic_load</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global_sp</span><span class="p">);</span>  <span class="c1">// 原子读取</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">local_sp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 使用 local_sp，后续 global_sp 的变化不影响本线程</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>此时 global_sp 的并发访问是安全的。</p>
+
+<p>必须遵守的规则：一致性。 atomic_load/store 只对你显式调用它们的那一次访问负责。如果你在某处写：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">sp</span> <span class="o">=</span> <span class="n">global_sp</span><span class="p">;</span>           <span class="c1">// 直接读取，不安全！</span>
+
+<span class="n">global_sp</span> <span class="o">=</span> <span class="n">new_sp</span><span class="p">;</span>            <span class="c1">// 直接赋值，不安全！</span>
+</code></pre></div></div>
+<p>那还是会引入数据竞争。所有对同一个 shared_ptr 变量的并发访问都必须走原子函数，没有“自动生效”一说。</p>
+
+<p>这正是 C++20 的 std::atomic&lt;std::shared_ptr<T>&gt; 要解决的问题——它把原子访问强制化，防止误用。</T></p>
+
+<h1 id="stdatomicstdshared_ptrc20">std::atomic&lt;std::shared_ptr<T>&gt;(C++20)</T></h1>
+
+<p>C++11 非成员函数：功能完备，但需要手动记住对所有变量都使用它们，容易疏忽。</p>
+
+<p>C++20 atomic<shared_ptr> 特化：类型系统强制所有访问都走原子成员函数，既安全又清晰。</shared_ptr></p>
+
+<p>两者的原理和内部实现几乎一样（都是靠内部锁或无锁结构来保护 shared_ptr 的原子性），只是接口便利性不同。</p>
+
+<p>只保证 shared_ptr 是线程安全的，又不能保证对象是线程安全的，这有啥意义呢？</p>
+
+<h1 id="rcu">RCU</h1>
+<p>atomic&lt;shared_ptr<T>&gt; + RCU 真的是神器啊！！！</T></p>
+<h2 id="定义">定义</h2>
+<p>RCU（Read-Copy-Update） 是一种同步机制，专门为读极多、写极少的场景设计，最早在 Linux 内核中广泛使用，现在已成为并发编程中的经典模式，它的核心哲学是：</p>
+<ul>
+  <li>读操作（Reader）：完全无锁，零同步开销，就像没有并发存在一样。</li>
+  <li>写操作（Updater）：不是原地修改数据，而是复制一份副本，在副本上修改，然后原子地替换掉旧指针。</li>
+  <li>旧数据回收：写者不能立刻释放旧数据，因为它可能正被某些读者使用，必须等到所有正在运行的读者都结束对旧数据的访问后，才能安全释放。</li>
+</ul>
+
+<h2 id="优缺点">优缺点</h2>
+<p>优点：</p>
+<ul>
+  <li>读者完全无锁，极低延迟，几乎无同步开销。</li>
+  <li>不会出现读者等写者、写者等读者的“锁护航”问题。</li>
+  <li>扩展性好，读端完全并行。</li>
+</ul>
+
+<p>缺点：</p>
+<ul>
+  <li>写者开销大（复制整个对象），不适合写频繁的场景。</li>
+  <li>内存占用高（旧对象延迟释放）。</li>
+  <li>宽限期后的回收可能延迟，对于内存敏感的系统需要谨慎。</li>
+  <li>实现复杂，尤其是内核态，需要处理各种 CPU 状态和抢占。</li>
+</ul>
+
+<p>std::atomic&lt;std::shared_ptr<T>&gt; 本质是保证 shared_ptr 对象的读写线程安全，通过合理的利用该点可以实现对象”特殊的“读写线程安全</T></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">std::atomic&lt;std::shared_ptr&lt;T&gt;&gt;</code> 确实直接保护的是 <strong><code class="language-plaintext highlighter-rouge">shared_ptr</code> 这个变量本身的并发读写</strong>，而不是 <code class="language-plaintext highlighter-rouge">T</code> 对象内部的字段。</li>
+  <li><strong>通过一定的使用约定（对象不可变、原子替换），你可以利用它间接实现一种“特殊的对象读写线程安全”</strong>。</li>
+</ul>
+
+<h2 id="使用策略">使用策略</h2>
+<p>读操作：必须先获取快照，然后通过快照访问对象成员</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 正确打开方式</span>
+<span class="k">auto</span> <span class="n">snapshot</span> <span class="o">=</span> <span class="n">global_sp</span><span class="p">.</span><span class="n">load</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">snapshot</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">snapshot</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">();</span>
+<span class="c1">// ......</span>
+
+<span class="c1">// 错误打开方式，会导致对象撕裂</span>
+<span class="c1">// load 到的是对象 obj1</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">global_sp</span><span class="p">.</span><span class="n">load</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">();</span>
+<span class="c1">// load 到的可能是对象 obj2</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">global_sp</span><span class="p">.</span><span class="n">load</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">();</span>
+<span class="c1">// ......</span>
+
+<span class="c1">// 导致 x 是 obj1 的，y 是 obj2 的</span>
+</code></pre></div></div>
+
+<p>写操作：必须先获取快照，然后根据快照创建副本</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 获取快照</span>
+<span class="k">auto</span> <span class="n">snapshot</span> <span class="o">=</span> <span class="n">global_sp</span><span class="p">.</span><span class="n">load</span><span class="p">();</span>
+<span class="c1">// 基于快照创建副本</span>
+<span class="k">auto</span> <span class="n">new_ptr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">snapshot</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="n">snapshot</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">);</span>
+<span class="c1">// 原子替换</span>
+<span class="n">global_sp</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="n">new_ptr</span><span class="p">);</span>
+
+</code></pre></div></div>
+
+<p>复杂对象的并发访问
+你这个总结非常到位，可以说是把并发编程中“如何原子地管理复杂对象”这个问题做了一个清晰的决策树：</p>
+<ul>
+  <li>如果 T 本身是 trivially copyable → 直接用 std::atomic<T>，无额外开销，真正的 lock‑free。</T></li>
+  <li>如果 T 不是，或者对象很大、更新时需要复制 → 用 std::atomic&lt;std::shared_ptr<T>&gt;，通过指针的原子切换来间接实现“整个对象的原子更新”。</T></li>
+  <li>atomic&lt;shared_ptr<T>&gt; 内部并非总是 lock‑free：它通常会用一把小锁来保护 shared_ptr 的读写，因此高频单点竞争时性能可能不如直接 atomic<T>。</T></T></li>
+</ul>
+
+<h1 id="其他">其他</h1>
+<p>在 Ubuntu 20.04 上安装 GCC 12：</p>
+
+<p>bash
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+sudo apt install gcc-12 g++-12
+然后在 CLion 的工具链中将 C 编译器设为 /usr/bin/gcc-12，C++ 编译器设为 /usr/bin/g++-12，之后 std::atomic&lt;std::shared_ptr<T>&gt; 就可以直接使用。</T></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">双缓冲区（Double Buffer）</title><link href="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html" rel="alternate" type="text/html" title="双缓冲区（Double Buffer）" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88Double%20Buffer%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html"><![CDATA[<p>双缓冲区（Double Buffering）是一种经典的并发设计模式，核心思想是用空间换无锁读：维护两份数据副本，读者永远访问其中一份（读区），写者在另一份（写区）上修改，修改完成后通过原子操作瞬间交换两份缓冲区的角色</p>
+
+<h1 id="实现原理">实现原理</h1>
+<p>两个对象实例：buffer[0] 和 buffer[1]。 一个原子索引：std::atomic<int> read_index{0}，表示当前读者应该读取哪一个缓冲区（0 或 1）。</int></p>
+<ul>
+  <li>读规则：读者读取 read_index，然后直接访问对应的缓冲区，不加锁，不拷贝（拿到的是引用或指针，但要确保在读期间写者不会覆盖它——这是设计的核心）。</li>
+  <li>写规则：写者计算出“非当前读区”的索引（1 - read_index），在那个缓冲区上进行修改。修改完成后，原子地更新 read_index 为这个新索引，让后续读者看到新数据。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">DoubleBuffer</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// 读者通过 ReaderView 获取只读访问</span>
+    <span class="k">class</span> <span class="nc">ReaderView</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">ref_</span><span class="p">;</span>
+    <span class="nl">public:</span>
+        <span class="k">explicit</span> <span class="n">ReaderView</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">ref</span><span class="p">)</span> <span class="o">:</span> <span class="n">ref_</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="p">{}</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ref_</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ref_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">explicit</span> <span class="nf">DoubleBuffer</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">initial</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">buffers_</span><span class="p">{</span><span class="n">initial</span><span class="p">,</span> <span class="n">initial</span><span class="p">},</span> <span class="n">read_index_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">// 读操作：无锁，返回当前读区的只读视图</span>
+    <span class="n">ReaderView</span> <span class="nf">read</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">read_index_</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_acquire</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nf">ReaderView</span><span class="p">(</span><span class="n">buffers_</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 写操作：传入一个函数对象，在非当前读区上修改</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Func</span><span class="p">&gt;</span>
+    <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">Func</span><span class="o">&amp;&amp;</span> <span class="n">updater</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">curr_read</span> <span class="o">=</span> <span class="n">read_index_</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_acquire</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">write_idx</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">curr_read</span><span class="p">;</span>               <span class="c1">// 选择另一个缓冲区</span>
+        <span class="n">T</span><span class="o">&amp;</span> <span class="n">write_buf</span> <span class="o">=</span> <span class="n">buffers_</span><span class="p">[</span><span class="n">write_idx</span><span class="p">];</span>
+        <span class="n">updater</span><span class="p">(</span><span class="n">write_buf</span><span class="p">);</span>                          <span class="c1">// 修改它</span>
+        <span class="n">read_index_</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="n">write_idx</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">memory_order_release</span><span class="p">);</span> <span class="c1">// 切换</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">T</span> <span class="n">buffers_</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">read_index_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// 使用</span>
+<span class="k">struct</span> <span class="nc">Config</span> <span class="p">{</span> <span class="cm">/* 大对象，非平凡 */</span> <span class="p">};</span>
+<span class="n">DoubleBuffer</span><span class="o">&lt;</span><span class="n">Config</span><span class="o">&gt;</span> <span class="n">db</span><span class="p">(</span><span class="n">Config</span><span class="p">{...});</span>
+
+<span class="c1">// 读者</span>
+<span class="k">auto</span> <span class="n">view</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">view</span><span class="o">-&gt;</span><span class="n">some_field</span><span class="p">;</span>   <span class="c1">// 无锁读取</span>
+
+<span class="c1">// 写者</span>
+<span class="n">db</span><span class="p">.</span><span class="n">write</span><span class="p">([](</span><span class="n">Config</span><span class="o">&amp;</span> <span class="n">new_cfg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">new_cfg</span><span class="p">.</span><span class="n">some_field</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1">// 修改写区</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>注意：这里的 write 方法需要拷贝或赋值整个对象吗？</p>
+<ul>
+  <li>如果 updater 是直接修改写区，则无需全量拷贝，只需在原对象上修改（但写区当前必须是“过时的”或本身就是可覆盖的）。上面的例子是原地修改 buffers_[write_idx]。</li>
+  <li>但在很多实现中，写区需要在每次写之前从读区复制一份，然后再修改，因为写区可能已经被之前的写操作弄脏了，或者你希望基于最新数据更新。可以在 updater 调用前添加：buffers_[write_idx] = buffers_[curr_read]; 但这会导致一次全量拷贝。</li>
+  <li>是否拷贝取决于具体需求：如果写者每次都完整覆盖对象的所有字段，可以不拷贝；如果需要基于旧值修改，则必须拷贝。</li>
+</ul>
+
+<h1 id="多写者">多写者</h1>
+<p>标准的双缓冲区模式中，写操作通常是单线程的（或者通过锁串行化）。 原因如下：</p>
+<ul>
+  <li>写操作直接修改 buffers_[write_idx]，如果多个写者同时修改同一个写区，会发生数据竞争。</li>
+  <li>即使你“计算出各自的写区”，但写区的确定依赖于 read_index 的当前值，而 read_index 在写操作完成前不会被更新。如果两个写者同时执行：</li>
+  <li>写者 A 和 B 同时读到 curr_read = 0，都决定修改 write_idx = 1。 两者同时修改 buffer[1]，竞争。</li>
+</ul>
+
+<p>因此，标准的双缓冲区实现要求写者之间互斥，通常加一个 std::mutex</p>
+
+<p>有没有无锁的多写者双缓冲？ 理论上可以，但极其复杂，需要确保每个写者操作不同的缓冲区且索引更新不冲突，通常不值得，因为写操作本身就稀缺，加锁开销可忽略。</p>
+
+<h1 id="线程安全">线程安全</h1>
+
+<p>场景重现：</p>
+<ul>
+  <li>初始状态：read_index = 0，读者正在读 buffer[0]。</li>
+  <li>写者第一次：计算出写区为 1，修改 buffer[1]，完成后 read_index.store(1)。</li>
+  <li>此时新的读者会读 buffer[1]，但之前已经开始读的读者可能还抓着 buffer[0] 的引用。</li>
+  <li>写者第二次：因为现在 read_index = 1，写者选择写区为 buffer[0]，并开始修改它。</li>
+  <li>而如果那个“老读者”还握着 buffer[0] 的引用没有释放，写者和老读者就并发访问了同一个 buffer，产生数据竞争。</li>
+</ul>
+
+<p>总结出来就是：</p>
+<ul>
+  <li>在读者长时间持有旧缓冲区的条件下，读写竞争就会出现（三缓冲区只能缓解，不能彻底解决）</li>
+  <li>使用双缓冲的前提是读者不会长时间持有旧缓冲区</li>
+</ul>
+
+<p>为什么图形学中三缓冲能“彻底”消除撕裂？</p>
+<ul>
+  <li>在图形渲染中，读者（显示器）以固定频率（如 60Hz）读取前缓冲（front buffer），读取是持续不断的，每 16.6ms 刷新一帧。</li>
+  <li>写者（GPU）渲染速度不稳定。使用双缓冲（前+后）时，如果 GPU 渲染太快，它必须等待下一次垂直同步才能交换，否则会覆盖正在显示的缓冲导致撕裂。</li>
+  <li>三缓冲引入第三个缓冲区作为额外的后缓冲，允许 GPU 在显示器读取前缓冲时，渲染到后缓冲 1，完成后立即交换到后缓冲 2，而显示器仍然读前缓冲。</li>
+  <li>这样 GPU 不会因为等待显示器而闲置，并且保证被修改的缓冲区永远不会是当前正被显示器读取的那个。显示器读取的缓冲区始终是交换链中特定那个，而交换链管理确保了旧缓冲区在所有引用释放前不会被重新用作渲染目标（通常通过信号量或队列）。</li>
+  <li>这是硬件和驱动配合实现的，比单纯的软件三缓冲更健壮。</li>
+</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">libjpeg</title><link href="https://xdevil.top/library/2026/06/08/libjpeg.html" rel="alternate" type="text/html" title="libjpeg" /><published>2026-06-08T00:00:00+00:00</published><updated>2026-06-08T00:00:00+00:00</updated><id>https://xdevil.top/library/2026/06/08/libjpeg</id><content type="html" xml:base="https://xdevil.top/library/2026/06/08/libjpeg.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <h2 id="安装">安装</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>libjpeg-dev
@@ -1446,99 +1749,4 @@ a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
   <li><strong>仿射变换</strong>（正交、斜投影）保持平行性，适合CAD和2.5D游戏。</li>
   <li><strong>射影变换</strong>（透视类）不保持平行性，但提供了真实感。</li>
   <li>所有投影矩阵都是4×4齐次矩阵，是射影变换或仿射变换在<strong>降维约束</strong>下的特例。</li>
-</ul>]]></content><author><name>Devil</name></author><category term="数学" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/80.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/80.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">死亡倒计时 · 野在新疆</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/05/03/%E6%AD%BB%E4%BA%A1%E5%80%92%E8%AE%A1%E6%97%B6-%E9%87%8E%E5%9C%A8%E6%96%B0%E7%96%86.html" rel="alternate" type="text/html" title="死亡倒计时 · 野在新疆" /><published>2026-05-03T00:00:00+00:00</published><updated>2026-05-03T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/05/03/%E6%AD%BB%E4%BA%A1%E5%80%92%E8%AE%A1%E6%97%B6%20%C2%B7%20%E9%87%8E%E5%9C%A8%E6%96%B0%E7%96%86</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/05/03/%E6%AD%BB%E4%BA%A1%E5%80%92%E8%AE%A1%E6%97%B6-%E9%87%8E%E5%9C%A8%E6%96%B0%E7%96%86.html"><![CDATA[<h1 id="攻略">攻略</h1>
-<h2 id="地图">地图</h2>
-<p>北疆自然，南疆人文</p>
-
-<p><img src="/assets/content/54.jpg" alt="/assets/content/54.jpg" /></p>
-
-<p><img src="/assets/content/55.jpg" alt="/assets/content/55.jpg" /></p>
-
-<h2 id="装备">装备</h2>
-<p>车辆</p>
-<ul>
-  <li>越野，油车 交通工具？？？No，拍照辅助工具！！！</li>
-</ul>
-
-<p>其它</p>
-<ul>
-  <li>墨镜、摄像机、防晒</li>
-</ul>
-
-<h2 id="注意">注意</h2>
-<p>安全第一！！！</p>
-
-<p>时间充裕，否则还没玩就得回去了</p>
-
-<p>不要投喂野生动物</p>
-
-<hr />
-
-<p>池、湖</p>
-
-<hr />
-
-<h1 id="赛里木湖">赛里木湖</h1>
-
-<p><img src="/assets/content/56.jpg" alt="/assets/content/56.jpg" /></p>
-
-<p>大西洋的最后一滴眼泪</p>
-
-<p>假期避开高峰期，最好提前一天去逛，人少，体验更好点</p>
-
-<p>逆时针（逆光） or 顺时针（绕路），逆时针个人感觉挺好的：</p>
-<ul>
-  <li>晚上 19 点到达赛里木湖，十里长梯边玩边看日落，出景区住宿</li>
-  <li>第二天早上 6 点多排队直接去点将台看日出（7 点开门）</li>
-  <li>剩下慢慢逛，逛完南门出去果子沟大桥瞅一眼</li>
-</ul>
-
-<h1 id="天山天池">天山天池</h1>
-
-<hr />
-
-<p>草原</p>
-
-<hr />
-
-<h1 id="那拉提">那拉提</h1>
-
-<h1 id="恰西">恰西</h1>
-<p><img src="/assets/content/57.jpg" alt="/assets/content/57.jpg" /></p>
-
-<p>去那拉提途中，饶点路顺便瞅眼，瞅瞅草原，近距离看雪山</p>
-
-<p>找个合适位置，拍个旱地拔葱</p>
-
-<h1 id="喀纳斯">喀纳斯</h1>
-
-<h1 id="禾木">禾木</h1>
-
-<hr />
-
-<p>公路</p>
-
-<hr />
-
-<h1 id="独库公路">独库公路</h1>
-
-<h1 id="伊昭公路">伊昭公路</h1>
-
-<hr />
-
-<p>其它</p>
-
-<hr />
-
-<h1 id="独山子大峡谷">独山子大峡谷</h1>
-<p><img src="/assets/content/60.jpg" alt="/assets/content/60.jpg" /></p>
-
-<p>在外面吹吹风，远距离拍拍雪山就可以撤了，进去转两圈也行，景区项目不建议</p>
-
-<h1 id="果子沟大桥">果子沟大桥</h1>
-
-<p>赛里木湖南门出来就是</p>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[青春没有售价，新疆就在脚下（等我做足攻略，会再战的）]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/79.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/79.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">少说话，多读书</title><link href="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html" rel="alternate" type="text/html" title="少说话，多读书" /><published>2026-02-28T00:00:00+00:00</published><updated>2026-02-28T00:00:00+00:00</updated><id>https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D%EF%BC%8C%E5%A4%9A%E8%AF%BB%E4%B9%A6</id><content type="html" xml:base="https://xdevil.top/%E6%B4%BB%E7%9D%80/2026/02/28/%E5%B0%91%E8%AF%B4%E8%AF%9D-%E5%A4%9A%E8%AF%BB%E4%B9%A6.html"><![CDATA[<h1 id="平凡的世界">平凡的世界</h1>
-
-<h1 id="兄弟">兄弟</h1>
-
-<h1 id="许三观卖血记">许三观卖血记</h1>]]></content><author><name>Devil</name></author><category term="活着" /><summary type="html"><![CDATA[见多识广，面对这世界时便会多一份游刃有余]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/78.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/78.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</ul>]]></content><author><name>Devil</name></author><category term="数学" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/80.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/80.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
