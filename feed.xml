@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-07-21T07:38:58+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">shared_ptr 是线程安全的吗？</title><link href="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html" rel="alternate" type="text/html" title="shared_ptr 是线程安全的吗？" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/shared_ptr%20%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html"><![CDATA[<h1 id="实现原理">实现原理</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-07-21T10:12:52+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">shared_ptr 是线程安全的吗？</title><link href="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html" rel="alternate" type="text/html" title="shared_ptr 是线程安全的吗？" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/shared_ptr%20%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html"><![CDATA[<h1 id="实现原理">实现原理</h1>
 <p>一个典型的 shared_ptr<T> 对象内部，通常包含两个原始指针（32位系统各4字节，64位系统各8字节）：</T></p>
 <ul>
   <li>对象指针：指向你实际管理的那个 T 类型的对象。</li>
@@ -308,7 +308,234 @@ sudo apt install gcc-12 g++-12
   <li>读者操作短暂	读者在写者下一次需要该缓冲区之前就已经释放引用（比如配置读取极快，几纳秒）</li>
   <li>写操作频率低	两个写操作的时间间隔足够让所有老读者退出</li>
   <li>缓冲区数量充足	3 个缓冲区在“一读一写”模式下足够，但若读者持有时间跨越多个写周期，则可能需要更多缓冲区或转向引用计数</li>
-</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">libjpeg</title><link href="https://xdevil.top/library/2026/06/08/libjpeg.html" rel="alternate" type="text/html" title="libjpeg" /><published>2026-06-08T00:00:00+00:00</published><updated>2026-06-08T00:00:00+00:00</updated><id>https://xdevil.top/library/2026/06/08/libjpeg</id><content type="html" xml:base="https://xdevil.top/library/2026/06/08/libjpeg.html"><![CDATA[<h1 id="概述">概述</h1>
+</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">奇异递归模板模式（Curiously Recurring Template Pattern，CRTP）</title><link href="https://xdevil.top/cpp/2026/07/19/%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F-Curiously-Recurring-Template-Pattern-CRTP.html" rel="alternate" type="text/html" title="奇异递归模板模式（Curiously Recurring Template Pattern，CRTP）" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%88Curiously%20Recurring%20Template%20Pattern%EF%BC%8CCRTP%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F-Curiously-Recurring-Template-Pattern-CRTP.html"><![CDATA[<p><strong>CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）</strong> 是 C++ 模板编程中的一种经典技巧：一个派生类将自己作为模板参数传递给基类，使得基类能够在编译期知道派生类的类型，从而在基类的方法中调用派生类的成员函数——实现编译期多态（静态多态）。</p>
+
+<h3 id="1-基本形式">1. 基本形式</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">interface</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 编译期将 this 转换为 Derived*，然后调用派生类的实现</span>
+        <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 可选：提供默认实现，若派生类没有则使用默认</span>
+    <span class="kt">void</span> <span class="nf">implementation</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 默认行为</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span> <span class="k">final</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">Base</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="kt">void</span> <span class="n">implementation</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 派生类定制行为</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 使用</span>
+<span class="n">MyClass</span> <span class="n">obj</span><span class="p">;</span>
+<span class="n">obj</span><span class="p">.</span><span class="n">interface</span><span class="p">();</span>  <span class="c1">// 调用 Base::interface，内部调用 MyClass::implementation</span>
+</code></pre></div></div>
+
+<p>关键：</p>
+<ul>
+  <li>基类 <code class="language-plaintext highlighter-rouge">Base</code> 接受模板参数 <code class="language-plaintext highlighter-rouge">Derived</code>。</li>
+  <li>派生类 <code class="language-plaintext highlighter-rouge">MyClass</code> 继承自 <code class="language-plaintext highlighter-rouge">Base&lt;MyClass&gt;</code>（<strong>自己作为模板参数传给基类</strong>）。</li>
+  <li>基类通过 <code class="language-plaintext highlighter-rouge">static_cast&lt;Derived*&gt;(this)</code> 安全地向下转型，因为 <code class="language-plaintext highlighter-rouge">this</code> 实际指向的就是 <code class="language-plaintext highlighter-rouge">Derived</code> 对象，这是类型安全的（没有任何虚函数或运行时开销）。</li>
+</ul>
+
+<h1 id="原理编译期多态静态多态">原理：编译期多态（静态多态）</h1>
+
+<p>CRTP 是<strong>静态多态</strong>的典型实现方式，与虚函数的动态多态对比：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>特性</th>
+      <th>CRTP（静态多态）</th>
+      <th>虚函数（动态多态）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>绑定时机</td>
+      <td>编译期</td>
+      <td>运行时（通过 vtable）</td>
+    </tr>
+    <tr>
+      <td>调用开销</td>
+      <td>直接函数调用，可内联</td>
+      <td>间接调用（查虚表），难以内联</td>
+    </tr>
+    <tr>
+      <td>对象大小</td>
+      <td>无虚指针，更小</td>
+      <td>包含 vptr，增大对象</td>
+    </tr>
+    <tr>
+      <td>灵活性</td>
+      <td>必须在编译时确定派生类类型</td>
+      <td>可动态绑定到任意派生类</td>
+    </tr>
+    <tr>
+      <td>代码膨胀</td>
+      <td>每个派生类实例化一份基类代码</td>
+      <td>只一份基类代码</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>核心机制</strong>：<code class="language-plaintext highlighter-rouge">static_cast&lt;Derived*&gt;(this)</code> 是安全的，因为派生类 <code class="language-plaintext highlighter-rouge">MyClass</code> 继承自 <code class="language-plaintext highlighter-rouge">Base&lt;MyClass&gt;</code>，所以 <code class="language-plaintext highlighter-rouge">this</code> 的运行时类型一定是 <code class="language-plaintext highlighter-rouge">MyClass*</code>。编译器可以完全优化掉转型，直接调用派生类的函数，甚至可以内联。</p>
+
+<h1 id="典型应用场景">典型应用场景</h1>
+
+<h2 id="场景-a静态多态编译期多态">场景 A：静态多态（编译期多态）</h2>
+<p>替代虚函数接口，用于对性能要求极高的场景（如游戏引擎、高频交易），且派生类数量在编译期已知。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Algorithm</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">step1</span><span class="p">();</span>
+        <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">step2</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FastAlgo</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">FastAlgo</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">step1</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* 快速实现 */</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">step2</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* 快速实现 */</span> <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>通过 CRTP，基类可以定义算法骨架，派生类实现具体步骤，没有虚函数开销。</p>
+
+<h2 id="场景-b对象计数器实例计数">场景 B：对象计数器（实例计数）</h2>
+<p>跟踪某个类创建了多少个对象，而且每个派生类拥有独立的计数器（利用模板实例化）。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Counted</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Counted</span><span class="p">()</span> <span class="p">{</span> <span class="o">++</span><span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+    <span class="o">~</span><span class="n">Counted</span><span class="p">()</span> <span class="p">{</span> <span class="o">--</span><span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">objectsAlive</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="kt">int</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;::</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MyWidget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">MyWidget</span><span class="o">&gt;</span> <span class="p">{};</span>
+<span class="k">class</span> <span class="nc">MyGadget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">MyGadget</span><span class="o">&gt;</span> <span class="p">{};</span>
+
+<span class="c1">// MyWidget 和 MyGadget 各自维护独立的计数</span>
+</code></pre></div></div>
+
+<h2 id="场景-c实现-enable_shared_from_this-的类似机制">场景 C：实现 <code class="language-plaintext highlighter-rouge">enable_shared_from_this</code> 的类似机制</h2>
+<p>CRTP 可以让基类方法返回指向派生类的指针/引用，且类型是派生类而非基类，从而支持链式调用。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Derived</span><span class="o">&amp;</span> <span class="n">setProperty</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ... 设置公共属性</span>
+        <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>   <span class="c1">// 返回派生类引用</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Widget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">setColor</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">Widget</span> <span class="n">w</span><span class="p">;</span>
+<span class="n">w</span><span class="p">.</span><span class="n">setProperty</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="n">setColor</span><span class="p">(</span><span class="s">"red"</span><span class="p">);</span>   <span class="c1">// 流畅接口</span>
+</code></pre></div></div>
+
+<h2 id="场景-d操作符重载辅助如-boostoperators">场景 D：操作符重载辅助（如 Boost.Operators）</h2>
+<p>通过 CRTP 自动为派生类生成运算操作符，只需派生类提供少量基本操作。</p>
+
+<p>例如，只需提供 <code class="language-plaintext highlighter-rouge">operator&lt;</code> 和 <code class="language-plaintext highlighter-rouge">operator==</code>，CRTP 基类自动生成 <code class="language-plaintext highlighter-rouge">operator&gt;</code>、<code class="language-plaintext highlighter-rouge">&lt;=</code>、<code class="language-plaintext highlighter-rouge">&gt;=</code>、<code class="language-plaintext highlighter-rouge">!=</code>。</p>
+
+<h2 id="场景-e混入类mixins">场景 E：混入类（Mixins）</h2>
+<p>混入类通过 CRTP 为类添加额外功能，而不影响类的主要职责。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">static</span> <span class="n">Derived</span><span class="o">&amp;</span> <span class="n">getInstance</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">static</span> <span class="n">Derived</span> <span class="n">instance</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+    <span class="n">Singleton</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">MyManager</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Singleton</span><span class="o">&lt;</span><span class="n">MyManager</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">Singleton</span><span class="o">&lt;</span><span class="n">MyManager</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="c1">// 私有构造等</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="crtp-的高级技巧多层继承与委托">CRTP 的高级技巧：多层继承与委托</h2>
+
+<p>CRTP 可以嵌套多层，基类又可以 CRTP 到另一个基类，形成链式调用。也可以在基类中检测派生类是否提供了某个方法（通过 SFINAE 或 <code class="language-plaintext highlighter-rouge">concepts</code>），如果未提供则使用基类的默认实现——这被称为 <strong>静态多态的“默认方法”</strong>。</p>
+
+<h1 id="5-crtp-的优缺点">5. CRTP 的优缺点</h1>
+
+<p><strong>优点</strong>：</p>
+<ul>
+  <li><strong>零运行时开销</strong>：无虚表，调用可内联，性能极致。</li>
+  <li><strong>对象体积更小</strong>：没有虚指针。</li>
+  <li><strong>类型安全</strong>：编译期检查，转型安全。</li>
+  <li><strong>灵活组合</strong>：通过混入可以按需组合类功能。</li>
+</ul>
+
+<p><strong>缺点</strong>：</p>
+<ul>
+  <li><strong>代码膨胀</strong>：每个派生类都会实例化一份基类代码，多个派生类可能导致二进制体积增大。</li>
+  <li><strong>不能动态切换</strong>：无法在运行时通过基类指针/引用统一处理不同的派生类对象（失去动态多态性）。</li>
+  <li><strong>模板深度依赖</strong>：错误信息长且难以阅读（C++20 concepts 有所改善）。</li>
+  <li><strong>无法存储异构容器</strong>：不能像 <code class="language-plaintext highlighter-rouge">vector&lt;Base*&gt;</code> 那样存储不同派生类对象。</li>
+</ul>
+
+<h1 id="现代-cc20对-crtp-的增强">现代 C++（C++20）对 CRTP 的增强</h1>
+
+<p>C++20 引入了 <strong>concepts</strong>，使得 CRTP 中的类型约束更加清晰，错误信息更友好。可以约束派生类必须实现哪些方法，否则在模板实例化早期就报错。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Derived</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">DerivedImpl</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">Derived</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="n">d</span><span class="p">.</span><span class="n">implementation</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">DerivedImpl</span> <span class="n">Derived</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">interface</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>这样，如果派生类未实现 <code class="language-plaintext highlighter-rouge">implementation()</code>，会在编译时给出简洁的错误：“约束不满足”。</p>
+
+<h1 id="总结">总结</h1>
+
+<p><strong>CRTP 是通过把派生类类型注入基类，实现编译期向下转型，从而在基类中调用派生类方法的技术。</strong><br />
+它适合在以下场景中使用：</p>
+<ul>
+  <li>需要虚函数的性能敏感代码。</li>
+  <li>想为多个类添加通用功能（计数、操作符重载、单例等）而不损失性能。</li>
+  <li>实现静态接口（如模板方法模式）且派生类类型编译期确定。</li>
+</ul>
+
+<p>但它不是虚函数的完全替代品——不能动态派发，不能在容器中存储异构对象。<br />
+在你进一步学习模板元编程或设计高性能库时，CRTP 会是一个频繁出现的武器。</p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="奇技淫巧" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">libjpeg</title><link href="https://xdevil.top/library/2026/06/08/libjpeg.html" rel="alternate" type="text/html" title="libjpeg" /><published>2026-06-08T00:00:00+00:00</published><updated>2026-06-08T00:00:00+00:00</updated><id>https://xdevil.top/library/2026/06/08/libjpeg</id><content type="html" xml:base="https://xdevil.top/library/2026/06/08/libjpeg.html"><![CDATA[<h1 id="概述">概述</h1>
 
 <h2 id="安装">安装</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>libjpeg-dev
@@ -1394,366 +1621,4 @@ WantedBy=multi-user.target
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl daemon-reload
 <span class="nb">sudo </span>systemctl <span class="nb">enable </span>vmware-share.service
 <span class="nb">sudo </span>systemctl start vmware-share.service
-</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/82.png" /><media:content medium="image" url="https://xdevil.top/assets/image/82.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">几何变换与投影</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html" rel="alternate" type="text/html" title="几何变换与投影" /><published>2026-05-05T00:00:00+00:00</published><updated>2026-05-05T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/05/05/%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8A%95%E5%BD%B1.html"><![CDATA[<h1 id="基础变换">基础变换</h1>
-<h2 id="平移translate">平移（translate）</h2>
-
-<h2 id="旋转rotate">旋转（rotate）</h2>
-
-<h2 id="缩放scale">缩放（scale）</h2>
-
-<h2 id="错切shear">错切（shear）</h2>
-
-<h1 id="几何变换">几何变换</h1>
-<p>几何变换是指对几何图形（点、线、面）进行位置、大小、形状、方向等改变的操作。它本质上是一个从二维/三维空间到自身的映射。</p>
-
-<p>几何变换可根据自由度和保持的属性（如距离、角度、平行性、共线性）进行分类。常见的几何变换按照从特殊到一般（约束由强到弱）排列为：</p>
-<ul>
-  <li>刚体变换：旋转+平移，保持距离和角度（6自由度）。</li>
-  <li>相似变换：刚体+均匀缩放，保持角度（7自由度）。</li>
-  <li>仿射变换：一般线性变换+平移，保持平行性（12自由度）。</li>
-  <li>射影变换：最一般的齐次线性变换，保持共线性（15自由度）。</li>
-</ul>
-
-<h1 id="刚体变换rigid-transformation">刚体变换（Rigid Transformation）</h1>
-
-<p>又称欧式变换（Euclidean Transformation）</p>
-
-<h2 id="定义">定义</h2>
-<p>保持点之间<strong>距离</strong>和<strong>夹角</strong>（即形状和大小）不变，且<strong>保持定向</strong>（无镜像）。只有旋转和平移组成。</p>
-
-<h2 id="模型">模型</h2>
-<p>点 $\mathbf{p} = [x, y, z]^T$ 变换后：
-\(\mathbf{p}' = \mathbf{R} \mathbf{p} + \mathbf{t}\)</p>
-
-<p>其中：</p>
-<ul>
-  <li>$\mathbf{R}$ 是 3×3 旋转矩阵，满足 $\mathbf{R}^T \mathbf{R} = \mathbf{I}$，$\det(\mathbf{R}) = +1$。</li>
-  <li>$\mathbf{t}$ 是 3×1 平移向量。</li>
-</ul>
-
-<p>齐次坐标形式：
-\(\begin{bmatrix} \mathbf{p}' \\ 1 \end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{R} &amp; \mathbf{t} \\
-\mathbf{0}^T &amp; 1
-\end{bmatrix}
-\begin{bmatrix} \mathbf{p} \\ 1 \end{bmatrix}\)</p>
-
-<p>矩阵记为：
-\(T_{\text{rigid}} =
-\begin{pmatrix}
-r_{11} &amp; r_{12} &amp; r_{13} &amp; t_x \\
-r_{21} &amp; r_{22} &amp; r_{23} &amp; t_y \\
-r_{31} &amp; r_{32} &amp; r_{33} &amp; t_z \\
-0 &amp; 0 &amp; 0 &amp; 1
-\end{pmatrix}\)</p>
-
-<h2 id="自由度">自由度</h2>
-<ul>
-  <li>旋转：3 个自由度（例如欧拉角或轴角）</li>
-  <li>平移：3 个自由度</li>
-  <li><strong>合计 6 个自由度</strong></li>
-</ul>
-
-<h2 id="不变性质">不变性质</h2>
-<ul>
-  <li>两点间的距离</li>
-  <li>直线间的夹角</li>
-  <li>体积（有符号体积保持不变）</li>
-  <li>曲面的高斯曲率</li>
-</ul>
-
-<h2 id="典型应用">典型应用</h2>
-<ul>
-  <li>机器人运动学（末端执行器位姿）</li>
-  <li>三维点云配准（ICP 算法中的刚性运动）</li>
-  <li>骨骼动画中的刚体骨骼变换</li>
-</ul>
-
-<h2 id="rt-s-tr">RT s TR</h2>
-
-<p>先平移后旋转（RT）还是先旋转后平移（TR）？</p>
-
-<h3 id="rt">RT</h3>
-<p>旋转是基于世界坐标系的（绕世界圆点旋转），平移也是基于世界坐标系的</p>
-
-\[R \cdot T = \begin{bmatrix}
-r_{11} &amp; r_{12} &amp; r_{13} &amp; r_{11}dx + r_{12}dy + r_{13}dz \\
-r_{21} &amp; r_{22} &amp; r_{23} &amp; r_{21}dx + r_{22}dy + r_{23}dz \\
-r_{31} &amp; r_{32} &amp; r_{33} &amp; r_{31}dx + r_{32}dy + r_{33}dz \\
-0 &amp; 0 &amp; 0 &amp; 1
-\end{bmatrix}\]
-
-<h3 id="tr正解">TR（正解）</h3>
-<p>平移是基于世界坐标系的，旋转是基于本地坐标系的（绕局部圆点旋转）</p>
-
-<p>更直观、形象，故常用</p>
-
-\[T \cdot R = \begin{bmatrix}
-r_{11} &amp; r_{12} &amp; r_{13} &amp; dx \\
-r_{21} &amp; r_{22} &amp; r_{23} &amp; dy \\
-r_{31} &amp; r_{32} &amp; r_{33} &amp; dz \\
-0 &amp; 0 &amp; 0 &amp; 1
-\end{bmatrix}\]
-
-<h3 id="对比">对比</h3>
-<p>先平移后旋转（ RT）：平移向量被旋转，物体可能偏离预期的世界坐标方向。</p>
-
-<p>先旋转后平移（TR）：平移量纯粹沿着世界/父坐标轴，与物体自身朝向无关。</p>
-
-<p>所以，最终的朝向由 R 一锤定音，与顺序无关；但最终的位置，一个经过了 R 的旋转处理，一个则保持了平移向量的原始模样。</p>
-
-<p>最终物体的旋转姿态（朝向）是完全一致的，唯一改变的是它在世界空间中的位置（平移）</p>
-
-<h1 id="相似变换similarity-transformation">相似变换（Similarity Transformation）</h1>
-<h2 id="定义-1">定义</h2>
-<p><strong>旋转 + 平移 + 均匀缩放</strong>。保持形状（角度）不变，但大小可以改变。</p>
-
-<h2 id="模型-1">模型</h2>
-<p>\(\mathbf{p}' = s \mathbf{R} \mathbf{p} + \mathbf{t}\)
-其中 $s &gt; 0$ 是均匀缩放因子。</p>
-
-<p>齐次矩阵：
-\(T_{\text{sim}} =
-\begin{bmatrix}
-s\mathbf{R} &amp; \mathbf{t} \\
-\mathbf{0}^T &amp; 1
-\end{bmatrix}\)</p>
-
-<h2 id="自由度-1">自由度</h2>
-<ul>
-  <li>旋转：3</li>
-  <li>平移：3</li>
-  <li>缩放：1</li>
-  <li><strong>合计 7 个自由度</strong></li>
-</ul>
-
-<h2 id="不变性质-1">不变性质</h2>
-<ul>
-  <li>角度（两条直线间的夹角）</li>
-  <li>形状（圆映射为圆，球映射为球）</li>
-  <li>平行性</li>
-  <li>交比（四点的交比不变）</li>
-</ul>
-
-<h2 id="典型应用-1">典型应用</h2>
-<ul>
-  <li>三维物体在图像中的尺度变化（同一物体远近不同）</li>
-  <li>多视图三维重建中的相似变换（尺度模糊）</li>
-  <li>三维模型归一化（缩放至单位大小）</li>
-</ul>
-
-<h2 id="注意">注意</h2>
-<p>与刚体变换相比，相似变换允许物体整体放大/缩小，但不允许各向异性缩放或错切。</p>
-
-<h1 id="仿射变换affine-transformation">仿射变换（Affine Transformation）</h1>
-
-<h2 id="定义-2">定义</h2>
-<p>保持<strong>平行性</strong>和<strong>共线性</strong>，但可以不保持长度和角度。包括：旋转、平移、均匀缩放、非均匀缩放、错切（剪切）、反射。</p>
-
-<h2 id="模型-2">模型</h2>
-<p>\(\mathbf{p}' = \mathbf{A} \mathbf{p} + \mathbf{t}\)
-其中 $\mathbf{A}$ 是 3×3 可逆矩阵（不必正交）。</p>
-
-<p>齐次矩阵：
-\(T_{\text{affine}} =
-\begin{bmatrix}
-a_{11} &amp; a_{12} &amp; a_{13} &amp; t_x \\
-a_{21} &amp; a_{22} &amp; a_{23} &amp; t_y \\
-a_{31} &amp; a_{32} &amp; a_{33} &amp; t_z \\
-0 &amp; 0 &amp; 0 &amp; 1
-\end{bmatrix}\)</p>
-
-<h2 id="自由度-2">自由度</h2>
-<p>$\mathbf{A}$ 有 9 个分量，平移 3 个，共 12 个参数，但 $\mathbf{A}$ 可逆（一般无进一步约束），自由度 <strong>12</strong>（齐次矩阵最后一行固定为 (0,0,0,1)）。</p>
-
-<h2 id="不变性质-2">不变性质</h2>
-<ul>
-  <li>平行性（平行线变换后仍平行）</li>
-  <li>共线性（共线的点仍共线）</li>
-  <li>直线上的线段比例</li>
-  <li>体积比（变换后体积与原来体积之比 = $\det(\mathbf{A})$，常数）</li>
-  <li>重心坐标</li>
-</ul>
-
-<h2 id="典型应用-2">典型应用</h2>
-<ul>
-  <li>三维形变（非刚性配准中的仿射近似）</li>
-  <li>医学图像配准（CT/MR 中的线性配准）</li>
-  <li>三维错切效果（歪斜造型）</li>
-</ul>
-
-<h2 id="示例沿-x-方向的错切">示例：沿 X 方向的错切</h2>
-<p>\(\mathbf{A}_{\text{shear}} =
-\begin{bmatrix}
-1 &amp; k &amp; 0 \\
-0 &amp; 1 &amp; 0 \\
-0 &amp; 0 &amp; 1
-\end{bmatrix}\)
-效果：$y$ 坐标不变，$x’ = x + k y$。</p>
-
-<h1 id="投影变换projective-transformation">投影变换（Projective Transformation）</h1>
-<p>射影变换</p>
-
-<h2 id="定义-3">定义</h2>
-<p>三维空间中最一般的可逆线性变换（在齐次坐标意义下）。它不保持平行性，但保持共线性和<strong>交比</strong>（四点的交比不变）。</p>
-
-<h2 id="模型-3">模型</h2>
-<p>在齐次坐标下：
-\(\begin{bmatrix} X' \\ Y' \\ Z' \\ W' \end{bmatrix}
-=
-\mathbf{H}_{4\times4}
-\begin{bmatrix} X \\ Y \\ Z \\ W \end{bmatrix}\)</p>
-
-<p>其中 $\mathbf{H}$ 是一个 4×4 可逆矩阵（非奇异）。真实三维坐标为：
-\(x' = \frac{X'}{W'},\quad y' = \frac{Y'}{W'},\quad z' = \frac{Z'}{W'}\)</p>
-
-<h2 id="自由度-3">自由度</h2>
-<p>4×4 矩阵有 16 个元素，整体尺度无关（齐次性），所以自由度为 <strong>15</strong>。</p>
-
-<h2 id="不变性质-3">不变性质</h2>
-<ul>
-  <li>共线性（直线映射为直线）</li>
-  <li>交比（四个共线点的交比不变）</li>
-  <li>接触阶（曲面间的相切关系）</li>
-</ul>
-
-<h2 id="与透视投影的区别">与“透视投影”的区别</h2>
-<ul>
-  <li>图形学中的<strong>透视投影</strong>通常指 <strong>三维到二维</strong> 的映射（用 3×4 或 4×4 矩阵，最后一行 (0,0,-1,0) 等），结果是二维图像。</li>
-  <li>这里的<strong>三维射影变换</strong>是 <strong>三维空间到自身</strong> 的一般可逆映射（有时也称为三维单应变换）。它可以模拟任意中心投影（包括从三维空间某点投影到另一平面，然后再反投回三维空间引起的全局变形）。</li>
-</ul>
-
-<h2 id="典型应用-3">典型应用</h2>
-<ul>
-  <li>多视图几何中，同一个三维平面在不同相机图像间的变换是二维射影变换（平面单应性）。</li>
-  <li>三维重建中的<strong>射影重建</strong>（仅满足射影变换等价性）。</li>
-  <li>计算机图形学效果：模拟复杂的镜头畸变、投影变形。</li>
-</ul>
-
-<h2 id="矩阵结构">矩阵结构</h2>
-<p>\(\mathbf{H}_{4\times4} =
-\begin{bmatrix}
-\mathbf{A}_{3\times3} &amp; \mathbf{t}_{3\times1} \\
-\mathbf{v}^T_{1\times3} &amp; v_{44}
-\end{bmatrix}\)</p>
-
-<ul>
-  <li>$\mathbf{A}$：仿射部分</li>
-  <li>$\mathbf{t}$：平移</li>
-  <li>$\mathbf{v}^T$：透视部分（引起透视变形）</li>
-  <li>$v_{44}$：整体缩放因子</li>
-</ul>
-
-<p>当 $\mathbf{v} = \mathbf{0}$ 且 $v_{44} \neq 0$ 时，退化为仿射变换（最后一行 (0,0,0,1) 可归一化得到）。</p>
-
-<h1 id="正交投影orthographic-projection">正交投影（Orthographic Projection）</h1>
-
-<h2 id="在变换谱系中的位置">在变换谱系中的位置</h2>
-<p><strong>属于仿射变换</strong>（且是平行投影中投影方向垂直于投影面的情况）。</p>
-
-<h2 id="为什么">为什么？</h2>
-<p>矩阵形式为：
-\(P_{\text{ortho}} =
-  \begin{bmatrix}
-  \frac{2}{r-l} &amp; 0 &amp; 0 &amp; -\frac{r+l}{r-l} \\
-  0 &amp; \frac{2}{t-b} &amp; 0 &amp; -\frac{t+b}{t-b} \\
-  0 &amp; 0 &amp; \frac{-2}{f-n} &amp; -\frac{f+n}{f-n} \\
-  0 &amp; 0 &amp; 0 &amp; 1
-  \end{bmatrix}\)</p>
-<ul>
-  <li>最后一行固定为 $(0,0,0,1)$ → <strong>无透视项</strong>（仿射变换的标志）。</li>
-  <li>左上角 3×3 子矩阵是对角矩阵（线性部分为缩放和平移，无旋转后可视为刚体+缩放的特殊情况）。</li>
-  <li>它保持了平行线和平行平面（因为仿射变换的性质）。</li>
-  <li>不保持角度（除非缩放均匀，但正交投影通常各向异性缩放不同坐标轴）。</li>
-</ul>
-
-<h2 id="与其他变换的关系">与其他变换的关系</h2>
-<ul>
-  <li>可以看作是<strong>刚体变换</strong>之后跟着一个<strong>缩放</strong>（将观察体映射到 NDC 立方体），再平移。整体是一个<strong>仿射变换</strong>。</li>
-  <li>它没有透视效果，因此不属于射影变换（虽然射影变换包含仿射，但此处强调其仿射属性）。</li>
-</ul>
-
-<h1 id="斜投影oblique-projection">斜投影（Oblique Projection）</h1>
-
-<h2 id="在变换谱系中的位置-1">在变换谱系中的位置</h2>
-<p><strong>也属于仿射变换</strong>（平行投影中投影方向不垂直于投影面）。</p>
-
-<h2 id="为什么-1">为什么？</h2>
-<p>典型斜投影矩阵（投影到 z=0 平面）：
-\(P_{\text{oblique}} =
-  \begin{bmatrix}
-  1 &amp; 0 &amp; L_x &amp; 0 \\
-  0 &amp; 1 &amp; L_y &amp; 0 \\
-  0 &amp; 0 &amp; 0 &amp; 0 \\
-  0 &amp; 0 &amp; 0 &amp; 1
-  \end{bmatrix}\)
-  或者更常见的是将它嵌入到 4×4 齐次矩阵中（保留深度时第三行不为零）。</p>
-<ul>
-  <li>最后一行 $(0,0,0,1)$，无透视项。</li>
-  <li>线性部分包含<strong>错切项</strong>$L_x, L_y$，属于仿射变换中的<strong>剪切</strong>。</li>
-  <li>仍保持平行性，但角度和长度不保持。</li>
-</ul>
-
-<h2 id="与其他变换的关系-1">与其他变换的关系</h2>
-<ul>
-  <li>它是仿射变换的一个特例，且是<strong>平行投影</strong>的一种。</li>
-  <li>如果投影方向垂直于投影面，则退化为正交投影。</li>
-  <li>没有近大远小效果，因此不属于射影变换中的“透视”类。</li>
-</ul>
-
-<hr />
-
-<h1 id="透视投影perspective-projection">透视投影（Perspective Projection）</h1>
-
-<h2 id="在变换谱系中的位置-2">在变换谱系中的位置</h2>
-<p><strong>属于射影变换（非仿射）</strong>。</p>
-
-<h2 id="为什么-2">为什么？</h2>
-<p>标准透视投影矩阵（以 OpenGL 为例）：
-  \(P_{\text{persp}} =
-  \begin{bmatrix}
-  \frac{2n}{r-l} &amp; 0 &amp; \frac{r+l}{r-l} &amp; 0 \\
-  0 &amp; \frac{2n}{t-b} &amp; \frac{t+b}{t-b} &amp; 0 \\
-  0 &amp; 0 &amp; -\frac{f+n}{f-n} &amp; -\frac{2fn}{f-n} \\
-  0 &amp; 0 &amp; -1 &amp; 0
-  \end{bmatrix}\)</p>
-<ul>
-  <li>最后一行不再是 $(0,0,0,1)$，而是 $(0,0,-1,0)$ → <strong>透视项</strong>。</li>
-  <li>这个矩阵将视锥体（frustum）映射到 NDC 立方体。经过透视除法后，实现近大远小。</li>
-  <li>它保持了共线性（直线映射为直线），但不保持平行性（平行线在透视下可能交于灭点）。</li>
-  <li>它是一般射影变换（15自由度）的一个特例，其中某些元素被固定为0或特定值，自由度约为5~6。</li>
-</ul>
-
-<h2 id="与其他变换的关系-2">与其他变换的关系</h2>
-<ul>
-  <li>当透视项为零时（即最后一行变成 (0,0,0,1)），退化为仿射变换（但通常无法直接退化，因为需要修改其他行）。</li>
-  <li>透视投影矩阵不是仿射变换，因为它的线性部分与平移部分结合后，不再保证平行线映射为平行线。</li>
-</ul>
-
-<h1 id="倾斜透视投影oblique-perspective">倾斜透视投影（Oblique Perspective）</h1>
-
-<h2 id="在变换谱系中的位置-3">在变换谱系中的位置</h2>
-<p><strong>仍然属于射影变换</strong>，是透视投影的一个不对称特例。</p>
-
-<h2 id="为什么-3">为什么？</h2>
-<ul>
-  <li>其矩阵形式与透视投影矩阵<strong>完全相同</strong>，但参数 (l, r, b, t) 不是对称的（即 (l \neq -r) 或 (b \neq -t)）。</li>
-  <li>例如，对于左眼视图，(l) 和 (r) 相对于视点不对称。</li>
-  <li>它同样具有最后一行 ((0,0,-1,0)) 的形式（假定视线方向沿 -Z），因此属于射影变换。</li>
-  <li>它产生的视觉效果与透视投影一致（近大远小），但视锥体的中心轴不垂直于投影平面（或视点不在投影平面中心）。</li>
-</ul>
-
-<h2 id="与其他变换的关系-3">与其他变换的关系</h2>
-<ul>
-  <li>它是透视投影矩阵的一般化：当 (l = -r) 且 (b = -t) 时，退化为标准的对称透视投影。</li>
-  <li>同样是非仿射的射影变换。</li>
-</ul>
-
-<h2 id="关键点">关键点</h2>
-<ul>
-  <li><strong>仿射变换</strong>（正交、斜投影）保持平行性，适合CAD和2.5D游戏。</li>
-  <li><strong>射影变换</strong>（透视类）不保持平行性，但提供了真实感。</li>
-  <li>所有投影矩阵都是4×4齐次矩阵，是射影变换或仿射变换在<strong>降维约束</strong>下的特例。</li>
-</ul>]]></content><author><name>Devil</name></author><category term="数学" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/80.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/80.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/82.png" /><media:content medium="image" url="https://xdevil.top/assets/image/82.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
