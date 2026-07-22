@@ -194,6 +194,8 @@
 
 <h1 id="stdatomicstdshared_ptrc20">std::atomic&lt;std::shared_ptr<T>&gt;(C++20)</T></h1>
 
+<p>为什么 atomic&lt;shared_ptr<T>&gt; 如此重要：它绕过了对 T 平凡性的要求，通过指针的原子操作来管理复杂的、非平凡的对象。</T></p>
+
 <p>C++11 非成员函数：功能完备，但需要手动记住对所有变量都使用它们，容易疏忽。</p>
 
 <p>C++20 atomic<shared_ptr> 特化：类型系统强制所有访问都走原子成员函数，既安全又清晰。</shared_ptr></p>
