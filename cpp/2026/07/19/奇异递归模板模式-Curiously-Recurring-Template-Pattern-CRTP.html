@@ -293,6 +293,50 @@
 
 <p>这样，如果派生类未实现 <code class="language-plaintext highlighter-rouge">implementation()</code>，会在编译时给出简洁的错误：“约束不满足”。</p>
 
+<h1 id="why">why</h1>
+
+<p>完全可以直接创建派生类么，定义接口函数和实现函数么，为什么非要用 crtp</p>
+
+<p>不用 crtp</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 相同的前置处理</span>
+        <span class="n">doA</span><span class="p">();</span>     <span class="c1">// 不同</span>
+        <span class="c1">// 相同的后置处理</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 相同的前置处理   ← 重复</span>
+        <span class="n">doB</span><span class="p">();</span>             <span class="c1">// 不同</span>
+        <span class="c1">// 相同的后置处理   ← 重复</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>用 crtp</p>
+<pre><code class="language-CPP">template &lt;typename Derived&gt;
+class Base {
+public:
+    void run() {
+        // 相同的前置处理（只写一次）
+        static_cast&lt;Derived*&gt;(this)-&gt;doWork();
+        // 相同的后置处理（只写一次）
+    }
+};
+
+class A : public Base&lt;A&gt; {
+public:
+    void doWork() { /* A 的特化 */ }
+};
+class B : public Base&lt;B&gt; {
+public:
+    void doWork() { /* B 的特化 */ }
+};
+</code></pre>
+
 <h1 id="总结">总结</h1>
 
 <p><strong>CRTP 是通过把派生类类型注入基类，实现编译期向下转型，从而在基类中调用派生类方法的技术。</strong><br />
