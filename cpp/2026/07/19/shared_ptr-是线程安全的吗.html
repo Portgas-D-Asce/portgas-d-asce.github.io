@@ -272,15 +272,6 @@
   <li>如果 T 不是，或者对象很大、更新时需要复制 → 用 std::atomic&lt;std::shared_ptr<T>&gt;，通过指针的原子切换来间接实现“整个对象的原子更新”。</T></li>
   <li>atomic&lt;shared_ptr<T>&gt; 内部并非总是 lock‑free：它通常会用一把小锁来保护 shared_ptr 的读写，因此高频单点竞争时性能可能不如直接 atomic<T>。</T></T></li>
 </ul>
-
-<h1 id="其他">其他</h1>
-<p>在 Ubuntu 20.04 上安装 GCC 12：</p>
-
-<p>bash
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt update
-sudo apt install gcc-12 g++-12
-然后在 CLion 的工具链中将 C 编译器设为 /usr/bin/gcc-12，C++ 编译器设为 /usr/bin/g++-12，之后 std::atomic&lt;std::shared_ptr<T>&gt; 就可以直接使用。</T></p>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"

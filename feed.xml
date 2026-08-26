@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-08-25T06:19:48+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">shared_ptr 是线程安全的吗？</title><link href="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html" rel="alternate" type="text/html" title="shared_ptr 是线程安全的吗？" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/shared_ptr%20%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html"><![CDATA[<h1 id="实现原理">实现原理</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-08-26T02:59:43+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Unbuntu 安装 GCC 12</title><link href="https://xdevil.top/cpp/2026/08/24/Unbuntu-%E5%AE%89%E8%A3%85-GCC-12.html" rel="alternate" type="text/html" title="Unbuntu 安装 GCC 12" /><published>2026-08-24T00:00:00+00:00</published><updated>2026-08-24T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/08/24/Unbuntu%20%E5%AE%89%E8%A3%85%20GCC%2012</id><content type="html" xml:base="https://xdevil.top/cpp/2026/08/24/Unbuntu-%E5%AE%89%E8%A3%85-GCC-12.html"><![CDATA[<p>在 Ubuntu 20.04 上安装 GCC 12：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>add-apt-repository ppa:ubuntu-toolchain-r/test
+<span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>gcc-12 g++-12
+</code></pre></div></div>
+
+<p>在 CLion 的工具链中配置如下，之后 std::atomic&lt;std::shared_ptr<T>&gt; 就可以直接使用。</T></p>
+<ul>
+  <li>C 编译器设为 /usr/bin/gcc-12</li>
+  <li>C++ 编译器设为 /usr/bin/g++-12</li>
+</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/87.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/87.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">shared_ptr 是线程安全的吗？</title><link href="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html" rel="alternate" type="text/html" title="shared_ptr 是线程安全的吗？" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/shared_ptr%20%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/shared_ptr-%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97.html"><![CDATA[<h1 id="实现原理">实现原理</h1>
 <p>一个典型的 shared_ptr<T> 对象内部，通常包含两个原始指针（32位系统各4字节，64位系统各8字节）：</T></p>
 <ul>
   <li>对象指针：指向你实际管理的那个 T 类型的对象。</li>
@@ -192,16 +203,7 @@
   <li>如果 T 本身是 trivially copyable → 直接用 std::atomic<T>，无额外开销，真正的 lock‑free。</T></li>
   <li>如果 T 不是，或者对象很大、更新时需要复制 → 用 std::atomic&lt;std::shared_ptr<T>&gt;，通过指针的原子切换来间接实现“整个对象的原子更新”。</T></li>
   <li>atomic&lt;shared_ptr<T>&gt; 内部并非总是 lock‑free：它通常会用一把小锁来保护 shared_ptr 的读写，因此高频单点竞争时性能可能不如直接 atomic<T>。</T></T></li>
-</ul>
-
-<h1 id="其他">其他</h1>
-<p>在 Ubuntu 20.04 上安装 GCC 12：</p>
-
-<p>bash
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt update
-sudo apt install gcc-12 g++-12
-然后在 CLion 的工具链中将 C 编译器设为 /usr/bin/gcc-12，C++ 编译器设为 /usr/bin/g++-12，之后 std::atomic&lt;std::shared_ptr<T>&gt; 就可以直接使用。</T></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">双缓冲区（Double Buffer）</title><link href="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html" rel="alternate" type="text/html" title="双缓冲区（Double Buffer）" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88Double%20Buffer%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html"><![CDATA[<p>双缓冲区（Double Buffering）是一种经典的并发设计模式，核心思想是用空间换无锁读：维护两份数据副本，读者永远访问其中一份（读区），写者在另一份（写区）上修改，修改完成后通过原子操作瞬间交换两份缓冲区的角色</p>
+</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="并发编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">双缓冲区（Double Buffer）</title><link href="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html" rel="alternate" type="text/html" title="双缓冲区（Double Buffer）" /><published>2026-07-19T00:00:00+00:00</published><updated>2026-07-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88Double%20Buffer%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/07/19/%E5%8F%8C%E7%BC%93%E5%86%B2%E5%8C%BA-Double-Buffer.html"><![CDATA[<p>双缓冲区（Double Buffering）是一种经典的并发设计模式，核心思想是用空间换无锁读：维护两份数据副本，读者永远访问其中一份（读区），写者在另一份（写区）上修改，修改完成后通过原子操作瞬间交换两份缓冲区的角色</p>
 
 <h1 id="实现原理">实现原理</h1>
 <p>两个对象实例：buffer[0] 和 buffer[1]。 一个原子索引：std::atomic<int> read_index{0}，表示当前读者应该读取哪一个缓冲区（0 或 1）。</int></p>
@@ -1619,52 +1621,4 @@ node <span class="nt">--version</span>
 node <span class="nt">--version</span>
 npm <span class="nt">--version</span>
 
-</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/81.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/81.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">win ubuntu 设置共享文件夹</title><link href="https://xdevil.top/skill/2026/06/01/win-ubuntu-%E8%AE%BE%E7%BD%AE%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9.html" rel="alternate" type="text/html" title="win ubuntu 设置共享文件夹" /><published>2026-06-01T00:00:00+00:00</published><updated>2026-06-01T00:00:00+00:00</updated><id>https://xdevil.top/skill/2026/06/01/win%20ubuntu%20%E8%AE%BE%E7%BD%AE%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9</id><content type="html" xml:base="https://xdevil.top/skill/2026/06/01/win-ubuntu-%E8%AE%BE%E7%BD%AE%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9.html"><![CDATA[<h1 id="win">win</h1>
-<p>右键需要共享的文件夹</p>
-
-<p>属性 -&gt; 共享 -&gt; 高级共享 -&gt; 共享此文件夹</p>
-
-<h1 id="ubuntu">ubuntu</h1>
-
-<p>右键虚拟机 -&gt; 设置 -&gt; 选项 -&gt; 共享文件夹 -&gt; 总是启用 -&gt; 添加</p>
-
-<p>执行挂载命令</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount <span class="nt">-t</span> fuse.vmhgfs-fuse .host:/ /mnt/hgfs <span class="nt">-o</span> allow_other <span class="nt">-o</span> nonempty
-
-<span class="nb">cd</span> /mnt/hgfs/shared_vm
-</code></pre></div></div>
-
-<p>开机启动配置: 使用 systemd 服务, 这是最推荐的方法，可控性强，即使后续的网络或存储服务有问题也不会导致启动失败。</p>
-
-<p>创建一个 systemd 服务文件：</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/systemd/system/vmware-share.service
-</code></pre></div></div>
-
-<p>写入服务配置： 将下面的内容复制到文件中，保存并退出 。</p>
-<ul>
-  <li>After 和 Wants 确保了网络相关服务已就绪，让挂载更稳定。</li>
-  <li>Type=oneshot 表示这是一个一次性任务。</li>
-  <li>RemainAfterExit=yes 会让服务在任务执行成功后仍保持激活状态。</li>
-</ul>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
-Description=Mount VMware Shared Folder
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=oneshot
-ExecStart=/bin/bash -c '/usr/bin/vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o nonempty'
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-</code></pre></div></div>
-
-<p>重新加载 systemd 并启用服务：</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl daemon-reload
-<span class="nb">sudo </span>systemctl <span class="nb">enable </span>vmware-share.service
-<span class="nb">sudo </span>systemctl start vmware-share.service
-</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/82.png" /><media:content medium="image" url="https://xdevil.top/assets/image/82.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/81.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/81.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
