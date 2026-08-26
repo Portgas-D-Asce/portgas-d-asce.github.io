@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>godot_cpp 环境搭建 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="godot_cpp 环境搭建" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" />
+<meta property="og:url" content="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/87.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-08-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-08-24T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/87.jpeg" />
+<meta name="twitter:title" content="godot_cpp 环境搭建" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-08-24T00:00:00+00:00","datePublished":"2026-08-24T00:00:00+00:00","description":"xxxxxx","headline":"godot_cpp 环境搭建","image":"https://xdevil.top/assets/image/87.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"},"url":"https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> godot_cpp 环境搭建 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="godot-cpp-编译">godot-cpp 编译</h1>
+<h2 id="下载源码">下载源码</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/godotengine/godot-cpp.git
+<span class="nb">cd </span>godot-cpp
+
+git checkout 4.5
+</code></pre></div></div>
+
+<h2 id="编译环境">编译环境</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 确认 python3 已安装</span>
+python3 <span class="nt">--version</span>
+
+<span class="c"># 安装 scons，apt 方式版本太低</span>
+pip3 <span class="nb">install </span>scons
+
+<span class="c"># 设置环境变量</span>
+<span class="nb">echo</span> <span class="nv">$SHELL</span>
+
+vim ~/.bashrc
+
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h2 id="编译">编译</h2>
+
+<p>导出 api 文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># macos</span>
+/Applications/Godot.app/Contents/MacOS/Godot <span class="nt">--dump-extension-api</span>
+
+<span class="c"># ubuntu</span>
+~/software/godot/Godot_v4.6-stable_linux.x86_64 <span class="nt">--dump-extension-api</span>
+</code></pre></div></div>
+
+<p>编译 godot-cpp 静态库</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>godot-cpp
+
+scons <span class="nt">-c</span>
+
+scons <span class="nv">platform</span><span class="o">=</span>macos <span class="nb">arch</span><span class="o">=</span>arm64 <span class="nv">target</span><span class="o">=</span>template_release <span class="nv">custom_api_file</span><span class="o">=</span>extension_api.json
+</code></pre></div></div>
+
+<h2 id="产物">产物</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># bin: libgodot-cpp.linux.template_release.x86_64.a</span>
+<span class="c"># 头文件: include, gen/include, gdextension</span>
+</code></pre></div></div>
+
+<h1 id="自定义插件">自定义插件</h1>
+
+<p>my_node.h</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;godot_cpp/classes/node.hpp&gt;</span><span class="cp">
+</span>
+<span class="k">namespace</span> <span class="n">godot</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">MyNode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Node</span> <span class="p">{</span>
+        <span class="n">GDCLASS</span><span class="p">(</span><span class="n">MyNode</span><span class="p">,</span> <span class="n">Node</span><span class="p">)</span>
+
+    <span class="nl">private:</span>
+        <span class="kt">double</span> <span class="n">speed</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="nl">protected:</span>
+        <span class="k">static</span> <span class="kt">void</span> <span class="n">_bind_methods</span><span class="p">();</span>
+
+    <span class="nl">public:</span>
+        <span class="n">MyNode</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="n">_process</span><span class="p">(</span><span class="kt">double</span> <span class="n">delta</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">get_speed</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kt">void</span> <span class="n">set_speed</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_speed</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>my_node.cpp</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"my_node.h"</span><span class="cp">
+#include</span> <span class="cpf">&lt;godot_cpp/core/class_db.hpp&gt;</span><span class="cp">
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">godot</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">_bind_methods</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ClassDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">D_METHOD</span><span class="p">(</span><span class="s">"get_speed"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">MyNode</span><span class="o">::</span><span class="n">get_speed</span><span class="p">);</span>
+    <span class="n">ClassDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">D_METHOD</span><span class="p">(</span><span class="s">"set_speed"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">MyNode</span><span class="o">::</span><span class="n">set_speed</span><span class="p">);</span>
+    <span class="n">ADD_PROPERTY</span><span class="p">(</span><span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">FLOAT</span><span class="p">,</span> <span class="s">"speed"</span><span class="p">),</span> <span class="s">"set_speed"</span><span class="p">,</span> <span class="s">"get_speed"</span><span class="p">);</span>
+    <span class="n">ADD_SIGNAL</span><span class="p">(</span><span class="n">MethodInfo</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">FLOAT</span><span class="p">,</span> <span class="s">"new_speed"</span><span class="p">)));</span>
+<span class="p">}</span>
+
+<span class="n">MyNode</span><span class="o">::</span><span class="n">MyNode</span><span class="p">()</span> <span class="p">{}</span>
+<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">_process</span><span class="p">(</span><span class="kt">double</span> <span class="n">delta</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">speed</span> <span class="o">+=</span> <span class="n">delta</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">;</span>
+    <span class="n">emit_signal</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">speed</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">get_speed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">speed</span><span class="p">;</span> <span class="p">}</span>
+<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">set_speed</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_speed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">p_speed</span><span class="p">;</span>
+    <span class="n">emit_signal</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">speed</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 入口函数</span>
+<span class="k">extern</span> <span class="s">"C"</span> <span class="p">{</span>
+<span class="n">GDExtensionBool</span> <span class="n">my_extension_init</span><span class="p">(</span><span class="n">GDExtensionInterfaceGetProcAddress</span> <span class="n">p_get_proc_address</span><span class="p">,</span>
+                                  <span class="n">GDExtensionClassLibraryPtr</span> <span class="n">p_library</span><span class="p">,</span>
+                                  <span class="n">GDExtensionInitialization</span> <span class="o">*</span><span class="n">r_initialization</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">godot</span><span class="o">::</span><span class="n">GDExtensionBinding</span><span class="o">::</span><span class="n">InitObject</span> <span class="n">init_obj</span><span class="p">(</span><span class="n">p_get_proc_address</span><span class="p">,</span> <span class="n">p_library</span><span class="p">,</span> <span class="n">r_initialization</span><span class="p">);</span>
+    <span class="n">init_obj</span><span class="p">.</span><span class="n">register_initializer</span><span class="p">([](</span><span class="n">godot</span><span class="o">::</span><span class="n">ModuleInitializationLevel</span> <span class="n">p_level</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p_level</span> <span class="o">==</span> <span class="n">godot</span><span class="o">::</span><span class="n">MODULE_INITIALIZATION_LEVEL_SCENE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ClassDB</span><span class="o">::</span><span class="n">register_class</span><span class="o">&lt;</span><span class="n">MyNode</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="n">init_obj</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>CMakeLists.txt</p>
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 4.3<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>godot_cpp_demo<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD_REQUIRED ON<span class="p">)</span>
+
+<span class="c1"># 你的扩展源文件</span>
+<span class="nb">add_library</span><span class="p">(</span>my_extension SHARED src/my_node.cpp<span class="p">)</span>
+
+<span class="nb">target_include_directories</span><span class="p">(</span>my_extension PRIVATE
+        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/src
+        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/gen/include
+        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/include
+        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/gdextension
+<span class="p">)</span>
+
+<span class="nb">target_link_directories</span><span class="p">(</span>my_extension PRIVATE godot_cpp/godot-cpp-4.5/bin<span class="p">)</span>
+
+<span class="c1"># 链接 godot-cpp 静态库</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>my_extension PRIVATE libgodot-cpp.linux.template_release.x86_64.a<span class="p">)</span>
+
+<span class="c1"># 编译选项</span>
+<span class="nb">target_compile_options</span><span class="p">(</span>my_extension PRIVATE -Wall -Wextra<span class="p">)</span>
+
+<span class="c1"># 设置输出名（去掉 lib 前缀，方便 Godot 加载）</span>
+<span class="nb">set_target_properties</span><span class="p">(</span>my_extension PROPERTIES PREFIX <span class="s2">""</span> OUTPUT_NAME <span class="s2">"my_extension"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>编译即可得到产物 <code class="language-plaintext highlighter-rouge">my_extension.so</code></p>
+
+<h1 id="使用插件">使用插件</h1>
+<p>godot 工程，根目录下新建 bin 文件夹，将 <code class="language-plaintext highlighter-rouge">my_extension.so</code> 放入其中</p>
+
+<p>根目录下新建 <code class="language-plaintext highlighter-rouge">demo.gdextension</code> 文件</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[configuration]
+entry_symbol = "my_extension_init"
+compatibility_minimum = "4.5"
+
+[libraries]
+linux.debug.x86_64 = "res://bin/my_extension.so"
+linux.release.x86_64 = "res://bin/my_extension.so"
+
+# 如果你的库也编译了 ARM64，可以增加：
+# linux.debug.arm64 = "res://bin/my_extension_arm64.so"
+# linux.release.arm64 = "res://bin/my_extension_arm64.so"
+</code></pre></div></div>
+
+<p>gd 脚本</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extends Node2D
+
+var my_node
+
+<span class="c"># Called when the node enters the scene tree for the first time.</span>
+func _ready<span class="o">()</span> -&gt; void:
+	my_node <span class="o">=</span> MyNode.new<span class="o">()</span>   <span class="c"># MyNode 来自 GDExtension</span>
+	add_child<span class="o">(</span>my_node<span class="o">)</span>
+	
+	<span class="c"># 连接信号</span>
+	my_node.connect<span class="o">(</span><span class="s2">"speed_changed"</span>, Callable<span class="o">(</span>self, <span class="s2">"_on_speed_changed"</span><span class="o">))</span>
+
+	<span class="c"># 调用方法和属性</span>
+	my_node.set_speed<span class="o">(</span>30.0<span class="o">)</span>
+	print<span class="o">(</span><span class="s2">"当前速度："</span>, my_node.get_speed<span class="o">())</span>
+	pass <span class="c"># Replace with function body.</span>
+
+
+<span class="c"># Called every frame. 'delta' is the elapsed time since the previous frame.</span>
+func _process<span class="o">(</span>delta: float<span class="o">)</span> -&gt; void:
+	pass
+	
+func _on_speed_changed<span class="o">(</span>new_speed<span class="o">)</span>:
+	print<span class="o">(</span><span class="s2">"速度变化："</span>, new_speed<span class="o">)</span>
+</code></pre></div></div>
+
+<p>重新加载 godot 工程并运行</p>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
