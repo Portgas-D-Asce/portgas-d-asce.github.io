@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>类型萃取（Type Traits） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="类型萃取（Type Traits）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html" />
+<meta property="og:url" content="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-09-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-09-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="类型萃取（Type Traits）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-09-19T00:00:00+00:00","datePublished":"2026-09-19T00:00:00+00:00","description":"xxxxxx","headline":"类型萃取（Type Traits）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html"},"url":"https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 类型萃取（Type Traits） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>类型萃取是 C++ 模板元编程的基石。它让编译器在编译期查询类型信息、变换类型、做出选择等</p>
+
+<h1 id="什么是类型萃取">什么是类型萃取</h1>
+
+<p>类型萃取是一类编译期元函数：输入一个或多个类型，输出一个编译期常量或另一个类型。</p>
+
+<p>它解决的核心问题是：模板代码在实例化之前，如何根据类型的不同性质，走不同的分支、生成不同的代码？</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 整数走这里</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// 其他类型走这里</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="两大输出">两大输出</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>输出</th>
+      <th>含义</th>
+      <th>例子</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>值</strong>（<code class="language-plaintext highlighter-rouge">bool</code>、<code class="language-plaintext highlighter-rouge">size_t</code> 等）</td>
+      <td>查询类型性质</td>
+      <td><code class="language-plaintext highlighter-rouge">is_integral_v&lt;T&gt;</code>、<code class="language-plaintext highlighter-rouge">alignment_of_v&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>类型</strong></td>
+      <td>变换类型</td>
+      <td><code class="language-plaintext highlighter-rouge">remove_const_t&lt;T&gt;</code>、<code class="language-plaintext highlighter-rouge">decay_t&lt;T&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>          <span class="c1">// 值萃取：得到 bool</span>
+<span class="n">std</span><span class="o">::</span><span class="n">remove_const_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>         <span class="c1">// 类型萃取：得到新类型</span>
+</code></pre></div></div>
+
+<h1 id="基石integral_constant">基石：integral_constant</h1>
+<p>几乎所有值萃取都建立在 integral_constant 上。它做了三件事：</p>
+<ul>
+  <li>把值 v 编码进类型。</li>
+  <li>提供 ::value 访问。</li>
+  <li>提供 ::type 指向自身，便于统一接口。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">T</span> <span class="n">v</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">integral_constant</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">value_type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">integral_constant</span><span class="p">;</span>
+    <span class="c1">// 类型转换运算符</span>
+    <span class="k">constexpr</span> <span class="k">operator</span> <span class="n">T</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// 函数调用运算符</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">using</span> <span class="n">true_type</span>  <span class="o">=</span> <span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="nb">true</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">false_type</span> <span class="o">=</span> <span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="nb">false</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="n">t</span><span class="p">;</span>
+<span class="kt">bool</span> <span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>        <span class="c1">// 隐式转换成 bool，b == true</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>         <span class="c1">// 隐式转换成 int，x == 1</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>         <span class="c1">// 隐式转换成 bool，条件为真</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">42</span><span class="o">&gt;</span> <span class="n">c</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">c</span><span class="p">();</span>       <span class="c1">// n == 42</span>
+</code></pre></div></div>
+
+<p>true_type 和 false_type 是所有布尔萃取的基类，类型萃取的标准写法：默认继承 false_type，对满足条件的类型偏特化为 true_type</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_integral</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>C++17 引入 _v 变量模板：</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">is_integral_v</span> <span class="o">=</span> <span class="n">is_integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="分类">分类</h1>
+
+<type_traits> 里的工具可按功能分为九类
+
+| 类别 | 代表工具 |
+|---|---|
+| 主要类别 | `is_void`、`is_integral`、`is_pointer`、`is_class` |
+| 复合类别 | `is_arithmetic`、`is_scalar`、`is_object` |
+| 类型属性 | `is_const`、`is_trivial`、`is_abstract` |
+| 支持操作 | `is_constructible`、`is_copy_assignable` |
+| 属性查询 | `alignment_of`、`rank`、`extent` |
+| 类型关系 | `is_same`、`is_base_of`、`is_convertible` |
+| 类型变换 | `remove_const`、`decay`、`enable_if`、`conditional` |
+| 逻辑运算 | `conjunction`、`disjunction`、`negation` |
+| 辅助 | `integral_constant`、`true_type`、`void_t` |
+
+
+
+## 主要类型类别
+
+
+判断 `T` 是否属于某个基础类别。
+
+| 萃取 | 含义 |
+|---|---|
+| `is_void_v<T>` | `T` 是 `void` |
+| `is_null_pointer_v<T>` | `T` 是 `std::nullptr_t` |
+| `is_integral_v<T>` | `T` 是整数类型 |
+| `is_floating_point_v<T>` | `T` 是浮点类型 |
+| `is_array_v<T>` | `T` 是数组 |
+| `is_enum_v<T>` | `T` 是枚举 |
+| `is_union_v<T>` | `T` 是联合体 |
+| `is_class_v<T>` | `T` 是类 |
+| `is_function_v<T>` | `T` 是函数 |
+| `is_pointer_v<T>` | `T` 是指针 |
+| `is_lvalue_reference_v<T>` | `T` 是左值引用 |
+| `is_rvalue_reference_v<T>` | `T` 是右值引用 |
+| `is_member_object_pointer_v<T>` | `T` 是成员对象指针 |
+| `is_member_function_pointer_v<T>` | `T` 是成员函数指针 |
+
+例子：
+
+```cpp
+static_assert(std::is_integral_v<int>);
+static_assert(!std::is_integral_v<double>);
+static_assert(std::is_pointer_v&lt;int*&gt;);
+```
+
+---
+
+## 复合类型类别
+
+判断 `T` 是否属于某个更宽泛的类别。
+
+| 萃取 | 含义 |
+|---|---|
+| `is_arithmetic_v<T>` | 整数或浮点 |
+| `is_fundamental_v<T>` | 算术或 `void` |
+| `is_scalar_v<T>` | 算术、枚举、指针、成员指针、`nullptr_t` |
+| `is_object_v<T>` | 对象类型（非函数、非引用、非 `void`） |
+| `is_compound_v<T>` | 非基本类型 |
+| `is_reference_v<T>` | 左值或右值引用 |
+| `is_member_pointer_v<T>` | 成员对象或成员函数指针 |
+
+关系：
+
+```text
+is_arithmetic = is_integral || is_floating_point
+is_fundamental = is_arithmetic || is_void
+is_scalar = is_arithmetic || is_enum || is_pointer || is_member_pointer || is_null_pointer
+is_object = 非函数、非引用、非 void
+is_compound = !is_fundamental
+is_reference = is_lvalue_reference || is_rvalue_reference
+is_member_pointer = is_member_object_pointer || is_member_function_pointer
+```
+
+## 类型属性
+
+判断类型是否具有某种修饰或性质。
+
+| 萃取 | 含义 |
+|---|---|
+| `is_const_v<T>` | `T` 有顶层 `const` |
+| `is_volatile_v<T>` | `T` 有顶层 `volatile` |
+| `is_trivial_v<T>` | `T` 是平凡类型 |
+| `is_trivially_copyable_v<T>` | `T` 可平凡复制 |
+| `is_standard_layout_v<T>` | `T` 是标准布局 |
+| `is_empty_v<T>` | `T` 是空类 |
+| `is_polymorphic_v<T>` | `T` 有多态 |
+| `is_abstract_v<T>` | `T` 是抽象类 |
+| `is_final_v<T>` | `T` 是 `final` |
+| `is_aggregate_v<T>` | `T` 是聚合类型（C++17） |
+| `is_signed_v<T>` | `T` 是有符号算术类型 |
+| `is_unsigned_v<T>` | `T` 是无符号算术类型 |
+| `is_bounded_array_v<T>` | `T` 是已知大小数组（C++20） |
+| `is_unbounded_array_v<T>` | `T` 是未知大小数组（C++20） |
+| `is_scoped_enum_v<T>` | `T` 是 scoped enum（C++23） |
+
+
+## 支持的操作
+
+判断类型是否支持某种构造、赋值、析构。
+
+| 萃取 | 含义 |
+|---|---|
+| `is_constructible_v&lt;T, Args...&gt;` | 可用 `Args...` 构造 |
+| `is_trivially_constructible_v&lt;T, Args...&gt;` | 可平凡构造 |
+| `is_nothrow_constructible_v&lt;T, Args...&gt;` | 构造不抛异常 |
+| `is_default_constructible_v<T>` | 可默认构造 |
+| `is_copy_constructible_v<T>` | 可拷贝构造 |
+| `is_move_constructible_v<T>` | 可移动构造 |
+| `is_assignable_v&lt;T, U&gt;` | 可赋值 |
+| `is_copy_assignable_v<T>` | 可拷贝赋值 |
+| `is_move_assignable_v<T>` | 可移动赋值 |
+| `is_destructible_v<T>` | 可析构 |
+| `is_trivially_destructible_v<T>` | 可平凡析构 |
+| `is_nothrow_destructible_v<T>` | 析构不抛异常 |
+| `has_virtual_destructor_v<T>` | 有虚析构函数 |
+| `is_swappable_v<T>` | 可交换（C++17） |
+| `is_nothrow_swappable_v<T>` | 交换不抛异常（C++17） |
+
+这些萃取大量用于 `std::vector`、`std::optional` 等容器的条件优化。
+
+
+## 属性查询
+
+查询类型的数值属性。
+
+| 萃取 | 含义 |
+|---|---|
+| `alignment_of_v<T>` | 对齐要求 |
+| `rank_v<T>` | 数组维度 |
+| `extent_v&lt;T, I&gt;` | 第 `I` 维大小 |
+
+
+## 类型关系
+
+判断类型之间的关系。
+
+| 萃取 | 含义 |
+|---|---|
+| `is_same_v&lt;T, U&gt;` | `T` 和 `U` 是同一类型 |
+| `is_base_of_v&lt;Base, Derived&gt;` | `Base` 是 `Derived` 的基类 |
+| `is_convertible_v&lt;From, To&gt;` | `From` 可隐式转换为 `To` |
+| `is_nothrow_convertible_v&lt;From, To&gt;` | 转换不抛异常（C++20） |
+| `is_invocable_v&lt;F, Args...&gt;` | `F` 可用 `Args...` 调用（C++17） |
+| `is_invocable_r_v&lt;R, F, Args...&gt;` | 调用结果可转 `R`（C++17） |
+| `is_nothrow_invocable_v&lt;F, Args...&gt;` | 调用不抛异常（C++17） |
+
+## 类型变换
+
+输入类型，输出新类型。
+
+`const` / `volatile` 变换
+
+| 萃取 | 含义 |
+|---|---|
+| `remove_const_t<T>` | 移除顶层 `const` |
+| `remove_volatile_t<T>` | 移除顶层 `volatile` |
+| `remove_cv_t<T>` | 移除 `const` 和 `volatile` |
+| `add_const_t<T>` | 添加 `const` |
+| `add_volatile_t<T>` | 添加 `volatile` |
+| `add_cv_t<T>` | 添加 `const` 和 `volatile` |
+
+引用变换
+
+| 萃取 | 含义 |
+|---|---|
+| `remove_reference_t<T>` | 移除引用 |
+| `add_lvalue_reference_t<T>` | 添加左值引用 |
+| `add_rvalue_reference_t<T>` | 添加右值引用 |
+
+指针变换
+
+| 萃取 | 含义 |
+|---|---|
+| `remove_pointer_t<T>` | 移除指针 |
+| `add_pointer_t<T>` | 添加指针 |
+
+符号变换
+
+| 萃取 | 含义 |
+|---|---|
+| `make_signed_t<T>` | 转为有符号 |
+| `make_unsigned_t<T>` | 转为无符号 |
+
+数组变换
+
+| 萃取 | 含义 |
+|---|---|
+| `remove_extent_t<T>` | 移除最外层数组维度 |
+| `remove_all_extents_t<T>` | 移除所有数组维度 |
+
+综合变换
+
+| 萃取 | 含义 |
+|---|---|
+| `decay_t<T>` | 退化：移除引用、移除顶层 cv、数组转指针、函数转函数指针 |
+| `common_type_t<Ts...>` | 多个类型的公共类型 |
+| `underlying_type_t<T>` | 枚举的底层类型 |
+| `conditional_t&lt;B, T, F&gt;` | 编译期三目 |
+| `enable_if_t&lt;B, T&gt;` | 条件启用（SFINAE） |
+| `void_t<Ts...>` | 恒为 `void`，用于检测 |
+| `type_identity_t<T>` | 返回 `T` 自身（C++20） |
+| `remove_cvref_t<T>` | 移除 cv 和引用（C++20） |
+
+## 逻辑运算
+
+在编译期组合布尔萃取。
+
+| 萃取 | 含义 |
+|---|---|
+| `conjunction_v<Ts...>` | 逻辑与（短路） |
+| `disjunction_v<Ts...>` | 逻辑或（短路） |
+| `negation_v<T>` | 逻辑非 |
+
+它们比 `&amp;&amp;`、`||` 更好，因为支持短路和继承。
+
+## 辅助工具
+
+| 工具 | 含义 |
+|---|---|
+| `integral_constant&lt;T, v&gt;` | 把值编码为类型 |
+| `bool_constant<b>` | `integral_constant&lt;bool, B&gt;` |
+| `true_type` / `false_type` | 布尔常量 |
+| `void_t<Ts...>` | 检测 SFINAE |
+| `type_identity<T>` | 阻止类型推导（C++20） |
+
+---
+
+# `_v` 和 `_t` 后缀
+
+C++14 起，所有值萃取有 `_v` 版本：
+
+```cpp
+std::is_integral_v<T>        // 等价于 std::is_integral<T>::value
+```
+
+C++14 起，所有类型变换有 `_t` 版本：
+
+```cpp
+std::remove_const_t<T>       // 等价于 typename std::remove_const<T>::type
+```
+
+C++17 起，`_v` 和 `_t` 成为标准。
+
+
+# 典型实现思路
+
+类型萃取的标准实现手法是**模板偏特化**。
+
+例 1：`remove_const`
+
+```cpp
+template <typename T="">
+struct remove_const { using type = T; };
+
+template <typename T="">
+struct remove_const<const T=""> { using type = T; };
+
+template <typename T="">
+using remove_const_t = typename remove_const<T>::type;
+```
+
+例 2：`is_pointer`
+
+```cpp
+template <typename T="">
+struct is_pointer : std::false_type {};
+
+template <typename T="">
+struct is_pointer&lt;T*&gt; : std::true_type {};
+```
+
+例 3：`enable_if`
+
+```cpp
+template &lt;bool B, typename T = void&gt;
+struct enable_if {};
+
+template <typename T="">
+struct enable_if&lt;true, T&gt; { using type = T; };
+
+template &lt;bool B, typename T = void&gt;
+using enable_if_t = typename enable_if&lt;B, T&gt;::type;
+```
+
+只有当 `B` 为 `true` 时，`enable_if&lt;true, T&gt;::type` 才存在，否则 SFINAE 让重载失败。
+
+例 4：`void_t`
+
+```cpp
+template <typename...>
+using void_t = void;
+```
+
+它总为 `void`，但能触发 SFINAE：
+
+```cpp
+template &lt;typename T, typename = void&gt;
+struct has_value_type : std::false_type {};
+
+template <typename T="">
+struct has_value_type&lt;T, void_t&lt;typename T::value_type&gt;&gt; : std::true_type {};
+```
+
+
+# 类型萃取的实际用途
+
+条件分支
+
+```cpp
+template <typename T="">
+void f(T x) {
+    if constexpr (std::is_integral_v<T>) {
+        // 整数优化
+    } else {
+        // 通用路径
+    }
+}
+```
+
+SFINAE 重载
+
+```cpp
+template &lt;typename T, std::enable_if_t&lt;std::is_integral_v<T>, int&gt; = 0&gt;
+void g(T x);
+
+template &lt;typename T, std::enable_if_t&lt;std::is_floating_point_v<T>, int&gt; = 0&gt;
+void g(T x);
+```
+
+完美转发与 `decay`
+
+```cpp
+template &lt;typename F, typename... Args&gt;
+auto invoke(F&amp;&amp; f, Args&amp;&amp;... args)
+    -&gt; std::invoke_result_t&lt;F, Args...&gt; {
+    return std::forward<F>(f)(std::forward<Args>(args)...);
+}
+```
+
+容器优化
+
+`std::vector` 用 `is_trivially_copyable` 决定用 `memcpy` 还是逐个拷贝。
+
+模板约束（C++20 之前）
+
+```cpp
+template &lt;typename T,
+          typename = std::enable_if_t&lt;std::is_arithmetic_v<T>&gt;&gt;
+T add(T a, T b) { return a + b; }
+```
+
+C++20 之后用 Concept 替代。
+
+---
+
+# C++20 之后还需要类型萃取吗
+
+需要。Concept 替代的是 `enable_if` 和 SFINAE，但：
+
+- 值查询仍然用 `is_*_v`。
+- 类型变换仍然用 `remove_*_t`、`decay_t` 等。
+- Concept 内部仍然用类型萃取定义约束。
+
+例如：
+
+```cpp
+template <typename T="">
+concept scalar = std::is_arithmetic_v<T>;
+```
+
+Concept 和类型萃取是互补的。
+
+
+# 类型萃取的常见陷阱
+
+1. **顶层 cv 和引用**：`is_const_v&lt;int&amp;&gt;` 是 `false`，因为引用本身没有 `const`。
+2. **数组退化**：`decay_t&lt;int[3]&gt;` 是 `int*`。
+3. **函数类型**：`is_class_v` 对函数是 `false`。
+4. **`is_convertible` 与 `explicit`**：`explicit` 构造函数不算隐式转换。
+5. **不完整类型**：对未定义类型使用某些萃取是未定义行为。
+6. **`common_type` 的退化**：`common_type_t&lt;int&amp;, double&gt;` 是 `double`，引用被移除。
+
+
+
+# 一句话总结
+
+**类型萃取是编译期的“类型查询”和“类型变换”工具。值萃取回答“T 是不是……”，类型变换回答“把 T 变成……”。它们的实现靠模板偏特化，用途是让模板代码在编译期根据类型性质走不同分支、生成不同代码。C++20 的 Concept 没有取代它们，而是建立在它们之上。**
+
+
+</T></typename></T></Args></F></T></T></T></typename></typename></typename...></typename></typename></typename></T></typename></const></typename></typename></T></T></T></T></T></Ts...></b></T></Ts...></Ts...></T></T></Ts...></T></Ts...></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></double></int></T></T></T></T></T></T></T></T></T></T></T></T></T></T></type_traits>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
