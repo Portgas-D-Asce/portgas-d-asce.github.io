@@ -960,6 +960,758 @@ is_member_pointer = is_member_object_pointer || is_member_function_pointer
 
 <p><strong>类型萃取是编译期的“类型查询”和“类型变换”工具。值萃取回答“T 是不是……”，类型变换回答“把 T 变成……”。它们的实现靠模板偏特化，用途是让模板代码在编译期根据类型性质走不同分支、生成不同代码。C++20 的 Concept 没有取代它们，而是建立在它们之上。</strong></p>
 
+<hr />
+
+<h1 id="10-个核心类型萃取逐行拆解">10 个核心类型萃取逐行拆解</h1>
+
+<h2 id="integral_constant所有值萃取的基石"><code class="language-plaintext highlighter-rouge">integral_constant</code>：所有值萃取的基石</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">T</span> <span class="n">v</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">integral_constant</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">T</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">value_type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">integral_constant</span><span class="p">;</span>
+
+    <span class="k">constexpr</span> <span class="k">operator</span> <span class="n">T</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="n">T</span> <span class="k">operator</span><span class="p">()()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">using</span> <span class="n">true_type</span>  <span class="o">=</span> <span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="nb">true</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">false_type</span> <span class="o">=</span> <span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="nb">false</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">template &lt;typename T, T v&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是值类型，<code class="language-plaintext highlighter-rouge">v</code> 是编码的值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">static constexpr T value = v;</code></td>
+      <td>把值暴露为编译期常量</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">using value_type = T;</code></td>
+      <td>统一接口，所有萃取都有 <code class="language-plaintext highlighter-rouge">value_type</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">using type = integral_constant;</code></td>
+      <td>指向自身，让 <code class="language-plaintext highlighter-rouge">::type</code> 在变换萃取里也统一</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">operator T()</code></td>
+      <td>隐式转换，让对象当值用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">operator()()</code></td>
+      <td>函数调用，让对象当函数对象用</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>关键设计：<strong>把值编码进类型</strong>。<code class="language-plaintext highlighter-rouge">true_type</code> 和 <code class="language-plaintext highlighter-rouge">false_type</code> 不是值，而是类型。</p>
+
+<h2 id="is_same最简单的值萃取"><code class="language-plaintext highlighter-rouge">is_same</code>：最简单的值萃取</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_same</span> <span class="o">:</span> <span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_same</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">is_same_v</span> <span class="o">=</span> <span class="n">is_same</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板继承 <code class="language-plaintext highlighter-rouge">false_type</code></td>
+      <td>默认两个类型不同</td>
+    </tr>
+    <tr>
+      <td>偏特化 <code class="language-plaintext highlighter-rouge">&lt;T, T&gt;</code> 继承 <code class="language-plaintext highlighter-rouge">true_type</code></td>
+      <td>两个类型相同时为真</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_v</code> 变量模板</td>
+      <td>C++17 简写，直接得到 <code class="language-plaintext highlighter-rouge">bool</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这是<strong>模板偏特化</strong>最经典的用法：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>is_same&lt;int, int&gt;   → 匹配 &lt;T, T&gt; 偏特化 → true_type
+is_same&lt;int, double&gt; → 匹配主模板        → false_type
+</code></pre></div></div>
+
+<h2 id="remove_const--remove_cv最简单的类型变换"><code class="language-plaintext highlighter-rouge">remove_const</code> / <code class="language-plaintext highlighter-rouge">remove_cv</code>：最简单的类型变换</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_const</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_const</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">remove_const_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">remove_const</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+
+<span class="c1">// remove_cv 类似</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_cv</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_cv</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_cv</span><span class="o">&lt;</span><span class="k">volatile</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_cv</span><span class="o">&lt;</span><span class="k">const</span> <span class="k">volatile</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板</td>
+      <td>默认返回 <code class="language-plaintext highlighter-rouge">T</code> 本身</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_const&lt;const T&gt;</code></td>
+      <td>匹配带 <code class="language-plaintext highlighter-rouge">const</code> 的类型，返回 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_cv</code> 三个偏特化</td>
+      <td>分别处理 <code class="language-plaintext highlighter-rouge">const</code>、<code class="language-plaintext highlighter-rouge">volatile</code>、<code class="language-plaintext highlighter-rouge">const volatile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_t</code> 别名</td>
+      <td>C++14 简写，直接得到类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">remove_const&lt;const int&amp;&gt;</code> 返回 <code class="language-plaintext highlighter-rouge">const int&amp;</code>，因为 <code class="language-plaintext highlighter-rouge">const</code> 在引用上不生效。引用本身不能加顶层 <code class="language-plaintext highlighter-rouge">const</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">remove_const_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&gt;</span>    <span class="c1">// int</span>
+<span class="n">remove_const_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;&gt;</span>   <span class="c1">// const int&amp;（引用上的 const 不生效）</span>
+<span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="k">volatile</span> <span class="kt">int</span><span class="o">&gt;</span>  <span class="c1">// int</span>
+</code></pre></div></div>
+
+<h2 id="remove_reference引用处理"><code class="language-plaintext highlighter-rouge">remove_reference</code>：引用处理</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_reference</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_reference</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&amp;&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_reference</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&amp;&amp;&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">remove_reference_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">remove_reference</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板</td>
+      <td>非引用类型，返回自身</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">&lt;T&amp;&gt;</code> 偏特化</td>
+      <td>左值引用，返回 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">&lt;T&amp;&amp;&gt;</code> 偏特化</td>
+      <td>右值引用，返回 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span>   <span class="c1">// int</span>
+<span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&amp;&gt;</span>  <span class="c1">// int</span>
+<span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>    <span class="c1">// int</span>
+</code></pre></div></div>
+
+<h2 id="is_integral典型的布尔查询"><code class="language-plaintext highlighter-rouge">is_integral</code>：典型的布尔查询</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_integral</span> <span class="o">:</span> <span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span>               <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span>               <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">signed</span> <span class="kt">char</span><span class="o">&gt;</span>        <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span>      <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">wchar_t</span><span class="o">&gt;</span>            <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">char16_t</span><span class="o">&gt;</span>           <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">char32_t</span><span class="o">&gt;</span>           <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">short</span><span class="o">&gt;</span>              <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">short</span><span class="o">&gt;</span>     <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>                <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span>       <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span>               <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">&gt;</span>      <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span>          <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="p">&gt;</span> <span class="k">struct</span> <span class="nc">is_integral</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span> <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">is_integral_v</span> <span class="o">=</span> <span class="n">is_integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板继承 <code class="language-plaintext highlighter-rouge">false_type</code></td>
+      <td>默认不是整数</td>
+    </tr>
+    <tr>
+      <td>每个整数类型一个全特化</td>
+      <td>是整数则为真</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_v</code> 变量模板</td>
+      <td>C++17 简写</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意：<code class="language-plaintext highlighter-rouge">is_integral&lt;const int&gt;</code> 也是 <code class="language-plaintext highlighter-rouge">true</code>。标准库的实现会先移除 cv 再判断：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_integral</span> <span class="o">:</span> <span class="n">is_integral_impl</span><span class="o">&lt;</span><span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>这样才能正确处理 <code class="language-plaintext highlighter-rouge">const int</code>、<code class="language-plaintext highlighter-rouge">volatile int</code> 等。</p>
+
+<h2 id="conditional编译期三目运算符"><code class="language-plaintext highlighter-rouge">conditional</code>：编译期三目运算符</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">F</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">conditional</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">F</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">conditional</span><span class="o">&lt;</span><span class="nb">false</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">F</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">F</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">F</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">conditional_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">conditional</span><span class="o">&lt;</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">F</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板</td>
+      <td><code class="language-plaintext highlighter-rouge">B == true</code> 时返回 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">false</code> 偏特化</td>
+      <td><code class="language-plaintext highlighter-rouge">B == false</code> 时返回 <code class="language-plaintext highlighter-rouge">F</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_t</code> 别名</td>
+      <td>直接得到类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">conditional_t</span><span class="o">&lt;</span><span class="nb">true</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>   <span class="c1">// int</span>
+<span class="n">conditional_t</span><span class="o">&lt;</span><span class="nb">false</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>  <span class="c1">// double</span>
+</code></pre></div></div>
+
+<p>等价于：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">F</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">conditional_t</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">conditional_t</span><span class="o">&lt;</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">F</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>这是 <code class="language-plaintext highlighter-rouge">std::conditional</code> 的完整实现。关键在于<strong>偏特化只对 <code class="language-plaintext highlighter-rouge">false</code> 生效</strong>，因为主模板已经处理了 <code class="language-plaintext highlighter-rouge">true</code>。</p>
+
+<h2 id="enable_ifsfinae-的核心"><code class="language-plaintext highlighter-rouge">enable_if</code>：SFINAE 的核心</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">enable_if</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">enable_if</span><span class="o">&lt;</span><span class="nb">true</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">enable_if_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">enable_if</span><span class="o">&lt;</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板 <code class="language-plaintext highlighter-rouge">enable_if&lt;B, T&gt;</code></td>
+      <td>没有 <code class="language-plaintext highlighter-rouge">::type</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">true</code> 偏特化</td>
+      <td>有 <code class="language-plaintext highlighter-rouge">::type = T</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_t</code> 别名</td>
+      <td>直接得到类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>关键：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">B == true</code>：<code class="language-plaintext highlighter-rouge">enable_if_t&lt;true, T&gt;</code> 是 <code class="language-plaintext highlighter-rouge">T</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">B == false</code>：<code class="language-plaintext highlighter-rouge">enable_if_t&lt;false, T&gt;</code> <strong>不存在</strong>，触发 SFINAE。</li>
+</ul>
+
+<p>用法：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_floating_point_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>当 <code class="language-plaintext highlighter-rouge">T = int</code> 时，第一个重载的 <code class="language-plaintext highlighter-rouge">enable_if_t&lt;true, int&gt;</code> 是 <code class="language-plaintext highlighter-rouge">int</code>，合法；第二个的 <code class="language-plaintext highlighter-rouge">enable_if_t&lt;false, int&gt;</code> 不存在，被移除。所以只有第一个重载参与。</p>
+
+<h2 id="void_tsfinae-检测工具"><code class="language-plaintext highlighter-rouge">void_t</code>：SFINAE 检测工具</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">void_t</span> <span class="o">=</span> <span class="kt">void</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>就这一行。但它能做很强大的事：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_value_type</span> <span class="o">:</span> <span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_value_type</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">void_t</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">void_t&lt;Ts...&gt;</code></td>
+      <td>无论传入什么，都是 <code class="language-plaintext highlighter-rouge">void</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">has_value_type</code> 主模板</td>
+      <td>默认 <code class="language-plaintext highlighter-rouge">false_type</code></td>
+    </tr>
+    <tr>
+      <td>偏特化</td>
+      <td>如果 <code class="language-plaintext highlighter-rouge">T::value_type</code> 合法，则匹配 <code class="language-plaintext highlighter-rouge">void_t&lt;...&gt;</code> = <code class="language-plaintext highlighter-rouge">void</code>，为 <code class="language-plaintext highlighter-rouge">true_type</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>关键：<code class="language-plaintext highlighter-rouge">void_t</code> 本身总是 <code class="language-plaintext highlighter-rouge">void</code>，但它会<strong>实例化模板参数</strong>。如果 <code class="language-plaintext highlighter-rouge">typename T::value_type</code> 不合法，SFINAE 让偏特化失败，回退到主模板。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">has_value_type</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;::</span><span class="n">value</span>  <span class="c1">// true</span>
+<span class="n">has_value_type</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">value</span>               <span class="c1">// false</span>
+</code></pre></div></div>
+
+<h2 id="decay综合变换"><code class="language-plaintext highlighter-rouge">decay</code>：综合变换</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">decay</span> <span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="k">using</span> <span class="n">U</span> <span class="o">=</span> <span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">conditional_t</span><span class="o">&lt;</span>
+        <span class="n">is_array_v</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="n">conditional_t</span><span class="o">&lt;</span>
+            <span class="n">is_bounded_array_v</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">,</span>
+            <span class="n">remove_extent_t</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;*</span><span class="p">,</span>
+            <span class="n">remove_extent_t</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;*</span>
+        <span class="o">&gt;</span><span class="p">,</span>
+        <span class="n">conditional_t</span><span class="o">&lt;</span>
+            <span class="n">is_function_v</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">,</span>
+            <span class="n">add_pointer_t</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">,</span>
+            <span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span>
+        <span class="o">&gt;</span>
+    <span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">decay_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">decay</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">decay</code> 做四件事：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>移除引用</td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;</code> → <code class="language-plaintext highlighter-rouge">int</code></td>
+    </tr>
+    <tr>
+      <td>移除顶层 cv</td>
+      <td><code class="language-plaintext highlighter-rouge">const int</code> → <code class="language-plaintext highlighter-rouge">int</code></td>
+    </tr>
+    <tr>
+      <td>数组转指针</td>
+      <td><code class="language-plaintext highlighter-rouge">int[3]</code> → <code class="language-plaintext highlighter-rouge">int*</code></td>
+    </tr>
+    <tr>
+      <td>函数转函数指针</td>
+      <td><code class="language-plaintext highlighter-rouge">void(int)</code> → <code class="language-plaintext highlighter-rouge">void(*)(int)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>例子：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span>              <span class="c1">// int</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;&gt;</span>        <span class="c1">// int</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span>            <span class="c1">// int*</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span>         <span class="c1">// int(*)[4]</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span>         <span class="c1">// void(*)(int)</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>               <span class="c1">// int</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">decay</code> 的典型用途是<strong>完美转发的返回类型</strong>和<strong>按值传参的类型推导</strong>：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">U</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// 去掉引用和 cv</span>
+    <span class="n">U</span> <span class="n">copy</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="common_type多类型公共类型"><code class="language-plaintext highlighter-rouge">common_type</code>：多类型公共类型</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 简化版</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Ts</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">common_type</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">common_type</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">decay_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">U</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">common_type</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">decay_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="nb">true</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">())</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">U</span><span class="p">,</span> <span class="k">typename</span><span class="o">...</span> <span class="nc">Rest</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">common_type</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">Rest</span><span class="p">...</span><span class="o">&gt;</span>
+    <span class="o">:</span> <span class="n">common_type</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">common_type</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">,</span> <span class="n">Rest</span><span class="p">...</span><span class="o">&gt;</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>逐行解释：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>单类型特化</td>
+      <td>返回 <code class="language-plaintext highlighter-rouge">decay_t&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td>双类型特化</td>
+      <td>用三目运算符推导公共类型，再 <code class="language-plaintext highlighter-rouge">decay</code></td>
+    </tr>
+    <tr>
+      <td>多类型递归</td>
+      <td>先算前两个，再和后面的递归</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>例子：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">common_type_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>         <span class="c1">// double</span>
+<span class="n">common_type_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">long</span><span class="o">&gt;</span>           <span class="c1">// long</span>
+<span class="n">common_type_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">&amp;&gt;</span> <span class="c1">// double</span>
+<span class="n">common_type_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span>  <span class="c1">// double</span>
+</code></pre></div></div>
+
+<p>关键点：</p>
+
+<ul>
+  <li>用 <code class="language-plaintext highlighter-rouge">decltype(true ? a : b)</code> 让编译器推导类型。</li>
+  <li>用 <code class="language-plaintext highlighter-rouge">decay_t</code> 去掉引用和 cv。</li>
+  <li>多类型递归展开。</li>
+</ul>
+
+<h2 id="10-个萃取的共同模式">10 个萃取的共同模式</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>模式</th>
+      <th>例子</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主模板给默认值</td>
+      <td><code class="language-plaintext highlighter-rouge">is_integral</code> 默认 <code class="language-plaintext highlighter-rouge">false_type</code></td>
+    </tr>
+    <tr>
+      <td>偏特化匹配条件</td>
+      <td><code class="language-plaintext highlighter-rouge">is_same&lt;T, T&gt;</code>、<code class="language-plaintext highlighter-rouge">remove_const&lt;const T&gt;</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_v</code>/<code class="language-plaintext highlighter-rouge">_t</code> 简写</td>
+      <td><code class="language-plaintext highlighter-rouge">is_integral_v</code>、<code class="language-plaintext highlighter-rouge">remove_const_t</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">::type</code> 统一接口</td>
+      <td>所有变换萃取都有 <code class="language-plaintext highlighter-rouge">type</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">::value</code> 统一接口</td>
+      <td>所有值萃取都有 <code class="language-plaintext highlighter-rouge">value</code></td>
+    </tr>
+    <tr>
+      <td>继承 <code class="language-plaintext highlighter-rouge">true_type</code>/<code class="language-plaintext highlighter-rouge">false_type</code></td>
+      <td>布尔萃取的标准写法</td>
+    </tr>
+    <tr>
+      <td>递归展开</td>
+      <td><code class="language-plaintext highlighter-rouge">common_type</code> 多类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="decay-和-remove_cvref-的区别"><code class="language-plaintext highlighter-rouge">decay</code> 和 <code class="language-plaintext highlighter-rouge">remove_cvref</code> 的区别</h1>
+
+<h2 id="decay-做四件事"><code class="language-plaintext highlighter-rouge">decay</code> 做四件事</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span class="mf">1.</span> <span class="err">移除引用</span>
+    <span class="mf">2.</span> <span class="err">移除顶层</span> <span class="n">cv</span>
+    <span class="mf">3.</span> <span class="err">数组</span> <span class="err">→</span> <span class="err">指针</span>
+    <span class="mf">4.</span> <span class="err">函数</span> <span class="err">→</span> <span class="err">函数指针</span>
+</code></pre></div></div>
+
+<p>例子：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span>           <span class="c1">// int</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;&gt;</span>     <span class="c1">// int</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span>         <span class="c1">// int*</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span>      <span class="c1">// int(*)[4]</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span>      <span class="c1">// void(*)(int)</span>
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&gt;</span>      <span class="c1">// int</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="remove_cvref-做两件事"><code class="language-plaintext highlighter-rouge">remove_cvref</code> 做两件事</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_cvref</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">remove_cvref_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">remove_cvref</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>它只做：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 移除引用
+2. 移除顶层 cv
+</code></pre></div></div>
+
+<p>例子：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span>           <span class="c1">// int</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;&gt;</span>     <span class="c1">// int</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span>         <span class="c1">// int[3]  ← 不变</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span>      <span class="c1">// int[3][4]  ← 不变</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span>      <span class="c1">// void(int)  ← 不变</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span><span class="o">&gt;</span>      <span class="c1">// int</span>
+</code></pre></div></div>
+
+<h2 id="关键区别">关键区别</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>变换</th>
+      <th><code class="language-plaintext highlighter-rouge">decay</code></th>
+      <th><code class="language-plaintext highlighter-rouge">remove_cvref</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>移除引用</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>移除顶层 cv</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>数组 → 指针</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td>函数 → 函数指针</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span>          <span class="c1">// int*</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span>   <span class="c1">// int[3]</span>
+
+<span class="n">decay_t</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span>       <span class="c1">// void(*)(int)</span>
+<span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span> <span class="c1">// void(int)</span>
+</code></pre></div></div>
+
+<h2 id="为什么需要-remove_cvref">为什么需要 <code class="language-plaintext highlighter-rouge">remove_cvref</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">decay</code> 太激进。有些场景你只想“去掉引用和 cv”，不想把数组变成指针。</p>
+
+<p>比如：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">U</span> <span class="o">=</span> <span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// 保留数组类型</span>
+    <span class="c1">// 如果 T 是 int(&amp;)[3]，U 是 int[3]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>如果用 <code class="language-plaintext highlighter-rouge">decay_t</code>，<code class="language-plaintext highlighter-rouge">int[3]</code> 会变成 <code class="language-plaintext highlighter-rouge">int*</code>，丢失数组大小信息。</p>
+
+<p>另一个场景是<strong>返回类型推导</strong>：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">remove_cvref_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里用 <code class="language-plaintext highlighter-rouge">remove_cvref_t</code> 比 <code class="language-plaintext highlighter-rouge">decay_t</code> 更精确，因为它不改变数组和函数类型。</p>
+
+<h2 id="标准库里的选择">标准库里的选择</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>场景</th>
+      <th>用哪个</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>按值传参的类型推导</td>
+      <td><code class="language-plaintext highlighter-rouge">decay_t</code></td>
+    </tr>
+    <tr>
+      <td>完美转发的返回类型</td>
+      <td><code class="language-plaintext highlighter-rouge">remove_cvref_t</code></td>
+    </tr>
+    <tr>
+      <td>存储类型（如 <code class="language-plaintext highlighter-rouge">std::vector</code>）</td>
+      <td><code class="language-plaintext highlighter-rouge">decay_t</code></td>
+    </tr>
+    <tr>
+      <td>模板元编程中间步骤</td>
+      <td><code class="language-plaintext highlighter-rouge">remove_cvref_t</code></td>
+    </tr>
+    <tr>
+      <td>C++20 之前</td>
+      <td>只能用 <code class="language-plaintext highlighter-rouge">decay_t</code> 或手动 <code class="language-plaintext highlighter-rouge">remove_cv_t&lt;remove_reference_t&lt;T&gt;&gt;</code></td>
+    </tr>
+    <tr>
+      <td>C++20 之后</td>
+      <td>优先 <code class="language-plaintext highlighter-rouge">remove_cvref_t</code>，除非确实需要数组/函数退化</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="一句话总结-1">一句话总结</h2>
+
+<blockquote>
+  <p><strong><code class="language-plaintext highlighter-rouge">decay</code> = 移除引用 + 移除 cv + 数组转指针 + 函数转函数指针。</strong><br />
+<strong><code class="language-plaintext highlighter-rouge">remove_cvref</code> = 移除引用 + 移除 cv。</strong><br />
+<code class="language-plaintext highlighter-rouge">decay</code> 更激进，<code class="language-plaintext highlighter-rouge">remove_cvref</code> 更保守。C++20 引入 <code class="language-plaintext highlighter-rouge">remove_cvref</code> 就是为了在不需要数组/函数退化时，有一个更精确的工具。</p>
+</blockquote>
+
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
