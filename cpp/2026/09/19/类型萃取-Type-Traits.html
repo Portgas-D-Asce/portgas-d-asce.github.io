@@ -171,397 +171,795 @@
 
 <h1 id="分类">分类</h1>
 
-<type_traits> 里的工具可按功能分为九类
+<p><code class="language-plaintext highlighter-rouge">type_traits</code>里的工具可按功能分为九类</p>
 
-| 类别 | 代表工具 |
-|---|---|
-| 主要类别 | `is_void`、`is_integral`、`is_pointer`、`is_class` |
-| 复合类别 | `is_arithmetic`、`is_scalar`、`is_object` |
-| 类型属性 | `is_const`、`is_trivial`、`is_abstract` |
-| 支持操作 | `is_constructible`、`is_copy_assignable` |
-| 属性查询 | `alignment_of`、`rank`、`extent` |
-| 类型关系 | `is_same`、`is_base_of`、`is_convertible` |
-| 类型变换 | `remove_const`、`decay`、`enable_if`、`conditional` |
-| 逻辑运算 | `conjunction`、`disjunction`、`negation` |
-| 辅助 | `integral_constant`、`true_type`、`void_t` |
+<table>
+  <thead>
+    <tr>
+      <th>类别</th>
+      <th>代表工具</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主要类别</td>
+      <td><code class="language-plaintext highlighter-rouge">is_void</code>、<code class="language-plaintext highlighter-rouge">is_integral</code>、<code class="language-plaintext highlighter-rouge">is_pointer</code>、<code class="language-plaintext highlighter-rouge">is_class</code></td>
+    </tr>
+    <tr>
+      <td>复合类别</td>
+      <td><code class="language-plaintext highlighter-rouge">is_arithmetic</code>、<code class="language-plaintext highlighter-rouge">is_scalar</code>、<code class="language-plaintext highlighter-rouge">is_object</code></td>
+    </tr>
+    <tr>
+      <td>类型属性</td>
+      <td><code class="language-plaintext highlighter-rouge">is_const</code>、<code class="language-plaintext highlighter-rouge">is_trivial</code>、<code class="language-plaintext highlighter-rouge">is_abstract</code></td>
+    </tr>
+    <tr>
+      <td>支持操作</td>
+      <td><code class="language-plaintext highlighter-rouge">is_constructible</code>、<code class="language-plaintext highlighter-rouge">is_copy_assignable</code></td>
+    </tr>
+    <tr>
+      <td>属性查询</td>
+      <td><code class="language-plaintext highlighter-rouge">alignment_of</code>、<code class="language-plaintext highlighter-rouge">rank</code>、<code class="language-plaintext highlighter-rouge">extent</code></td>
+    </tr>
+    <tr>
+      <td>类型关系</td>
+      <td><code class="language-plaintext highlighter-rouge">is_same</code>、<code class="language-plaintext highlighter-rouge">is_base_of</code>、<code class="language-plaintext highlighter-rouge">is_convertible</code></td>
+    </tr>
+    <tr>
+      <td>类型变换</td>
+      <td><code class="language-plaintext highlighter-rouge">remove_const</code>、<code class="language-plaintext highlighter-rouge">decay</code>、<code class="language-plaintext highlighter-rouge">enable_if</code>、<code class="language-plaintext highlighter-rouge">conditional</code></td>
+    </tr>
+    <tr>
+      <td>逻辑运算</td>
+      <td><code class="language-plaintext highlighter-rouge">conjunction</code>、<code class="language-plaintext highlighter-rouge">disjunction</code>、<code class="language-plaintext highlighter-rouge">negation</code></td>
+    </tr>
+    <tr>
+      <td>辅助</td>
+      <td><code class="language-plaintext highlighter-rouge">integral_constant</code>、<code class="language-plaintext highlighter-rouge">true_type</code>、<code class="language-plaintext highlighter-rouge">void_t</code></td>
+    </tr>
+  </tbody>
+</table>
 
+<h2 id="主要类型类别">主要类型类别</h2>
 
+<p>判断 <code class="language-plaintext highlighter-rouge">T</code> 是否属于某个基础类别。</p>
 
-## 主要类型类别
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_void_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是 <code class="language-plaintext highlighter-rouge">void</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_null_pointer_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是 <code class="language-plaintext highlighter-rouge">std::nullptr_t</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_integral_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是整数类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_floating_point_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是浮点类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_array_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是数组</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_enum_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是枚举</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_union_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是联合体</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_class_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是类</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_function_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是函数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_pointer_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是指针</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_lvalue_reference_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是左值引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_rvalue_reference_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是右值引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_member_object_pointer_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是成员对象指针</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_member_function_pointer_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是成员函数指针</td>
+    </tr>
+  </tbody>
+</table>
 
+<p>例子：</p>
 
-判断 `T` 是否属于某个基础类别。
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_pointer_v</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;</span><span class="p">);</span>
+</code></pre></div></div>
 
-| 萃取 | 含义 |
-|---|---|
-| `is_void_v<T>` | `T` 是 `void` |
-| `is_null_pointer_v<T>` | `T` 是 `std::nullptr_t` |
-| `is_integral_v<T>` | `T` 是整数类型 |
-| `is_floating_point_v<T>` | `T` 是浮点类型 |
-| `is_array_v<T>` | `T` 是数组 |
-| `is_enum_v<T>` | `T` 是枚举 |
-| `is_union_v<T>` | `T` 是联合体 |
-| `is_class_v<T>` | `T` 是类 |
-| `is_function_v<T>` | `T` 是函数 |
-| `is_pointer_v<T>` | `T` 是指针 |
-| `is_lvalue_reference_v<T>` | `T` 是左值引用 |
-| `is_rvalue_reference_v<T>` | `T` 是右值引用 |
-| `is_member_object_pointer_v<T>` | `T` 是成员对象指针 |
-| `is_member_function_pointer_v<T>` | `T` 是成员函数指针 |
+<h2 id="复合类型类别">复合类型类别</h2>
 
-例子：
+<p>判断 <code class="language-plaintext highlighter-rouge">T</code> 是否属于某个更宽泛的类别。</p>
 
-```cpp
-static_assert(std::is_integral_v<int>);
-static_assert(!std::is_integral_v<double>);
-static_assert(std::is_pointer_v&lt;int*&gt;);
-```
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_arithmetic_v&lt;T&gt;</code></td>
+      <td>整数或浮点</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_fundamental_v&lt;T&gt;</code></td>
+      <td>算术或 <code class="language-plaintext highlighter-rouge">void</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_scalar_v&lt;T&gt;</code></td>
+      <td>算术、枚举、指针、成员指针、<code class="language-plaintext highlighter-rouge">nullptr_t</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_object_v&lt;T&gt;</code></td>
+      <td>对象类型（非函数、非引用、非 <code class="language-plaintext highlighter-rouge">void</code>）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_compound_v&lt;T&gt;</code></td>
+      <td>非基本类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_reference_v&lt;T&gt;</code></td>
+      <td>左值或右值引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_member_pointer_v&lt;T&gt;</code></td>
+      <td>成员对象或成员函数指针</td>
+    </tr>
+  </tbody>
+</table>
 
----
+<p>关系：</p>
 
-## 复合类型类别
-
-判断 `T` 是否属于某个更宽泛的类别。
-
-| 萃取 | 含义 |
-|---|---|
-| `is_arithmetic_v<T>` | 整数或浮点 |
-| `is_fundamental_v<T>` | 算术或 `void` |
-| `is_scalar_v<T>` | 算术、枚举、指针、成员指针、`nullptr_t` |
-| `is_object_v<T>` | 对象类型（非函数、非引用、非 `void`） |
-| `is_compound_v<T>` | 非基本类型 |
-| `is_reference_v<T>` | 左值或右值引用 |
-| `is_member_pointer_v<T>` | 成员对象或成员函数指针 |
-
-关系：
-
-```text
-is_arithmetic = is_integral || is_floating_point
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>is_arithmetic = is_integral || is_floating_point
 is_fundamental = is_arithmetic || is_void
 is_scalar = is_arithmetic || is_enum || is_pointer || is_member_pointer || is_null_pointer
 is_object = 非函数、非引用、非 void
 is_compound = !is_fundamental
 is_reference = is_lvalue_reference || is_rvalue_reference
 is_member_pointer = is_member_object_pointer || is_member_function_pointer
-```
-
-## 类型属性
-
-判断类型是否具有某种修饰或性质。
-
-| 萃取 | 含义 |
-|---|---|
-| `is_const_v<T>` | `T` 有顶层 `const` |
-| `is_volatile_v<T>` | `T` 有顶层 `volatile` |
-| `is_trivial_v<T>` | `T` 是平凡类型 |
-| `is_trivially_copyable_v<T>` | `T` 可平凡复制 |
-| `is_standard_layout_v<T>` | `T` 是标准布局 |
-| `is_empty_v<T>` | `T` 是空类 |
-| `is_polymorphic_v<T>` | `T` 有多态 |
-| `is_abstract_v<T>` | `T` 是抽象类 |
-| `is_final_v<T>` | `T` 是 `final` |
-| `is_aggregate_v<T>` | `T` 是聚合类型（C++17） |
-| `is_signed_v<T>` | `T` 是有符号算术类型 |
-| `is_unsigned_v<T>` | `T` 是无符号算术类型 |
-| `is_bounded_array_v<T>` | `T` 是已知大小数组（C++20） |
-| `is_unbounded_array_v<T>` | `T` 是未知大小数组（C++20） |
-| `is_scoped_enum_v<T>` | `T` 是 scoped enum（C++23） |
-
-
-## 支持的操作
-
-判断类型是否支持某种构造、赋值、析构。
-
-| 萃取 | 含义 |
-|---|---|
-| `is_constructible_v&lt;T, Args...&gt;` | 可用 `Args...` 构造 |
-| `is_trivially_constructible_v&lt;T, Args...&gt;` | 可平凡构造 |
-| `is_nothrow_constructible_v&lt;T, Args...&gt;` | 构造不抛异常 |
-| `is_default_constructible_v<T>` | 可默认构造 |
-| `is_copy_constructible_v<T>` | 可拷贝构造 |
-| `is_move_constructible_v<T>` | 可移动构造 |
-| `is_assignable_v&lt;T, U&gt;` | 可赋值 |
-| `is_copy_assignable_v<T>` | 可拷贝赋值 |
-| `is_move_assignable_v<T>` | 可移动赋值 |
-| `is_destructible_v<T>` | 可析构 |
-| `is_trivially_destructible_v<T>` | 可平凡析构 |
-| `is_nothrow_destructible_v<T>` | 析构不抛异常 |
-| `has_virtual_destructor_v<T>` | 有虚析构函数 |
-| `is_swappable_v<T>` | 可交换（C++17） |
-| `is_nothrow_swappable_v<T>` | 交换不抛异常（C++17） |
-
-这些萃取大量用于 `std::vector`、`std::optional` 等容器的条件优化。
-
-
-## 属性查询
-
-查询类型的数值属性。
-
-| 萃取 | 含义 |
-|---|---|
-| `alignment_of_v<T>` | 对齐要求 |
-| `rank_v<T>` | 数组维度 |
-| `extent_v&lt;T, I&gt;` | 第 `I` 维大小 |
-
+</code></pre></div></div>
+
+<h2 id="类型属性">类型属性</h2>
+
+<p>判断类型是否具有某种修饰或性质。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_const_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 有顶层 <code class="language-plaintext highlighter-rouge">const</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_volatile_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 有顶层 <code class="language-plaintext highlighter-rouge">volatile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_trivial_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是平凡类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_trivially_copyable_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可平凡复制</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_standard_layout_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是标准布局</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_empty_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是空类</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_polymorphic_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 有多态</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_abstract_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是抽象类</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_final_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是 <code class="language-plaintext highlighter-rouge">final</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_aggregate_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是聚合类型（C++17）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_signed_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是有符号算术类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_unsigned_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是无符号算术类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_bounded_array_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是已知大小数组（C++20）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_unbounded_array_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是未知大小数组（C++20）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_scoped_enum_v&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是 scoped enum（C++23）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="支持的操作">支持的操作</h2>
+
+<p>判断类型是否支持某种构造、赋值、析构。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_constructible_v&lt;T, Args...&gt;</code></td>
+      <td>可用 <code class="language-plaintext highlighter-rouge">Args...</code> 构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_trivially_constructible_v&lt;T, Args...&gt;</code></td>
+      <td>可平凡构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_nothrow_constructible_v&lt;T, Args...&gt;</code></td>
+      <td>构造不抛异常</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_default_constructible_v&lt;T&gt;</code></td>
+      <td>可默认构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_copy_constructible_v&lt;T&gt;</code></td>
+      <td>可拷贝构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_move_constructible_v&lt;T&gt;</code></td>
+      <td>可移动构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_assignable_v&lt;T, U&gt;</code></td>
+      <td>可赋值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_copy_assignable_v&lt;T&gt;</code></td>
+      <td>可拷贝赋值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_move_assignable_v&lt;T&gt;</code></td>
+      <td>可移动赋值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_destructible_v&lt;T&gt;</code></td>
+      <td>可析构</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_trivially_destructible_v&lt;T&gt;</code></td>
+      <td>可平凡析构</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_nothrow_destructible_v&lt;T&gt;</code></td>
+      <td>析构不抛异常</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">has_virtual_destructor_v&lt;T&gt;</code></td>
+      <td>有虚析构函数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_swappable_v&lt;T&gt;</code></td>
+      <td>可交换（C++17）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_nothrow_swappable_v&lt;T&gt;</code></td>
+      <td>交换不抛异常（C++17）</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这些萃取大量用于 <code class="language-plaintext highlighter-rouge">std::vector</code>、<code class="language-plaintext highlighter-rouge">std::optional</code> 等容器的条件优化。</p>
+
+<h2 id="属性查询">属性查询</h2>
+
+<p>查询类型的数值属性。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alignment_of_v&lt;T&gt;</code></td>
+      <td>对齐要求</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rank_v&lt;T&gt;</code></td>
+      <td>数组维度</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">extent_v&lt;T, I&gt;</code></td>
+      <td>第 <code class="language-plaintext highlighter-rouge">I</code> 维大小</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="类型关系">类型关系</h2>
+
+<p>判断类型之间的关系。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_same_v&lt;T, U&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 和 <code class="language-plaintext highlighter-rouge">U</code> 是同一类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_base_of_v&lt;Base, Derived&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Base</code> 是 <code class="language-plaintext highlighter-rouge">Derived</code> 的基类</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_convertible_v&lt;From, To&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">From</code> 可隐式转换为 <code class="language-plaintext highlighter-rouge">To</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_nothrow_convertible_v&lt;From, To&gt;</code></td>
+      <td>转换不抛异常（C++20）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_invocable_v&lt;F, Args...&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">F</code> 可用 <code class="language-plaintext highlighter-rouge">Args...</code> 调用（C++17）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_invocable_r_v&lt;R, F, Args...&gt;</code></td>
+      <td>调用结果可转 <code class="language-plaintext highlighter-rouge">R</code>（C++17）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">is_nothrow_invocable_v&lt;F, Args...&gt;</code></td>
+      <td>调用不抛异常（C++17）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="类型变换">类型变换</h2>
+
+<p>输入类型，输出新类型。</p>
+
+<p><code class="language-plaintext highlighter-rouge">const</code> / <code class="language-plaintext highlighter-rouge">volatile</code> 变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_const_t&lt;T&gt;</code></td>
+      <td>移除顶层 <code class="language-plaintext highlighter-rouge">const</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_volatile_t&lt;T&gt;</code></td>
+      <td>移除顶层 <code class="language-plaintext highlighter-rouge">volatile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_cv_t&lt;T&gt;</code></td>
+      <td>移除 <code class="language-plaintext highlighter-rouge">const</code> 和 <code class="language-plaintext highlighter-rouge">volatile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_const_t&lt;T&gt;</code></td>
+      <td>添加 <code class="language-plaintext highlighter-rouge">const</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_volatile_t&lt;T&gt;</code></td>
+      <td>添加 <code class="language-plaintext highlighter-rouge">volatile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_cv_t&lt;T&gt;</code></td>
+      <td>添加 <code class="language-plaintext highlighter-rouge">const</code> 和 <code class="language-plaintext highlighter-rouge">volatile</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>引用变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_reference_t&lt;T&gt;</code></td>
+      <td>移除引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_lvalue_reference_t&lt;T&gt;</code></td>
+      <td>添加左值引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code></td>
+      <td>添加右值引用</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>指针变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_pointer_t&lt;T&gt;</code></td>
+      <td>移除指针</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">add_pointer_t&lt;T&gt;</code></td>
+      <td>添加指针</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>符号变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">make_signed_t&lt;T&gt;</code></td>
+      <td>转为有符号</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">make_unsigned_t&lt;T&gt;</code></td>
+      <td>转为无符号</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>数组变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_extent_t&lt;T&gt;</code></td>
+      <td>移除最外层数组维度</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_all_extents_t&lt;T&gt;</code></td>
+      <td>移除所有数组维度</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>综合变换</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">decay_t&lt;T&gt;</code></td>
+      <td>退化：移除引用、移除顶层 cv、数组转指针、函数转函数指针</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">common_type_t&lt;Ts...&gt;</code></td>
+      <td>多个类型的公共类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">underlying_type_t&lt;T&gt;</code></td>
+      <td>枚举的底层类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">conditional_t&lt;B, T, F&gt;</code></td>
+      <td>编译期三目</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">enable_if_t&lt;B, T&gt;</code></td>
+      <td>条件启用（SFINAE）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">void_t&lt;Ts...&gt;</code></td>
+      <td>恒为 <code class="language-plaintext highlighter-rouge">void</code>，用于检测</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type_identity_t&lt;T&gt;</code></td>
+      <td>返回 <code class="language-plaintext highlighter-rouge">T</code> 自身（C++20）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">remove_cvref_t&lt;T&gt;</code></td>
+      <td>移除 cv 和引用（C++20）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="逻辑运算">逻辑运算</h2>
+
+<p>在编译期组合布尔萃取。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>萃取</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">conjunction_v&lt;Ts...&gt;</code></td>
+      <td>逻辑与（短路）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">disjunction_v&lt;Ts...&gt;</code></td>
+      <td>逻辑或（短路）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">negation_v&lt;T&gt;</code></td>
+      <td>逻辑非</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>它们比 <code class="language-plaintext highlighter-rouge">&amp;&amp;</code>、<code class="language-plaintext highlighter-rouge">||</code> 更好，因为支持短路和继承。</p>
+
+<h2 id="辅助工具">辅助工具</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>工具</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">integral_constant&lt;T, v&gt;</code></td>
+      <td>把值编码为类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bool_constant&lt;B&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integral_constant&lt;bool, B&gt;</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">true_type</code> / <code class="language-plaintext highlighter-rouge">false_type</code></td>
+      <td>布尔常量</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">void_t&lt;Ts...&gt;</code></td>
+      <td>检测 SFINAE</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type_identity&lt;T&gt;</code></td>
+      <td>阻止类型推导（C++20）</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="_v-和-_t-后缀"><code class="language-plaintext highlighter-rouge">_v</code> 和 <code class="language-plaintext highlighter-rouge">_t</code> 后缀</h1>
+
+<p>C++14 起，所有值萃取有 <code class="language-plaintext highlighter-rouge">_v</code> 版本：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>        <span class="c1">// 等价于 std::is_integral&lt;T&gt;::value</span>
+</code></pre></div></div>
+
+<p>C++14 起，所有类型变换有 <code class="language-plaintext highlighter-rouge">_t</code> 版本：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">remove_const_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>       <span class="c1">// 等价于 typename std::remove_const&lt;T&gt;::type</span>
+</code></pre></div></div>
+
+<p>C++17 起，<code class="language-plaintext highlighter-rouge">_v</code> 和 <code class="language-plaintext highlighter-rouge">_t</code> 成为标准。</p>
+
+<h1 id="典型实现思路">典型实现思路</h1>
+
+<p>类型萃取的标准实现手法是<strong>模板偏特化</strong>。</p>
+
+<p>例 1：<code class="language-plaintext highlighter-rouge">remove_const</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_const</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">remove_const</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">remove_const_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">remove_const</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>例 2：<code class="language-plaintext highlighter-rouge">is_pointer</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_pointer</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_pointer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p>例 3：<code class="language-plaintext highlighter-rouge">enable_if</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">enable_if</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">enable_if</span><span class="o">&lt;</span><span class="nb">true</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">B</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">enable_if_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">enable_if</span><span class="o">&lt;</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>只有当 <code class="language-plaintext highlighter-rouge">B</code> 为 <code class="language-plaintext highlighter-rouge">true</code> 时，<code class="language-plaintext highlighter-rouge">enable_if&lt;true, T&gt;::type</code> 才存在，否则 SFINAE 让重载失败。</p>
+
+<p>例 4：<code class="language-plaintext highlighter-rouge">void_t</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">void_t</span> <span class="o">=</span> <span class="kt">void</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>它总为 <code class="language-plaintext highlighter-rouge">void</code>，但能触发 SFINAE：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_value_type</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_value_type</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">void_t</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<h1 id="类型萃取的实际用途">类型萃取的实际用途</h1>
+
+<p>条件分支</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 整数优化</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// 通用路径</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>SFINAE 重载</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">g</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_floating_point_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">g</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>完美转发与 <code class="language-plaintext highlighter-rouge">decay</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">F</span><span class="p">,</span> <span class="k">typename</span><span class="o">...</span> <span class="nc">Args</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">invoke</span><span class="p">(</span><span class="n">F</span><span class="o">&amp;&amp;</span> <span class="n">f</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span>
+    <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">F</span><span class="o">&gt;</span><span class="p">(</span><span class="n">f</span><span class="p">)(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Args</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">)...);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>容器优化</p>
+
+<p><code class="language-plaintext highlighter-rouge">std::vector</code> 用 <code class="language-plaintext highlighter-rouge">is_trivially_copyable</code> 决定用 <code class="language-plaintext highlighter-rouge">memcpy</code> 还是逐个拷贝。</p>
+
+<p>模板约束（C++20 之前）</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span>
+          <span class="k">typename</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>C++20 之后用 Concept 替代。</p>
+
+<hr />
+
+<h1 id="c20-之后还需要类型萃取吗">C++20 之后还需要类型萃取吗</h1>
+
+<p>需要。Concept 替代的是 <code class="language-plaintext highlighter-rouge">enable_if</code> 和 SFINAE，但：</p>
+
+<ul>
+  <li>值查询仍然用 <code class="language-plaintext highlighter-rouge">is_*_v</code>。</li>
+  <li>类型变换仍然用 <code class="language-plaintext highlighter-rouge">remove_*_t</code>、<code class="language-plaintext highlighter-rouge">decay_t</code> 等。</li>
+  <li>Concept 内部仍然用类型萃取定义约束。</li>
+</ul>
+
+<p>例如：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Concept 和类型萃取是互补的。</p>
+
+<h1 id="类型萃取的常见陷阱">类型萃取的常见陷阱</h1>
+
+<ol>
+  <li><strong>顶层 cv 和引用</strong>：<code class="language-plaintext highlighter-rouge">is_const_v&lt;int&amp;&gt;</code> 是 <code class="language-plaintext highlighter-rouge">false</code>，因为引用本身没有 <code class="language-plaintext highlighter-rouge">const</code>。</li>
+  <li><strong>数组退化</strong>：<code class="language-plaintext highlighter-rouge">decay_t&lt;int[3]&gt;</code> 是 <code class="language-plaintext highlighter-rouge">int*</code>。</li>
+  <li><strong>函数类型</strong>：<code class="language-plaintext highlighter-rouge">is_class_v</code> 对函数是 <code class="language-plaintext highlighter-rouge">false</code>。</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">is_convertible</code> 与 <code class="language-plaintext highlighter-rouge">explicit</code></strong>：<code class="language-plaintext highlighter-rouge">explicit</code> 构造函数不算隐式转换。</li>
+  <li><strong>不完整类型</strong>：对未定义类型使用某些萃取是未定义行为。</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">common_type</code> 的退化</strong>：<code class="language-plaintext highlighter-rouge">common_type_t&lt;int&amp;, double&gt;</code> 是 <code class="language-plaintext highlighter-rouge">double</code>，引用被移除。</li>
+</ol>
+
+<h1 id="一句话总结">一句话总结</h1>
+
+<p><strong>类型萃取是编译期的“类型查询”和“类型变换”工具。值萃取回答“T 是不是……”，类型变换回答“把 T 变成……”。它们的实现靠模板偏特化，用途是让模板代码在编译期根据类型性质走不同分支、生成不同代码。C++20 的 Concept 没有取代它们，而是建立在它们之上。</strong></p>
 
-## 类型关系
-
-判断类型之间的关系。
-
-| 萃取 | 含义 |
-|---|---|
-| `is_same_v&lt;T, U&gt;` | `T` 和 `U` 是同一类型 |
-| `is_base_of_v&lt;Base, Derived&gt;` | `Base` 是 `Derived` 的基类 |
-| `is_convertible_v&lt;From, To&gt;` | `From` 可隐式转换为 `To` |
-| `is_nothrow_convertible_v&lt;From, To&gt;` | 转换不抛异常（C++20） |
-| `is_invocable_v&lt;F, Args...&gt;` | `F` 可用 `Args...` 调用（C++17） |
-| `is_invocable_r_v&lt;R, F, Args...&gt;` | 调用结果可转 `R`（C++17） |
-| `is_nothrow_invocable_v&lt;F, Args...&gt;` | 调用不抛异常（C++17） |
-
-## 类型变换
-
-输入类型，输出新类型。
-
-`const` / `volatile` 变换
-
-| 萃取 | 含义 |
-|---|---|
-| `remove_const_t<T>` | 移除顶层 `const` |
-| `remove_volatile_t<T>` | 移除顶层 `volatile` |
-| `remove_cv_t<T>` | 移除 `const` 和 `volatile` |
-| `add_const_t<T>` | 添加 `const` |
-| `add_volatile_t<T>` | 添加 `volatile` |
-| `add_cv_t<T>` | 添加 `const` 和 `volatile` |
-
-引用变换
-
-| 萃取 | 含义 |
-|---|---|
-| `remove_reference_t<T>` | 移除引用 |
-| `add_lvalue_reference_t<T>` | 添加左值引用 |
-| `add_rvalue_reference_t<T>` | 添加右值引用 |
-
-指针变换
-
-| 萃取 | 含义 |
-|---|---|
-| `remove_pointer_t<T>` | 移除指针 |
-| `add_pointer_t<T>` | 添加指针 |
-
-符号变换
-
-| 萃取 | 含义 |
-|---|---|
-| `make_signed_t<T>` | 转为有符号 |
-| `make_unsigned_t<T>` | 转为无符号 |
-
-数组变换
-
-| 萃取 | 含义 |
-|---|---|
-| `remove_extent_t<T>` | 移除最外层数组维度 |
-| `remove_all_extents_t<T>` | 移除所有数组维度 |
-
-综合变换
-
-| 萃取 | 含义 |
-|---|---|
-| `decay_t<T>` | 退化：移除引用、移除顶层 cv、数组转指针、函数转函数指针 |
-| `common_type_t<Ts...>` | 多个类型的公共类型 |
-| `underlying_type_t<T>` | 枚举的底层类型 |
-| `conditional_t&lt;B, T, F&gt;` | 编译期三目 |
-| `enable_if_t&lt;B, T&gt;` | 条件启用（SFINAE） |
-| `void_t<Ts...>` | 恒为 `void`，用于检测 |
-| `type_identity_t<T>` | 返回 `T` 自身（C++20） |
-| `remove_cvref_t<T>` | 移除 cv 和引用（C++20） |
-
-## 逻辑运算
-
-在编译期组合布尔萃取。
-
-| 萃取 | 含义 |
-|---|---|
-| `conjunction_v<Ts...>` | 逻辑与（短路） |
-| `disjunction_v<Ts...>` | 逻辑或（短路） |
-| `negation_v<T>` | 逻辑非 |
-
-它们比 `&amp;&amp;`、`||` 更好，因为支持短路和继承。
-
-## 辅助工具
-
-| 工具 | 含义 |
-|---|---|
-| `integral_constant&lt;T, v&gt;` | 把值编码为类型 |
-| `bool_constant<b>` | `integral_constant&lt;bool, B&gt;` |
-| `true_type` / `false_type` | 布尔常量 |
-| `void_t<Ts...>` | 检测 SFINAE |
-| `type_identity<T>` | 阻止类型推导（C++20） |
-
----
-
-# `_v` 和 `_t` 后缀
-
-C++14 起，所有值萃取有 `_v` 版本：
-
-```cpp
-std::is_integral_v<T>        // 等价于 std::is_integral<T>::value
-```
-
-C++14 起，所有类型变换有 `_t` 版本：
-
-```cpp
-std::remove_const_t<T>       // 等价于 typename std::remove_const<T>::type
-```
-
-C++17 起，`_v` 和 `_t` 成为标准。
-
-
-# 典型实现思路
-
-类型萃取的标准实现手法是**模板偏特化**。
-
-例 1：`remove_const`
-
-```cpp
-template <typename T="">
-struct remove_const { using type = T; };
-
-template <typename T="">
-struct remove_const<const T=""> { using type = T; };
-
-template <typename T="">
-using remove_const_t = typename remove_const<T>::type;
-```
-
-例 2：`is_pointer`
-
-```cpp
-template <typename T="">
-struct is_pointer : std::false_type {};
-
-template <typename T="">
-struct is_pointer&lt;T*&gt; : std::true_type {};
-```
-
-例 3：`enable_if`
-
-```cpp
-template &lt;bool B, typename T = void&gt;
-struct enable_if {};
-
-template <typename T="">
-struct enable_if&lt;true, T&gt; { using type = T; };
-
-template &lt;bool B, typename T = void&gt;
-using enable_if_t = typename enable_if&lt;B, T&gt;::type;
-```
-
-只有当 `B` 为 `true` 时，`enable_if&lt;true, T&gt;::type` 才存在，否则 SFINAE 让重载失败。
-
-例 4：`void_t`
-
-```cpp
-template <typename...>
-using void_t = void;
-```
-
-它总为 `void`，但能触发 SFINAE：
-
-```cpp
-template &lt;typename T, typename = void&gt;
-struct has_value_type : std::false_type {};
-
-template <typename T="">
-struct has_value_type&lt;T, void_t&lt;typename T::value_type&gt;&gt; : std::true_type {};
-```
-
-
-# 类型萃取的实际用途
-
-条件分支
-
-```cpp
-template <typename T="">
-void f(T x) {
-    if constexpr (std::is_integral_v<T>) {
-        // 整数优化
-    } else {
-        // 通用路径
-    }
-}
-```
-
-SFINAE 重载
-
-```cpp
-template &lt;typename T, std::enable_if_t&lt;std::is_integral_v<T>, int&gt; = 0&gt;
-void g(T x);
-
-template &lt;typename T, std::enable_if_t&lt;std::is_floating_point_v<T>, int&gt; = 0&gt;
-void g(T x);
-```
-
-完美转发与 `decay`
-
-```cpp
-template &lt;typename F, typename... Args&gt;
-auto invoke(F&amp;&amp; f, Args&amp;&amp;... args)
-    -&gt; std::invoke_result_t&lt;F, Args...&gt; {
-    return std::forward<F>(f)(std::forward<Args>(args)...);
-}
-```
-
-容器优化
-
-`std::vector` 用 `is_trivially_copyable` 决定用 `memcpy` 还是逐个拷贝。
-
-模板约束（C++20 之前）
-
-```cpp
-template &lt;typename T,
-          typename = std::enable_if_t&lt;std::is_arithmetic_v<T>&gt;&gt;
-T add(T a, T b) { return a + b; }
-```
-
-C++20 之后用 Concept 替代。
-
----
-
-# C++20 之后还需要类型萃取吗
-
-需要。Concept 替代的是 `enable_if` 和 SFINAE，但：
-
-- 值查询仍然用 `is_*_v`。
-- 类型变换仍然用 `remove_*_t`、`decay_t` 等。
-- Concept 内部仍然用类型萃取定义约束。
-
-例如：
-
-```cpp
-template <typename T="">
-concept scalar = std::is_arithmetic_v<T>;
-```
-
-Concept 和类型萃取是互补的。
-
-
-# 类型萃取的常见陷阱
-
-1. **顶层 cv 和引用**：`is_const_v&lt;int&amp;&gt;` 是 `false`，因为引用本身没有 `const`。
-2. **数组退化**：`decay_t&lt;int[3]&gt;` 是 `int*`。
-3. **函数类型**：`is_class_v` 对函数是 `false`。
-4. **`is_convertible` 与 `explicit`**：`explicit` 构造函数不算隐式转换。
-5. **不完整类型**：对未定义类型使用某些萃取是未定义行为。
-6. **`common_type` 的退化**：`common_type_t&lt;int&amp;, double&gt;` 是 `double`，引用被移除。
-
-
-
-# 一句话总结
-
-**类型萃取是编译期的“类型查询”和“类型变换”工具。值萃取回答“T 是不是……”，类型变换回答“把 T 变成……”。它们的实现靠模板偏特化，用途是让模板代码在编译期根据类型性质走不同分支、生成不同代码。C++20 的 Concept 没有取代它们，而是建立在它们之上。**
-
-
-</T></typename></T></Args></F></T></T></T></typename></typename></typename...></typename></typename></typename></T></typename></const></typename></typename></T></T></T></T></T></Ts...></b></T></Ts...></Ts...></T></T></Ts...></T></Ts...></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></T></double></int></T></T></T></T></T></T></T></T></T></T></T></T></T></T></type_traits>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
