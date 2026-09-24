@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>类型萃取（Type Traits） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="类型萃取（Type Traits）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/cpp/2026/09/22/concept.html" />
+<meta property="og:url" content="https://xdevil.top/cpp/2026/09/22/concept.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-09-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-09-22T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="类型萃取（Type Traits）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-09-22T00:00:00+00:00","datePublished":"2026-09-22T00:00:00+00:00","description":"xxxxxx","headline":"类型萃取（Type Traits）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/cpp/2026/09/22/concept.html"},"url":"https://xdevil.top/cpp/2026/09/22/concept.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 类型萃取（Type Traits） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>Concept 是 C++20 引入的模板约束机制。它让模板参数的要求显式、可读、可组合，彻底改变了泛型编程的写法。</p>
+
+<h1 id="什么是-concept">什么是 Concept</h1>
+
+<p>Concept 是一个编译期的命名谓词：输入一个或多个类型，返回编译期 <code class="language-plaintext highlighter-rouge">bool</code>，用于约束模板参数。</p>
+
+<p>一句话： Concept 是给模板参数写的“类型必须满足什么条件”的命名谓词。</p>
+
+<p>它解决的核心问题是： 模板代码在实例化之前，如何显式声明对类型的要求，并在不满足时给出清晰的错误信息？</p>
+
+<p>例如：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">T</code> 是任意类型，<code class="language-plaintext highlighter-rouge">scalar</code> 是一个被约束了（必须是算术类型）的类型</p>
+
+<h1 id="没有-concept-之前的问题">没有 Concept 之前的问题</h1>
+
+<p>问题 1：错误信息难读</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">struct</span> <span class="nc">Foo</span> <span class="p">{};</span>
+<span class="n">add</span><span class="p">(</span><span class="n">Foo</span><span class="p">{},</span> <span class="n">Foo</span><span class="p">{});</span>
+</code></pre></div></div>
+
+<p>编译器展开模板后报：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error: no match for 'operator+' (operand types are 'Foo' and 'Foo')
+note: in instantiation of function template 'add&lt;Foo&gt;'
+</code></pre></div></div>
+
+<p>用户看到的是 <code class="language-plaintext highlighter-rouge">operator+</code> 缺失，而不是“T 必须支持加法”。</p>
+
+<p>问题 2：SFINAE 复杂难写</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span>
+          <span class="k">typename</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>问题：</p>
+
+<ul>
+  <li>语法复杂。</li>
+  <li>错误信息仍然难懂。</li>
+  <li>多个重载容易冲突（<code class="language-plaintext highlighter-rouge">enable_if</code> 相同签名）。</li>
+  <li>约束不能组合。</li>
+</ul>
+
+<p>问题 3：约束不可复用</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;&gt;</span>
+<span class="n">T</span> <span class="nf">mul</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>同一个约束写了两遍。想改就得改多处。</p>
+
+<h1 id="concept-的语法">Concept 的语法</h1>
+
+<h2 id="定义">定义</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 名字：concept 的名称</span>
+<span class="c1">// 条件：编译期布尔表达式，可以是 `is_*_v`、`requires` 表达式、其他 concept 的组合</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="err">名字</span> <span class="o">=</span> <span class="err">条件</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="使用">使用</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 四种写法等价</span>
+<span class="c1">// 方式 1：作为模板参数约束</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// 方式 2：作为 requires 子句</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+    <span class="k">requires</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// 方式 3：缩写函数模板</span>
+<span class="n">scalar</span> <span class="k">auto</span> <span class="nf">add</span><span class="p">(</span><span class="n">scalar</span> <span class="k">auto</span> <span class="n">a</span><span class="p">,</span> <span class="n">scalar</span> <span class="k">auto</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// 方式 4：作为类型约束</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">scalar</span> <span class="k">auto</span> <span class="n">x</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="检查">检查</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scalar</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>       <span class="c1">// true</span>
+<span class="n">scalar</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span>  <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">scalar&lt;T&gt;</code> 在编译期返回 <code class="language-plaintext highlighter-rouge">bool</code>，可以用于 <code class="language-plaintext highlighter-rouge">static_assert</code>、<code class="language-plaintext highlighter-rouge">if constexpr</code>、模板参数。</p>
+
+<h1 id="requires-表达式"><code class="language-plaintext highlighter-rouge">requires</code> 表达式</h1>
+
+<p>Concept 的核心是 <code class="language-plaintext highlighter-rouge">requires</code> 表达式，它检查一组表达式是否合法。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">addable</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>拆开看：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>部分</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">requires(T a, T b)</code></td>
+      <td>声明“假设存在的变量”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{ a + b }</code></td>
+      <td>要求表达式合法</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-&gt; std::convertible_to&lt;T&gt;</code></td>
+      <td>要求结果可转 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">requires</code> 表达式有四种要求。</p>
+<ul>
+  <li>简单要求</li>
+  <li>类型要求</li>
+  <li>复合要求</li>
+  <li>嵌套要求</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 简单要求</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">has_foo</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>       <span class="c1">// a.foo() 必须合法</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>      <span class="c1">// a.bar(1) 必须合法</span>
+<span class="p">};</span>
+
+<span class="c1">// 类型要求</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">has_value_type</span> <span class="o">=</span> <span class="k">requires</span> <span class="p">{</span>
+    <span class="k">typename</span> <span class="n">T</span><span class="o">::</span><span class="n">value_type</span><span class="p">;</span>   <span class="c1">// T 必须有嵌套类型 value_type</span>
+<span class="p">};</span>
+
+<span class="c1">// 复合要求</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">addable</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// a+b 合法，结果可转 T</span>
+    <span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">}</span> <span class="k">noexcept</span><span class="p">;</span>                    <span class="c1">// a*b 合法，不抛异常</span>
+<span class="p">};</span>
+
+<span class="c1">// 嵌套要求</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">small</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">requires</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">;</span>   <span class="c1">// 额外条件</span>
+    <span class="k">requires</span> <span class="n">std</span><span class="o">::</span><span class="n">is_trivial_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>复合要求的三种形式：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>形式</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{ expr };</code></td>
+      <td><code class="language-plaintext highlighter-rouge">expr</code> 合法</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{ expr } -&gt; Concept;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">expr</code> 合法，且结果满足 Concept</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{ expr } noexcept;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">expr</code> 合法，且不抛异常</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">requires</code> 表达式的求值规则</p>
+<ul>
+  <li>所有要求都满足 → <code class="language-plaintext highlighter-rouge">true</code>。</li>
+  <li>任意一个要求不满足 → <code class="language-plaintext highlighter-rouge">false</code>。</li>
+  <li>不满足时不会报错，只是返回 <code class="language-plaintext highlighter-rouge">false</code>。</li>
+</ul>
+
+<p>关键：<code class="language-plaintext highlighter-rouge">requires</code> 表达式<strong>不执行</strong>任何代码，只检查表达式是否合法。</p>
+
+<h1 id="concept-的分类">Concept 的分类</h1>
+
+<p>Concept 可按来源分三类。</p>
+
+<h2 id="标准库-concept">标准库 Concept</h2>
+
+<p>C++20 在 <code class="language-plaintext highlighter-rouge">&lt;concepts&gt;</code> 和 <code class="language-plaintext highlighter-rouge">&lt;iterator&gt;</code> 等头文件里提供了大量标准 Concept。</p>
+
+<p><strong>核心语言相关：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::same_as&lt;T, U&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 和 <code class="language-plaintext highlighter-rouge">U</code> 是同一类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::derived_from&lt;D, B&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">D</code> 继承自 <code class="language-plaintext highlighter-rouge">B</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::convertible_to&lt;From, To&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">From</code> 可隐式转 <code class="language-plaintext highlighter-rouge">To</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::common_reference_with&lt;T, U&gt;</code></td>
+      <td>有公共引用类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::common_with&lt;T, U&gt;</code></td>
+      <td>有公共类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::integral&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是整数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::signed_integral&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是有符号整数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::unsigned_integral&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是无符号整数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::floating_point&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 是浮点</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::assignable_from&lt;L, R&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">R</code> 可赋给 <code class="language-plaintext highlighter-rouge">L</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::swappable&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可交换</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::destructible&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可析构</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::constructible_from&lt;T, Args...&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可用 <code class="language-plaintext highlighter-rouge">Args...</code> 构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::default_initializable&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可默认构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::move_constructible&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可移动构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::copy_constructible&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 可拷贝构造</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>比较相关：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::equality_comparable&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 支持 <code class="language-plaintext highlighter-rouge">==</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::totally_ordered&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 支持全序比较</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::three_way_comparable&lt;T&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code> 支持 <code class="language-plaintext highlighter-rouge">&lt;=&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>对象相关：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::movable&lt;T&gt;</code></td>
+      <td>可移动、可交换</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::copyable&lt;T&gt;</code></td>
+      <td>可拷贝、可移动</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::semiregular&lt;T&gt;</code></td>
+      <td>可拷贝、可默认构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::regular&lt;T&gt;</code></td>
+      <td>半正则 + 相等比较</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::invocable&lt;F, Args...&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">F</code> 可用 <code class="language-plaintext highlighter-rouge">Args...</code> 调用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::predicate&lt;F, Args...&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">F</code> 是谓词</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::relation&lt;R, T, U&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">R</code> 定义 <code class="language-plaintext highlighter-rouge">T</code> 和 <code class="language-plaintext highlighter-rouge">U</code> 的关系</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::equivalence_relation&lt;R, T, U&gt;</code></td>
+      <td>等价关系</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::strict_weak_order&lt;R, T, U&gt;</code></td>
+      <td>严格弱序</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>范围相关（<code class="language-plaintext highlighter-rouge">&lt;ranges&gt;</code>）：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::range&lt;R&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">R</code> 是范围</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::sized_range&lt;R&gt;</code></td>
+      <td>有 <code class="language-plaintext highlighter-rouge">size()</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::view&lt;R&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">R</code> 是视图</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::input_range&lt;R&gt;</code></td>
+      <td>输入范围</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::forward_range&lt;R&gt;</code></td>
+      <td>前向范围</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::random_access_range&lt;R&gt;</code></td>
+      <td>随机访问范围</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::contiguous_range&lt;R&gt;</code></td>
+      <td>连续范围</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="自定义-concept">自定义 Concept</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">M</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">matrix_like</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">M</span> <span class="n">m</span><span class="p">,</span> <span class="n">index_t</span> <span class="n">i</span><span class="p">,</span> <span class="n">index_t</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="n">m</span><span class="p">.</span><span class="n">rows</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="p">{</span> <span class="n">m</span><span class="p">.</span><span class="n">cols</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="p">{</span> <span class="n">m</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="p">};</span>
+    <span class="k">typename</span> <span class="n">M</span><span class="o">::</span><span class="n">value_type</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="组合-concept">组合 Concept</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">numeric</span> <span class="o">=</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">totally_ordered</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">small_numeric</span> <span class="o">=</span> <span class="n">numeric</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="concept-的组合">Concept 的组合</h1>
+
+<p>Concept 可以用逻辑运算符组合。</p>
+
+<h2 id="合取-">合取 <code class="language-plaintext highlighter-rouge">&amp;&amp;</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">small_scalar</span> <span class="o">=</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">small_scalar&lt;T&gt;</code> 为真当且仅当两个条件都满足。</p>
+
+<h2 id="析取-">析取 <code class="language-plaintext highlighter-rouge">||</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">numeric</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">||</span> <span class="n">std</span><span class="o">::</span><span class="n">floating_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">numeric&lt;T&gt;</code> 为真当且仅当至少一个条件满足。</p>
+
+<h2 id="否定-">否定 <code class="language-plaintext highlighter-rouge">!</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">non_scalar</span> <span class="o">=</span> <span class="o">!</span><span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="组合的短路求值">组合的短路求值</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">has_foo_and_bar</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span> <span class="p">}</span>
+                       <span class="o">&amp;&amp;</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span><span class="p">.</span><span class="n">bar</span><span class="p">();</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>如果第一个 <code class="language-plaintext highlighter-rouge">requires</code> 为 <code class="language-plaintext highlighter-rouge">false</code>，第二个不再求值。这叫<strong>约束的短路</strong>。</p>
+
+<h2 id="约束的偏序">约束的偏序</h2>
+
+<p>多个约束可以按“严格程度”排序：编译器会选择约束更强的重载</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">concept</span> <span class="n">A</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">concept</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="p">...;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">A</span> <span class="n">T</span><span class="p">&gt;</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>  <span class="c1">// 约束较弱</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">B</span> <span class="n">T</span><span class="p">&gt;</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>  <span class="c1">// 约束较强，优先匹配</span>
+</code></pre></div></div>
+
+<h1 id="concept-与模板实例化">Concept 与模板实例化</h1>
+
+<h2 id="约束检查时机">约束检查时机</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>        <span class="c1">// OK，T = int</span>
+<span class="n">add</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>    <span class="c1">// OK，T = double</span>
+<span class="n">add</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">);</span>    <span class="c1">// 编译错误：const char* 不满足 scalar</span>
+</code></pre></div></div>
+
+<p>错误信息比 SFINAE 的错误信息清楚得多</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error: constraint 'scalar&lt;const char*&gt;' not satisfied
+</code></pre></div></div>
+
+<h2 id="约束与重载决议">约束与重载决议</h2>
+<p>约束参与重载决议。如果两个重载都满足，选约束更强的</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">requires</span> <span class="n">std</span><span class="o">::</span><span class="n">integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"integral</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">requires</span> <span class="n">std</span><span class="o">::</span><span class="n">floating_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"floating</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>     <span class="c1">// integral</span>
+<span class="n">f</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>   <span class="c1">// floating</span>
+<span class="n">f</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>   <span class="c1">// 编译错误：没有匹配的重载</span>
+</code></pre></div></div>
+
+<h2 id="约束与偏特化">约束与偏特化</h2>
+<p>Concept 可以用于类模板偏特化</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">wrapper</span> <span class="p">{</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">integral</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">wrapper</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="p">};</span>  <span class="c1">// 仅对整数特化</span>
+</code></pre></div></div>
+
+<h1 id="concept-与类型萃取的关系">Concept 与类型萃取的关系</h1>
+
+<p>Concept 不是替代类型萃取，而是<strong>建立在类型萃取和 <code class="language-plaintext highlighter-rouge">requires</code> 表达式之上</strong>的更高层抽象。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>层次</th>
+      <th>工具</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>底层</td>
+      <td><code class="language-plaintext highlighter-rouge">is_arithmetic_v</code>、<code class="language-plaintext highlighter-rouge">is_same_v</code></td>
+      <td>查询类型性质</td>
+    </tr>
+    <tr>
+      <td>中层</td>
+      <td><code class="language-plaintext highlighter-rouge">requires</code> 表达式</td>
+      <td>检查表达式合法性</td>
+    </tr>
+    <tr>
+      <td>上层</td>
+      <td>Concept</td>
+      <td>命名谓词，约束模板参数</td>
+    </tr>
+    <tr>
+      <td>应用</td>
+      <td><code class="language-plaintext highlighter-rouge">template &lt;scalar T&gt;</code></td>
+      <td>泛型算法</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Concept 内部用类型萃取</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// Concept 内部用 `requires`</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">addable</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Concept 替代 `enable_if`</span>
+<span class="c1">// C++17</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">&gt;</span><span class="o">&gt;&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// C++20</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">add</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="c1">// Concept 不能替代类型变换, 只做约束，不做变换</span>
+<span class="n">std</span><span class="o">::</span><span class="n">remove_const_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>   <span class="c1">// 仍然是类型萃取</span>
+<span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>          <span class="c1">// 仍然是类型萃取</span>
+</code></pre></div></div>
+
+<h1 id="concept-的实际用途">Concept 的实际用途</h1>
+
+<p>约束模板参数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">,</span> <span class="n">index_t</span> <span class="n">Rows</span> <span class="o">=</span> <span class="n">dynamic</span><span class="p">,</span> <span class="n">index_t</span> <span class="n">Cols</span> <span class="o">=</span> <span class="n">dynamic</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>约束泛型算法</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">vector_like</span> <span class="n">V</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">norm2</span><span class="p">(</span><span class="k">const</span> <span class="n">V</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>替代 SFINAE 重载</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">integral</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">floating_point</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>约束类模板偏特化</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">container</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">integral</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="cm">/* 整数版本 */</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">floating_point</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="p">{</span> <span class="cm">/* 浮点版本 */</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>缩写函数模板: <code class="language-plaintext highlighter-rouge">scalar auto</code> 是 <code class="language-plaintext highlighter-rouge">template &lt;scalar T&gt; void print(T x)</code> 的简写。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="n">scalar</span> <span class="k">auto</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>约束返回值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">has_begin</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">has_begin</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">first</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">*</span><span class="n">t</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>编译期分支: 这里用的是标准库 Concept，不是 <code class="language-plaintext highlighter-rouge">is_*_v</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 整数路径</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nf">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">floating_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 浮点路径</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="concept-的常见陷阱">Concept 的常见陷阱</h1>
+
+<p><code class="language-plaintext highlighter-rouge">requires</code> 表达式不执行代码</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">bad</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>   <span class="c1">// 只检查 a.foo() 是否合法，不实际调用</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">requires</code> 表达式内的变量是假想的</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">addable</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// a 和 b 是假想对象，不真实存在</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Concept 不能有默认参数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span> <span class="o">=</span> <span class="kt">int</span><span class="p">&gt;</span>   <span class="c1">// 错误：Concept 不能有默认模板参数</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Concept 不能被显式实例化</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scalar</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>   <span class="c1">// 这是检查，不是实例化</span>
+</code></pre></div></div>
+
+<p>Concept 的短路可能隐藏错误: 如果 <code class="language-plaintext highlighter-rouge">t.size()</code> 不合法，第二个 <code class="language-plaintext highlighter-rouge">requires</code> 不求值，<code class="language-plaintext highlighter-rouge">has_size</code> 为 <code class="language-plaintext highlighter-rouge">false</code>，不会报错</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">has_size</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="p">}</span>
+                 <span class="o">&amp;&amp;</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>Concept 不能约束非类型模板参数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">positive</span> <span class="o">=</span> <span class="p">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">// 错误：Concept 只约束类型</span>
+</code></pre></div></div>
+
+<p>非类型模板参数用 <code class="language-plaintext highlighter-rouge">requires</code> 子句：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="p">&gt;</span> <span class="k">requires</span> <span class="p">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">requires</code> 子句和 <code class="language-plaintext highlighter-rouge">requires</code> 表达式不同: 一个是约束语法，一个是表达式语法。名字相同，含义不同。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// requires 子句</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span> <span class="k">requires</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">f</span><span class="p">();</span>
+
+<span class="c1">// requires 表达式</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">addable</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>Concept 的求值顺序: 先检查 <code class="language-plaintext highlighter-rouge">A&lt;T&gt;</code>，再检查 <code class="language-plaintext highlighter-rouge">B</code>。如果 <code class="language-plaintext highlighter-rouge">A&lt;T&gt;</code> 为 <code class="language-plaintext highlighter-rouge">false</code>，<code class="language-plaintext highlighter-rouge">B</code> 的第二个 <code class="language-plaintext highlighter-rouge">requires</code> 不求值。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">A</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span> <span class="p">};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">bar</span><span class="p">();</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<h1 id="concept-vs-类型萃取-vs-sfinae">Concept vs 类型萃取 vs SFINAE</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>类型萃取</th>
+      <th>SFINAE</th>
+      <th>Concept</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>引入版本</td>
+      <td>C++11</td>
+      <td>C++11</td>
+      <td>C++20</td>
+    </tr>
+    <tr>
+      <td>作用</td>
+      <td>查询/变换类型</td>
+      <td>条件启用重载</td>
+      <td>命名约束</td>
+    </tr>
+    <tr>
+      <td>语法</td>
+      <td><code class="language-plaintext highlighter-rouge">is_*_v</code>、<code class="language-plaintext highlighter-rouge">remove_*_t</code></td>
+      <td><code class="language-plaintext highlighter-rouge">enable_if</code>、<code class="language-plaintext highlighter-rouge">void_t</code></td>
+      <td><code class="language-plaintext highlighter-rouge">concept</code>、<code class="language-plaintext highlighter-rouge">requires</code></td>
+    </tr>
+    <tr>
+      <td>错误信息</td>
+      <td>中等</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>可组合</td>
+      <td>有限</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>可读性</td>
+      <td>中</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>重载冲突</td>
+      <td>容易</td>
+      <td>容易</td>
+      <td>按约束偏序</td>
+    </tr>
+    <tr>
+      <td>是否替代</td>
+      <td>—</td>
+      <td>被 Concept 替代</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>关系：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>类型萃取 → 提供底层布尔和类型变换
+SFINAE   → 用类型萃取做条件启用
+Concept  → 用类型萃取和 requires 表达式做命名约束
+</code></pre></div></div>
+
+<p>Concept 替代的是 SFINAE，不是类型萃取。</p>
+
+<h1 id="一张总表">一张总表</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>类别</th>
+      <th>代表</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>核心语言</td>
+      <td><code class="language-plaintext highlighter-rouge">same_as</code>、<code class="language-plaintext highlighter-rouge">derived_from</code>、<code class="language-plaintext highlighter-rouge">convertible_to</code>、<code class="language-plaintext highlighter-rouge">integral</code>、<code class="language-plaintext highlighter-rouge">floating_point</code></td>
+    </tr>
+    <tr>
+      <td>对象</td>
+      <td><code class="language-plaintext highlighter-rouge">movable</code>、<code class="language-plaintext highlighter-rouge">copyable</code>、<code class="language-plaintext highlighter-rouge">semiregular</code>、<code class="language-plaintext highlighter-rouge">regular</code>、<code class="language-plaintext highlighter-rouge">destructible</code></td>
+    </tr>
+    <tr>
+      <td>构造</td>
+      <td><code class="language-plaintext highlighter-rouge">constructible_from</code>、<code class="language-plaintext highlighter-rouge">default_initializable</code>、<code class="language-plaintext highlighter-rouge">copy_constructible</code></td>
+    </tr>
+    <tr>
+      <td>比较</td>
+      <td><code class="language-plaintext highlighter-rouge">equality_comparable</code>、<code class="language-plaintext highlighter-rouge">totally_ordered</code>、<code class="language-plaintext highlighter-rouge">three_way_comparable</code></td>
+    </tr>
+    <tr>
+      <td>调用</td>
+      <td><code class="language-plaintext highlighter-rouge">invocable</code>、<code class="language-plaintext highlighter-rouge">predicate</code>、<code class="language-plaintext highlighter-rouge">relation</code>、<code class="language-plaintext highlighter-rouge">strict_weak_order</code></td>
+    </tr>
+    <tr>
+      <td>范围</td>
+      <td><code class="language-plaintext highlighter-rouge">range</code>、<code class="language-plaintext highlighter-rouge">sized_range</code>、<code class="language-plaintext highlighter-rouge">view</code>、<code class="language-plaintext highlighter-rouge">input_range</code>、<code class="language-plaintext highlighter-rouge">random_access_range</code></td>
+    </tr>
+    <tr>
+      <td>组合</td>
+      <td><code class="language-plaintext highlighter-rouge">&amp;&amp;</code>、<code class="language-plaintext highlighter-rouge">||</code>、<code class="language-plaintext highlighter-rouge">!</code></td>
+    </tr>
+    <tr>
+      <td>自定义</td>
+      <td><code class="language-plaintext highlighter-rouge">concept 名字 = 条件;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="一句话总结">一句话总结</h1>
+
+<p><strong>Concept 是 C++20 的命名约束：用 <code class="language-plaintext highlighter-rouge">requires</code> 表达式或类型萃取定义，返回编译期 <code class="language-plaintext highlighter-rouge">bool</code>，用于约束模板参数。它替代了 <code class="language-plaintext highlighter-rouge">enable_if</code> 和 SFINAE，让模板代码更可读、错误信息更友好、约束可组合。但它不替代类型萃取——类型萃取仍然用于查询和变换类型，Concept 建立在它们之上。</strong></p>
+
+<h1 id="附-命名谓词">附: 命名谓词</h1>
+
+<h2 id="什么是谓词">什么是谓词</h2>
+
+<p><strong>谓词（predicate）</strong> 就是“返回 <code class="language-plaintext highlighter-rouge">bool</code> 的东西”。</p>
+
+<p>数学里： $P(x)$ 是一个谓词，表示“ $x$ 满足某性质”，结果是真或假。</p>
+
+<p>C++ 里：<code class="language-plaintext highlighter-rouge">is_even</code> 就是一个谓词。给它一个 <code class="language-plaintext highlighter-rouge">x</code>，它返回 <code class="language-plaintext highlighter-rouge">true</code> 或 <code class="language-plaintext highlighter-rouge">false</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">is_even</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>所以谓词的本质是： <strong>输入一个东西，输出一个布尔值。</strong></p>
+
+<h2 id="什么是命名">什么是“命名”</h2>
+
+<p>如果不给谓词起名字，你只能在需要的地方临时写条件：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+    <span class="k">requires</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>这个 <code class="language-plaintext highlighter-rouge">std::is_arithmetic_v&lt;T&gt;</code> 就是一个<strong>匿名谓词</strong>——它能判断，但没有名字。</p>
+
+<p>给它起个名字：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">scalar</code> 就是<strong>命名谓词</strong>。</p>
+
+<p>之后可以写：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>而不是每次重复 <code class="language-plaintext highlighter-rouge">std::is_arithmetic_v&lt;T&gt;</code>。</p>
+
+<p>所以“命名”的意思是： <strong>把一组类型要求打包，起一个名字，之后用名字代替那组要求。</strong></p>
+
+<h2 id="concept-就是命名谓词">Concept 就是命名谓词</h2>
+
+<p>Concept 的语法：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="err">名字</span> <span class="o">=</span> <span class="err">条件</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>左边 <code class="language-plaintext highlighter-rouge">名字</code>：给谓词起的名字。</li>
+  <li>右边 <code class="language-plaintext highlighter-rouge">条件</code>：一个编译期布尔表达式。</li>
+  <li><code class="language-plaintext highlighter-rouge">T</code>：谓词的参数，代表“被检查的类型”。</li>
+</ul>
+
+<p>所以：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>读作： 定义一个名为 <code class="language-plaintext highlighter-rouge">scalar</code> 的谓词，输入类型 <code class="language-plaintext highlighter-rouge">T</code>，当 <code class="language-plaintext highlighter-rouge">T</code> 是算术类型时返回 <code class="language-plaintext highlighter-rouge">true</code>。</p>
+
+<hr />
+
+<h2 id="普通谓词-vs-concept">普通谓词 vs Concept</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>普通谓词</th>
+      <th>Concept</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>输入</td>
+      <td>值</td>
+      <td>类型</td>
+    </tr>
+    <tr>
+      <td>返回</td>
+      <td><code class="language-plaintext highlighter-rouge">bool</code></td>
+      <td>编译期 <code class="language-plaintext highlighter-rouge">bool</code></td>
+    </tr>
+    <tr>
+      <td>求值时机</td>
+      <td>运行时</td>
+      <td>编译期</td>
+    </tr>
+    <tr>
+      <td>用途</td>
+      <td>条件判断</td>
+      <td>约束模板参数</td>
+    </tr>
+    <tr>
+      <td>例子</td>
+      <td><code class="language-plaintext highlighter-rouge">is_even(4)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">scalar&lt;double&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>普通谓词：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">is_even</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">);</span>       <span class="c1">// 输入值，运行时返回 bool</span>
+<span class="n">is_even</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>                 <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>Concept：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="p">...;</span>       <span class="c1">// 输入类型，编译期返回 bool</span>
+<span class="n">scalar</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>              <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">scalar&lt;double&gt;</code> 看起来像函数调用，其实是<strong>编译期布尔值</strong>。</p>
+
+<h2 id="为什么叫谓词而不是函数">为什么叫“谓词”而不是“函数”</h2>
+
+<p>因为 Concept 不是函数。它：</p>
+<ul>
+  <li><strong>不在运行时执行</strong>，只在编译期求值。</li>
+  <li><strong>不能取地址</strong>，不能当函数指针。</li>
+  <li><strong>参数是类型</strong>，不是值。</li>
+  <li><strong>结果只用于约束</strong>，不产生运行时行为。</li>
+</ul>
+
+<p>它更像数学里的谓词： $P(T)$：类型 $T$ 满足某性质, 而不是 C++ 函数。</p>
+
+<h2 id="六concept-可以组合">六、Concept 可以组合</h2>
+
+<p>命名谓词的好处之一是可组合：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">ordered</span> <span class="o">=</span> <span class="k">requires</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="p">{</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">numeric</span> <span class="o">=</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">ordered</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">numeric</code> 也是一个命名谓词，由两个命名谓词组合而成。</p>
+
+<p>用起来：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="n">numeric</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">clamp</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">lo</span><span class="p">,</span> <span class="n">T</span> <span class="n">hi</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>读作：<code class="language-plaintext highlighter-rouge">T</code> 必须满足 <code class="language-plaintext highlighter-rouge">numeric</code>：既是标量，又可比较。</p>
+
+<h2 id="七和命名谓词对应的还有匿名谓词">七、和“命名谓词”对应的还有“匿名谓词”</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 匿名谓词：直接写条件</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+    <span class="k">requires</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+
+<span class="c1">// 命名谓词：起名字</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">concept</span> <span class="n">small_scalar</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_arithmetic_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="n">small_scalar</span> <span class="n">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">matrix</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>命名谓词的好处：</p>
+<ul>
+  <li><strong>可读</strong>：<code class="language-plaintext highlighter-rouge">small_scalar&lt;T&gt;</code> 比 <code class="language-plaintext highlighter-rouge">std::is_arithmetic_v&lt;T&gt; &amp;&amp; sizeof(T) &lt;= 8</code> 清楚。</li>
+  <li><strong>可复用</strong>：多个模板可以共用同一个 concept。</li>
+  <li><strong>可组合</strong>：<code class="language-plaintext highlighter-rouge">concept A = B&lt;T&gt; &amp;&amp; C&lt;T&gt;;</code></li>
+  <li><strong>错误信息友好</strong>：编译器直接说 <code class="language-plaintext highlighter-rouge">small_scalar&lt;T&gt;</code> 不满足，而不是展开一长串表达式。</li>
+</ul>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
