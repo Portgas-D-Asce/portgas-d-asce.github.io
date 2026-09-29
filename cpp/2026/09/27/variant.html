@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>variant | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="variant" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/cpp/2026/09/27/variant.html" />
+<meta property="og:url" content="https://xdevil.top/cpp/2026/09/27/variant.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-09-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-09-27T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="variant" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-09-27T00:00:00+00:00","datePublished":"2026-09-27T00:00:00+00:00","description":"xxxxxx","headline":"variant","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/cpp/2026/09/27/variant.html"},"url":"https://xdevil.top/cpp/2026/09/27/variant.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> variant </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p><code class="language-plaintext highlighter-rouge">std::variant</code> 是 C++17 引入的<strong>类型安全的联合体</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code> 里。它能在同一块存储中保存多种类型之一，并且知道当前是哪一个。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代化替代品。</p>
+
+<h1 id="是什么">是什么</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是一个类型安全的联合体：任意时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。</strong></p>
+
+<p>一句话： <strong><code class="language-plaintext highlighter-rouge">variant</code> 是“多选一”的容器：它可能装 <code class="language-plaintext highlighter-rouge">T1</code>，可能装 <code class="language-plaintext highlighter-rouge">T2</code>，可能装 <code class="language-plaintext highlighter-rouge">T3</code>……但同一时刻只能装一个。</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 现在装 int</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 现在装 double</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 现在装 std::string</span>
+</code></pre></div></div>
+
+<h1 id="为什么需要-variant">为什么需要 <code class="language-plaintext highlighter-rouge">variant</code></h1>
+
+<h2 id="问题union-不安全">问题：<code class="language-plaintext highlighter-rouge">union</code> 不安全</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">union</span> <span class="n">U</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">d</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>   <span class="c1">// 错误：非平凡类型不能在 union 里</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">union</code> 的问题：</p>
+
+<ol>
+  <li><strong>不知道当前存的是哪个成员</strong>，需要手动加标签。</li>
+  <li><strong>不能放非平凡类型</strong>（有构造/析构函数的类型）。</li>
+  <li><strong>不管理生命周期</strong>，需要手动调用构造/析构。</li>
+  <li><strong>没有类型安全</strong>，读错成员是未定义行为。</li>
+</ol>
+
+<h2 id="variant-的解法"><code class="language-plaintext highlighter-rouge">variant</code> 的解法</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 类型安全，知道当前是 string</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">variant</code> 自动管理：</p>
+
+<ul>
+  <li>当前是哪个类型（标签）。</li>
+  <li>生命周期（构造/析构）。</li>
+  <li>类型安全访问（<code class="language-plaintext highlighter-rouge">get</code> 检查类型）。</li>
+  <li>异常安全（如果切换类型时抛异常）。</li>
+</ul>
+
+<hr />
+
+<h1 id="基本用法">基本用法</h1>
+
+<p>定义：<code class="language-plaintext highlighter-rouge">v</code> 可以存 <code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">double</code>、<code class="language-plaintext highlighter-rouge">std::string</code> 三者之一。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>默认构造： <strong>第一个备选类型必须可默认构造</strong>，否则 <code class="language-plaintext highlighter-rouge">variant</code> 不能默认构造。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 默认是第一个类型 int，值为 0</span>
+</code></pre></div></div>
+
+<p>赋值时，<code class="language-plaintext highlighter-rouge">variant</code> 会：</p>
+
+<ol>
+  <li>销毁当前值。</li>
+  <li>构造新值。</li>
+  <li>更新类型标签。</li>
+</ol>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 存 int</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 存 double</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 存 std::string</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"world"</span><span class="p">);</span>  <span class="c1">// 存 std::string</span>
+</code></pre></div></div>
+
+<p>访问：<code class="language-plaintext highlighter-rouge">std::get</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>          <span class="c1">// OK</span>
+<span class="c1">// double d = std::get&lt;double&gt;(v); // 抛 std::bad_variant_access</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>    <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<p>按索引访问：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 第 0 个类型 int</span>
+</code></pre></div></div>
+
+<p>检查当前类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>     <span class="c1">// true</span>
+<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>  <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p>获取类型索引：<code class="language-plaintext highlighter-rouge">index()</code> 返回当前激活类型的下标。如果 <code class="language-plaintext highlighter-rouge">variant</code> 是 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code>，返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">v</span><span class="p">.</span><span class="n">index</span><span class="p">();</span>   <span class="c1">// 0，第一个类型</span>
+</code></pre></div></div>
+
+<p>安全访问：<code class="language-plaintext highlighter-rouge">std::get_if</code> 返回指针，类型不匹配时返回 <code class="language-plaintext highlighter-rouge">nullptr</code>，不抛异常。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get_if</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>   <span class="c1">// v 是 int</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"not int"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="visit访问-variant-的标准方式"><code class="language-plaintext highlighter-rouge">visit</code>：访问 <code class="language-plaintext highlighter-rouge">variant</code> 的标准方式</h1>
+
+<p><code class="language-plaintext highlighter-rouge">std::visit</code> 是访问 <code class="language-plaintext highlighter-rouge">variant</code> 的推荐方式，它对当前类型调用一个可调用对象。<code class="language-plaintext highlighter-rouge">visit</code> 会根据 <code class="language-plaintext highlighter-rouge">v</code> 的当前类型，调用 lambda 的对应重载。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>更复杂的例子</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">printer</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">printer</span><span class="p">{},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">if constexpr</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">T</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nf">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"other</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">overloaded</code>
+这是 C++17 的惯用法，用继承合并多个 lambda。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">overloaded</span> <span class="o">:</span> <span class="n">Fs</span><span class="p">...</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">Fs</span><span class="o">::</span><span class="k">operator</span><span class="p">()...;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
+<span class="n">overloaded</span><span class="p">(</span><span class="n">Fs</span><span class="p">...)</span> <span class="o">-&gt;</span> <span class="n">overloaded</span><span class="o">&lt;</span><span class="n">Fs</span><span class="p">...</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">overloaded</span><span class="p">{</span>
+    <span class="p">[](</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
+    <span class="p">[](</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
+    <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="monostate让-variant-可默认构造"><code class="language-plaintext highlighter-rouge">monostate</code>：让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造</h1>
+
+<p><code class="language-plaintext highlighter-rouge">std::variant</code> 要求第一个备选类型可默认构造。如果所有类型都不可默认构造：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">NoDefault</span> <span class="p">{</span>
+    <span class="n">NoDefault</span><span class="p">()</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">NoDefault</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">std::monostate</code> 作为第一个备选：<code class="language-plaintext highlighter-rouge">monostate</code> 是一个空类型，表示“空状态”。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">monostate</span><span class="p">,</span> <span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<h1 id="variant-的实现原理"><code class="language-plaintext highlighter-rouge">variant</code> 的实现原理</h1>
+
+<p>存储</p>
+
+<p><code class="language-plaintext highlighter-rouge">variant</code> 内部通常是：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">union</code> 保存所有类型的存储。</li>
+  <li><code class="language-plaintext highlighter-rouge">index_</code> 记录当前是哪个类型。</li>
+  <li>用<strong>对齐</strong>确保 <code class="language-plaintext highlighter-rouge">union</code> 能容纳所有类型。</li>
+  <li>用<strong>大小</strong>取所有类型的最大者。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Ts</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">variant</span> <span class="p">{</span>
+    <span class="k">union</span> <span class="n">storage</span> <span class="p">{</span>
+        <span class="n">T1</span> <span class="n">t1</span><span class="p">;</span>
+        <span class="n">T2</span> <span class="n">t2</span><span class="p">;</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span> <span class="n">storage_</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">index_</span><span class="p">;</span>   <span class="c1">// 当前激活类型</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>生命周期管理</p>
+
+<ul>
+  <li>构造：在 <code class="language-plaintext highlighter-rouge">union</code> 上 placement new。</li>
+  <li>析构：调用当前类型的析构函数。</li>
+  <li>赋值：先析构旧值，再构造新值。</li>
+</ul>
+
+<p>异常安全,如果切换类型时新值构造抛异常：</p>
+
+<ul>
+  <li>旧值已经析构。</li>
+  <li>新值没构造成功。</li>
+  <li><code class="language-plaintext highlighter-rouge">variant</code> 进入 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code> 状态。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">valueless_by_exception</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// v 没有值</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这是 <code class="language-plaintext highlighter-rouge">variant</code> 最尴尬的状态。<code class="language-plaintext highlighter-rouge">index()</code> 返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
+
+<p>只有在以下情况才会出现：</p>
+
+<ol>
+  <li>切换类型时，旧类型析构成功。</li>
+  <li>新类型构造抛异常。</li>
+  <li>且新类型不是 <code class="language-plaintext highlighter-rouge">nothrow</code> 构造。</li>
+</ol>
+
+<p>现代实现尽量避免这个状态。</p>
+
+<h1 id="variant-vs-union-vs-any"><code class="language-plaintext highlighter-rouge">variant</code> vs <code class="language-plaintext highlighter-rouge">union</code> vs <code class="language-plaintext highlighter-rouge">any</code></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><code class="language-plaintext highlighter-rouge">union</code></th>
+      <th><code class="language-plaintext highlighter-rouge">variant</code></th>
+      <th><code class="language-plaintext highlighter-rouge">any</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>类型安全</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>类型数量</td>
+      <td>编译期固定</td>
+      <td>编译期固定</td>
+      <td>运行期任意</td>
+    </tr>
+    <tr>
+      <td>知道当前类型</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>非平凡类型</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>生命周期管理</td>
+      <td>手动</td>
+      <td>自动</td>
+      <td>自动</td>
+    </tr>
+    <tr>
+      <td>头文件</td>
+      <td>语言</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;any&gt;</code></td>
+    </tr>
+    <tr>
+      <td>用途</td>
+      <td>底层</td>
+      <td>多选一</td>
+      <td>任意类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">union</code>：C 风格，不安全。</li>
+  <li><code class="language-plaintext highlighter-rouge">variant</code>：C++17，类型安全的联合体。</li>
+  <li><code class="language-plaintext highlighter-rouge">any</code>：C++17，可以装任意类型，但访问需要知道类型。</li>
+</ul>
+
+<h1 id="variant-的常用操作"><code class="language-plaintext highlighter-rouge">variant</code> 的常用操作</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v = x</code></td>
+      <td>赋值，切换类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v.index()</code></td>
+      <td>当前类型索引</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v.valueless_by_exception()</code></td>
+      <td>是否无值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get&lt;T&gt;(v)</code></td>
+      <td>按类型访问，不匹配抛异常</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get&lt;I&gt;(v)</code></td>
+      <td>按索引访问</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get_if&lt;T&gt;(&amp;v)</code></td>
+      <td>按类型访问，不匹配返回 <code class="language-plaintext highlighter-rouge">nullptr</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::holds_alternative&lt;T&gt;(v)</code></td>
+      <td>检查当前类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::visit(f, v)</code></td>
+      <td>对当前类型调用 <code class="language-plaintext highlighter-rouge">f</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::variant_size_v&lt;V&gt;</code></td>
+      <td>备选类型数量</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::variant_alternative_t&lt;I, V&gt;</code></td>
+      <td>第 <code class="language-plaintext highlighter-rouge">I</code> 个备选类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="variant-的实际用途"><code class="language-plaintext highlighter-rouge">variant</code> 的实际用途</h1>
+
+<p>表示多态值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="mi">42</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">};</span>
+</code></pre></div></div>
+
+<p>解析结果</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">ParseResult</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Success</span><span class="p">,</span> <span class="n">Error</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">ParseResult</span> <span class="nf">parse</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>状态机</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">State</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Idle</span><span class="p">,</span> <span class="n">Running</span><span class="p">,</span> <span class="n">Stopped</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>JSON 值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Json</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span><span class="p">,</span>
+    <span class="kt">bool</span><span class="p">,</span>
+    <span class="kt">double</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Json</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">Json</span><span class="o">&gt;</span>
+<span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>错误处理</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">error_code</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="variant-的常见陷阱"><code class="language-plaintext highlighter-rouge">variant</code> 的常见陷阱</h1>
+
+<p>默认构造要求</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误：NoDefault 不可默认构造</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">monostate</code> 解决。</p>
+
+<p>重复类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但 get&lt;int&gt; 有歧义</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">std::get&lt;int&gt;(v)</code> 编译错误，因为 <code class="language-plaintext highlighter-rouge">int</code> 出现两次。用索引访问：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Thrower</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Thrower</span><span class="p">{};</span>   <span class="c1">// 构造抛异常</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+    <span class="c1">// v 可能 valueless</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">get</code> 抛异常</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 抛 std::bad_variant_access</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">get_if</code> 避免异常。</p>
+
+<p>引用类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">double</span><span class="o">&amp;&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但要小心生命周期</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> 返回值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>所有分支的返回类型必须一致，或者能推导出公共类型。</p>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> 多参数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">);</span>   <span class="c1">// f 必须能处理所有类型组合</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">v1</code> 有 N 种类型，<code class="language-plaintext highlighter-rouge">v2</code> 有 M 种类型，<code class="language-plaintext highlighter-rouge">f</code> 必须能处理 N×M 种组合。</p>
+
+<h1 id="一句话总结">一句话总结</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是 C++17 的类型安全联合体，同一时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。它自动管理生命周期和类型标签，用 <code class="language-plaintext highlighter-rouge">get</code>、<code class="language-plaintext highlighter-rouge">get_if</code>、<code class="language-plaintext highlighter-rouge">visit</code> 访问。<code class="language-plaintext highlighter-rouge">monostate</code> 用于让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代替代品，用于表示“多选一”的类型。</strong></p>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

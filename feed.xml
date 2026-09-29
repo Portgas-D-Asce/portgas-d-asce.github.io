@@ -1,494 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-09-28T14:32:16+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">类型萃取（Type Traits）</title><link href="https://xdevil.top/cpp/2026/09/26/decltype-&-declval.html" rel="alternate" type="text/html" title="类型萃取（Type Traits）" /><published>2026-09-26T00:00:00+00:00</published><updated>2026-09-26T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/26/decltype%20&amp;%20declval</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/26/decltype-&amp;-declval.html"><![CDATA[<h1 id="decltype"><code class="language-plaintext highlighter-rouge">decltype</code></h1>
-
-<h2 id="是什么">是什么</h2>
-
-<p><strong><code class="language-plaintext highlighter-rouge">decltype(expr)</code> 是一个说明符：输入一个表达式，返回它的类型，不求值。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>        <span class="c1">// y 是 int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// z 是 double</span>
-</code></pre></div></div>
-
-<h2 id="三条规则">三条规则</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th><code class="language-plaintext highlighter-rouge">e</code> 的形式</th>
-      <th><code class="language-plaintext highlighter-rouge">decltype(e)</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>未加括号的标识符或类成员访问</td>
-      <td>该标识符声明时的类型</td>
-    </tr>
-    <tr>
-      <td>左值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;</code></td>
-    </tr>
-    <tr>
-      <td>纯右值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T</code></td>
-    </tr>
-    <tr>
-      <td>将亡值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>     <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span>    <span class="c1">// const int</span>
-<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span>   <span class="c1">// int&amp;，加括号变成左值表达式</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>     <span class="c1">// int&amp;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// int，纯右值</span>
-</code></pre></div></div>
-
-<h2 id="与-auto-的区别">与 <code class="language-plaintext highlighter-rouge">auto</code> 的区别</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th><code class="language-plaintext highlighter-rouge">auto</code></th>
-      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>推导依据</td>
-      <td>初始化表达式，按值推导</td>
-      <td>表达式的类型，精确推导</td>
-    </tr>
-    <tr>
-      <td>引用</td>
-      <td>去掉引用</td>
-      <td>保留引用</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">const</code></td>
-      <td>去掉顶层 <code class="language-plaintext highlighter-rouge">const</code></td>
-      <td>保留 <code class="language-plaintext highlighter-rouge">const</code></td>
-    </tr>
-    <tr>
-      <td>数组</td>
-      <td>退化为指针</td>
-      <td>保留数组类型</td>
-    </tr>
-    <tr>
-      <td>用途</td>
-      <td>变量声明</td>
-      <td>返回类型、SFINAE、元编程</td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-<span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>          <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="n">b</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// int&amp;</span>
-
-<span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cx</span><span class="p">;</span>         <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// const int</span>
-</code></pre></div></div>
-
-<h2 id="decltypeautoc14"><code class="language-plaintext highlighter-rouge">decltype(auto)</code>（C++14）</h2>
-
-<p>按 <code class="language-plaintext highlighter-rouge">decltype</code> 规则推导返回类型，保留引用和 <code class="language-plaintext highlighter-rouge">const</code>。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>   <span class="c1">// 返回 int&amp;，因为 x 是左值</span>
-<span class="k">auto</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>             <span class="c1">// 返回 int，按值</span>
-</code></pre></div></div>
-
-<h2 id="典型用途">典型用途</h2>
-
-<p><strong>1. 返回类型推导（C++11 尾置返回类型）</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">add</span><span class="p">(</span><span class="n">A</span> <span class="n">a</span><span class="p">,</span> <span class="n">B</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><strong>2. SFINAE</strong>： <code class="language-plaintext highlighter-rouge">t.foo()</code> 不合法 → <code class="language-plaintext highlighter-rouge">decltype</code> 替换失败 → SFINAE。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">())</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><strong>3. 类型萃取</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="实现原理">实现原理</h2>
-
-<p><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，不是标准库组件。以 Clang 和 GCC 为例：</p>
-
-<p><strong>整体流程：</strong></p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>源码: decltype(expr)
-    ↓
-[Parser] 解析为 DecltypeType 节点 / DECLTYPE_TYPE 树节点
-    ↓
-[Sema] 对 expr 进行类型推导，得到 UnderlyingType
-    ↓
-[AST] 生成 DecltypeType(E, UnderlyingType)
-    ↓
-[CodeGen] 直接使用 UnderlyingType，不做额外计算
-</code></pre></div></div>
-
-<p><strong>Clang：</strong></p>
-
-<ul>
-  <li>AST 节点：<code class="language-plaintext highlighter-rouge">DecltypeType</code>，保存 <code class="language-plaintext highlighter-rouge">Expr *E</code> 和 <code class="language-plaintext highlighter-rouge">QualType UnderlyingType</code>。</li>
-  <li>Sema 阶段先分析表达式的值类别和类型，再按规则决定 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">DecltypeType</code> 不被唯一化（每个 <code class="language-plaintext highlighter-rouge">decltype</code> 有自己的 AST 节点）。</li>
-  <li>Lambda 中 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 有上下文敏感的特殊处理。</li>
-  <li>CodeGen 直接使用 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>，<code class="language-plaintext highlighter-rouge">decltype</code> 不产生运行时行为。</li>
-</ul>
-
-<p><strong>GCC：</strong></p>
-
-<ul>
-  <li>树节点：<code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code>，定义在 <code class="language-plaintext highlighter-rouge">cp-tree.def</code>。</li>
-  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_EXPR</code> 取出内部表达式。</li>
-  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_ID_EXPR_OR_MEMBER_ACCESS_P</code> 标记是否为“未加括号的标识符或成员访问”。</li>
-  <li>模板中始终视为依赖类型，实例化时由 <code class="language-plaintext highlighter-rouge">tsubst</code> 重新计算。</li>
-</ul>
-
-<p><strong>关键设计要点：</strong></p>
-
-<table>
-  <thead>
-    <tr>
-      <th>要点</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>不求值</td>
-      <td>操作数在 Unevaluated 上下文中分析</td>
-    </tr>
-    <tr>
-      <td>保留引用和 cv</td>
-      <td>与 auto 不同，不退化类型</td>
-    </tr>
-    <tr>
-      <td>括号规则</td>
-      <td><code class="language-plaintext highlighter-rouge">decltype(x)</code> 与 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 不同</td>
-    </tr>
-    <tr>
-      <td>依赖类型</td>
-      <td>模板中始终 dependent，实例化时才确定</td>
-    </tr>
-    <tr>
-      <td>不唯一化</td>
-      <td>每个 decltype 表达式有独立 AST 节点</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="常见陷阱">常见陷阱</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span> <span class="c1">// int&amp;，加括号改变结果</span>
-
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">();</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">f</span><span class="p">())</span>  <span class="c1">// int&amp;</span>
-<span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">();</span>  <span class="c1">// int</span>
-
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="o">++</span><span class="p">)</span>  <span class="c1">// int，x++ 不求值</span>
-<span class="k">decltype</span><span class="p">(</span><span class="o">++</span><span class="n">x</span><span class="p">)</span>  <span class="c1">// int&amp;，++x 不求值</span>
-</code></pre></div></div>
-
-<h1 id="declval"><code class="language-plaintext highlighter-rouge">declval</code></h1>
-
-<h2 id="是什么-1">是什么</h2>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::declval&lt;T&gt;()</code> 是函数模板，返回 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>，但不构造对象。用于编译期类型推导。</strong></p>
-
-<p>一句话： <strong>在编译期“假装”有一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，只用于 <code class="language-plaintext highlighter-rouge">decltype</code>、<code class="language-plaintext highlighter-rouge">sizeof</code>、<code class="language-plaintext highlighter-rouge">noexcept</code> 等不求值上下文。</strong></p>
-
-<h2 id="实现原理-1">实现原理</h2>
-
-<p>标准定义（<code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code>）：<strong>只有声明，没有定义。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="n">add_rvalue_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>libstdc++ 实际源码：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-  <span class="n">_GLIBCXX_CONSTEXPR</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span>
-  <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>libc++ 实际源码：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="n">_LIBCPP_HIDE_FROM_ABI</span> <span class="k">typename</span> <span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">declval</span><span class="p">()</span> <span class="n">_NOEXCEPT</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="为什么没有函数体">为什么没有函数体</h2>
-
-<p><code class="language-plaintext highlighter-rouge">declval</code> 只用于<strong>不求值上下文</strong>：这些上下文里函数不会被实际调用，编译器只需返回类型。</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">decltype(declval&lt;T&gt;().foo())</code></li>
-  <li><code class="language-plaintext highlighter-rouge">sizeof(declval&lt;T&gt;())</code></li>
-  <li><code class="language-plaintext highlighter-rouge">noexcept(declval&lt;T&gt;().foo())</code></li>
-</ul>
-
-<p>如果用户真调用：这是<strong>故意设计</strong>：防止运行期调用，只在链接期报错。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>   <span class="c1">// 链接错误：未定义的引用</span>
-</code></pre></div></div>
-
-<h2 id="为什么用-add_rvalue_reference_tt-而不是-t">为什么用 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code> 而不是 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></h2>
-
-<p>因为 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 对某些类型不合法：</p>
-
-<table>
-  <thead>
-    <tr>
-      <th><code class="language-plaintext highlighter-rouge">T</code></th>
-      <th><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></th>
-      <th><code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">void</code></td>
-      <td><code class="language-plaintext highlighter-rouge">void&amp;&amp;</code> 不合法</td>
-      <td><code class="language-plaintext highlighter-rouge">void</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><code class="language-plaintext highlighter-rouge">add_rvalue_reference</code> 的源码：用 <code class="language-plaintext highlighter-rouge">__void_t&lt;_Tp&amp;&amp;&gt;</code> 做 SFINAE 检测 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 是否合法。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span> <span class="p">{</span>
-    <span class="k">typedef</span> <span class="n">_Tp</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// 回退：T&amp;&amp; 不合法时返回 T（处理 void）</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">__void_t</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&amp;&amp;&gt;&gt;</span> <span class="p">{</span>
-    <span class="k">typedef</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// T&amp;&amp; 合法时返回 T&amp;&amp;</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">add_rvalue_reference</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<h2 id="为什么-noexcept">为什么 <code class="language-plaintext highlighter-rouge">noexcept</code></h2>
-
-<p><code class="language-plaintext highlighter-rouge">declval</code> 没有函数体，逻辑上不可能抛异常。标 <code class="language-plaintext highlighter-rouge">noexcept</code> 让它在 <code class="language-plaintext highlighter-rouge">noexcept</code> 表达式里可用：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">constexpr</span> <span class="kt">bool</span> <span class="nf">is_nothrow_foo</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">noexcept</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">());</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="decltype-与-declval-的配合"><code class="language-plaintext highlighter-rouge">decltype</code> 与 <code class="language-plaintext highlighter-rouge">declval</code> 的配合</h1>
-
-<h2 id="为什么需要配合">为什么需要配合</h2>
-
-<p>在 <code class="language-plaintext highlighter-rouge">decltype</code> 里需要一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，<code class="language-plaintext highlighter-rouge">declval</code> 解决了这个问题：</p>
-
-<ul>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T{}.foo()</code>：<code class="language-plaintext highlighter-rouge">T</code> 可能没有默认构造函数。</li>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T().foo()</code>：同上。</li>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T t; t.foo()</code>：<code class="language-plaintext highlighter-rouge">decltype</code> 里不能声明变量。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span>
-</code></pre></div></div>
-
-<p>配合流程</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>declval&lt;T&gt;()  →  返回 T&amp;&amp;，假装有 T 对象
-    ↓
-.foo()        →  调用成员函数
-    ↓
-decltype(...) →  推导返回类型
-    ↓
-不合法        →  SFINAE
-</code></pre></div></div>
-
-<h2 id="典型用例">典型用例</h2>
-
-<p><strong>检测成员函数</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_foo</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_foo</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span><span class="o">&gt;&gt;</span>
-    <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>检测运算符</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_plus</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_plus</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>推导表达式类型</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">);</span>
-</code></pre></div></div>
-
-<p><strong>检测可转换性</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_convertible</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_convertible</span><span class="o">&lt;</span><span class="n">From</span><span class="p">,</span> <span class="n">To</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
-    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">To</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">From</span><span class="o">&gt;</span><span class="p">())</span>
-<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>检测迭代器</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_iterable</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_iterable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span>
-    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())),</span>
-    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()))</span>
-<span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<h2 id="libstdc-中的-declval-实现细节">libstdc++ 中的 <code class="language-plaintext highlighter-rouge">declval</code> 实现细节</h2>
-
-<p>标准库自身也用 <code class="language-plaintext highlighter-rouge">decltype</code> + 重载决议实现 <code class="language-plaintext highlighter-rouge">declval</code>：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">_Up</span> <span class="o">=</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span><span class="p">&gt;</span>
-<span class="n">_Up</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="n">_Tp</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">long</span><span class="p">);</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">declval</span><span class="p">()</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">__declval</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
-</code></pre></div></div>
-
-<ul>
-  <li>第一个重载返回 <code class="language-plaintext highlighter-rouge">_Up = _Tp&amp;&amp;</code>。</li>
-  <li>第二个重载返回 <code class="language-plaintext highlighter-rouge">_Tp</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">__declval&lt;_Tp&gt;(0)</code> 优先匹配第一个（<code class="language-plaintext highlighter-rouge">int</code> 比 <code class="language-plaintext highlighter-rouge">long</code> 更匹配）。</li>
-  <li>如果 <code class="language-plaintext highlighter-rouge">_Tp&amp;&amp;</code> 不合法，第一个重载 SFINAE 失败，回退到第二个。</li>
-  <li>用 <code class="language-plaintext highlighter-rouge">decltype</code> 推导最终返回类型。</li>
-</ul>
-
-<h1 id="对照总表">对照总表</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>维度</th>
-      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
-      <th><code class="language-plaintext highlighter-rouge">declval</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>类型</td>
-      <td>编译器关键字</td>
-      <td>函数模板</td>
-    </tr>
-    <tr>
-      <td>头文件</td>
-      <td>无（语言特性）</td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
-    </tr>
-    <tr>
-      <td>输入</td>
-      <td>表达式</td>
-      <td>类型 <code class="language-plaintext highlighter-rouge">T</code></td>
-    </tr>
-    <tr>
-      <td>输出</td>
-      <td>表达式的类型</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>（假想对象）</td>
-    </tr>
-    <tr>
-      <td>是否求值</td>
-      <td>否</td>
-      <td>否</td>
-    </tr>
-    <tr>
-      <td>是否有定义</td>
-      <td>—</td>
-      <td>只有声明</td>
-    </tr>
-    <tr>
-      <td>是否可调用</td>
-      <td>—</td>
-      <td>不能实际调用</td>
-    </tr>
-    <tr>
-      <td>典型用途</td>
-      <td>返回类型、SFINAE</td>
-      <td><code class="language-plaintext highlighter-rouge">decltype</code> 内部提供假想对象</td>
-    </tr>
-    <tr>
-      <td>源码位置</td>
-      <td>Clang <code class="language-plaintext highlighter-rouge">DecltypeType</code> / GCC <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code></td>
-      <td>libstdc++ / libc++ <code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="总结">总结</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，在 Sema 阶段按值类别推导表达式类型，存入 AST 节点，CodeGen 直接使用结果，不产生运行时逻辑。</strong></p>
-
-<p><strong><code class="language-plaintext highlighter-rouge">declval</code> 是一个只有声明的函数模板，返回 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code>，在编译期假装有 <code class="language-plaintext highlighter-rouge">T</code> 对象，只用于不求值上下文。两者配合是 SFINAE 检测成员、运算符、返回类型的核心工具。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="模板元泛型编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">类型萃取（Type Traits）</title><link href="https://xdevil.top/cpp/2026/09/22/concept.html" rel="alternate" type="text/html" title="类型萃取（Type Traits）" /><published>2026-09-22T00:00:00+00:00</published><updated>2026-09-22T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/22/concept</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/22/concept.html"><![CDATA[<p>Concept 是 C++20 引入的模板约束机制。它让模板参数的要求显式、可读、可组合，彻底改变了泛型编程的写法。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-09-29T10:07:54+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html"></title><link href="https://xdevil.top/2026/09/29/2026-09-22-concept.html" rel="alternate" type="text/html" title="" /><published>2026-09-29T10:07:54+00:00</published><updated>2026-09-29T10:07:54+00:00</updated><id>https://xdevil.top/2026/09/29/2026-09-22-concept</id><content type="html" xml:base="https://xdevil.top/2026/09/29/2026-09-22-concept.html"><![CDATA[<p>Concept 是 C++20 引入的模板约束机制。它让模板参数的要求显式、可读、可组合，彻底改变了泛型编程的写法。</p>
 
 <h1 id="什么是-concept">什么是 Concept</h1>
 
@@ -1506,7 +1016,952 @@ Concept  → 用类型萃取和 requires 表达式做命名约束
   <li><strong>可复用</strong>：多个模板可以共用同一个 concept。</li>
   <li><strong>可组合</strong>：<code class="language-plaintext highlighter-rouge">concept A = B&lt;T&gt; &amp;&amp; C&lt;T&gt;;</code></li>
   <li><strong>错误信息友好</strong>：编译器直接说 <code class="language-plaintext highlighter-rouge">small_scalar&lt;T&gt;</code> 不满足，而不是展开一长串表达式。</li>
-</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="模板元泛型编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">类型萃取（Type Traits）</title><link href="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html" rel="alternate" type="text/html" title="类型萃取（Type Traits）" /><published>2026-09-19T00:00:00+00:00</published><updated>2026-09-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96%EF%BC%88Type%20Traits%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html"><![CDATA[<p>类型萃取是 C++ 模板元编程的基石。它让编译器在编译期查询类型信息、变换类型、做出选择等</p>
+</ul>]]></content><author><name>Devil</name><email>Devil@gmail.com</email></author></entry><entry><title type="html">variant</title><link href="https://xdevil.top/cpp/2026/09/27/variant.html" rel="alternate" type="text/html" title="variant" /><published>2026-09-27T00:00:00+00:00</published><updated>2026-09-27T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/27/variant</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/27/variant.html"><![CDATA[<p><code class="language-plaintext highlighter-rouge">std::variant</code> 是 C++17 引入的<strong>类型安全的联合体</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code> 里。它能在同一块存储中保存多种类型之一，并且知道当前是哪一个。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代化替代品。</p>
+
+<h1 id="是什么">是什么</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是一个类型安全的联合体：任意时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。</strong></p>
+
+<p>一句话： <strong><code class="language-plaintext highlighter-rouge">variant</code> 是“多选一”的容器：它可能装 <code class="language-plaintext highlighter-rouge">T1</code>，可能装 <code class="language-plaintext highlighter-rouge">T2</code>，可能装 <code class="language-plaintext highlighter-rouge">T3</code>……但同一时刻只能装一个。</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 现在装 int</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 现在装 double</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 现在装 std::string</span>
+</code></pre></div></div>
+
+<h1 id="为什么需要-variant">为什么需要 <code class="language-plaintext highlighter-rouge">variant</code></h1>
+
+<h2 id="问题union-不安全">问题：<code class="language-plaintext highlighter-rouge">union</code> 不安全</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">union</span> <span class="n">U</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">d</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>   <span class="c1">// 错误：非平凡类型不能在 union 里</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">union</code> 的问题：</p>
+
+<ol>
+  <li><strong>不知道当前存的是哪个成员</strong>，需要手动加标签。</li>
+  <li><strong>不能放非平凡类型</strong>（有构造/析构函数的类型）。</li>
+  <li><strong>不管理生命周期</strong>，需要手动调用构造/析构。</li>
+  <li><strong>没有类型安全</strong>，读错成员是未定义行为。</li>
+</ol>
+
+<h2 id="variant-的解法"><code class="language-plaintext highlighter-rouge">variant</code> 的解法</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 类型安全，知道当前是 string</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">variant</code> 自动管理：</p>
+
+<ul>
+  <li>当前是哪个类型（标签）。</li>
+  <li>生命周期（构造/析构）。</li>
+  <li>类型安全访问（<code class="language-plaintext highlighter-rouge">get</code> 检查类型）。</li>
+  <li>异常安全（如果切换类型时抛异常）。</li>
+</ul>
+
+<hr />
+
+<h1 id="基本用法">基本用法</h1>
+
+<p>定义：<code class="language-plaintext highlighter-rouge">v</code> 可以存 <code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">double</code>、<code class="language-plaintext highlighter-rouge">std::string</code> 三者之一。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>默认构造： <strong>第一个备选类型必须可默认构造</strong>，否则 <code class="language-plaintext highlighter-rouge">variant</code> 不能默认构造。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 默认是第一个类型 int，值为 0</span>
+</code></pre></div></div>
+
+<p>赋值时，<code class="language-plaintext highlighter-rouge">variant</code> 会：</p>
+
+<ol>
+  <li>销毁当前值。</li>
+  <li>构造新值。</li>
+  <li>更新类型标签。</li>
+</ol>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 存 int</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 存 double</span>
+<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 存 std::string</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"world"</span><span class="p">);</span>  <span class="c1">// 存 std::string</span>
+</code></pre></div></div>
+
+<p>访问：<code class="language-plaintext highlighter-rouge">std::get</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>          <span class="c1">// OK</span>
+<span class="c1">// double d = std::get&lt;double&gt;(v); // 抛 std::bad_variant_access</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>    <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<p>按索引访问：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 第 0 个类型 int</span>
+</code></pre></div></div>
+
+<p>检查当前类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>     <span class="c1">// true</span>
+<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>  <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p>获取类型索引：<code class="language-plaintext highlighter-rouge">index()</code> 返回当前激活类型的下标。如果 <code class="language-plaintext highlighter-rouge">variant</code> 是 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code>，返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">v</span><span class="p">.</span><span class="n">index</span><span class="p">();</span>   <span class="c1">// 0，第一个类型</span>
+</code></pre></div></div>
+
+<p>安全访问：<code class="language-plaintext highlighter-rouge">std::get_if</code> 返回指针，类型不匹配时返回 <code class="language-plaintext highlighter-rouge">nullptr</code>，不抛异常。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get_if</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>   <span class="c1">// v 是 int</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"not int"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="visit访问-variant-的标准方式"><code class="language-plaintext highlighter-rouge">visit</code>：访问 <code class="language-plaintext highlighter-rouge">variant</code> 的标准方式</h1>
+
+<p><code class="language-plaintext highlighter-rouge">std::visit</code> 是访问 <code class="language-plaintext highlighter-rouge">variant</code> 的推荐方式，它对当前类型调用一个可调用对象。<code class="language-plaintext highlighter-rouge">visit</code> 会根据 <code class="language-plaintext highlighter-rouge">v</code> 的当前类型，调用 lambda 的对应重载。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>更复杂的例子</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">printer</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">printer</span><span class="p">{},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">if constexpr</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">T</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nf">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"other</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">overloaded</code>
+这是 C++17 的惯用法，用继承合并多个 lambda。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">overloaded</span> <span class="o">:</span> <span class="n">Fs</span><span class="p">...</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">Fs</span><span class="o">::</span><span class="k">operator</span><span class="p">()...;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
+<span class="n">overloaded</span><span class="p">(</span><span class="n">Fs</span><span class="p">...)</span> <span class="o">-&gt;</span> <span class="n">overloaded</span><span class="o">&lt;</span><span class="n">Fs</span><span class="p">...</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">overloaded</span><span class="p">{</span>
+    <span class="p">[](</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
+    <span class="p">[](</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
+    <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="monostate让-variant-可默认构造"><code class="language-plaintext highlighter-rouge">monostate</code>：让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造</h1>
+
+<p><code class="language-plaintext highlighter-rouge">std::variant</code> 要求第一个备选类型可默认构造。如果所有类型都不可默认构造：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">NoDefault</span> <span class="p">{</span>
+    <span class="n">NoDefault</span><span class="p">()</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">NoDefault</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">std::monostate</code> 作为第一个备选：<code class="language-plaintext highlighter-rouge">monostate</code> 是一个空类型，表示“空状态”。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">monostate</span><span class="p">,</span> <span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<h1 id="variant-的实现原理"><code class="language-plaintext highlighter-rouge">variant</code> 的实现原理</h1>
+
+<p>存储</p>
+
+<p><code class="language-plaintext highlighter-rouge">variant</code> 内部通常是：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">union</code> 保存所有类型的存储。</li>
+  <li><code class="language-plaintext highlighter-rouge">index_</code> 记录当前是哪个类型。</li>
+  <li>用<strong>对齐</strong>确保 <code class="language-plaintext highlighter-rouge">union</code> 能容纳所有类型。</li>
+  <li>用<strong>大小</strong>取所有类型的最大者。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Ts</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">variant</span> <span class="p">{</span>
+    <span class="k">union</span> <span class="n">storage</span> <span class="p">{</span>
+        <span class="n">T1</span> <span class="n">t1</span><span class="p">;</span>
+        <span class="n">T2</span> <span class="n">t2</span><span class="p">;</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span> <span class="n">storage_</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">index_</span><span class="p">;</span>   <span class="c1">// 当前激活类型</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>生命周期管理</p>
+
+<ul>
+  <li>构造：在 <code class="language-plaintext highlighter-rouge">union</code> 上 placement new。</li>
+  <li>析构：调用当前类型的析构函数。</li>
+  <li>赋值：先析构旧值，再构造新值。</li>
+</ul>
+
+<p>异常安全,如果切换类型时新值构造抛异常：</p>
+
+<ul>
+  <li>旧值已经析构。</li>
+  <li>新值没构造成功。</li>
+  <li><code class="language-plaintext highlighter-rouge">variant</code> 进入 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code> 状态。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">valueless_by_exception</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// v 没有值</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这是 <code class="language-plaintext highlighter-rouge">variant</code> 最尴尬的状态。<code class="language-plaintext highlighter-rouge">index()</code> 返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
+
+<p>只有在以下情况才会出现：</p>
+
+<ol>
+  <li>切换类型时，旧类型析构成功。</li>
+  <li>新类型构造抛异常。</li>
+  <li>且新类型不是 <code class="language-plaintext highlighter-rouge">nothrow</code> 构造。</li>
+</ol>
+
+<p>现代实现尽量避免这个状态。</p>
+
+<h1 id="variant-vs-union-vs-any"><code class="language-plaintext highlighter-rouge">variant</code> vs <code class="language-plaintext highlighter-rouge">union</code> vs <code class="language-plaintext highlighter-rouge">any</code></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><code class="language-plaintext highlighter-rouge">union</code></th>
+      <th><code class="language-plaintext highlighter-rouge">variant</code></th>
+      <th><code class="language-plaintext highlighter-rouge">any</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>类型安全</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>类型数量</td>
+      <td>编译期固定</td>
+      <td>编译期固定</td>
+      <td>运行期任意</td>
+    </tr>
+    <tr>
+      <td>知道当前类型</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>非平凡类型</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>生命周期管理</td>
+      <td>手动</td>
+      <td>自动</td>
+      <td>自动</td>
+    </tr>
+    <tr>
+      <td>头文件</td>
+      <td>语言</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;any&gt;</code></td>
+    </tr>
+    <tr>
+      <td>用途</td>
+      <td>底层</td>
+      <td>多选一</td>
+      <td>任意类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">union</code>：C 风格，不安全。</li>
+  <li><code class="language-plaintext highlighter-rouge">variant</code>：C++17，类型安全的联合体。</li>
+  <li><code class="language-plaintext highlighter-rouge">any</code>：C++17，可以装任意类型，但访问需要知道类型。</li>
+</ul>
+
+<h1 id="variant-的常用操作"><code class="language-plaintext highlighter-rouge">variant</code> 的常用操作</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v = x</code></td>
+      <td>赋值，切换类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v.index()</code></td>
+      <td>当前类型索引</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v.valueless_by_exception()</code></td>
+      <td>是否无值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get&lt;T&gt;(v)</code></td>
+      <td>按类型访问，不匹配抛异常</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get&lt;I&gt;(v)</code></td>
+      <td>按索引访问</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::get_if&lt;T&gt;(&amp;v)</code></td>
+      <td>按类型访问，不匹配返回 <code class="language-plaintext highlighter-rouge">nullptr</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::holds_alternative&lt;T&gt;(v)</code></td>
+      <td>检查当前类型</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::visit(f, v)</code></td>
+      <td>对当前类型调用 <code class="language-plaintext highlighter-rouge">f</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::variant_size_v&lt;V&gt;</code></td>
+      <td>备选类型数量</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::variant_alternative_t&lt;I, V&gt;</code></td>
+      <td>第 <code class="language-plaintext highlighter-rouge">I</code> 个备选类型</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="variant-的实际用途"><code class="language-plaintext highlighter-rouge">variant</code> 的实际用途</h1>
+
+<p>表示多态值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="mi">42</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">};</span>
+</code></pre></div></div>
+
+<p>解析结果</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">ParseResult</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Success</span><span class="p">,</span> <span class="n">Error</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">ParseResult</span> <span class="nf">parse</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>状态机</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">State</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Idle</span><span class="p">,</span> <span class="n">Running</span><span class="p">,</span> <span class="n">Stopped</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>JSON 值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Json</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span><span class="p">,</span>
+    <span class="kt">bool</span><span class="p">,</span>
+    <span class="kt">double</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Json</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">Json</span><span class="o">&gt;</span>
+<span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>错误处理</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">error_code</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="variant-的常见陷阱"><code class="language-plaintext highlighter-rouge">variant</code> 的常见陷阱</h1>
+
+<p>默认构造要求</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误：NoDefault 不可默认构造</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">monostate</code> 解决。</p>
+
+<p>重复类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但 get&lt;int&gt; 有歧义</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">std::get&lt;int&gt;(v)</code> 编译错误，因为 <code class="language-plaintext highlighter-rouge">int</code> 出现两次。用索引访问：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Thrower</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Thrower</span><span class="p">{};</span>   <span class="c1">// 构造抛异常</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+    <span class="c1">// v 可能 valueless</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">get</code> 抛异常</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 抛 std::bad_variant_access</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">get_if</code> 避免异常。</p>
+
+<p>引用类型</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">double</span><span class="o">&amp;&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但要小心生命周期</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> 返回值</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>所有分支的返回类型必须一致，或者能推导出公共类型。</p>
+
+<p><code class="language-plaintext highlighter-rouge">visit</code> 多参数</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">);</span>   <span class="c1">// f 必须能处理所有类型组合</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">v1</code> 有 N 种类型，<code class="language-plaintext highlighter-rouge">v2</code> 有 M 种类型，<code class="language-plaintext highlighter-rouge">f</code> 必须能处理 N×M 种组合。</p>
+
+<h1 id="一句话总结">一句话总结</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是 C++17 的类型安全联合体，同一时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。它自动管理生命周期和类型标签，用 <code class="language-plaintext highlighter-rouge">get</code>、<code class="language-plaintext highlighter-rouge">get_if</code>、<code class="language-plaintext highlighter-rouge">visit</code> 访问。<code class="language-plaintext highlighter-rouge">monostate</code> 用于让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代替代品，用于表示“多选一”的类型。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="c++17" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">decltype &amp;amp; declval</title><link href="https://xdevil.top/cpp/2026/09/26/decltype-&-declval.html" rel="alternate" type="text/html" title="decltype &amp;amp; declval" /><published>2026-09-26T00:00:00+00:00</published><updated>2026-09-26T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/26/decltype%20&amp;%20declval</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/26/decltype-&amp;-declval.html"><![CDATA[<h1 id="decltype"><code class="language-plaintext highlighter-rouge">decltype</code></h1>
+
+<h2 id="是什么">是什么</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">decltype(expr)</code> 是一个说明符：输入一个表达式，返回它的类型，不求值。</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>        <span class="c1">// y 是 int</span>
+<span class="k">decltype</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// z 是 double</span>
+</code></pre></div></div>
+
+<h2 id="三条规则">三条规则</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">e</code> 的形式</th>
+      <th><code class="language-plaintext highlighter-rouge">decltype(e)</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>未加括号的标识符或类成员访问</td>
+      <td>该标识符声明时的类型</td>
+    </tr>
+    <tr>
+      <td>左值表达式</td>
+      <td><code class="language-plaintext highlighter-rouge">T&amp;</code></td>
+    </tr>
+    <tr>
+      <td>纯右值表达式</td>
+      <td><code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+    <tr>
+      <td>将亡值表达式</td>
+      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+
+<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>     <span class="c1">// int</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span>    <span class="c1">// const int</span>
+<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span>   <span class="c1">// int&amp;，加括号变成左值表达式</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>     <span class="c1">// int&amp;</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// int，纯右值</span>
+</code></pre></div></div>
+
+<h2 id="与-auto-的区别">与 <code class="language-plaintext highlighter-rouge">auto</code> 的区别</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><code class="language-plaintext highlighter-rouge">auto</code></th>
+      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>推导依据</td>
+      <td>初始化表达式，按值推导</td>
+      <td>表达式的类型，精确推导</td>
+    </tr>
+    <tr>
+      <td>引用</td>
+      <td>去掉引用</td>
+      <td>保留引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">const</code></td>
+      <td>去掉顶层 <code class="language-plaintext highlighter-rouge">const</code></td>
+      <td>保留 <code class="language-plaintext highlighter-rouge">const</code></td>
+    </tr>
+    <tr>
+      <td>数组</td>
+      <td>退化为指针</td>
+      <td>保留数组类型</td>
+    </tr>
+    <tr>
+      <td>用途</td>
+      <td>变量声明</td>
+      <td>返回类型、SFINAE、元编程</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>          <span class="c1">// int</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="n">b</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// int&amp;</span>
+
+<span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cx</span><span class="p">;</span>         <span class="c1">// int</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// const int</span>
+</code></pre></div></div>
+
+<h2 id="decltypeautoc14"><code class="language-plaintext highlighter-rouge">decltype(auto)</code>（C++14）</h2>
+
+<p>按 <code class="language-plaintext highlighter-rouge">decltype</code> 规则推导返回类型，保留引用和 <code class="language-plaintext highlighter-rouge">const</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>   <span class="c1">// 返回 int&amp;，因为 x 是左值</span>
+<span class="k">auto</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>             <span class="c1">// 返回 int，按值</span>
+</code></pre></div></div>
+
+<h2 id="典型用途">典型用途</h2>
+
+<p><strong>1. 返回类型推导（C++11 尾置返回类型）</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">add</span><span class="p">(</span><span class="n">A</span> <span class="n">a</span><span class="p">,</span> <span class="n">B</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>2. SFINAE</strong>： <code class="language-plaintext highlighter-rouge">t.foo()</code> 不合法 → <code class="language-plaintext highlighter-rouge">decltype</code> 替换失败 → SFINAE。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>3. 类型萃取</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="实现原理">实现原理</h2>
+
+<p><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，不是标准库组件。以 Clang 和 GCC 为例：</p>
+
+<p><strong>整体流程：</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>源码: decltype(expr)
+    ↓
+[Parser] 解析为 DecltypeType 节点 / DECLTYPE_TYPE 树节点
+    ↓
+[Sema] 对 expr 进行类型推导，得到 UnderlyingType
+    ↓
+[AST] 生成 DecltypeType(E, UnderlyingType)
+    ↓
+[CodeGen] 直接使用 UnderlyingType，不做额外计算
+</code></pre></div></div>
+
+<p><strong>Clang：</strong></p>
+
+<ul>
+  <li>AST 节点：<code class="language-plaintext highlighter-rouge">DecltypeType</code>，保存 <code class="language-plaintext highlighter-rouge">Expr *E</code> 和 <code class="language-plaintext highlighter-rouge">QualType UnderlyingType</code>。</li>
+  <li>Sema 阶段先分析表达式的值类别和类型，再按规则决定 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">DecltypeType</code> 不被唯一化（每个 <code class="language-plaintext highlighter-rouge">decltype</code> 有自己的 AST 节点）。</li>
+  <li>Lambda 中 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 有上下文敏感的特殊处理。</li>
+  <li>CodeGen 直接使用 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>，<code class="language-plaintext highlighter-rouge">decltype</code> 不产生运行时行为。</li>
+</ul>
+
+<p><strong>GCC：</strong></p>
+
+<ul>
+  <li>树节点：<code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code>，定义在 <code class="language-plaintext highlighter-rouge">cp-tree.def</code>。</li>
+  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_EXPR</code> 取出内部表达式。</li>
+  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_ID_EXPR_OR_MEMBER_ACCESS_P</code> 标记是否为“未加括号的标识符或成员访问”。</li>
+  <li>模板中始终视为依赖类型，实例化时由 <code class="language-plaintext highlighter-rouge">tsubst</code> 重新计算。</li>
+</ul>
+
+<p><strong>关键设计要点：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>要点</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>不求值</td>
+      <td>操作数在 Unevaluated 上下文中分析</td>
+    </tr>
+    <tr>
+      <td>保留引用和 cv</td>
+      <td>与 auto 不同，不退化类型</td>
+    </tr>
+    <tr>
+      <td>括号规则</td>
+      <td><code class="language-plaintext highlighter-rouge">decltype(x)</code> 与 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 不同</td>
+    </tr>
+    <tr>
+      <td>依赖类型</td>
+      <td>模板中始终 dependent，实例化时才确定</td>
+    </tr>
+    <tr>
+      <td>不唯一化</td>
+      <td>每个 decltype 表达式有独立 AST 节点</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="常见陷阱">常见陷阱</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1">// int</span>
+<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span> <span class="c1">// int&amp;，加括号改变结果</span>
+
+<span class="kt">int</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">();</span>
+<span class="k">decltype</span><span class="p">(</span><span class="n">f</span><span class="p">())</span>  <span class="c1">// int&amp;</span>
+<span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">();</span>  <span class="c1">// int</span>
+
+<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="o">++</span><span class="p">)</span>  <span class="c1">// int，x++ 不求值</span>
+<span class="k">decltype</span><span class="p">(</span><span class="o">++</span><span class="n">x</span><span class="p">)</span>  <span class="c1">// int&amp;，++x 不求值</span>
+</code></pre></div></div>
+
+<h1 id="declval"><code class="language-plaintext highlighter-rouge">declval</code></h1>
+
+<h2 id="是什么-1">是什么</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::declval&lt;T&gt;()</code> 是函数模板，返回 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>，但不构造对象。用于编译期类型推导。</strong></p>
+
+<p>一句话： <strong>在编译期“假装”有一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，只用于 <code class="language-plaintext highlighter-rouge">decltype</code>、<code class="language-plaintext highlighter-rouge">sizeof</code>、<code class="language-plaintext highlighter-rouge">noexcept</code> 等不求值上下文。</strong></p>
+
+<h2 id="实现原理-1">实现原理</h2>
+
+<p>标准定义（<code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code>）：<strong>只有声明，没有定义。</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">add_rvalue_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>libstdc++ 实际源码：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+  <span class="n">_GLIBCXX_CONSTEXPR</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span>
+  <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>libc++ 实际源码：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+<span class="n">_LIBCPP_HIDE_FROM_ABI</span> <span class="k">typename</span> <span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">declval</span><span class="p">()</span> <span class="n">_NOEXCEPT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="为什么没有函数体">为什么没有函数体</h2>
+
+<p><code class="language-plaintext highlighter-rouge">declval</code> 只用于<strong>不求值上下文</strong>：这些上下文里函数不会被实际调用，编译器只需返回类型。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">decltype(declval&lt;T&gt;().foo())</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sizeof(declval&lt;T&gt;())</code></li>
+  <li><code class="language-plaintext highlighter-rouge">noexcept(declval&lt;T&gt;().foo())</code></li>
+</ul>
+
+<p>如果用户真调用：这是<strong>故意设计</strong>：防止运行期调用，只在链接期报错。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>   <span class="c1">// 链接错误：未定义的引用</span>
+</code></pre></div></div>
+
+<h2 id="为什么用-add_rvalue_reference_tt-而不是-t">为什么用 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code> 而不是 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></h2>
+
+<p>因为 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 对某些类型不合法：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">T</code></th>
+      <th><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></th>
+      <th><code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">int</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">void</code></td>
+      <td><code class="language-plaintext highlighter-rouge">void&amp;&amp;</code> 不合法</td>
+      <td><code class="language-plaintext highlighter-rouge">void</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">add_rvalue_reference</code> 的源码：用 <code class="language-plaintext highlighter-rouge">__void_t&lt;_Tp&amp;&amp;&gt;</code> 做 SFINAE 检测 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 是否合法。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span> <span class="p">{</span>
+    <span class="k">typedef</span> <span class="n">_Tp</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// 回退：T&amp;&amp; 不合法时返回 T（处理 void）</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">__void_t</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&amp;&amp;&gt;&gt;</span> <span class="p">{</span>
+    <span class="k">typedef</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// T&amp;&amp; 合法时返回 T&amp;&amp;</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">add_rvalue_reference</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<h2 id="为什么-noexcept">为什么 <code class="language-plaintext highlighter-rouge">noexcept</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">declval</code> 没有函数体，逻辑上不可能抛异常。标 <code class="language-plaintext highlighter-rouge">noexcept</code> 让它在 <code class="language-plaintext highlighter-rouge">noexcept</code> 表达式里可用：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="kt">bool</span> <span class="nf">is_nothrow_foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">noexcept</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="decltype-与-declval-的配合"><code class="language-plaintext highlighter-rouge">decltype</code> 与 <code class="language-plaintext highlighter-rouge">declval</code> 的配合</h1>
+
+<h2 id="为什么需要配合">为什么需要配合</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">decltype</code> 里需要一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，<code class="language-plaintext highlighter-rouge">declval</code> 解决了这个问题：</p>
+
+<ul>
+  <li>不能写 <code class="language-plaintext highlighter-rouge">T{}.foo()</code>：<code class="language-plaintext highlighter-rouge">T</code> 可能没有默认构造函数。</li>
+  <li>不能写 <code class="language-plaintext highlighter-rouge">T().foo()</code>：同上。</li>
+  <li>不能写 <code class="language-plaintext highlighter-rouge">T t; t.foo()</code>：<code class="language-plaintext highlighter-rouge">decltype</code> 里不能声明变量。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>配合流程</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>declval&lt;T&gt;()  →  返回 T&amp;&amp;，假装有 T 对象
+    ↓
+.foo()        →  调用成员函数
+    ↓
+decltype(...) →  推导返回类型
+    ↓
+不合法        →  SFINAE
+</code></pre></div></div>
+
+<h2 id="典型用例">典型用例</h2>
+
+<p><strong>检测成员函数</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_foo</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_foo</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span><span class="o">&gt;&gt;</span>
+    <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p><strong>检测运算符</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_plus</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">has_plus</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p><strong>推导表达式类型</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
+<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>检测可转换性</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_convertible</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_convertible</span><span class="o">&lt;</span><span class="n">From</span><span class="p">,</span> <span class="n">To</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
+    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">To</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">From</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<p><strong>检测迭代器</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_iterable</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">is_iterable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span>
+    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())),</span>
+    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()))</span>
+<span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
+</code></pre></div></div>
+
+<h2 id="libstdc-中的-declval-实现细节">libstdc++ 中的 <code class="language-plaintext highlighter-rouge">declval</code> 实现细节</h2>
+
+<p>标准库自身也用 <code class="language-plaintext highlighter-rouge">decltype</code> + 重载决议实现 <code class="language-plaintext highlighter-rouge">declval</code>：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">_Up</span> <span class="o">=</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span><span class="p">&gt;</span>
+<span class="n">_Up</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+<span class="n">_Tp</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">long</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">declval</span><span class="p">()</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">__declval</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+</code></pre></div></div>
+
+<ul>
+  <li>第一个重载返回 <code class="language-plaintext highlighter-rouge">_Up = _Tp&amp;&amp;</code>。</li>
+  <li>第二个重载返回 <code class="language-plaintext highlighter-rouge">_Tp</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">__declval&lt;_Tp&gt;(0)</code> 优先匹配第一个（<code class="language-plaintext highlighter-rouge">int</code> 比 <code class="language-plaintext highlighter-rouge">long</code> 更匹配）。</li>
+  <li>如果 <code class="language-plaintext highlighter-rouge">_Tp&amp;&amp;</code> 不合法，第一个重载 SFINAE 失败，回退到第二个。</li>
+  <li>用 <code class="language-plaintext highlighter-rouge">decltype</code> 推导最终返回类型。</li>
+</ul>
+
+<h1 id="对照总表">对照总表</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
+      <th><code class="language-plaintext highlighter-rouge">declval</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>类型</td>
+      <td>编译器关键字</td>
+      <td>函数模板</td>
+    </tr>
+    <tr>
+      <td>头文件</td>
+      <td>无（语言特性）</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
+    </tr>
+    <tr>
+      <td>输入</td>
+      <td>表达式</td>
+      <td>类型 <code class="language-plaintext highlighter-rouge">T</code></td>
+    </tr>
+    <tr>
+      <td>输出</td>
+      <td>表达式的类型</td>
+      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>（假想对象）</td>
+    </tr>
+    <tr>
+      <td>是否求值</td>
+      <td>否</td>
+      <td>否</td>
+    </tr>
+    <tr>
+      <td>是否有定义</td>
+      <td>—</td>
+      <td>只有声明</td>
+    </tr>
+    <tr>
+      <td>是否可调用</td>
+      <td>—</td>
+      <td>不能实际调用</td>
+    </tr>
+    <tr>
+      <td>典型用途</td>
+      <td>返回类型、SFINAE</td>
+      <td><code class="language-plaintext highlighter-rouge">decltype</code> 内部提供假想对象</td>
+    </tr>
+    <tr>
+      <td>源码位置</td>
+      <td>Clang <code class="language-plaintext highlighter-rouge">DecltypeType</code> / GCC <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code></td>
+      <td>libstdc++ / libc++ <code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="总结">总结</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，在 Sema 阶段按值类别推导表达式类型，存入 AST 节点，CodeGen 直接使用结果，不产生运行时逻辑。</strong></p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">declval</code> 是一个只有声明的函数模板，返回 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code>，在编译期假装有 <code class="language-plaintext highlighter-rouge">T</code> 对象，只用于不求值上下文。两者配合是 SFINAE 检测成员、运算符、返回类型的核心工具。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="模板元泛型编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">类型萃取（Type Traits）</title><link href="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html" rel="alternate" type="text/html" title="类型萃取（Type Traits）" /><published>2026-09-19T00:00:00+00:00</published><updated>2026-09-19T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96%EF%BC%88Type%20Traits%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/19/%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96-Type-Traits.html"><![CDATA[<p>类型萃取是 C++ 模板元编程的基石。它让编译器在编译期查询类型信息、变换类型、做出选择等</p>
 
 <h1 id="什么是类型萃取">什么是类型萃取</h1>
 
@@ -3927,330 +4382,4 @@ public:
 </ul>
 
 <p>但它不是虚函数的完全替代品——不能动态派发，不能在容器中存储异构对象。<br />
-在你进一步学习模板元编程或设计高性能库时，CRTP 会是一个频繁出现的武器。</p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="奇技淫巧" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">libjpeg</title><link href="https://xdevil.top/library/2026/06/08/libjpeg.html" rel="alternate" type="text/html" title="libjpeg" /><published>2026-06-08T00:00:00+00:00</published><updated>2026-06-08T00:00:00+00:00</updated><id>https://xdevil.top/library/2026/06/08/libjpeg</id><content type="html" xml:base="https://xdevil.top/library/2026/06/08/libjpeg.html"><![CDATA[<h1 id="概述">概述</h1>
-
-<h2 id="安装">安装</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>libjpeg-dev
-
-apt show libjpeg-dev
-<span class="c"># Package: libjpeg-dev</span>
-<span class="c"># Version: 8c-2ubuntu8</span>
-<span class="c"># Priority: optional</span>
-<span class="c"># Section: libdevel</span>
-<span class="c"># Source: libjpeg8-empty</span>
-<span class="c"># Origin: Ubuntu</span>
-<span class="c"># Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;</span>
-<span class="c"># Bugs: https://bugs.launchpad.net/ubuntu/+filebug</span>
-<span class="c"># Installed-Size: 26.6 kB</span>
-<span class="c"># Depends: libjpeg8-dev</span>
-<span class="c"># Supported: 5y</span>
-<span class="c"># Download-Size: 1,546 B</span>
-<span class="c"># APT-Sources: https://mirrors.tuna.tsinghua.edu.cn/ubuntu bionic/main amd64 Packages</span>
-<span class="c"># Description: Independent JPEG Group's JPEG runtime library (dependency package)</span>
-<span class="c">#  This package will always depend on the current default JPEG library</span>
-<span class="c">#  development package version.</span>
-
-
-<span class="nb">ls</span> <span class="nt">-l</span> /usr/lib/x86_64-linux-gnu/libjpeg.so<span class="k">*</span>
-<span class="c"># lrwxrwxrwx 1 root root     16 Sep 21  2022 /usr/lib/x86_64-linux-gnu/libjpeg.so.8 -&gt; libjpeg.so.8.2.2</span>
-<span class="c"># -rw-r--r-- 1 root root 539352 Sep 21  2022 /usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2</span>
-</code></pre></div></div>
-
-<p>核心数据结构
-库的核心是两种状态结构体：</p>
-
-<p>struct jpeg_decompress_struct：解压缩（读）状态。</p>
-
-<p>struct jpeg_compress_struct：压缩（写）状态。</p>
-
-<p>struct jpeg_error_mgr：错误管理器，必须由用户初始化并绑定到上述结构体，否则错误时将直接 exit()。</p>
-
-<p>所有操作都围绕这两个结构体展开。</p>
-
-<p>错误处理
-libjpeg 默认的错误处理方式是调用 exit() 终止程序。为了在函数中安全地捕获错误，必须自定义错误管理器，利用 setjmp/longjmp 实现异常风格的跳转。</p>
-
-<h2 id="libjpeg-turbo">libjpeg-turbo</h2>
-<p>libjpeg 和 libjpeg-turbo 是两个 JPEG 编解码库，功能目标相同但实现细节差异很大。简单说：libjpeg 是原始标准实现，libjpeg-turbo 是保持 API 兼容的高性能分支。</p>
-
-<p>如何选择</p>
-<ul>
-  <li>追求性能：优先选 libjpeg-turbo，尤其是服务器端处理大量图片、实时压缩等场景。</li>
-  <li>追求最小依赖或特殊平台：如果目标平台没有 SIMD 支持（如某些嵌入式 CPU），libjpeg 的纯 C 实现更省事。</li>
-  <li>兼容性顾虑：两者 API 兼容，但 ABI 可能不完全一致（如数据结构对齐），在编译阶段替换即可，不要混用不同库的二进制。</li>
-</ul>
-
-<h1 id="代码">代码</h1>
-
-<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 4.2<span class="p">)</span>
-<span class="nb">project</span><span class="p">(</span>libjpeg<span class="p">)</span>
-
-<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
-
-<span class="nb">add_executable</span><span class="p">(</span>libjpeg main.cpp<span class="p">)</span>
-
-<span class="nb">target_link_libraries</span><span class="p">(</span>libjpeg jpeg<span class="p">)</span>
-</code></pre></div></div>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp">
-#include</span> <span class="cpf">&lt;csetjmp&gt;</span><span class="c1">   // for setjmp/longjmp</span><span class="cp">
-#include</span> <span class="cpf">&lt;jpeglib.h&gt;</span><span class="cp">
-</span>
-<span class="k">struct</span> <span class="nc">error_mgr</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="nc">jpeg_error_mgr</span> <span class="n">pub</span><span class="p">;</span>   <span class="cm">/* 公共字段 */</span>
-    <span class="kt">jmp_buf</span> <span class="n">jmp_buffer</span><span class="p">;</span>       <span class="cm">/* 用于跳转 */</span>
-<span class="p">};</span>
-
-<span class="c1">// #define METHODDEF(type)          static type</span>
-<span class="n">METHODDEF</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">error_exit</span><span class="p">(</span><span class="n">j_common_ptr</span> <span class="n">cinfo</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="k">auto</span> <span class="n">err</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">struct</span> <span class="nc">error_mgr</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">cinfo</span><span class="o">-&gt;</span><span class="n">err</span><span class="p">);</span>
-    <span class="cm">/* 可在此打印默认错误信息 */</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">cinfo</span><span class="o">-&gt;</span><span class="n">err</span><span class="o">-&gt;</span><span class="n">output_message</span><span class="p">)(</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="cm">/* 跳回调用点 */</span>
-    <span class="n">longjmp</span><span class="p">(</span><span class="n">err</span><span class="o">-&gt;</span><span class="n">jmp_buffer</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="cm">/**
- * 读取 JPEG 文件，返回 RGB24 像素数组。
- * 调用者负责 free() 返回的缓冲区。
- * 失败返回 NULL。
- */</span>
-<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">read_jpeg_from_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">height</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">infile</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">infile</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"无法打开文件 %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">filename</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">struct</span> <span class="nc">jpeg_decompress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
-    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
-    <span class="cm">/* 1. 初始化错误管理器*/</span>
-    <span class="c1">// libjpeg 默认的错误处理方式是调用 exit() 终止程序。</span>
-    <span class="c1">// 为了在函数中安全地捕获错误，必须自定义错误管理器，利用 setjmp/longjmp 实现异常风格的跳转。</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
-    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
-
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="c1">// 设置跳跃点, 第一次调用 setjmp 时执行（返回值 0）</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
-        <span class="cm">/* 当 longjmp 跳回时执行（返回值 非零）,错误发生时会跳转到这里 */</span>
-        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">image_buffer</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* 2. 创建解压缩对象 */</span>
-    <span class="n">jpeg_create_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="cm">/* 3. 指定输入文件 */</span>
-    <span class="n">jpeg_stdio_src</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">infile</span><span class="p">);</span>
-
-    <span class="cm">/* 4. 读取 JPEG 头（必须） */</span>
-    <span class="c1">// (void) 这个强制类型转换告诉编译器：“我知道这个函数有返回值，但我故意不使用它，不要为此发出警告。</span>
-    <span class="c1">// jpeg_read_header 的返回值主要标识 JPEG 数据流的大致完整性，但在我们给出的示例中，已经安装了自定义错误管理器（setjmp/longjmp），</span>
-    <span class="c1">// 任何致命错误都会直接跳转到 setjmp 的错误处理分支，根本不会从函数返回。所以这个返回值在多数安全处理框架下没有意义，直接忽略反而更清晰。</span>
-    <span class="c1">// 但直接前置 (void) 是最简洁、最常用的“自文档化”手法——它向阅读代码的人表明：此处的返回值是经过考虑的，并非疏忽遗忘。</span>
-    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_header</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
-
-    <span class="cm">/* 5. 开始解压缩 */</span>
-    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_start_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="o">*</span><span class="n">width</span>  <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_width</span><span class="p">;</span>
-    <span class="o">*</span><span class="n">height</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">num_channels</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_components</span><span class="p">;</span>  <span class="cm">/* 通常为 3 (RGB) 或 1 (灰度) */</span>
-
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_channels</span><span class="p">;</span>
-
-    <span class="cm">/* 6. 分配图像缓冲区（存放完整像素） */</span>
-    <span class="n">image_buffer</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">malloc</span><span class="p">(</span><span class="n">row_stride</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">height</span><span class="p">)));</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"内存分配失败</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* 7. 逐行读取 */</span>
-    <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">output_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
-        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* 8. 完成解压缩 */</span>
-    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_finish_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="cm">/* 9. 清理 */</span>
-    <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">fclose</span><span class="p">(</span><span class="n">infile</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">image_buffer</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**
- * 如果 JPEG 数据已加载到内存，使用 jpeg_mem_src() 替代 jpeg_stdio_src()
- * 从内存中解压 JPEG，参数 data 为完整 JPEG 数据，size 为其字节数。
- * 返回 RGB 像素缓冲，调用者负责 free()。
- */</span>
-<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">read_jpeg_from_memory</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">size</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">height</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="nc">jpeg_decompress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
-    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
-    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
-        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">image_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">image_buffer</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_create_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="cm">/* 指定内存源 */</span>
-    <span class="n">jpeg_mem_src</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
-
-    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_header</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
-    <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_start_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="o">*</span><span class="n">width</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_width</span><span class="p">;</span>
-    <span class="o">*</span><span class="n">height</span> <span class="o">=</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_components</span><span class="p">;</span>
-
-    <span class="n">image_buffer</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">malloc</span><span class="p">(</span><span class="n">row_stride</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">height</span><span class="p">)));</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">image_buffer</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* 7. 逐行读取 */</span>
-    <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">output_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">output_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
-        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_read_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_finish_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_destroy_decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">image_buffer</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**
- * 将 RGB24 像素写入 JPEG 文件。
- * quality 范围 0..100。
- * 成功返回 1，失败返回 0。
- */</span>
-<span class="kt">int</span> <span class="nf">write_jpeg_to_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">quality</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="nc">jpeg_compress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
-    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">outfile</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"无法创建文件 %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">filename</span><span class="p">);</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
-    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
-        <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">outfile</span><span class="p">);</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_create_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_stdio_dest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">outfile</span><span class="p">);</span>
-
-    <span class="cm">/* 设置图像参数 */</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_width</span>      <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span>     <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">input_components</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>          <span class="cm">/* RGB = 3 通道 */</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">in_color_space</span>   <span class="o">=</span> <span class="n">JCS_RGB</span><span class="p">;</span>    <span class="cm">/* 颜色空间 */</span>
-
-    <span class="n">jpeg_set_defaults</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_set_quality</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span> <span class="cm">/* 第二个参数 TRUE 表示基线压缩 */</span>
-
-    <span class="n">jpeg_start_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
-
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">next_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
-        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_write_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_finish_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">fclose</span><span class="p">(</span><span class="n">outfile</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**
- * 将 RGB 图像压缩到内存，返回 JPEG 数据缓冲区和大小。
- * 调用者必须用 free() 释放返回的缓冲区。
- * 返回 NULL 表示失败。
- */</span>
-<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">write_jpeg_to_memory</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">image_buffer</span><span class="p">,</span>
-                                    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">quality</span><span class="p">,</span>
-                                    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">outsize</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="nc">jpeg_compress_struct</span> <span class="n">cinfo</span><span class="p">{};</span>
-    <span class="k">struct</span> <span class="nc">error_mgr</span> <span class="n">err</span><span class="p">{};</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">jpeg_buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="o">*</span><span class="n">outsize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">);</span>
-    <span class="n">err</span><span class="p">.</span><span class="n">pub</span><span class="p">.</span><span class="n">error_exit</span> <span class="o">=</span> <span class="n">error_exit</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">err</span><span class="p">.</span><span class="n">jmp_buffer</span><span class="p">))</span> <span class="p">{</span>
-        <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">jpeg_buffer</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">jpeg_buffer</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_create_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="cm">/* 目标为内存 */</span>
-    <span class="n">jpeg_mem_dest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">jpeg_buffer</span><span class="p">,</span> <span class="n">outsize</span><span class="p">);</span>
-
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">input_components</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="n">cinfo</span><span class="p">.</span><span class="n">in_color_space</span> <span class="o">=</span> <span class="n">JCS_RGB</span><span class="p">;</span>
-
-    <span class="n">jpeg_set_defaults</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_set_quality</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
-
-    <span class="n">jpeg_start_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
-
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row_stride</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_array</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">;</span><span class="n">cinfo</span><span class="p">.</span><span class="n">next_scanline</span> <span class="o">&lt;</span> <span class="n">cinfo</span><span class="p">.</span><span class="n">image_height</span><span class="p">;</span> <span class="n">ptr</span> <span class="o">+=</span> <span class="n">row_stride</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">buffer_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
-        <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">jpeg_write_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">,</span> <span class="n">buffer_array</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">jpeg_finish_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-    <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cinfo</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">jpeg_buffer</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">const</span> <span class="k">auto</span> <span class="n">rgb_ptr</span> <span class="o">=</span> <span class="n">read_jpeg_from_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">width</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">height</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">" vs "</span> <span class="o">&lt;&lt;</span> <span class="n">height</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">write_jpeg_to_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rgb_ptr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-
-    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">len</span><span class="p">;</span>
-    <span class="k">const</span> <span class="k">auto</span> <span class="n">jpeg_ptr</span> <span class="o">=</span> <span class="n">write_jpeg_to_memory</span><span class="p">(</span><span class="n">rgb_ptr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
-
-    <span class="k">const</span> <span class="k">auto</span> <span class="n">rgb_ptr_2</span> <span class="o">=</span> <span class="n">read_jpeg_from_memory</span><span class="p">(</span><span class="n">jpeg_ptr</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">width</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">height</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">" vs "</span> <span class="o">&lt;&lt;</span> <span class="n">height</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-
-    <span class="n">write_jpeg_to_file</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">rgb_ptr_2</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-</code></pre></div></div>]]></content><author><name>Devil</name></author><category term="library" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/87.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/87.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+在你进一步学习模板元编程或设计高性能库时，CRTP 会是一个频繁出现的武器。</p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="奇技淫巧" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/86.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/86.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
