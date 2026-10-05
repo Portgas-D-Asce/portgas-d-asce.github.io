@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>optional | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="optional" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/cpp/2026/10/02/optional.html" />
+<meta property="og:url" content="https://xdevil.top/cpp/2026/10/02/optional.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-02T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="optional" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-02T00:00:00+00:00","datePublished":"2026-10-02T00:00:00+00:00","description":"xxxxxx","headline":"optional","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/cpp/2026/10/02/optional.html"},"url":"https://xdevil.top/cpp/2026/10/02/optional.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> optional </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p><code class="language-plaintext highlighter-rouge">std::optional</code> 是 C++17 引入的<strong>可能无值的容器</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code> 里。
+它表示“要么有一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的值，要么什么都没有”。它是 <code class="language-plaintext highlighter-rouge">nullptr</code>、特殊哨兵值、<code class="language-plaintext highlighter-rouge">bool + T</code> 组合的类型安全替代品。</p>
+
+<h1 id="是什么">是什么</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code> 是一个可能包含 <code class="language-plaintext highlighter-rouge">T</code> 类型值、也可能为空的容器。</strong></p>
+
+<p>一句话：<strong><code class="language-plaintext highlighter-rouge">optional</code> 是“可能有值”的容器：它要么装一个 <code class="language-plaintext highlighter-rouge">T</code>，要么什么都不装。</strong></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>        <span class="c1">// 有值</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span><span class="p">;</span>             <span class="c1">// 空</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o3</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// 空</span>
+</code></pre></div></div>
+
+<h1 id="为什么需要-optional">为什么需要 <code class="language-plaintext highlighter-rouge">optional</code></h1>
+
+<h2 id="问题函数可能返回没有值">问题：函数可能返回“没有值”</h2>
+
+<p>假设一个函数查找整数，可能找到，也可能找不到。</p>
+
+<p><strong>方案 1：返回指针</strong>,问题：</p>
+
+<ul>
+  <li>需要动态分配或返回内部指针。</li>
+  <li>调用者需要判空。</li>
+  <li>所有权不清晰。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>方案 2：返回 <code class="language-plaintext highlighter-rouge">bool</code> + 输出参数</strong>,问题：</p>
+
+<ul>
+  <li>调用者必须先构造 <code class="language-plaintext highlighter-rouge">out</code>。</li>
+  <li>接口不直观。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>方案 3：返回哨兵值</strong>, 问题：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-1</code> 可能是合法值。</li>
+  <li>哨兵值污染值域。
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>   <span class="c1">// 返回 -1 表示找不到</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>方案 4：抛异常</strong>,问题：</p>
+
+<ul>
+  <li>异常开销大。</li>
+  <li>“找不到”不是异常情况。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>   <span class="c1">// 找不到抛异常</span>
+</code></pre></div></div>
+
+<h2 id="optional-的解法"><code class="language-plaintext highlighter-rouge">optional</code> 的解法</h2>
+<p>清晰、类型安全、零开销。</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>
+
+<span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="s">"foo"</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"not found"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="基本用法">基本用法</h1>
+
+<h2 id="定义与初始化">定义与初始化</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span><span class="p">;</span>                    <span class="c1">// 空</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>               <span class="c1">// 有值 42</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o3</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>     <span class="c1">// 空</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o4</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_optional</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>  <span class="c1">// 有值 42</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o5</span><span class="p">{</span><span class="mi">42</span><span class="p">};</span>                <span class="c1">// 有值 42</span>
+</code></pre></div></div>
+
+<h2 id="检查是否有值">检查是否有值</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span> <span class="p">{</span> <span class="cm">/* 有值 */</span> <span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 有值，隐式转 bool */</span> <span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 空 */</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="访问值">访问值</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">o</span><span class="p">;</span>          <span class="c1">// 解引用</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>   <span class="c1">// 取值，空时抛 std::bad_optional_access</span>
+
+<span class="c1">// 空时返回默认值</span>
+<span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 有值返回 42，空返回 0</span>
+</code></pre></div></div>
+
+<h2 id="修改值">修改值</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
+
+<span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 赋值</span>
+<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">// 原地构造</span>
+<span class="n">o</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>           <span class="c1">// 清空</span>
+
+<span class="n">o</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>    <span class="c1">// 清空</span>
+</code></pre></div></div>
+
+<h2 id="比较">比较</h2>
+<p><code class="language-plaintext highlighter-rouge">optional</code> 支持所有比较运算符：</p>
+
+<ul>
+  <li>两个 <code class="language-plaintext highlighter-rouge">optional</code> 比较：先比是否有值，再比值。</li>
+  <li><code class="language-plaintext highlighter-rouge">optional</code> 与 <code class="language-plaintext highlighter-rouge">T</code> 比较：<code class="language-plaintext highlighter-rouge">optional</code> 有值时比值。</li>
+  <li><code class="language-plaintext highlighter-rouge">optional</code> 与 <code class="language-plaintext highlighter-rouge">nullopt</code> 比较：判断是否为空。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">d</span><span class="p">;</span>         <span class="c1">// 空</span>
+
+<span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// true</span>
+<span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="p">;</span>   <span class="c1">// false</span>
+<span class="n">a</span> <span class="o">==</span> <span class="n">d</span><span class="p">;</span>   <span class="c1">// false</span>
+<span class="n">d</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>排序规则：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nullopt &lt; 任何有值的 optional</code>。</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>         <span class="c1">// 空</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="c1">// 有值</span>
+<span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// true，空小于有值</span>
+</code></pre></div></div>
+
+<h1 id="optional-的实现原理"><code class="language-plaintext highlighter-rouge">optional</code> 的实现原理</h1>
+
+<h2 id="存储">存储</h2>
+
+<p><code class="language-plaintext highlighter-rouge">optional</code> 内部通常是一个<strong>联合体 + bool 标志</strong>：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
+    <span class="k">union</span> <span class="n">storage</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="n">empty</span><span class="p">;</span>
+        <span class="n">T</span> <span class="n">value</span><span class="p">;</span>
+        <span class="n">storage</span><span class="p">()</span> <span class="o">:</span> <span class="n">empty</span><span class="p">()</span> <span class="p">{}</span>
+        <span class="o">~</span><span class="n">storage</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="p">}</span> <span class="n">storage_</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">has_value_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">storage</code> 是联合体，要么是空的 <code class="language-plaintext highlighter-rouge">char</code>，要么是 <code class="language-plaintext highlighter-rouge">T</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">has_value_</code> 记录当前是否有值。</li>
+  <li>构造函数根据是否有值，决定是否 placement new 构造 <code class="language-plaintext highlighter-rouge">T</code>。</li>
+  <li>析构函数根据 <code class="language-plaintext highlighter-rouge">has_value_</code>，决定是否调用 <code class="language-plaintext highlighter-rouge">T</code> 的析构。</li>
+</ul>
+
+<h2 id="大小">大小</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">);</span>      <span class="c1">// 通常是 8</span>
+<span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">);</span>   <span class="c1">// 通常是 16</span>
+<span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">);</span>     <span class="c1">// 通常是 2</span>
+</code></pre></div></div>
+
+<p>一般等于：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sizeof(T) + 对齐填充 + 1（bool）+ 对齐填充
+</code></pre></div></div>
+
+<h2 id="零开销">零开销</h2>
+
+<p>如果 <code class="language-plaintext highlighter-rouge">T</code> 有一个“不可能的值”可以表示空，<code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code> 可以做到零开销。但标准库的 <code class="language-plaintext highlighter-rouge">optional</code> 不保证这一点，通常多一个 <code class="language-plaintext highlighter-rouge">bool</code>。</p>
+
+<h2 id="optionalt-不合法"><code class="language-plaintext highlighter-rouge">optional&lt;T&amp;&gt;</code> 不合法</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 编译错误</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">optional</code> 不能存引用。如果需要“可能无值的引用”，用 <code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">std::reference_wrapper&lt;T&gt;</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="optional-的常用操作"><code class="language-plaintext highlighter-rouge">optional</code> 的常用操作</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o = x</code></td>
+      <td>赋值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o.emplace(args...)</code></td>
+      <td>原地构造</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o.reset()</code></td>
+      <td>清空</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o.has_value()</code></td>
+      <td>是否有值</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o.value()</code></td>
+      <td>取值，空时抛异常</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o.value_or(default)</code></td>
+      <td>取值，空时返回默认</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*o</code></td>
+      <td>解引用</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o-&gt;member</code></td>
+      <td>访问成员</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">o == other</code></td>
+      <td>比较</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::make_optional(...)</code></td>
+      <td>工厂函数</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">std::nullopt</code></td>
+      <td>空值常量</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="value_or-的细节"><code class="language-plaintext highlighter-rouge">value_or</code> 的细节</h1>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span><span class="p">;</span>
+
+<span class="n">o1</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 42</span>
+<span class="n">o2</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 0</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">value_or</code> 的返回类型是 <code class="language-plaintext highlighter-rouge">T</code>，不是 <code class="language-plaintext highlighter-rouge">T&amp;</code>。所以：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+<span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="s">"default"</span><span class="p">);</span>   <span class="c1">// 返回 std::string，不是引用</span>
+</code></pre></div></div>
+
+<p>如果 <code class="language-plaintext highlighter-rouge">T</code> 是移动-only 类型：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>   <span class="c1">// OK，移动</span>
+</code></pre></div></div>
+
+<h1 id="optional-的实际用途"><code class="language-plaintext highlighter-rouge">optional</code> 的实际用途</h1>
+
+<h2 id="函数返回可能无值">函数返回可能无值</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">parse_int</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="配置项">配置项</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">config</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">host_</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">set_port</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">port_</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">port_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="缓存">缓存</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">cache</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">value_t</span><span class="o">&gt;</span> <span class="n">cached_</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="k">const</span> <span class="n">value_t</span><span class="o">&amp;</span> <span class="n">get</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">cached_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cached_</span> <span class="o">=</span> <span class="n">compute</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="o">*</span><span class="n">cached_</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="延迟初始化">延迟初始化</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">heavy_object</span><span class="o">&gt;</span> <span class="n">obj</span><span class="p">;</span>
+<span class="c1">// 需要时再初始化</span>
+<span class="n">obj</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span>
+</code></pre></div></div>
+
+<h2 id="成员可能不存在">成员可能不存在</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">person</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">nickname</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="可选参数">可选参数</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">connect</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="optional-vs-其他工具"><code class="language-plaintext highlighter-rouge">optional</code> vs 其他工具</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code></th>
+      <th><code class="language-plaintext highlighter-rouge">variant&lt;Ts...&gt;</code></th>
+      <th><code class="language-plaintext highlighter-rouge">any</code></th>
+      <th><code class="language-plaintext highlighter-rouge">T*</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>可能无值</td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>类型数量</td>
+      <td>1</td>
+      <td>编译期多个</td>
+      <td>任意</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>存储</td>
+      <td>内联</td>
+      <td>内联</td>
+      <td>可能堆</td>
+      <td>指针</td>
+    </tr>
+    <tr>
+      <td>类型安全</td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td>性能</td>
+      <td>高</td>
+      <td>高</td>
+      <td>较低</td>
+      <td>高</td>
+    </tr>
+    <tr>
+      <td>头文件</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;any&gt;</code></td>
+      <td>语言</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="选择原则">选择原则</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>需求</th>
+      <th>用哪个</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>可能有一个值，可能没有</td>
+      <td><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code></td>
+    </tr>
+    <tr>
+      <td>多个已知类型选一个</td>
+      <td><code class="language-plaintext highlighter-rouge">variant&lt;Ts...&gt;</code></td>
+    </tr>
+    <tr>
+      <td>任意类型，运行期确定</td>
+      <td><code class="language-plaintext highlighter-rouge">any</code></td>
+    </tr>
+    <tr>
+      <td>引用可能为空</td>
+      <td><code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">optional&lt;reference_wrapper&lt;T&gt;&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="optional-的常见陷阱"><code class="language-plaintext highlighter-rouge">optional</code> 的常见陷阱</h1>
+
+<h2 id="optionalbool"><code class="language-plaintext highlighter-rouge">optional&lt;bool&gt;</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
+<span class="c1">// o 有三个状态：空、false、true</span>
+</code></pre></div></div>
+
+<p>容易混淆：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 有值，但是 false 还是 true？ */</span> <span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 值是 true */</span> <span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="nb">false</span><span class="p">))</span> <span class="p">{</span> <span class="cm">/* 值是 true */</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>推荐用 <code class="language-plaintext highlighter-rouge">optional&lt;bool&gt;</code> 表示三态，但要注意区分“有值”和“值为真”。</p>
+
+<h2 id="optionalt-和-t-的隐式转换"><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code> 和 <code class="language-plaintext highlighter-rouge">T</code> 的隐式转换</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 错误：不能隐式转换</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">o</span><span class="p">;</span>  <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">optional</code> 不隐式转换成 <code class="language-plaintext highlighter-rouge">T</code>，必须显式解引用。</p>
+
+<h2 id="value-抛异常"><code class="language-plaintext highlighter-rouge">value()</code> 抛异常</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>   <span class="c1">// 抛 std::bad_optional_access</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">value_or</code> 或先检查。</p>
+
+<h2 id="optionalt-不合法-1"><code class="language-plaintext highlighter-rouge">optional&lt;T&amp;&gt;</code> 不合法</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 编译错误</span>
+</code></pre></div></div>
+
+<p>用 <code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">reference_wrapper</code>。</p>
+
+<h2 id="嵌套-optional">嵌套 <code class="language-plaintext highlighter-rouge">optional</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>合法，但访问需要两层：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="o">**</span><span class="n">o</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="比较的陷阱">比较的陷阱</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>         <span class="c1">// 空</span>
+<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="c1">// 有值</span>
+
+<span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>    <span class="c1">// true，空小于有值</span>
+<span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// false</span>
+<span class="n">a</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>空 <code class="language-plaintext highlighter-rouge">optional</code> 和 <code class="language-plaintext highlighter-rouge">nullopt</code> 相等，但不等于有值的 <code class="language-plaintext highlighter-rouge">optional</code>。</p>
+
+<h2 id="optional-的拷贝开销"><code class="language-plaintext highlighter-rouge">optional</code> 的拷贝开销</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">copy</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 拷贝整个字符串</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">optional</code> 的拷贝会拷贝 <code class="language-plaintext highlighter-rouge">T</code>，可能开销大。</p>
+
+<h2 id="emplace-的参数"><code class="language-plaintext highlighter-rouge">emplace</code> 的参数</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
+<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">});</span>   <span class="c1">// 错误：initializer_list 推导问题</span>
+<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">});</span>  <span class="c1">// 不推荐</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>  <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<h2 id="optional-和-constexpr"><code class="language-plaintext highlighter-rouge">optional</code> 和 <code class="language-plaintext highlighter-rouge">constexpr</code></h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="o">*</span><span class="n">o</span> <span class="o">==</span> <span class="mi">42</span><span class="p">);</span>   <span class="c1">// OK</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">optional</code> 在 C++17 里不是完全 <code class="language-plaintext highlighter-rouge">constexpr</code>，C++20 改进了一些。</p>
+
+<h1 id="optional-的源码级细节"><code class="language-plaintext highlighter-rouge">optional</code> 的源码级细节</h1>
+
+<h2 id="libstdc-的实现">libstdc++ 的实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="n">_Stored_type</span> <span class="o">=</span> <span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+    <span class="k">struct</span> <span class="nc">_Empty_byte</span> <span class="p">{</span> <span class="p">};</span>
+
+    <span class="k">union</span> <span class="n">_Storage</span> <span class="p">{</span>
+        <span class="k">constexpr</span> <span class="n">_Storage</span><span class="p">()</span> <span class="o">:</span> <span class="n">_M_empty</span><span class="p">()</span> <span class="p">{}</span>
+        <span class="n">_Empty_byte</span> <span class="n">_M_empty</span><span class="p">;</span>
+        <span class="n">_Stored_type</span> <span class="n">_M_value</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="n">_Storage</span> <span class="n">_M_storage</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">_M_engaged</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="libc-的实现">libc++ 的实现</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
+    <span class="k">union</span> <span class="n">__storage</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="n">__empty_</span><span class="p">;</span>
+        <span class="n">T</span> <span class="n">__value_</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="n">__storage</span> <span class="n">__s_</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">__engaged_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>两者都用：</p>
+
+<ul>
+  <li>联合体存储（空字节或值）。</li>
+  <li><code class="language-plaintext highlighter-rouge">bool</code> 标记是否有值。</li>
+</ul>
+
+<h1 id="一张总表">一张总表</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>特性</th>
+      <th><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>引入版本</td>
+      <td>C++17</td>
+    </tr>
+    <tr>
+      <td>头文件</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code></td>
+    </tr>
+    <tr>
+      <td>保存类型</td>
+      <td>一个 <code class="language-plaintext highlighter-rouge">T</code> 或空</td>
+    </tr>
+    <tr>
+      <td>类型确定</td>
+      <td>编译期</td>
+    </tr>
+    <tr>
+      <td>类型安全</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>是否可空</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>是否可比较</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>是否可拷贝</td>
+      <td>✅（如果 <code class="language-plaintext highlighter-rouge">T</code> 可拷贝）</td>
+    </tr>
+    <tr>
+      <td>是否可移动</td>
+      <td>✅（如果 <code class="language-plaintext highlighter-rouge">T</code> 可移动）</td>
+    </tr>
+    <tr>
+      <td>性能</td>
+      <td>高（内联，无堆分配）</td>
+    </tr>
+    <tr>
+      <td>典型用途</td>
+      <td>可能无值的返回、可选参数、缓存</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="一句话总结">一句话总结</h1>
+
+<p><strong><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code> 是 C++17 的“可能无值”容器，同一时刻要么装一个 <code class="language-plaintext highlighter-rouge">T</code>，要么为空。
+它用联合体 + bool 实现，零堆分配，类型安全。用 <code class="language-plaintext highlighter-rouge">has_value</code>、<code class="language-plaintext highlighter-rouge">value</code>、<code class="language-plaintext highlighter-rouge">value_or</code>、<code class="language-plaintext highlighter-rouge">*</code> 访问。
+它替代了指针、哨兵值、<code class="language-plaintext highlighter-rouge">bool + 输出参数</code>，适合表示“可能没有结果”。</strong></p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
