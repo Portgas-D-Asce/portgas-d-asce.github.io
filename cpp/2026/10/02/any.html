@@ -758,7 +758,8 @@
 <h1 id="一句话总结">一句话总结</h1>
 
 <p><strong><code class="language-plaintext highlighter-rouge">std::any</code> 是 C++17 的类型擦除容器，能保存任意类型的单个值，并在运行期安全取回。
-它用类型擦除实现，通常有小对象优化。访问用 <code class="language-plaintext highlighter-rouge">any_cast</code>，类型不匹配时抛异常或返回 <code class="language-plaintext highlighter-rouge">nullptr</code>。它适合类型在运行期确定的场景，但不适合高性能路径。在线性代数库里很少需要 <code class="language-plaintext highlighter-rouge">any</code>，因为矩阵类型通常在编译期确定。</strong></p>
+它用类型擦除实现，通常有小对象优化。访问用 <code class="language-plaintext highlighter-rouge">any_cast</code>，类型不匹配时抛异常或返回 <code class="language-plaintext highlighter-rouge">nullptr</code>。
+它适合类型在运行期确定的场景，但不适合高性能路径。在线性代数库里很少需要 <code class="language-plaintext highlighter-rouge">any</code>，因为矩阵类型通常在编译期确定。</strong></p>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"
