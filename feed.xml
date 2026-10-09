@@ -1,4 +1,1163 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-08T08:30:31+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">span</title><link href="https://xdevil.top/cpp/2026/10/06/span.html" rel="alternate" type="text/html" title="span" /><published>2026-10-06T00:00:00+00:00</published><updated>2026-10-06T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/10/06/span</id><content type="html" xml:base="https://xdevil.top/cpp/2026/10/06/span.html"><![CDATA[<p><code class="language-plaintext highlighter-rouge">std::span</code> 是 C++20 引入的<strong>非拥有连续视图</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;span&gt;</code> 里。它是对一段连续内存的“窗口”，不持有数据、不管理生命周期，只提供访问接口。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-09T08:00:35+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">LU 分解</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU-%E5%88%86%E8%A7%A3.html" rel="alternate" type="text/html" title="LU 分解" /><published>2026-10-07T00:00:00+00:00</published><updated>2026-10-07T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU%20%E5%88%86%E8%A7%A3</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU-%E5%88%86%E8%A7%A3.html"><![CDATA[<p>约定：$\mathbb F$ 为数域（主要取 $\mathbb R$ 或 $\mathbb C$），$A\in M_n(\mathbb F)$。记 $D_k$ 为 $A$ 的 $k$ 阶顺序主子式，规定 $D_0=1$。</p>
+
+<h1 id="lu-分解">LU 分解</h1>
+
+<h2 id="一般-lu-分解">一般 LU 分解</h2>
+<h3 id="定义">定义</h3>
+
+<p><strong>定义 1.1.1（LU 分解）</strong><br />
+设 $A\in M_n(\mathbb F)$。若存在下三角矩阵 $L\in M_n(\mathbb F)$ 与上三角矩阵 $U\in M_n(\mathbb F)$，使得
+\(A=LU,\)
+则称 $A$ 具有 <strong>LU 分解</strong>。此时对 $L$ 与 $U$ 的对角线元素均未作归一化规定。</p>
+
+<p><strong>注</strong><br />
+若不特别说明，“LU 分解”在多数教材中默认指 Doolittle 分解（$L$ 单位下三角）。本节先讨论最一般的情形。</p>
+
+<h3 id="存在性">存在性</h3>
+
+<p><strong>定理 1.2.1（LU 分解的存在性）</strong><br />
+设 $A\in M_n(\mathbb F)$，$D_k$ 为其 $k$ 阶顺序主子式。若
+\(D_k\ne 0,\qquad k=1,2,\dots,n,\)
+则 $A$ 存在 LU 分解。</p>
+
+<p><strong>证明</strong><br />
+由 Doolittle 分解的存在性定理（定理 2.2.1），在条件 $D_k\ne 0$ 下，$A$ 存在唯一的 Doolittle 分解
+\(A=L_0U_0,\)
+其中 $L_0$ 为单位下三角矩阵，$U_0$ 为上三角矩阵。此即一个 LU 分解。$\square$</p>
+
+<p><strong>注</strong><br />
+条件 $D_k\ne 0$ 是充分条件，但不是必要条件。某些满足 $D_k=0$ 的矩阵仍可能存在 LU 分解（例如某些奇异矩阵），但此时分解一般不唯一。</p>
+
+<h3 id="不唯一性">不唯一性</h3>
+
+<p><strong>命题 1.3.1（LU 分解的不唯一性）</strong><br />
+设 $A$ 非奇异且存在 LU 分解 $A=LU$，其中 $L,U$ 均可逆。则 $A$ 的 LU 分解不唯一。</p>
+
+<p><strong>证明</strong><br />
+设 $D\in M_n(\mathbb F)$ 为任意可逆对角矩阵。令
+\(L'=LD,\qquad U'=D^{-1}U.\)
+则 $L’$ 仍为下三角矩阵，$U’$ 仍为上三角矩阵，且
+\(L'U'=LD\,D^{-1}U=LU=A.\)
+由于 $D$ 有无穷多种取法（只需对角线元素非零），故 $A$ 有无穷多个 LU 分解。$\square$</p>
+
+<p><strong>例 1.3.2</strong><br />
+取
+\(A=\begin{pmatrix}2&amp;1\\4&amp;3\end{pmatrix}.\)
+一个 LU 分解为
+\(L_1=\begin{pmatrix}1&amp;0\\2&amp;1\end{pmatrix},\qquad
+U_1=\begin{pmatrix}2&amp;1\\0&amp;1\end{pmatrix}.\)
+取 $D=\operatorname{diag}(2,3)$，则
+\(L_2=L_1D=\begin{pmatrix}2&amp;0\\4&amp;3\end{pmatrix},\qquad
+U_2=D^{-1}U_1=\begin{pmatrix}1&amp;\frac12\\0&amp;\frac13\end{pmatrix}.\)
+验证：
+\(L_2U_2=
+\begin{pmatrix}2&amp;0\\4&amp;3\end{pmatrix}
+\begin{pmatrix}1&amp;\frac12\\0&amp;\frac13\end{pmatrix}
+=
+\begin{pmatrix}2&amp;1\\4&amp;3\end{pmatrix}=A.\)
+故同一矩阵 $A$ 至少有两个不同的 LU 分解。</p>
+
+<h3 id="归一化的必要性">归一化的必要性</h3>
+
+<p>由命题 1.3.1 知，一般 LU 分解因对角尺度可任意拆分而不唯一。为得到唯一分解，必须对 $L$ 或 $U$ 的对角线施加归一化条件。由此产生三种标准规范形式：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>归一化条件</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$L$ 单位下三角</td>
+      <td>Doolittle 分解</td>
+    </tr>
+    <tr>
+      <td>$U$ 单位上三角</td>
+      <td>Crout 分解</td>
+    </tr>
+    <tr>
+      <td>$L,U$ 均单位三角，对角尺度单独提取</td>
+      <td>LDU 分解</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>三者的关系为：
+\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
+
+<h3 id="注记">注记</h3>
+
+<ol>
+  <li>一般 LU 分解在数值计算中不单独使用，因不唯一导致算法无法确定输出。</li>
+  <li>若 $A$ 奇异，LU 分解可能存在也可能不存在，需具体分析。</li>
+  <li>若 $A$ 的某个顺序主子式为零，则不换行的 LU 分解可能失败，需引入行交换（PLU）。</li>
+</ol>
+
+<h2 id="doolittle-分解">Doolittle 分解</h2>
+
+<h3 id="定义-1">定义</h3>
+
+<p><strong>定义 2.1.1（Doolittle 分解）</strong><br />
+设 $A\in M_n(\mathbb F)$。若存在单位下三角矩阵 $L$（即 $l_{ii}=1$，$i&lt;j$ 时 $l_{ij}=0$）与上三角矩阵 $U$，使得
+\(A=LU,\)
+则称其为 $A$ 的 <strong>Doolittle 分解</strong>。</p>
+
+<h3 id="存在唯一性">存在唯一性</h3>
+
+<p><strong>定理 2.2.1（Doolittle 分解的存在唯一性）</strong><br />
+设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
+
+<ol>
+  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
+  <li>$A$ 存在唯一的 Doolittle 分解 $A=LU$，其中 $L$ 单位下三角，$U$ 上三角，且 $u_{kk}\ne 0$；</li>
+  <li>不换行的高斯消元可对 $A$ 一直进行到底。</li>
+</ol>
+
+<p><strong>证明</strong></p>
+
+<p>$(2)\Rightarrow(1)$：设 $A=LU$。对每个 $k$，令 $A_k,L_k,U_k$ 分别为 $A,L,U$ 的前 $k$ 阶顺序主子矩阵。由分块矩阵乘法，
+\(A_k=L_kU_k.\)
+因 $L_k$ 为单位下三角矩阵，$\det L_k=1$；因 $U_k$ 为上三角矩阵，
+\(\det U_k=\prod_{i=1}^k u_{ii}.\)
+故
+\(D_k=\det A_k=\det L_k\det U_k=\prod_{i=1}^k u_{ii}.\)
+由 $u_{ii}\ne 0$ 得 $D_k\ne 0$。</p>
+
+<p>$(1)\Rightarrow(3)$：对 $A$ 做不换行的高斯消元。可以证明第 $k$ 步消元前的主元为
+\(p_k=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)
+因 $D_k\ne 0$ 且 $D_{k-1}\ne 0$，故 $p_k\ne 0$，消元可一直进行到底。</p>
+
+<p>$(3)\Rightarrow(2)$：不换行的高斯消元过程等价于左乘一系列单位下三角初等矩阵 $E_1,\dots,E_m$，使得
+\(E_m\cdots E_1A=U,\)
+其中 $U$ 为上三角矩阵。于是
+\(A=(E_m\cdots E_1)^{-1}U=L U,\)
+其中
+\(L=E_1^{-1}\cdots E_m^{-1}\)
+为单位下三角矩阵。</p>
+
+<p><strong>唯一性</strong>：若 $A=L_1U_1=L_2U_2$，其中 $L_1,L_2$ 单位下三角，$U_1,U_2$ 上三角，则
+\(L_2^{-1}L_1=U_2U_1^{-1}.\)
+左边为单位下三角矩阵，右边为上三角矩阵。两者相等，故只能为对角矩阵。又因左边对角线全为 $1$，该对角矩阵为 $I$。于是
+\(L_1=L_2,\qquad U_1=U_2.\)
+唯一性得证。$\square$</p>
+
+<h3 id="doolittle-算法">Doolittle 算法</h3>
+
+<p><strong>算法 2.3.1（按行计算）</strong><br />
+对 $k=1,2,\dots,n$：</p>
+
+<ol>
+  <li>计算 $U$ 的第 $k$ 行：
+\(u_{kj}=a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj},\qquad j=k,k+1,\dots,n.\)</li>
+  <li>计算 $L$ 的第 $k$ 列：
+\(l_{ik}=\frac{1}{u_{kk}}\Bigl(a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}\Bigr),\qquad i=k+1,k+2,\dots,n.\)</li>
+</ol>
+
+<p><strong>计算量</strong>：约 $\dfrac{2}{3}n^3$ 次浮点乘除。</p>
+
+<p><strong>存储</strong>：$L$ 与 $U$ 可原地存放在 $A$ 的存储空间中。$L$ 的对角线（全为 $1$）无需存储。</p>
+
+<h3 id="解线性方程组">解线性方程组</h3>
+
+<p><strong>算法 2.4.1（Doolittle 法解 $Ax=b$）</strong></p>
+
+<ol>
+  <li>分解 $A=LU$；</li>
+  <li><strong>前代</strong>：解 $Ly=b$，
+\(y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n;\)</li>
+  <li><strong>回代</strong>：解 $Ux=y$，
+\(x_i=\frac{1}{u_{ii}}\Bigl(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\Bigr),\qquad i=n,n-1,\dots,1.\)</li>
+</ol>
+
+<p><strong>优势</strong>：当有多个右端项 $b^{(1)},\dots,b^{(m)}$ 时，只需分解一次，后续每次求解仅需 $O(n^2)$ 次运算。</p>
+
+<h3 id="行列式与逆矩阵">行列式与逆矩阵</h3>
+
+<p><strong>行列式</strong>
+\(\det A=\det L\det U=1\cdot\prod_{i=1}^{n}u_{ii}=\prod_{i=1}^{n}u_{ii}.\)</p>
+
+<p><strong>逆矩阵</strong>：解 $AX=I$，对 $I$ 的每一列应用算法 2.4.1。</p>
+
+<h3 id="例题">例题</h3>
+
+<p><strong>例 2.6.1</strong><br />
+设
+\(A=\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}.\)</p>
+
+<p><strong>第 1 步</strong>（$k=1$）：
+\(u_{11}=2,\quad u_{12}=1,\quad u_{13}=1;\)
+\(l_{21}=\frac{4}{2}=2,\quad l_{31}=\frac{8}{2}=4.\)</p>
+
+<p><strong>第 2 步</strong>（$k=2$）：
+\(u_{22}=3-2\cdot 1=1,\quad u_{23}=3-2\cdot 1=1;\)
+\(l_{32}=\frac{7-4\cdot 1}{1}=3.\)</p>
+
+<p><strong>第 3 步</strong>（$k=3$）：
+\(u_{33}=9-4\cdot 1-3\cdot 1=2.\)</p>
+
+<p>于是
+\(L=\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix},\qquad
+U=\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}.\)</p>
+
+<p>验证：
+\(LU=
+\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
+\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}
+=
+\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}=A.\)</p>
+
+<p>且 $\det A=2\cdot 1\cdot 2=4$。</p>
+
+<h3 id="注记-1">注记</h3>
+
+<ol>
+  <li><strong>无行交换</strong>：Doolittle 分解不允许行交换，因此仅对满足 $D_k\ne 0$ 的矩阵存在。</li>
+  <li><strong>数值不稳定</strong>：即使 $D_k\ne 0$，若某主元绝对值极小，浮点消元会产生严重误差。典型例子为
+\(A=\begin{pmatrix}10^{-20}&amp;1\\1&amp;1\end{pmatrix},\)
+精确 LU 分解存在，但 $u_{11}=10^{-20}$ 导致 $l_{21}=10^{20}$，误差放大。</li>
+  <li><strong>应用最广</strong>：在数值库中，若不加说明，“LU 分解”通常指带部分主元的 Doolittle 分解（即 PLU）。</li>
+</ol>
+
+<h2 id="crout-分解">Crout 分解</h2>
+
+<h3 id="定义-2">定义</h3>
+
+<p><strong>定义 3.1.1（Crout 分解）</strong><br />
+设 $A\in M_n(\mathbb F)$。若存在下三角矩阵 $L$ 与单位上三角矩阵 $U$（即 $u_{ii}=1$，$i&gt;j$ 时 $u_{ij}=0$），使得
+\(A=LU,\)
+则称其为 $A$ 的 <strong>Crout 分解</strong>。</p>
+
+<h3 id="存在唯一性-1">存在唯一性</h3>
+
+<p><strong>定理 3.2.1（Crout 分解的存在唯一性）</strong><br />
+设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
+
+<ol>
+  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
+  <li>$A$ 存在唯一的 Crout 分解 $A=LU$，其中 $L$ 下三角且 $l_{kk}\ne 0$，$U$ 单位上三角。</li>
+</ol>
+
+<p><strong>证明</strong><br />
+由定理 2.2.1，在 $D_k\ne 0$ 条件下，$A$ 存在唯一 Doolittle 分解
+\(A=L_0U_0,\)
+其中 $L_0$ 单位下三角，$U_0$ 上三角，且 $u_{kk}\ne 0$。令
+\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}).\)
+则 $D$ 可逆。定义
+\(L=L_0D,\qquad U=D^{-1}U_0.\)
+显然 $L$ 为下三角矩阵，其对角线元素为 $u_{kk}\ne 0$；$U$ 为单位上三角矩阵。且
+\(LU=L_0D\,D^{-1}U_0=L_0U_0=A.\)</p>
+
+<p><strong>唯一性</strong>：若 $A=L_1U_1=L_2U_2$，其中 $U_1,U_2$ 单位上三角，则
+\(L_2^{-1}L_1=U_2U_1^{-1}.\)
+左边为下三角矩阵，右边为单位上三角矩阵。两者相等，只能是对角矩阵。又因右边对角线为 $1$，故该对角矩阵为 $I$。于是
+\(L_1=L_2,\qquad U_1=U_2.\)
+$\square$</p>
+
+<h3 id="crout-算法">Crout 算法</h3>
+
+<p><strong>算法 3.3.1（按列计算）</strong><br />
+对 $k=1,2,\dots,n$：</p>
+
+<ol>
+  <li>计算 $L$ 的第 $k$ 列（$i=k,k+1,\dots,n$）：
+\(l_{ik}=a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}.\)</li>
+  <li>计算 $U$ 的第 $k$ 行（$j=k+1,\dots,n$）：
+\(u_{kj}=\frac{1}{l_{kk}}\Bigl(a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj}\Bigr).\)
+并规定 $u_{kk}=1$。</li>
+</ol>
+
+<p><strong>计算量</strong>：约 $\dfrac{2}{3}n^3$ 次浮点乘除，与 Doolittle 相同。</p>
+
+<h3 id="与-doolittle-的关系">与 Doolittle 的关系</h3>
+
+<p>设 $A$ 的 Doolittle 分解为
+\(A=L_DU_D,\)
+令
+\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}).\)
+则
+\(L_{\text{Crout}}=L_DD,\qquad
+U_{\text{Crout}}=D^{-1}U_D.\)</p>
+
+<p>等价地，若对 $A^{\mathsf T}$ 作 Doolittle 分解
+\(A^{\mathsf T}=L_D'U_D',\)
+则
+\(A=U_D'^{\mathsf T}L_D'^{\mathsf T},\)
+其中 $U_D’^{\mathsf T}$ 为下三角，$L_D’^{\mathsf T}$ 为单位上三角。因此 <strong>Crout 分解与 Doolittle 分解互为转置</strong>。</p>
+
+<h3 id="解线性方程组-1">解线性方程组</h3>
+
+<p><strong>算法 3.5.1（Crout 法解 $Ax=b$）</strong></p>
+
+<ol>
+  <li>分解 $A=LU$，其中 $U$ 单位上三角；</li>
+  <li><strong>前代</strong>：解 $Ly=b$，
+\(y_i=\frac{1}{l_{ii}}\Bigl(b_i-\sum_{j=1}^{i-1}l_{ij}y_j\Bigr),\qquad i=1,\dots,n;\)</li>
+  <li><strong>回代</strong>：解 $Ux=y$，
+\(x_i=y_i-\sum_{j=i+1}^{n}u_{ij}x_j,\qquad i=n,\dots,1.\)
+因 $u_{ii}=1$，回代时无需除法。</li>
+</ol>
+
+<h3 id="行列式">行列式</h3>
+
+<p>\(\det A=\det L\det U=\prod_{i=1}^{n}l_{ii}\cdot 1=\prod_{i=1}^{n}l_{ii}.\)
+即 <strong>Crout 分解中 $L$ 的对角线元素之积等于 $\det A$</strong>。</p>
+
+<h3 id="例题-1">例题</h3>
+
+<p>承例 2.6.1 的 $A$。Doolittle 分解中
+\(L_D=\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix},\qquad
+U_D=\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix},\qquad
+D=\operatorname{diag}(2,1,2).\)</p>
+
+<p>于是 Crout 分解：
+\(L_C=L_DD=
+\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
+\begin{pmatrix}2&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix}
+=
+\begin{pmatrix}2&amp;0&amp;0\\4&amp;1&amp;0\\8&amp;3&amp;2\end{pmatrix},\)
+\(U_C=D^{-1}U_D=
+\begin{pmatrix}\frac12&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;\frac12\end{pmatrix}
+\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}
+=
+\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)</p>
+
+<p>验证：
+\(L_CU_C=
+\begin{pmatrix}2&amp;0&amp;0\\4&amp;1&amp;0\\8&amp;3&amp;2\end{pmatrix}
+\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}
+=
+\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}=A.\)
+且 $\det A=2\cdot 1\cdot 2=4$，而 $L_C$ 对角线乘积 $2\cdot 1\cdot 2=4$，一致。</p>
+
+<h3 id="注记-2">注记</h3>
+
+<ol>
+  <li>与 Doolittle 互为转置：在需要处理 $A^{\mathsf T}$ 的场合可灵活选用。</li>
+  <li>数值稳定性与 Doolittle 相同；无主元时可能不稳定。</li>
+  <li>适合需要直接得到 $\det A$ 或 $L$ 对角线主元的场合。</li>
+</ol>
+
+<h2 id="ldu-分解">LDU 分解</h2>
+
+<h3 id="定义-3">定义</h3>
+
+<p><strong>定义 4.1.1（LDU 分解）</strong><br />
+设 $A\in M_n(\mathbb F)$。若存在单位下三角矩阵 $L$、对角矩阵 $D$、单位上三角矩阵 $U$，使得
+\(A=LDU,\)
+则称其为 $A$ 的 <strong>LDU 分解</strong>。</p>
+
+<h3 id="存在唯一性-2">存在唯一性</h3>
+
+<p><strong>定理 4.2.1（LDU 分解的存在唯一性）</strong><br />
+设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
+
+<ol>
+  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
+  <li>$A$ 存在唯一的 LDU 分解 $A=LDU$。</li>
+</ol>
+
+<p><strong>证明</strong><br />
+由定理 2.2.1，在 $D_k\ne 0$ 条件下，$A$ 存在唯一 Doolittle 分解
+\(A=L_0U_0,\)
+其中 $L_0$ 单位下三角，$U_0$ 上三角，且 $u_{kk}\ne 0$。令
+\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}),\qquad
+U=D^{-1}U_0.\)
+则 $D$ 可逆，$U$ 为单位上三角矩阵，且
+\(L_0DU=L_0D\,D^{-1}U_0=L_0U_0=A.\)</p>
+
+<p><strong>唯一性</strong>：若 $A=L_1D_1U_1=L_2D_2U_2$，其中 $L_i$ 单位下三角，$U_i$ 单位上三角，$D_i$ 对角，则
+\(L_2^{-1}L_1=D_2U_2U_1^{-1}D_1^{-1}.\)
+左边为单位下三角矩阵，右边为上三角矩阵。两者相等，故为对角矩阵。又因左边对角线为 $1$，该对角矩阵为 $I$。于是
+\(L_1=L_2,\qquad D_1U_1=D_2U_2.\)
+再比较对角线得 $D_1=D_2$，进而 $U_1=U_2$。$\square$</p>
+
+<h3 id="与-doolittlecrout-的关系">与 Doolittle、Crout 的关系</h3>
+
+<p>设 LDU 分解为
+\(A=LDU.\)
+则：</p>
+
+<ul>
+  <li><strong>Doolittle 分解</strong>：$A=L(DU)$，其中 $L$ 单位下三角，$DU$ 上三角；</li>
+  <li><strong>Crout 分解</strong>：$A=(LD)U$，其中 $LD$ 下三角，$U$ 单位上三角。</li>
+</ul>
+
+<p>因此 <strong>LDU 分解是 Doolittle 与 Crout 的公共细化</strong>：
+\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
+
+<h3 id="行列式-1">行列式</h3>
+
+\[\det A=\det L\det D\det U=1\cdot\prod_{i=1}^{n}d_{ii}\cdot 1=\prod_{i=1}^{n}d_{ii}.\]
+
+<h3 id="例题-2">例题</h3>
+
+<p>承例 2.6.1 的 $A$。由 Doolittle 分解 $A=L_DU_D$，取
+\(D=\operatorname{diag}(2,1,2),\qquad
+U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)
+则
+\(A=L_DDU=
+\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
+\begin{pmatrix}2&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix}
+\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)
+验证成立，且 $\det A=2\cdot 1\cdot 2=4$。</p>
+
+<h3 id="注记-3">注记</h3>
+
+<ol>
+  <li>LDU 分解把对角尺度单独分离，便于理论分析。</li>
+  <li>若 $A$ 对称且 $D_k\ne 0$，则 $U=L^{\mathsf T}$，即
+\(A=LDL^{\mathsf T}.\)
+若 $A$ 对称正定，则 $D$ 的对角线元素全为正，进一步令 $L_C=LD^{1/2}$，得 Cholesky 分解
+\(A=L_CL_C^{\mathsf T}.\)</li>
+  <li>LDU 分解在数值计算中较少单独使用，主要作为理论工具。</li>
+</ol>
+
+<h2 id="三种规范形式的统一关系">三种规范形式的统一关系</h2>
+
+<h3 id="关系图">关系图</h3>
+
+<p>\(\text{一般 LU 分解 }A=LU\)
+\(\downarrow\text{ 对 }L\text{ 归一化}\)
+\(\text{Doolittle }A=L_DU_D\)
+\(\downarrow\text{ 提取对角尺度 }D=\operatorname{diag}(U_D)\)
+\(\text{LDU }A=L_DDU'\)
+\(\downarrow\text{ 对 }U\text{ 归一化}\)
+\(\text{Crout }A=L_CU_C\)</p>
+
+<h3 id="转换公式">转换公式</h3>
+
+<p>设 Doolittle 分解为 $A=L_DU_D$，令 $D=\operatorname{diag}(U_D)$，则：</p>
+
+<p>\(L_{\text{Crout}}=L_DD,\qquad U_{\text{Crout}}=D^{-1}U_D;\)
+\(L_{\text{LDU}}=L_D,\qquad D_{\text{LDU}}=D,\qquad U_{\text{LDU}}=D^{-1}U_D.\)</p>
+
+<h3 id="对比表">对比表</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>分解</th>
+      <th>形式</th>
+      <th>$L$ 对角线</th>
+      <th>$U$ 对角线</th>
+      <th>唯一性条件</th>
+      <th>行列式</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一般 LU</td>
+      <td>$A=LU$</td>
+      <td>任意</td>
+      <td>任意</td>
+      <td>不唯一</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Doolittle</td>
+      <td>$A=LU$</td>
+      <td>全为 $1$</td>
+      <td>$u_{ii}\ne 0$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod u_{ii}$</td>
+    </tr>
+    <tr>
+      <td>Crout</td>
+      <td>$A=LU$</td>
+      <td>$l_{ii}\ne 0$</td>
+      <td>全为 $1$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod l_{ii}$</td>
+    </tr>
+    <tr>
+      <td>LDU</td>
+      <td>$A=LDU$</td>
+      <td>全为 $1$</td>
+      <td>全为 $1$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod d_{ii}$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="带主元的-lu-分解扩展">带主元的 LU 分解（扩展）</h1>
+
+<p>当 $D_k=0$ 或主元过小时，无主元 LU 分解失效或不稳定，需引入置换矩阵。</p>
+
+<h2 id="plu-分解部分主元">PLU 分解（部分主元）</h2>
+
+<p><strong>定义 6.1.1</strong><br />
+若存在置换矩阵 $P$、单位下三角矩阵 $L$、上三角矩阵 $U$，使得
+\(PA=LU,\)
+则称其为 $A$ 的 <strong>PLU 分解</strong>。</p>
+
+<p><strong>定理 6.1.2（存在性）</strong><br />
+对任意非奇异矩阵 $A\in M_n(\mathbb F)$，PLU 分解总存在。</p>
+
+<p><strong>算法 6.1.3</strong><br />
+对 $k=1,\dots,n-1$：</p>
+
+<ol>
+  <li>选主元：求 $p\in{k,\dots,n}$ 使
+\(|a_{pk}|=\max_{k\le i\le n}|a_{ik}|.\)</li>
+  <li>交换第 $k$ 行与第 $p$ 行，同时更新 $P$ 及已算出的 $L$ 的前 $k-1$ 列。</li>
+  <li>消元：
+\(l_{ik}=\frac{a_{ik}}{a_{kk}},\quad i=k+1,\dots,n;\)
+\(a_{ij}\leftarrow a_{ij}-l_{ik}a_{kj},\quad i,j&gt;k.\)</li>
+</ol>
+
+<p><strong>解 $Ax=b$</strong></p>
+<ol>
+  <li>分解 $PA=LU$；</li>
+  <li>计算 $\tilde b=Pb$；</li>
+  <li>前代解 $Ly=\tilde b$；</li>
+  <li>回代解 $Ux=y$。</li>
+</ol>
+
+<p><strong>行列式</strong>
+\(\det A=\det(P)\prod_{i=1}^{n}u_{ii},\qquad \det(P)=\pm1.\)</p>
+
+<p><strong>稳定性</strong>：增长因子 $\rho$ 最坏 $2^{n-1}$，实践中通常很小。误差估计为
+\(\|\hat x-x\|\le c\,n^3\rho\,\epsilon\,\|A\|\,\|A^{-1}\|\,\|x\|.\)</p>
+
+<h2 id="palu-分解完全主元">PALU 分解（完全主元）</h2>
+
+<p><strong>定义 6.2.1</strong><br />
+若存在置换矩阵 $P,Q$、单位下三角矩阵 $L$、上三角矩阵 $U$，使得
+\(PAQ=LU,\)
+则称其为 $A$ 的 <strong>PALU 分解</strong>。</p>
+
+<p><strong>算法 6.2.2</strong><br />
+对 $k=1,\dots,n-1$：</p>
+
+<ol>
+  <li>在剩余子矩阵中找绝对值最大元素：
+\(|a_{pq}|=\max_{k\le i,j\le n}|a_{ij}|.\)</li>
+  <li>交换第 $k$ 行与第 $p$ 行；交换第 $k$ 列与第 $q$ 列；更新 $P,Q$。</li>
+  <li>消元，同 PLU。</li>
+</ol>
+
+<p><strong>增长因子上界</strong>
+\(\rho\le n\cdot 2\cdot 3^{1/2}\cdots n^{1/(n-1)}\approx cn^{1+\ln n},\)
+远优于部分主元法的 $2^{n-1}$。</p>
+
+<p><strong>与 PLU 对比</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>PLU</th>
+      <th>PALU</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>形式</td>
+      <td>$PA=LU$</td>
+      <td>$PAQ=LU$</td>
+    </tr>
+    <tr>
+      <td>主元选择</td>
+      <td>每列选最大</td>
+      <td>整个子矩阵选最大</td>
+    </tr>
+    <tr>
+      <td>稳定性</td>
+      <td>好</td>
+      <td>更好</td>
+    </tr>
+    <tr>
+      <td>实现复杂度</td>
+      <td>简单</td>
+      <td>复杂</td>
+    </tr>
+    <tr>
+      <td>实际使用</td>
+      <td>主流</td>
+      <td>特殊场合</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="特殊矩阵的-lu-型分解扩展">特殊矩阵的 LU 型分解（扩展）</h1>
+
+<h2 id="cholesky-分解">Cholesky 分解</h2>
+
+<p><strong>定义 7.1.1</strong><br />
+设 $A\in M_n(\mathbb R)$ 对称正定。若存在下三角矩阵 $L$，其对角线元素全为正，使得
+\(A=LL^{\mathsf T},\)
+则称其为 $A$ 的 <strong>Cholesky 分解</strong>。</p>
+
+<p><strong>定理 7.1.2（存在唯一性）</strong><br />
+设 $A\in M_n(\mathbb R)$ 对称。则 $A$ 正定当且仅当存在唯一的下三角矩阵 $L$，对角线为正，使得 $A=LL^{\mathsf T}$。</p>
+
+<p><strong>算法 7.1.3</strong><br />
+对 $j=1,\dots,n$：
+\(l_{jj}=\sqrt{a_{jj}-\sum_{k=1}^{j-1}l_{jk}^2},\)
+\(l_{ij}=\frac{1}{l_{jj}}\Bigl(a_{ij}-\sum_{k=1}^{j-1}l_{ik}l_{jk}\Bigr),\qquad i=j+1,\dots,n.\)</p>
+
+<p><strong>计算量</strong>：约 $\dfrac{1}{3}n^3$，为 LU 的一半。</p>
+
+<p><strong>行列式</strong>
+\(\det A=\Bigl(\prod_{i=1}^{n}l_{ii}\Bigr)^2.\)</p>
+
+<p><strong>数值稳定性</strong>：无需选主元即稳定。误差估计
+\(\|\hat L\hat L^{\mathsf T}-A\|\le c\,n\,\epsilon\,\|A\|.\)</p>
+
+<h2 id="ldlᵀ-分解">LDLᵀ 分解</h2>
+
+<p><strong>定义 7.2.1</strong><br />
+设 $A\in M_n(\mathbb R)$ 对称。若存在单位下三角矩阵 $L$ 与对角矩阵 $D$，使得
+\(A=LDL^{\mathsf T},\)
+则称其为 $A$ 的 <strong>LDLᵀ 分解</strong>。</p>
+
+<p><strong>定理 7.2.2（存在唯一性）</strong><br />
+设 $A$ 对称且 $D_k\ne 0$（$k=1,\dots,n$）。则 $A$ 存在唯一的 LDLᵀ 分解。若 $A$ 正定，则 $D$ 的对角线元素全为正。</p>
+
+<p><strong>与 Cholesky 的关系</strong>
+\(L_{\text{Cholesky}}=L_{\text{LDL}^{\mathsf T}}D^{1/2}.\)</p>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>无开方运算；</li>
+  <li>适用于对称不定矩阵（只要 $D_k\ne 0$）；</li>
+  <li>保留对称性，只需存储 $L$ 和 $D$。</li>
+</ol>
+
+<h1 id="总表">总表</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>形式</th>
+      <th>适用矩阵</th>
+      <th>唯一性条件</th>
+      <th>计算量</th>
+      <th>数值稳定性</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一般 LU</td>
+      <td>$A=LU$</td>
+      <td>$D_k\ne 0$</td>
+      <td>不唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>Doolittle</td>
+      <td>$A=LU$，$L$ 单位下三角</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>Crout</td>
+      <td>$A=LU$，$U$ 单位上三角</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>LDU</td>
+      <td>$A=LDU$</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>PLU</td>
+      <td>$PA=LU$</td>
+      <td>任意非奇异</td>
+      <td>唯一</td>
+      <td>$\frac23n^3+O(n^2)$</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>PALU</td>
+      <td>$PAQ=LU$</td>
+      <td>任意非奇异</td>
+      <td>唯一</td>
+      <td>$\frac23n^3+O(n^2)$</td>
+      <td>更好</td>
+    </tr>
+    <tr>
+      <td>Cholesky</td>
+      <td>$A=LL^{\mathsf T}$</td>
+      <td>对称正定</td>
+      <td>唯一</td>
+      <td>$\frac13n^3$</td>
+      <td>极好</td>
+    </tr>
+    <tr>
+      <td>LDLᵀ</td>
+      <td>$A=LDL^{\mathsf T}$</td>
+      <td>对称，$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac13n^3$</td>
+      <td>好</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="结论">结论</h1>
+
+<p>$LU$ 分解的核心是 $A=LU$，通过归一化对角线，得到 $Doolittle$、$Crout$、$LDU$ 三种规范形式。</p>
+
+<p>三者关系：
+\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
+
+<p>对称正定情形：
+\(\text{LDU}\longrightarrow\text{LDL}^{\mathsf T}\longrightarrow\text{Cholesky}.\)</p>
+
+<p>数值稳定化：
+\(\text{Doolittle}\xrightarrow{\text{加行交换}}\text{PLU}\xrightarrow{\text{加列交换}}\text{PALU}.\)</p>
+
+<p>选择原则：</p>
+<ol>
+  <li><strong>一般方阵、需稳定</strong>：PLU；</li>
+  <li><strong>病态方阵、要求更高稳定</strong>：PALU；</li>
+  <li><strong>对称正定</strong>：Cholesky；</li>
+  <li><strong>对称不定但 $D_k\ne 0$</strong>：LDLᵀ；</li>
+  <li><strong>理论分析、需分离对角尺度</strong>：LDU；</li>
+  <li><strong>教学或特殊实现</strong>：Doolittle 或 Crout。</li>
+</ol>
+
+<h1 id="附-a上三角矩阵分解">附 A：上三角矩阵分解</h1>
+
+<p><strong>命题</strong><br />
+设 $U\in M_n(\mathbb F)$ 为上三角矩阵。则 $U$ 可分解为
+\(U=DU',\)
+其中 $D$ 为对角矩阵，$U’$ 为单位上三角矩阵（即 $u’<em>{ii}=1$，$i&gt;j$ 时 $u’</em>{ij}=0$），当且仅当对每个 $i=1,\dots,n$，若 $u_{ii}=0$，则 $U$ 的第 $i$ 行全为零。</p>
+
+<p>特别地，若 $U$ 可逆（即所有 $u_{ii}\ne 0$），则这样的分解存在且唯一：
+\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\qquad
+U'=D^{-1}U.\)</p>
+
+<h2 id="证明">证明</h2>
+
+<h3 id="必要性">必要性</h3>
+
+<p>设 $U=DU’$，其中 $D=\operatorname{diag}(d_1,\dots,d_n)$，$U’$ 为单位上三角。比较对角线：
+\(u_{ii}=d_i\cdot 1=d_i,\qquad i=1,\dots,n.\)
+故 $d_i=u_{ii}$。</p>
+
+<p>考虑 $U$ 的第 $i$ 行元素。由于 $D$ 为对角矩阵，
+\(u_{ij}=\sum_{k=1}^n d_{ik}u'_{kj}=d_i u'_{ij},\qquad j=1,\dots,n.\)
+若 $u_{ii}=0$，则 $d_i=0$，于是
+\(u_{ij}=0\cdot u'_{ij}=0,\qquad j=1,\dots,n.\)
+即第 $i$ 行全为零。必要性得证。</p>
+
+<h3 id="充分性">充分性</h3>
+
+<p>假设对每个 $i$，若 $u_{ii}=0$，则第 $i$ 行全为零。定义
+\(d_i=u_{ii},\qquad i=1,\dots,n,\)
+并令 $D=\operatorname{diag}(d_1,\dots,d_n)$。</p>
+
+<ul>
+  <li>若 $d_i\ne 0$，令 $U’$ 的第 $i$ 行为 $\frac{1}{d_i}$ 乘以 $U$ 的第 $i$ 行，即
+\(u'_{ij}=\frac{u_{ij}}{u_{ii}},\qquad j=1,\dots,n.\)
+此时 $u’_{ii}=1$，且因 $U$ 上三角，$U’$ 也为上三角。</li>
+  <li>若 $d_i=0$，则 $U$ 的第 $i$ 行全为零。此时令 $U’$ 的第 $i$ 行为单位上三角矩阵的标准第 $i$ 行（即 $u’<em>{ii}=1$，$u’</em>{ij}=0$ 对 $j&gt;i$），这样 $d_i u’<em>{ij}=0$，仍满足 $u</em>{ij}=d_i u’_{ij}$。</li>
+</ul>
+
+<p>于是按行构造出 $U’$，它为单位上三角矩阵，且 $DU’=U$。充分性得证。</p>
+
+<h2 id="推论">推论</h2>
+
+<ol>
+  <li>
+    <p><strong>可逆上三角矩阵</strong><br />
+若 $U$ 可逆，则所有 $u_{ii}\ne 0$。此时分解存在且唯一：
+\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\qquad
+U'=D^{-1}U.\)
+这就是上三角矩阵的 <strong>Doolittle 型归一化</strong>。</p>
+  </li>
+  <li>
+    <p><strong>不可逆上三角矩阵</strong><br />
+若某些 $u_{ii}=0$，则分解可能不存在。例如
+\(U=\begin{pmatrix}0&amp;1\\0&amp;0\end{pmatrix}.\)
+对角线元素为 $0,0$。若存在 $U=DU’$，则 $D=\operatorname{diag}(0,0)$，从而 $DU’=0$，与 $U\ne 0$ 矛盾。故不能分解。</p>
+  </li>
+  <li>
+    <p><strong>零行情形</strong><br />
+若 $U$ 的零对角元所在行确实全为零，则分解仍存在，但不唯一，因为 $U’$ 对应行可任意选择（只需保持单位上三角）。</p>
+  </li>
+</ol>
+
+<h2 id="注记-4">注记</h2>
+
+<ol>
+  <li>
+    <p>若将“单位上三角矩阵”改为一般的上三角矩阵，则任何上三角矩阵 $U$ 都可平凡地分解为
+\(U=I\cdot U,\)
+其中 $I$ 为对角矩阵，$U$ 为上三角矩阵。但这没有意义。要求 $U’$ 为单位上三角，等价于将 $U$ 的对角尺度完全提取到对角矩阵 $D$ 中。</p>
+  </li>
+  <li>
+    <p>对下三角矩阵有完全对称的结论：$L$ 可分解为 $L=L’D$，其中 $D$ 对角，$L’$ 为单位下三角，当且仅当每个零对角元所在列全为零（或行？需转置）。可逆时唯一。</p>
+  </li>
+  <li>
+    <p>在 LU 分解中，若 $A=L_0U_0$ 为 Doolittle 分解，则 $U_0$ 可写为
+\(U_0=D U',\)
+其中 $D=\operatorname{diag}(U_0)$，$U’$ 为单位上三角。于是
+\(A=L_0D U',\)
+这正是 LDU 分解。</p>
+  </li>
+</ol>
+
+<h2 id="结论-1">结论</h2>
+<p>上三角矩阵不一定能分解为对角矩阵与单位上三角矩阵的乘积。<br />
+<strong>充要条件</strong>是：每个零对角元所在的行全为零。<br />
+若上三角矩阵可逆，则一定可以唯一分解为
+\(U=DU',\qquad D=\operatorname{diag}(u_{11},\dots,u_{nn}),\quad U'=D^{-1}U\text{ 单位上三角}.\)</p>
+
+<p><strong>定义（顺序主子式）</strong><br />
+设 $A=(a_{ij})\in M_n(\mathbb F)$，其中 $\mathbb F$ 为数域。对 $k=1,2,\dots,n$，称
+\(A_k=(a_{ij})_{1\le i,j\le k}\)
+为 $A$ 的 <strong>$k$ 阶顺序主子矩阵</strong>，其行列式
+\(D_k=\det A_k\)
+为 $A$ 的 <strong>$k$ 阶顺序主子式</strong>。规定 $D_0=1$。</p>
+
+<p>所谓“所有顺序主子式非零”，即
+\(D_k\ne 0,\qquad k=1,2,\dots,n.\)</p>
+
+<h1 id="附-b顺序主子式">附 B：顺序主子式</h1>
+
+<h2 id="主要定理">主要定理</h2>
+
+<p><strong>定理</strong><br />
+设 $A\in M_n(\mathbb F)$。下列命题等价：</p>
+
+<ol>
+  <li>$A$ 的所有顺序主子式非零，即 $D_k\ne 0$，$k=1,\dots,n$；</li>
+  <li>$A$ 存在唯一的 LU 分解
+\(A=LU,\)
+其中 $L$ 为单位下三角矩阵，$U$ 为上三角矩阵；</li>
+  <li>对 $A$ 进行<strong>不换行</strong>的高斯消元时，每一步的主元均非零；</li>
+  <li>每个顺序主子矩阵 $A_k$ 都可逆，$k=1,\dots,n$。</li>
+</ol>
+
+<h2 id="证明概要">证明概要</h2>
+
+<h3 id="1-rightarrow-3">(1) $\Rightarrow$ (3)</h3>
+
+<p>设第 $k$ 步消元前的主元为 $p_k$。可以证明
+\(p_k=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)
+因为 $D_k\ne 0$ 且 $D_{k-1}\ne 0$，故
+\(p_k\ne 0.\)
+因此高斯消元可以一直进行下去，不需要交换行。</p>
+
+<h3 id="3-rightarrow-2">(3) $\Rightarrow$ (2)</h3>
+
+<p>不换行的高斯消元过程等价于将 $A$ 左乘一系列单位下三角初等矩阵。最终得到上三角矩阵 $U$，而这些初等矩阵的逆乘积构成单位下三角矩阵 $L$，于是
+\(A=LU.\)
+唯一性证明如下：若
+\(A=L_1U_1=L_2U_2,\)
+则
+\(L_2^{-1}L_1=U_2U_1^{-1}.\)
+左边是单位下三角矩阵，右边是上三角矩阵。两者相等，只能是对角矩阵。又因左边对角线全为 $1$，故该对角矩阵为 $I$。于是
+\(L_1=L_2,\qquad U_1=U_2.\)</p>
+
+<h3 id="2-rightarrow-1">(2) $\Rightarrow$ (1)</h3>
+
+<p>若 $A=LU$，则对每个 $k$，
+\(A_k=L_kU_k,\)
+其中 $L_k,U_k$ 分别是 $L,U$ 的前 $k$ 阶顺序主子矩阵。由于 $L$ 为单位下三角，$\det L_k=1$；由于 $U$ 为上三角，
+\(\det U_k=\prod_{i=1}^k u_{ii}.\)
+因此
+\(D_k=\det A_k=\det L_k\det U_k=\prod_{i=1}^k u_{ii}.\)
+若 LU 分解唯一且 $U$ 非奇异，则 $u_{ii}\ne 0$，从而 $D_k\ne 0$。</p>
+
+<h2 id="直接推论">直接推论</h2>
+
+<ol>
+  <li>
+    <p><strong>矩阵非奇异</strong><br />
+因为
+\(\det A=D_n\ne 0,\)
+所以 $A$ 可逆。</p>
+  </li>
+  <li>
+    <p><strong>行列式与主元的关系</strong><br />
+\(\det A=D_n=\prod_{k=1}^n u_{kk},\)
+且
+\(u_{kk}=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)</p>
+  </li>
+  <li>
+    <p><strong>LDU 分解</strong><br />
+令
+\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\)
+则
+\(A=LDU',\)
+其中 $U’=D^{-1}U$ 为单位上三角矩阵。</p>
+  </li>
+  <li>
+    <p><strong>与正定性的关系</strong><br />
+若 $A$ 为实对称矩阵，则
+\(A\text{ 正定}\iff D_k&gt;0,\quad k=1,\dots,n.\)
+这是 Sylvester 判据。<br />
+但仅“顺序主子式非零”不能推出正定，因为 $D_k$ 可能为负。</p>
+  </li>
+</ol>
+
+<h2 id="与非奇异的区别">与“非奇异”的区别</h2>
+
+<ul>
+  <li>$A$ 非奇异只要求
+\(D_n=\det A\ne 0.\)</li>
+  <li>所有顺序主子式非零要求更强：
+\(D_1\ne 0,\ D_2\ne 0,\ \dots,\ D_n\ne 0.\)</li>
+</ul>
+
+<p>因此：
+\(\text{所有顺序主子式非零}\ \Longrightarrow\ A\text{ 非奇异},\)
+但反之不成立。</p>
+
+<p><strong>例</strong><br />
+\(A=\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}.\)
+有
+\(D_1=0,\qquad D_2=\det A=-1\ne 0.\)
+所以 $A$ 非奇异，但 $D_1=0$，不满足所有顺序主子式非零。此时不换行的 LU 分解失败，因为第一步主元为 $0$。但通过交换两行，可做 PLU 分解：
+\(\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}
+=
+\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}
+\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}
+\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}.\)</p>
+
+<h2 id="与-plu-分解的关系">与 PLU 分解的关系</h2>
+
+<ul>
+  <li>若所有顺序主子式非零，则无主元 LU 分解存在且唯一：
+\(A=LU.\)</li>
+  <li>若某个顺序主子式为零，则无主元 LU 分解可能不存在，或即使存在也不唯一。此时需要引入行交换，即 PLU 分解：
+\(PA=LU.\)</li>
+</ul>
+
+<p>因此，“所有顺序主子式非零”恰好是 <strong>LU 分解无需行交换</strong> 的充要条件。</p>
+
+<h2 id="注记-5">注记</h2>
+
+<ol>
+  <li>
+    <p>“顺序主子式”与“主子式”不同。<br />
+主子式可以选取任意 $k$ 个行和对应的 $k$ 个列。<br />
+所有顺序主子式非零不意味着所有主子式非零。<br />
+例如
+\(A=\begin{pmatrix}1&amp;2\\3&amp;0\end{pmatrix},\)
+$D_1=1\ne 0$，$D_2=-6\ne 0$，但 $a_{22}=0$ 是一个 $1$ 阶主子式。</p>
+  </li>
+  <li>
+    <p>数值计算中，顺序主子式非零只保证精确算术下消元可行。若某些主元绝对值很小，浮点计算仍可能不稳定，因此实际算法通常采用部分主元法（PLU）。</p>
+  </li>
+  <li>
+    <p>该结论对任意数域 $\mathbb F$ 上的方阵均成立。</p>
+  </li>
+</ol>
+
+<h1 id="附-c解线性方程组doolittle-法为例">附 C：解线性方程组（Doolittle 法为例）</h1>
+
+<h2 id="三角方程组的求解">三角方程组的求解</h2>
+
+<p><strong>前代法解 $Ly=b$</strong><br />
+因 $L$ 为单位下三角矩阵，方程组写为
+\(\begin{cases}
+y_1=b_1,\\
+l_{21}y_1+y_2=b_2,\\
+\vdots\\
+l_{n1}y_1+l_{n2}y_2+\cdots+y_n=b_n.
+\end{cases}\)
+逐次可得
+\(y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n.\)</p>
+
+<p><strong>回代法解 $Ux=y$</strong><br />
+因 $U$ 为上三角矩阵且 $u_{ii}\ne 0$，方程组写为
+\(\begin{cases}
+u_{11}x_1+u_{12}x_2+\cdots+u_{1n}x_n=y_1,\\
+u_{22}x_2+\cdots+u_{2n}x_n=y_2,\\
+\vdots\\
+u_{nn}x_n=y_n.
+\end{cases}\)
+从最后一行开始，
+\(x_n=\frac{y_n}{u_{nn}},\)
+\(x_i=\frac{1}{u_{ii}}\left(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\right),\qquad i=n-1,n-2,\dots,1.\)</p>
+
+<h2 id="doolittle-法解-axb-的完整步骤">Doolittle 法解 $Ax=b$ 的完整步骤</h2>
+
+<h3 id="算法流程">算法流程</h3>
+
+<p><strong>步骤 1：Doolittle 分解 $A=LU$</strong></p>
+
+<p>对 $k=1,2,\dots,n$：</p>
+
+<ol>
+  <li>计算 $U$ 的第 $k$ 行：
+\(u_{kj}=a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj},\qquad j=k,k+1,\dots,n.\)</li>
+  <li>计算 $L$ 的第 $k$ 列：
+\(l_{ik}=\frac{1}{u_{kk}}\left(a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}\right),\qquad i=k+1,k+2,\dots,n.\)
+并规定 $l_{kk}=1$。</li>
+</ol>
+
+<p><strong>步骤 2：前代解 $Ly=b$</strong></p>
+
+\[y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n.\]
+
+<p><strong>步骤 3：回代解 $Ux=y$</strong></p>
+
+\[x_i=\frac{1}{u_{ii}}\left(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\right),\qquad i=n,n-1,\dots,1.\]
+
+<h3 id="正确性证明">正确性证明</h3>
+
+<p>因 $A=LU$，原方程 $Ax=b$ 等价于
+\(LUx=b.\)
+令
+\(y=Ux.\)
+则 $Ly=b$。由于 $L$ 为单位下三角矩阵，$\det L=1\ne 0$，故 $Ly=b$ 有唯一解 $y$，可由前代法求出。再由 $Ux=y$，因 $U$ 上三角且 $u_{ii}\ne 0$，$\det U=\prod_{i=1}^n u_{ii}\ne 0$，故有唯一解 $x$，可由回代法求出。于是 $x$ 即为 $Ax=b$ 的唯一解。$\square$</p>
+
+<h3 id="计算量">计算量</h3>
+
+<ul>
+  <li>Doolittle 分解：约 $\dfrac{2}{3}n^3$ 次浮点乘除；</li>
+  <li>前代：约 $n^2$ 次；</li>
+  <li>回代：约 $n^2$ 次。</li>
+</ul>
+
+<p>总计约
+\(\frac{2}{3}n^3+O(n^2)\)
+次浮点运算。当有多个右端项 $b^{(1)},\dots,b^{(m)}$ 时，分解只需进行一次，总计算量为
+\(\frac{2}{3}n^3+2mn^2+O(n^2).\)</p>
+
+<h2 id="数值例子">数值例子</h2>
+
+<p>设
+\(A=\begin{pmatrix}
+2&amp;1&amp;1\\
+4&amp;3&amp;3\\
+8&amp;7&amp;9
+\end{pmatrix},\qquad
+b=\begin{pmatrix}
+1\\
+1\\
+1
+\end{pmatrix}.\)</p>
+
+<h3 id="doolittle-分解-1">Doolittle 分解</h3>
+
+<p>由前文结果，
+\(L=\begin{pmatrix}
+1&amp;0&amp;0\\
+2&amp;1&amp;0\\
+4&amp;3&amp;1
+\end{pmatrix},\qquad
+U=\begin{pmatrix}
+2&amp;1&amp;1\\
+0&amp;1&amp;1\\
+0&amp;0&amp;2
+\end{pmatrix}.\)
+验证 $LU=A$。</p>
+
+<h3 id="前代解-lyb">前代解 $Ly=b$</h3>
+
+<p>\(y_1=1,\)
+\(y_2=b_2-l_{21}y_1=1-2\cdot 1=-1,\)
+\(y_3=b_3-l_{31}y_1-l_{32}y_2=1-4\cdot 1-3\cdot(-1)=1-4+3=0.\)
+故
+\(y=\begin{pmatrix}1\\-1\\0\end{pmatrix}.\)</p>
+
+<h3 id="回代解-uxy">回代解 $Ux=y$</h3>
+
+<p>\(x_3=\frac{y_3}{u_{33}}=\frac{0}{2}=0,\)
+\(x_2=\frac{1}{u_{22}}(y_2-u_{23}x_3)=\frac{1}{1}(-1-1\cdot 0)=-1,\)
+\(x_1=\frac{1}{u_{11}}(y_1-u_{12}x_2-u_{13}x_3)
+=\frac{1}{2}(1-1\cdot(-1)-1\cdot 0)
+=\frac{1}{2}(1+1)=1.\)
+于是
+\(x=\begin{pmatrix}1\\-1\\0\end{pmatrix}.\)</p>
+
+<p><strong>验证</strong>：
+\(Ax=\begin{pmatrix}
+2&amp;1&amp;1\\
+4&amp;3&amp;3\\
+8&amp;7&amp;9
+\end{pmatrix}
+\begin{pmatrix}
+1\\-1\\0
+\end{pmatrix}
+=
+\begin{pmatrix}
+2-1\\
+4-3\\
+8-7
+\end{pmatrix}
+=
+\begin{pmatrix}
+1\\1\\1
+\end{pmatrix}=b.\)
+正确。</p>
+
+<h2 id="数值稳定性与主元选择">数值稳定性与主元选择</h2>
+
+<p>Doolittle 法在精确算术下是可行的，但在浮点计算中，若某个主元 $u_{kk}$ 的绝对值极小，会导致 $l_{ik}=a_{ik}/u_{kk}$ 非常大，从而放大舍入误差，使结果不可靠。</p>
+
+<p><strong>例</strong><br />
+\(A=\begin{pmatrix}
+10^{-20}&amp;1\\
+1&amp;1
+\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\end{pmatrix}.\)
+精确解为 $x\approx(1,1)^T$。但若按 Doolittle 分解，
+\(u_{11}=10^{-20},\qquad l_{21}=10^{20},\)
+在浮点运算中会产生严重误差。</p>
+
+<p><strong>解决方案</strong><br />
+实际计算中采用 <strong>带部分主元的 PLU 分解</strong>：
+\(PA=LU,\)
+其中 $P$ 为置换矩阵。算法在每一步选择当前列中绝对值最大的元素作为主元，并交换行。这样可以保证所有 $|l_{ij}|\le 1$，显著提高数值稳定性。</p>
+
+<p>因此，实际数值软件（如 LAPACK、MATLAB、NumPy）中，“LU 分解”通常默认指带部分主元的 PLU 分解，而非纯粹的 Doolittle 分解。</p>
+
+<hr />
+
+<h2 id="优缺点">优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>分解一次后，可重复用于多个右端项 $b$，节省计算量。</li>
+  <li>算法结构清晰，易于实现。</li>
+  <li>可原地存储 $L$ 和 $U$ 于 $A$ 的存储空间中。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>要求所有顺序主子式非零；否则分解不存在或需行交换。</li>
+  <li>无主元时数值不稳定。</li>
+  <li>对稀疏矩阵可能产生填充（fill-in），破坏稀疏性。</li>
+</ol>
+
+<h2 id="总结">总结</h2>
+
+<p>Doolittle 法解线性方程组 $Ax=b$ 的核心步骤为：</p>
+
+\[A=LU
+\;\Longrightarrow\;
+Ly=b
+\;\xrightarrow{\text{前代}}\;
+y
+\;\Longrightarrow\;
+Ux=y
+\;\xrightarrow{\text{回代}}\;
+x.\]
+
+<p>适用条件：$A$ 的所有顺序主子式非零。<br />
+计算量：约 $\dfrac{2}{3}n^3+O(n^2)$。<br />
+数值实现中，为保证稳定性，通常采用带部分主元的 PLU 分解。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">span</title><link href="https://xdevil.top/cpp/2026/10/06/span.html" rel="alternate" type="text/html" title="span" /><published>2026-10-06T00:00:00+00:00</published><updated>2026-10-06T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/10/06/span</id><content type="html" xml:base="https://xdevil.top/cpp/2026/10/06/span.html"><![CDATA[<p><code class="language-plaintext highlighter-rouge">std::span</code> 是 C++20 引入的<strong>非拥有连续视图</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;span&gt;</code> 里。它是对一段连续内存的“窗口”，不持有数据、不管理生命周期，只提供访问接口。</p>
 
 <h1 id="是什么">是什么</h1>
 
@@ -5448,195 +6607,4 @@ is_same&lt;int, double&gt; → 匹配主模板        → false_type
 <ul>
   <li>C 编译器设为 /usr/bin/gcc-12</li>
   <li>C++ 编译器设为 /usr/bin/g++-12</li>
-</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">godot_cpp 环境搭建</title><link href="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate" type="text/html" title="godot_cpp 环境搭建" /><published>2026-08-24T00:00:00+00:00</published><updated>2026-08-24T00:00:00+00:00</updated><id>https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp%20%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA</id><content type="html" xml:base="https://xdevil.top/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/2026/08/24/godot_cpp-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html"><![CDATA[<h1 id="godot-cpp-编译">godot-cpp 编译</h1>
-<h2 id="下载源码">下载源码</h2>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/godotengine/godot-cpp.git
-<span class="nb">cd </span>godot-cpp
-
-git checkout 4.5
-</code></pre></div></div>
-
-<h2 id="编译环境">编译环境</h2>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 确认 python3 已安装</span>
-python3 <span class="nt">--version</span>
-
-<span class="c"># 安装 scons，apt 方式版本太低</span>
-pip3 <span class="nb">install </span>scons
-
-<span class="c"># 设置环境变量</span>
-<span class="nb">echo</span> <span class="nv">$SHELL</span>
-
-vim ~/.bashrc
-
-<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
-</code></pre></div></div>
-
-<h2 id="编译">编译</h2>
-
-<p>导出 api 文件</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># macos</span>
-/Applications/Godot.app/Contents/MacOS/Godot <span class="nt">--dump-extension-api</span>
-
-<span class="c"># ubuntu</span>
-~/software/godot/Godot_v4.6-stable_linux.x86_64 <span class="nt">--dump-extension-api</span>
-</code></pre></div></div>
-
-<p>编译 godot-cpp 静态库</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>godot-cpp
-
-scons <span class="nt">-c</span>
-
-scons <span class="nv">platform</span><span class="o">=</span>macos <span class="nb">arch</span><span class="o">=</span>arm64 <span class="nv">target</span><span class="o">=</span>template_release <span class="nv">custom_api_file</span><span class="o">=</span>extension_api.json
-</code></pre></div></div>
-
-<h2 id="产物">产物</h2>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># bin: libgodot-cpp.linux.template_release.x86_64.a</span>
-<span class="c"># 头文件: include, gen/include, gdextension</span>
-</code></pre></div></div>
-
-<h1 id="自定义插件">自定义插件</h1>
-
-<p>my_node.h</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;godot_cpp/classes/node.hpp&gt;</span><span class="cp">
-</span>
-<span class="k">namespace</span> <span class="n">godot</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">MyNode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Node</span> <span class="p">{</span>
-        <span class="n">GDCLASS</span><span class="p">(</span><span class="n">MyNode</span><span class="p">,</span> <span class="n">Node</span><span class="p">)</span>
-
-    <span class="nl">private:</span>
-        <span class="kt">double</span> <span class="n">speed</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
-
-    <span class="nl">protected:</span>
-        <span class="k">static</span> <span class="kt">void</span> <span class="n">_bind_methods</span><span class="p">();</span>
-
-    <span class="nl">public:</span>
-        <span class="n">MyNode</span><span class="p">();</span>
-        <span class="kt">void</span> <span class="n">_process</span><span class="p">(</span><span class="kt">double</span> <span class="n">delta</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
-        <span class="kt">double</span> <span class="n">get_speed</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-        <span class="kt">void</span> <span class="n">set_speed</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_speed</span><span class="p">);</span>
-    <span class="p">};</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>my_node.cpp</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"my_node.h"</span><span class="cp">
-#include</span> <span class="cpf">&lt;godot_cpp/core/class_db.hpp&gt;</span><span class="cp">
-</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">godot</span><span class="p">;</span>
-
-<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">_bind_methods</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ClassDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">D_METHOD</span><span class="p">(</span><span class="s">"get_speed"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">MyNode</span><span class="o">::</span><span class="n">get_speed</span><span class="p">);</span>
-    <span class="n">ClassDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">D_METHOD</span><span class="p">(</span><span class="s">"set_speed"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">MyNode</span><span class="o">::</span><span class="n">set_speed</span><span class="p">);</span>
-    <span class="n">ADD_PROPERTY</span><span class="p">(</span><span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">FLOAT</span><span class="p">,</span> <span class="s">"speed"</span><span class="p">),</span> <span class="s">"set_speed"</span><span class="p">,</span> <span class="s">"get_speed"</span><span class="p">);</span>
-    <span class="n">ADD_SIGNAL</span><span class="p">(</span><span class="n">MethodInfo</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">FLOAT</span><span class="p">,</span> <span class="s">"new_speed"</span><span class="p">)));</span>
-<span class="p">}</span>
-
-<span class="n">MyNode</span><span class="o">::</span><span class="n">MyNode</span><span class="p">()</span> <span class="p">{}</span>
-<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">_process</span><span class="p">(</span><span class="kt">double</span> <span class="n">delta</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">speed</span> <span class="o">+=</span> <span class="n">delta</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">;</span>
-    <span class="n">emit_signal</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">speed</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="kt">double</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">get_speed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">speed</span><span class="p">;</span> <span class="p">}</span>
-<span class="kt">void</span> <span class="n">MyNode</span><span class="o">::</span><span class="n">set_speed</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_speed</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">speed</span> <span class="o">=</span> <span class="n">p_speed</span><span class="p">;</span>
-    <span class="n">emit_signal</span><span class="p">(</span><span class="s">"speed_changed"</span><span class="p">,</span> <span class="n">speed</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="c1">// 入口函数</span>
-<span class="k">extern</span> <span class="s">"C"</span> <span class="p">{</span>
-<span class="n">GDExtensionBool</span> <span class="n">my_extension_init</span><span class="p">(</span><span class="n">GDExtensionInterfaceGetProcAddress</span> <span class="n">p_get_proc_address</span><span class="p">,</span>
-                                  <span class="n">GDExtensionClassLibraryPtr</span> <span class="n">p_library</span><span class="p">,</span>
-                                  <span class="n">GDExtensionInitialization</span> <span class="o">*</span><span class="n">r_initialization</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">godot</span><span class="o">::</span><span class="n">GDExtensionBinding</span><span class="o">::</span><span class="n">InitObject</span> <span class="n">init_obj</span><span class="p">(</span><span class="n">p_get_proc_address</span><span class="p">,</span> <span class="n">p_library</span><span class="p">,</span> <span class="n">r_initialization</span><span class="p">);</span>
-    <span class="n">init_obj</span><span class="p">.</span><span class="n">register_initializer</span><span class="p">([](</span><span class="n">godot</span><span class="o">::</span><span class="n">ModuleInitializationLevel</span> <span class="n">p_level</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">p_level</span> <span class="o">==</span> <span class="n">godot</span><span class="o">::</span><span class="n">MODULE_INITIALIZATION_LEVEL_SCENE</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">ClassDB</span><span class="o">::</span><span class="n">register_class</span><span class="o">&lt;</span><span class="n">MyNode</span><span class="o">&gt;</span><span class="p">();</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="k">return</span> <span class="n">init_obj</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
-<span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>CMakeLists.txt</p>
-<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 4.3<span class="p">)</span>
-<span class="nb">project</span><span class="p">(</span>godot_cpp_demo<span class="p">)</span>
-
-<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 20<span class="p">)</span>
-<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD_REQUIRED ON<span class="p">)</span>
-
-<span class="c1"># 你的扩展源文件</span>
-<span class="nb">add_library</span><span class="p">(</span>my_extension SHARED src/my_node.cpp<span class="p">)</span>
-
-<span class="nb">target_include_directories</span><span class="p">(</span>my_extension PRIVATE
-        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/src
-        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/gen/include
-        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/include
-        <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>/godot_cpp/godot-cpp-4.5/gdextension
-<span class="p">)</span>
-
-<span class="nb">target_link_directories</span><span class="p">(</span>my_extension PRIVATE godot_cpp/godot-cpp-4.5/bin<span class="p">)</span>
-
-<span class="c1"># 链接 godot-cpp 静态库</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span>my_extension PRIVATE libgodot-cpp.linux.template_release.x86_64.a<span class="p">)</span>
-
-<span class="c1"># 编译选项</span>
-<span class="nb">target_compile_options</span><span class="p">(</span>my_extension PRIVATE -Wall -Wextra<span class="p">)</span>
-
-<span class="c1"># 设置输出名（去掉 lib 前缀，方便 Godot 加载）</span>
-<span class="nb">set_target_properties</span><span class="p">(</span>my_extension PROPERTIES PREFIX <span class="s2">""</span> OUTPUT_NAME <span class="s2">"my_extension"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>编译即可得到产物 <code class="language-plaintext highlighter-rouge">my_extension.so</code></p>
-
-<h1 id="使用插件">使用插件</h1>
-<p>godot 工程，根目录下新建 bin 文件夹，将 <code class="language-plaintext highlighter-rouge">my_extension.so</code> 放入其中</p>
-
-<p>根目录下新建 <code class="language-plaintext highlighter-rouge">demo.gdextension</code> 文件</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[configuration]
-entry_symbol = "my_extension_init"
-compatibility_minimum = "4.5"
-
-[libraries]
-linux.debug.x86_64 = "res://bin/my_extension.so"
-linux.release.x86_64 = "res://bin/my_extension.so"
-
-# 如果你的库也编译了 ARM64，可以增加：
-# linux.debug.arm64 = "res://bin/my_extension_arm64.so"
-# linux.release.arm64 = "res://bin/my_extension_arm64.so"
-</code></pre></div></div>
-
-<p>gd 脚本</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extends Node2D
-
-var my_node
-
-<span class="c"># Called when the node enters the scene tree for the first time.</span>
-func _ready<span class="o">()</span> -&gt; void:
-	my_node <span class="o">=</span> MyNode.new<span class="o">()</span>   <span class="c"># MyNode 来自 GDExtension</span>
-	add_child<span class="o">(</span>my_node<span class="o">)</span>
-	
-	<span class="c"># 连接信号</span>
-	my_node.connect<span class="o">(</span><span class="s2">"speed_changed"</span>, Callable<span class="o">(</span>self, <span class="s2">"_on_speed_changed"</span><span class="o">))</span>
-
-	<span class="c"># 调用方法和属性</span>
-	my_node.set_speed<span class="o">(</span>30.0<span class="o">)</span>
-	print<span class="o">(</span><span class="s2">"当前速度："</span>, my_node.get_speed<span class="o">())</span>
-	pass <span class="c"># Replace with function body.</span>
-
-
-<span class="c"># Called every frame. 'delta' is the elapsed time since the previous frame.</span>
-func _process<span class="o">(</span>delta: float<span class="o">)</span> -&gt; void:
-	pass
-	
-func _on_speed_changed<span class="o">(</span>new_speed<span class="o">)</span>:
-	print<span class="o">(</span><span class="s2">"速度变化："</span>, new_speed<span class="o">)</span>
-</code></pre></div></div>
-
-<p>重新加载 godot 工程并运行</p>]]></content><author><name>Devil</name></author><category term="计算机图形学" /><category term="godot" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/87.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/87.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+</ul>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="skill" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
