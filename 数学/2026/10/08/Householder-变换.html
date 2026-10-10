@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>Householder 变换 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Householder 变换" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/Householder-%E5%8F%98%E6%8D%A2.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/Householder-%E5%8F%98%E6%8D%A2.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-08T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="Householder 变换" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-08T00:00:00+00:00","datePublished":"2026-10-08T00:00:00+00:00","description":"xxxxxx","headline":"Householder 变换","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/Householder-%E5%8F%98%E6%8D%A2.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/Householder-%E5%8F%98%E6%8D%A2.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> Householder 变换 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="动机与基本思想">动机与基本思想</h1>
+
+<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。<strong>Householder 变换</strong>提供了另一种方法：通过<strong>镜面反射</strong>将向量映射到坐标轴方向，从而一次性消去多个元素。</p>
+
+<p>Householder 变换是 QR 分解、特征值计算、最小二乘问题等的核心工具，具有<strong>数值稳定</strong>、<strong>计算高效</strong>的优点。</p>
+
+<h1 id="定义">定义</h1>
+
+<p><strong>定义 2.1（Householder 变换）</strong><br />
+设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），$v\in\mathbb F^n$ 为非零向量。定义矩阵
+\(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}\in M_n(\mathbb F),\)</p>
+
+<p>其中 $v^{\mathsf H}$ 为 $v$ 的共轭转置（实矩阵时为 $v^{\mathsf T}$）。称 $H$ 为<strong>Householder 变换矩阵</strong>，或称 <strong>Householder 反射矩阵</strong>，$v$ 称为 <strong>Householder 向量</strong>。</p>
+
+<p><strong>注</strong></p>
+<ul>
+  <li>
+    <p>当 $\mathbb F=\mathbb R$ 时，
+\(H=I-2\frac{vv^{\mathsf T}}{v^{\mathsf T}v}.\)</p>
+  </li>
+  <li>
+    <p>当 $\mathbb F=\mathbb C$ 时，
+\(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}.\)</p>
+  </li>
+</ul>
+
+<p><strong>规范化形式</strong><br />
+若令 $u=v/|v|_2$，则 $|u|_2=1$，且
+\(H=I-2uu^{\mathsf H}.\)</p>
+
+<p>这种形式更简洁，便于理论分析。</p>
+
+<h1 id="几何意义">几何意义</h1>
+
+<p>Householder 变换是<strong>关于超平面的镜面反射</strong>。</p>
+
+<p>设 $u\in\mathbb F^n$ 为单位向量，超平面
+\(\mathcal P=\{x\in\mathbb F^n:\langle x,u\rangle=0\}=u^\perp.\)</p>
+
+<p>则对任意 $x\in\mathbb F^n$，可分解为
+\(x=x_{\parallel}+x_{\perp},\)</p>
+
+<p>其中
+\(x_{\parallel}=\langle x,u\rangle u\in\operatorname{span}(u),\qquad
+x_{\perp}=x-\langle x,u\rangle u\in u^\perp.\)</p>
+
+<p>Householder 变换
+\(Hx=x-2\langle x,u\rangle u=x_{\parallel}-x_{\perp}\)</p>
+
+<p>将 $x$ 的平行分量反向，垂直分量保持不变。因此 $H$ 是关于超平面 $u^\perp$ 的<strong>镜面反射</strong>。</p>
+
+<p><strong>几何性质</strong>：</p>
+<ul>
+  <li>$H$ 保持向量长度：$|Hx|_2=|x|_2$；</li>
+  <li>$H$ 保持内积：$\langle Hx,Hy\rangle=\langle x,y\rangle$；</li>
+  <li>$H$ 是对合变换：$H^2=I$；</li>
+  <li>$H$ 将 $u$ 映为 $-u$，将 $u^\perp$ 中向量映为自身。</li>
+</ul>
+
+<h1 id="基本性质">基本性质</h1>
+
+<p><strong>定理 4.1（Householder 矩阵的性质）</strong><br />
+设 $H=I-2uu^{\mathsf H}$，其中 $|u|_2=1$。则：</p>
+
+<ol>
+  <li>
+    <p><strong>Hermite 性</strong>：
+\(H^{\mathsf H}=H.\)</p>
+  </li>
+  <li>
+    <p><strong>酉性</strong>（正交性）：
+\(H^{\mathsf H}H=HH^{\mathsf H}=I.\)</p>
+  </li>
+  <li>
+    <p><strong>对合性</strong>：
+\(H^2=I.\)</p>
+  </li>
+  <li>
+    <p><strong>行列式</strong>：
+\(\det H=-1.\)</p>
+  </li>
+  <li>
+    <p><strong>特征值</strong>：$H$ 的特征值为 $-1$（重数 $1$，对应特征向量 $u$）和 $1$（重数 $n-1$，对应 $u^\perp$）。</p>
+  </li>
+</ol>
+
+<p><strong>证明</strong></p>
+
+<p>(1)
+\(H^{\mathsf H}=(I-2uu^{\mathsf H})^{\mathsf H}=I-2uu^{\mathsf H}=H.\)</p>
+
+<p>(2) 由 $u^{\mathsf H}u=1$，
+\(H^{\mathsf H}H=H^2=(I-2uu^{\mathsf H})^2=I-4uu^{\mathsf H}+4uu^{\mathsf H}uu^{\mathsf H}=I-4uu^{\mathsf H}+4uu^{\mathsf H}=I.\)</p>
+
+<p>又 $H^{\mathsf H}=H$，故 $HH^{\mathsf H}=I$。</p>
+
+<p>(3) 由 (2) 直接得 $H^2=I$。</p>
+
+<p>(4) 设 $u^\perp$ 的一组标准正交基为 $u_2,\dots,u_n$，则 ${u,u_2,\dots,u_n}$ 构成 $\mathbb F^n$ 的标准正交基。在此基下，$H$ 的矩阵表示为
+\(\operatorname{diag}(-1,1,\dots,1).\)</p>
+
+<p>故 $\det H=(-1)\cdot 1^{n-1}=-1$。</p>
+
+<p>(5) 由上述对角表示直接得到。$\square$</p>
+
+<p><strong>推论 4.2</strong><br />
+Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</strong>的。因此 $H$ 可对角化，特征值为 $\pm 1$。</p>
+
+<h1 id="householder-变换的构造">Householder 变换的构造</h1>
+
+<h2 id="问题">问题</h2>
+
+<p>给定非零向量 $x\in\mathbb F^n$，求 Householder 向量 $v$（或单位向量 $u$），使得
+\(Hx=\alpha e_1,\)</p>
+
+<p>其中 $\alpha\in\mathbb F$，$e_1=(1,0,\dots,0)^{\mathsf T}$。即用镜面反射将 $x$ 映到第一个坐标轴方向。</p>
+
+<h2 id="构造方法">构造方法</h2>
+
+<p><strong>定理 5.2.1</strong><br />
+设 $x\in\mathbb F^n$ 非零。令
+\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+
+<p>其中
+\(\operatorname{sgn}(x_1)=
+\begin{cases}
+\dfrac{x_1}{|x_1|},&amp; x_1\ne 0,\\
+1,&amp; x_1=0.
+\end{cases}\)</p>
+
+<p>定义
+\(v=x-\alpha e_1.\)</p>
+
+<p>则 $v\ne 0$，且
+\(Hx=\alpha e_1,\)</p>
+
+<p>其中
+\(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}.\)</p>
+
+<p><strong>证明</strong><br />
+首先计算 $v^{\mathsf H}v$：
+\(v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
+=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\)</p>
+
+<p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有
+\(|\alpha|^2=\|x\|_2^2,\qquad
+\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\)</p>
+
+\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2|x_1|.\]
+
+<p>故
+\(v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
+=2\|x\|_2(\|x\|_2-|x_1|).\)</p>
+
+<p>又
+\(v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
+=\|x\|_2^2-\|x\|_2|x_1|
+=\|x\|_2(\|x\|_2-|x_1|).\)</p>
+
+<p>因此
+\(\frac{2v^{\mathsf H}x}{v^{\mathsf H}v}=1.\)</p>
+
+<p>于是
+\(Hx=x-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}x
+=x-2\frac{v^{\mathsf H}x}{v^{\mathsf H}v}v
+=x-v.\)</p>
+
+<p>而
+\(x-v=x-(x-\alpha e_1)=\alpha e_1.\)</p>
+
+<p>故 $Hx=\alpha e_1$。$\square$</p>
+
+<h2 id="避免相消的选取">避免相消的选取</h2>
+
+<p>若直接取 $v=x-|x|_2e_1$，当 $x_1&gt;0$ 时，$v_1=x_1-|x|_2$ 可能发生<strong>相消</strong>（两个接近的数相减），导致精度损失。故取
+\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+
+<p>使得 $v_1=x_1+\operatorname{sgn}(x_1)|x|_2$ 为同号相加，避免相消。这是 Householder 变换数值稳定的关键。</p>
+
+<h2 id="符号约定">符号约定</h2>
+
+<p>在实数情形下，常取
+\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+
+<p>则
+\(v=x+\operatorname{sgn}(x_1)\|x\|_2 e_1.\)</p>
+
+<p>若 $x_1=0$，取 $\alpha=-|x|_2$，$v=x+|x|_2e_1$。</p>
+
+<hr />
+
+<h1 id="qr-分解">QR 分解</h1>
+
+<h2 id="算法">算法</h2>
+
+<p>设 $A\in M_{m\times n}(\mathbb F)$，$m\ge n$。</p>
+
+<p><strong>第 1 步</strong><br />
+取 $A$ 的第一列 $x=A_{:,1}\in\mathbb F^m$，构造 Householder 矩阵 $H_1\in M_m(\mathbb F)$，使得
+\(H_1x=\alpha_1 e_1.\)</p>
+
+<p>令
+\(A^{(1)}=H_1A.\)</p>
+
+<p>则 $A^{(1)}$ 的第一列除第一个元素外全为零：
+\(A^{(1)}=\begin{pmatrix}
+\times&amp;\times&amp;\cdots&amp;\times\\
+0&amp;\times&amp;\cdots&amp;\times\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;\times&amp;\cdots&amp;\times
+\end{pmatrix}.\)</p>
+
+<p><strong>第 $k$ 步</strong><br />
+设 $A^{(k-1)}$ 的前 $k-1$ 列已化为上三角形式。取 $A^{(k-1)}$ 第 $k$ 列中从第 $k$ 行到第 $m$ 行的子向量
+\(x=\begin{pmatrix}a_{k,k}^{(k-1)}\\a_{k+1,k}^{(k-1)}\\\vdots\\a_{m,k}^{(k-1)}\end{pmatrix}\in\mathbb F^{m-k+1}.\)</p>
+
+<p>构造 $(m-k+1)\times(m-k+1)$ 的 Householder 矩阵 $\tilde H_k$，使得
+\(\tilde H_kx=\alpha_k e_1.\)</p>
+
+<p>令
+\(H_k=\begin{pmatrix}I_{k-1}&amp;0\\0&amp;\tilde H_k\end{pmatrix}\in M_m(\mathbb F).\)</p>
+
+<p>更新
+\(A^{(k)}=H_kA^{(k-1)}.\)</p>
+
+<p><strong>最终</strong><br />
+经过 $n$ 步（或直到 $k=\min(m,n)$），得到
+\(R=H_n\cdots H_1A,\)</p>
+
+<p>其中 $R$ 为上三角矩阵。令
+\(Q=H_1H_2\cdots H_n,\)</p>
+
+<p>则 $Q$ 为酉矩阵（正交矩阵），且
+\(A=QR.\)</p>
+
+<h2 id="计算量">计算量</h2>
+
+<ul>
+  <li>每次 Householder 变换作用于 $m\times n$ 矩阵，计算量约为 $4mn$ 次浮点运算；</li>
+  <li>总计算量约为
+\(2mn^2-\frac{2}{3}n^3+O(mn).\)</li>
+</ul>
+
+<h2 id="存储">存储</h2>
+
+<p>Householder 向量 $v_k$ 可以存储在 $A$ 被消零的位置，节省存储空间。</p>
+
+<h2 id="数值稳定性">数值稳定性</h2>
+
+<p>Householder QR 分解是<strong>后向稳定</strong>的。存在 $\delta A$ 使得
+\(\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F,\)</p>
+
+<p>且
+\(A+\delta A=QR,\)</p>
+
+<p>其中 $Q$ 精确正交，$R$ 精确上三角。常数 $c$ 较小，与矩阵维数多项式相关。</p>
+
+<h1 id="解线性方程组与最小二乘">解线性方程组与最小二乘</h1>
+
+<h2 id="解-axb">解 $Ax=b$</h2>
+
+<p>设 $A\in M_n(\mathbb F)$ 非奇异，$A=QR$。则
+\(Ax=b\iff QRx=b\iff Rx=Q^{\mathsf H}b.\)</p>
+
+<p>回代求解上三角方程组即可。</p>
+
+<h2 id="最小二乘问题">最小二乘问题</h2>
+
+<p>设 $A\in M_{m\times n}(\mathbb F)$ 列满秩，$m\ge n$。最小二乘问题
+\(\min_{x\in\mathbb F^n}\|Ax-b\|_2\)</p>
+
+<p>的解为
+\(x=R^{-1}Q^{\mathsf H}b,\)</p>
+
+<p>其中 $A=QR$，$R$ 为上三角矩阵。因 $|Ax-b|_2=|QRx-b|_2=|Rx-Q^{\mathsf H}b|_2$（$Q$ 保范数），最小化等价于解 $Rx=Q^{\mathsf H}b$。</p>
+
+<h1 id="与其他变换的比较">与其他变换的比较</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>计算量</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>经典 Gram–Schmidt</td>
+      <td>差</td>
+      <td>$2mn^2$</td>
+      <td>教学、小规模</td>
+    </tr>
+    <tr>
+      <td>修正 Gram–Schmidt</td>
+      <td>较好</td>
+      <td>$2mn^2$</td>
+      <td>中等规模、并行</td>
+    </tr>
+    <tr>
+      <td>Householder 变换</td>
+      <td>极好</td>
+      <td>$2mn^2-\frac23n^3$</td>
+      <td>通用、QR 分解标准</td>
+    </tr>
+    <tr>
+      <td>Givens 旋转</td>
+      <td>好</td>
+      <td>约 $3mn^2$</td>
+      <td>稀疏矩阵、并行</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>特点对比</strong>：</p>
+
+<ul>
+  <li><strong>Householder</strong>：每次消去一整列的下方元素，适合稠密矩阵；</li>
+  <li><strong>Givens</strong>：每次消去一个元素，适合稀疏矩阵和并行计算；</li>
+  <li><strong>Gram–Schmidt</strong>：构造正交基，但数值稳定性较差。</li>
+</ul>
+
+<h1 id="例题">例题</h1>
+
+<h2 id="构造-householder-变换">构造 Householder 变换</h2>
+
+<p>设
+\(x=\begin{pmatrix}3\\4\end{pmatrix}\in\mathbb R^2.\)</p>
+
+<p>求 Householder 矩阵 $H$ 使得 $Hx=\alpha e_1$。</p>
+
+<p><strong>解</strong>：
+\(\|x\|_2=5,\qquad x_1=3&gt;0,\qquad \alpha=-\|x\|_2=-5.\)</p>
+
+\[v=x-\alpha e_1=\begin{pmatrix}3\\4\end{pmatrix}-\begin{pmatrix}-5\\0\end{pmatrix}=\begin{pmatrix}8\\4\end{pmatrix}.\]
+
+\[v^{\mathsf T}v=64+16=80.\]
+
+\[H=I-2\frac{vv^{\mathsf T}}{v^{\mathsf T}v}
+=I-\frac{1}{40}\begin{pmatrix}8\\4\end{pmatrix}\begin{pmatrix}8&amp;4\end{pmatrix}
+=I-\frac{1}{40}\begin{pmatrix}64&amp;32\\32&amp;16\end{pmatrix}
+=\begin{pmatrix}1-\frac{64}{40}&amp;-\frac{32}{40}\\-\frac{32}{40}&amp;1-\frac{16}{40}\end{pmatrix}
+=\begin{pmatrix}-\frac{3}{5}&amp;-\frac{4}{5}\\-\frac{4}{5}&amp;\frac{3}{5}\end{pmatrix}.\]
+
+<p>验证：
+\(Hx=\begin{pmatrix}-\frac{3}{5}&amp;-\frac{4}{5}\\-\frac{4}{5}&amp;\frac{3}{5}\end{pmatrix}\begin{pmatrix}3\\4\end{pmatrix}
+=\begin{pmatrix}-\frac{9}{5}-\frac{16}{5}\\-\frac{12}{5}+\frac{12}{5}\end{pmatrix}
+=\begin{pmatrix}-5\\0\end{pmatrix}=-5e_1.\)</p>
+
+<p>正确。</p>
+
+<h2 id="qr-分解-1">QR 分解</h2>
+
+<p>设
+\(A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}.\)</p>
+
+<p>用 Householder 变换求 QR 分解。</p>
+
+<p><strong>第 1 步</strong>：取第一列 $x=(1,1,0)^{\mathsf T}$。
+\(\|x\|_2=\sqrt2,\qquad x_1=1&gt;0,\qquad \alpha=-\sqrt2.\)</p>
+
+\[v_1=x-\alpha e_1=(1+\sqrt2,\,1,\,0)^{\mathsf T}.\]
+
+\[H_1=I-2\frac{v_1v_1^{\mathsf T}}{v_1^{\mathsf T}v_1}.\]
+
+<p>计算得
+\(H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;\frac{1}{\sqrt2}\\0&amp;1\end{pmatrix}.\)</p>
+
+<p><strong>第 2 步</strong>：取第二列从第 2 行起的子向量 $x_2=(\frac{1}{\sqrt2},1)^{\mathsf T}$。
+\(\|x_2\|_2=\sqrt{\frac12+1}=\sqrt{\frac32},\qquad x_{2,1}=\frac{1}{\sqrt2}&gt;0,\qquad \alpha_2=-\sqrt{\frac32}.\)</p>
+
+<p>构造 $\tilde H_2\in M_2(\mathbb R)$，令
+\(H_2=\begin{pmatrix}1&amp;0&amp;0\\0&amp;\tilde H_2\end{pmatrix}.\)</p>
+
+<p>计算得
+\(R=H_2H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;-\sqrt{\frac32}\\0&amp;0\end{pmatrix}.\)</p>
+
+<p>最终
+\(Q=H_1H_2,\qquad A=QR.\)</p>
+
+<h1 id="应用">应用</h1>
+
+<ol>
+  <li><strong>QR 分解</strong>：Householder 变换是数值 QR 分解的标准方法。</li>
+  <li><strong>最小二乘问题</strong>：通过 QR 分解求解。</li>
+  <li><strong>特征值计算</strong>：QR 算法中反复使用 Householder 变换将矩阵化为上 Hessenberg 形式。</li>
+  <li><strong>奇异值分解</strong>：SVD 计算中先用 Householder 变换将矩阵化为双对角形式。</li>
+  <li><strong>线性方程组</strong>：直接求解或作为预处理。</li>
+  <li><strong>数值优化</strong>：构造正交基、求解约束问题。</li>
+</ol>
+
+<h1 id="总结">总结</h1>
+
+\[\text{Householder 变换 }H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}\text{ 是关于超平面的镜面反射。}\]
+
+<p><strong>核心性质</strong>：</p>
+<ul>
+  <li>Hermite：$H^{\mathsf H}=H$；</li>
+  <li>酉性：$H^{\mathsf H}H=I$；</li>
+  <li>对合：$H^2=I$；</li>
+  <li>行列式：$\det H=-1$；</li>
+  <li>特征值：$-1$（一重），$1$（$n-1$ 重）。</li>
+</ul>
+
+<p><strong>构造方法</strong>：给定 $x\ne 0$，取
+\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\qquad v=x-\alpha e_1,\)</p>
+
+<p>则
+\(Hx=\alpha e_1.\)</p>
+
+<p><strong>QR 分解</strong>：通过 $n$ 次 Householder 变换，将 $A$ 化为上三角矩阵 $R$：
+\(R=H_n\cdots H_1A,\qquad Q=H_1\cdots H_n,\qquad A=QR.\)</p>
+
+<p><strong>优点</strong>：</p>
+<ol>
+  <li>数值稳定（后向稳定）；</li>
+  <li>计算量适中；</li>
+  <li>可原地存储；</li>
+  <li>适用于稠密矩阵。</li>
+</ol>
+
+<p>Householder 变换是数值线性代数中最基本、最重要的工具之一，其镜面反射的几何直观与代数简洁性使其成为 QR 分解、特征值计算和最小二乘问题的首选方法。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
