@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>施密特正交化 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="施密特正交化" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-08T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="施密特正交化" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-08T00:00:00+00:00","datePublished":"2026-10-08T00:00:00+00:00","description":"xxxxxx","headline":"施密特正交化","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 施密特正交化 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="动机与基本问题">动机与基本问题</h1>
+
+<p>在线性代数中，经常需要将一组线性无关的向量转化为一组<strong>标准正交向量</strong>，即两两正交且每个向量长度为 $1$ 的向量组。标准正交基具有许多优良性质，例如计算投影、求解最小二乘问题、构造 QR 分解等。</p>
+
+<p><strong>问题陈述</strong><br />
+设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），$V$ 为 $\mathbb F$ 上的内积空间，内积记为 $\langle \cdot,\cdot\rangle$，诱导范数为 $|x|=\sqrt{\langle x,x\rangle}$。给定 $n$ 个线性无关的向量
+\(v_1,v_2,\dots,v_n\in V,\)</p>
+
+<p>求一组标准正交向量
+\(q_1,q_2,\dots,q_n\in V,\)</p>
+
+<p>使得对每个 $k=1,\dots,n$，
+\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
+
+<p>即 $q_1,\dots,q_k$ 张成与原向量组前 $k$ 个向量相同的子空间。</p>
+
+<h1 id="内积空间中的基本概念">内积空间中的基本概念</h1>
+
+<p><strong>定义 2.1（正交与标准正交）</strong></p>
+<ul>
+  <li>若 $\langle x,y\rangle=0$，则称 $x$ 与 $y$ <strong>正交</strong>，记作 $x\perp y$。</li>
+  <li>
+    <p>若向量组 $q_1,\dots,q_n$ 满足
+\(\langle q_i,q_j\rangle=\delta_{ij}=
+\begin{cases}
+1,&amp; i=j,\\
+0,&amp; i\ne j,
+\end{cases}\)</p>
+
+    <p>则称其为<strong>标准正交向量组</strong>。</p>
+  </li>
+</ul>
+
+<p><strong>定义 2.2（投影）</strong><br />
+设 $q$ 为单位向量（$|q|=1$），则向量 $v$ 在 $q$ 方向上的投影为
+\(\operatorname{proj}_q(v)=\langle v,q\rangle q.\)</p>
+
+<p>若 $q_1,\dots,q_k$ 为标准正交向量组，则 $v$ 在子空间 $\operatorname{span}(q_1,\dots,q_k)$ 上的正交投影为
+\(\operatorname{proj}(v)=\sum_{i=1}^k \langle v,q_i\rangle q_i.\)</p>
+
+<p>残差 $v-\operatorname{proj}(v)$ 与每个 $q_i$ 正交。</p>
+
+<h1 id="经典-gramschmidt-过程">经典 Gram–Schmidt 过程</h1>
+
+<h2 id="算法描述">算法描述</h2>
+
+<p><strong>经典 Gram–Schmidt 过程（CGS）</strong> 逐步构造标准正交向量组 $q_1,\dots,q_n$。</p>
+
+<p><strong>第 1 步</strong><br />
+令
+\(q_1=\frac{v_1}{\|v_1\|}.\)</p>
+
+<p>显然 $|q_1|=1$，且 $\operatorname{span}(q_1)=\operatorname{span}(v_1)$。</p>
+
+<p><strong>第 $k$ 步（$k=2,\dots,n$）</strong><br />
+假设已构造出标准正交向量 $q_1,\dots,q_{k-1}$，且
+\(\operatorname{span}(q_1,\dots,q_{k-1})=\operatorname{span}(v_1,\dots,v_{k-1}).\)</p>
+
+<p>令
+\(\tilde q_k = v_k - \sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i.\)</p>
+
+<p>由于 $v_k$ 与 $v_1,\dots,v_{k-1}$ 线性无关，$\tilde q_k\ne 0$。令
+\(q_k=\frac{\tilde q_k}{\|\tilde q_k\|}.\)</p>
+
+<p>则 $q_k$ 与 $q_1,\dots,q_{k-1}$ 正交，且 $|q_k|=1$。同时
+\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
+
+<h2 id="正确性证明">正确性证明</h2>
+
+<p><strong>命题 3.2.1</strong><br />
+经典 Gram–Schmidt 过程产生的向量组 $q_1,\dots,q_n$ 是标准正交的，且对每个 $k$，
+\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
+
+<p><strong>证明</strong><br />
+对 $k$ 归纳。$k=1$ 显然。</p>
+
+<p>假设对 $k-1$ 成立。对任意 $i&lt;k$，
+\(\langle \tilde q_k,q_i\rangle
+=\langle v_k,q_i\rangle-\sum_{j=1}^{k-1}\langle v_k,q_j\rangle\langle q_j,q_i\rangle.\)</p>
+
+<p>由归纳假设 $\langle q_j,q_i\rangle=\delta_{ij}$，故
+\(\langle \tilde q_k,q_i\rangle
+=\langle v_k,q_i\rangle-\langle v_k,q_i\rangle=0.\)</p>
+
+<p>因此 $\tilde q_k\perp q_i$（$i&lt;k$）。于是 $q_k=\tilde q_k/|\tilde q_k|$ 与所有 $q_i$ 正交且范数为 $1$。</p>
+
+<p>关于张成空间：由构造，
+\(v_k=\tilde q_k+\sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i,\)</p>
+
+<p>且 $\tilde q_k$ 是 $q_k$ 的倍数。因此 $v_k\in\operatorname{span}(q_1,\dots,q_k)$。反之，由 $\tilde q_k$ 的表达式，$q_k$ 是 $v_k$ 与 $q_1,\dots,q_{k-1}$ 的线性组合，而 $q_1,\dots,q_{k-1}$ 张成 $\operatorname{span}(v_1,\dots,v_{k-1})$，故 $q_k\in\operatorname{span}(v_1,\dots,v_k)$。因此两个子空间相等。$\square$</p>
+
+<h2 id="唯一性">唯一性</h2>
+
+<p>若要求每个 $q_k$ 与 $v_k$ 的内积为正（即 $\langle v_k,q_k\rangle&gt;0$），则标准正交基是唯一的。否则，每个 $q_k$ 可相差一个模为 $1$ 的标量因子。</p>
+
+<h1 id="与-qr-分解的关系">与 QR 分解的关系</h1>
+
+<p>设 $A=[v_1\ v_2\ \cdots\ v_n]\in M_{m\times n}(\mathbb F)$，其列向量线性无关。令
+\(Q=[q_1\ q_2\ \cdots\ q_n],\qquad
+R=\begin{pmatrix}
+r_{11}&amp;r_{12}&amp;\cdots&amp;r_{1n}\\
+0&amp;r_{22}&amp;\cdots&amp;r_{2n}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;\cdots&amp;r_{nn}
+\end{pmatrix},\)</p>
+
+<p>其中
+\(r_{ij}=\langle v_j,q_i\rangle\quad (i&lt;j),\qquad
+r_{jj}=\|\tilde q_j\|.\)</p>
+
+<p>则由 Gram–Schmidt 过程，
+\(v_j=\sum_{i=1}^{j-1}\langle v_j,q_i\rangle q_i + \tilde q_j
+=\sum_{i=1}^{j-1}r_{ij}q_i + r_{jj}q_j
+=\sum_{i=1}^{j}r_{ij}q_i.\)</p>
+
+<p>因此
+\(A=QR,\)</p>
+
+<p>其中 $Q$ 的列向量标准正交（$Q^{\mathsf H}Q=I$），$R$ 为上三角矩阵，且 $r_{jj}&gt;0$。</p>
+
+<p>这就给出了 <strong>QR 分解</strong> 的一种构造方法。然而，经典 Gram–Schmidt 在数值上不稳定，实际计算中常采用修正 Gram–Schmidt 或 Householder 变换。</p>
+
+<h1 id="修正-gramschmidt-过程">修正 Gram–Schmidt 过程</h1>
+
+<h2 id="数值问题">数值问题</h2>
+
+<p>经典 Gram–Schmidt 在浮点运算中，当向量接近线性相关时，由于舍入误差，计算出的 $q_k$ 可能不再与之前的 $q_i$ 精确正交，正交性损失严重。</p>
+
+<p><strong>修正 Gram–Schmidt（MGS）</strong> 通过改变计算顺序来改善正交性。</p>
+
+<h2 id="算法">算法</h2>
+
+<p>设 $v_1,\dots,v_n$ 线性无关。令 $a_i=v_i$ 作为工作向量。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for i = 1 to n:
+    r_{ii} = ||a_i||
+    q_i = a_i / r_{ii}
+    for j = i+1 to n:
+        r_{ij} = &lt;q_i, a_j&gt;
+        a_j = a_j - r_{ij} q_i
+</code></pre></div></div>
+
+<p>最终得到标准正交向量 $q_1,\dots,q_n$ 和上三角矩阵 $R=(r_{ij})$。</p>
+
+<p><strong>区别</strong>：经典 GS 是对每个 $v_k$ 一次性减去所有投影；MGS 是每计算出一个 $q_i$，立即从所有后续向量 $a_j$ 中减去其在 $q_i$ 上的分量。</p>
+
+<h2 id="数值稳定性">数值稳定性</h2>
+
+<ul>
+  <li><strong>经典 GS</strong>：正交性误差约为 $\kappa(A)\epsilon$，其中 $\kappa(A)$ 是条件数，$\epsilon$ 是机器精度。</li>
+  <li><strong>修正 GS</strong>：正交性误差约为 $\kappa(A)\epsilon$，但常数更小，且在某些情况下显著优于 CGS。</li>
+  <li><strong>Householder 变换</strong>：正交性误差约为 $\epsilon$，数值最稳定，但计算量略大。</li>
+</ul>
+
+<p>因此，在高精度要求下，QR 分解通常采用 Householder 变换或 Givens 旋转，而非 Gram–Schmidt。</p>
+
+<h1 id="例题">例题</h1>
+
+<p>设
+\(v_1=\begin{pmatrix}1\\1\\0\end{pmatrix},\quad
+v_2=\begin{pmatrix}1\\0\\1\end{pmatrix},\quad
+v_3=\begin{pmatrix}0\\1\\1\end{pmatrix}.\)</p>
+
+<p>使用经典 Gram–Schmidt 正交化。</p>
+
+<p><strong>第 1 步</strong>：
+\(\|v_1\|=\sqrt{2},\qquad
+q_1=\frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\\0\end{pmatrix}.\)</p>
+
+<p><strong>第 2 步</strong>：
+\(\langle v_2,q_1\rangle
+=\frac{1}{\sqrt{2}}(1\cdot1+0\cdot1+1\cdot0)=\frac{1}{\sqrt{2}}.\)</p>
+
+\[\tilde q_2=v_2-\frac{1}{\sqrt{2}}q_1
+=\begin{pmatrix}1\\0\\1\end{pmatrix}
+-\frac{1}{\sqrt{2}}\cdot\frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\\0\end{pmatrix}
+=\begin{pmatrix}1\\0\\1\end{pmatrix}
+-\begin{pmatrix}\frac12\\\frac12\\0\end{pmatrix}
+=\begin{pmatrix}\frac12\\-\frac12\\1\end{pmatrix}.\]
+
+\[\|\tilde q_2\|=\sqrt{\frac14+\frac14+1}=\sqrt{\frac32}=\frac{\sqrt6}{2}.\]
+
+\[q_2=\frac{1}{\sqrt{6}/2}\begin{pmatrix}\frac12\\-\frac12\\1\end{pmatrix}
+=\frac{1}{\sqrt6}\begin{pmatrix}1\\-1\\2\end{pmatrix}.\]
+
+<p><strong>第 3 步</strong>：
+\(\langle v_3,q_1\rangle
+=\frac{1}{\sqrt{2}}(0\cdot1+1\cdot1+1\cdot0)=\frac{1}{\sqrt{2}},\)</p>
+
+\[\langle v_3,q_2\rangle
+=\frac{1}{\sqrt6}(0\cdot1+1\cdot(-1)+1\cdot2)=\frac{1}{\sqrt6}.\]
+
+\[\tilde q_3=v_3-\frac{1}{\sqrt{2}}q_1-\frac{1}{\sqrt6}q_2
+=\begin{pmatrix}0\\1\\1\end{pmatrix}
+-\frac{1}{2}\begin{pmatrix}1\\1\\0\end{pmatrix}
+-\frac{1}{6}\begin{pmatrix}1\\-1\\2\end{pmatrix}
+=\begin{pmatrix}0\\1\\1\end{pmatrix}
+-\begin{pmatrix}\frac12\\\frac12\\0\end{pmatrix}
+-\begin{pmatrix}\frac16\\-\frac16\\\frac13\end{pmatrix}
+=\begin{pmatrix}-\frac23\\\frac23\\\frac23\end{pmatrix}.\]
+
+\[\|\tilde q_3\|=\sqrt{\frac49+\frac49+\frac49}=\sqrt{\frac43}=\frac{2}{\sqrt3}.\]
+
+\[q_3=\frac{\sqrt3}{2}\begin{pmatrix}-\frac23\\\frac23\\\frac23\end{pmatrix}
+=\frac{1}{\sqrt3}\begin{pmatrix}-1\\1\\1\end{pmatrix}.\]
+
+<p>最终标准正交向量组为
+\(q_1=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\\0\end{pmatrix},\quad
+q_2=\frac{1}{\sqrt6}\begin{pmatrix}1\\-1\\2\end{pmatrix},\quad
+q_3=\frac{1}{\sqrt3}\begin{pmatrix}-1\\1\\1\end{pmatrix}.\)</p>
+
+<h1 id="应用">应用</h1>
+
+<ol>
+  <li><strong>QR 分解</strong>：Gram–Schmidt 是构造 QR 分解的直接方法之一。</li>
+  <li><strong>最小二乘问题</strong>：求解 $\min|Ax-b|_2$ 时，若 $A=QR$，则解为 $Rx=Q^{\mathsf H}b$。</li>
+  <li><strong>特征值计算</strong>：QR 算法通过反复 QR 分解迭代求特征值。</li>
+  <li><strong>信号处理</strong>：正交化用于自适应滤波、波束形成等。</li>
+  <li><strong>数值线性代数</strong>：构造标准正交基，用于子空间迭代、Krylov 方法等。</li>
+</ol>
+
+<h1 id="与-householder-变换givens-旋转的比较">与 Householder 变换、Givens 旋转的比较</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>计算量</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>经典 Gram–Schmidt</td>
+      <td>差</td>
+      <td>$2mn^2$</td>
+      <td>教学、小规模</td>
+    </tr>
+    <tr>
+      <td>修正 Gram–Schmidt</td>
+      <td>较好</td>
+      <td>$2mn^2$</td>
+      <td>中等规模、并行</td>
+    </tr>
+    <tr>
+      <td>Householder 变换</td>
+      <td>极好</td>
+      <td>$2mn^2-\frac23n^3$</td>
+      <td>通用、QR 分解标准</td>
+    </tr>
+    <tr>
+      <td>Givens 旋转</td>
+      <td>好</td>
+      <td>约 $3mn^2$</td>
+      <td>稀疏矩阵、并行</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>在数值计算库（LAPACK、MATLAB、NumPy）中，QR 分解通常采用 Householder 变换，因其稳定且高效。</p>
+
+<h1 id="总结">总结</h1>
+
+\[\text{Gram–Schmidt 正交化：将线性无关向量组转化为标准正交向量组。}\]
+
+<p><strong>核心公式</strong>：
+\(\tilde q_k = v_k - \sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i,\qquad
+q_k = \frac{\tilde q_k}{\|\tilde q_k\|}.\)</p>
+
+<p><strong>与 QR 分解的关系</strong>：
+\(A=QR,\quad Q\text{ 列标准正交},\quad R\text{ 上三角}.\)</p>
+
+<p><strong>数值实现</strong>：经典 Gram–Schmidt 不稳定，修正 Gram–Schmidt 较好，Householder 变换最稳定。</p>
+
+<p>Gram–Schmidt 正交化是线性代数中构造标准正交基的基本工具，也是理解 QR 分解、最小二乘法和许多数值算法的基石。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
