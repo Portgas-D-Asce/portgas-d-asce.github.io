@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-15T17:10:52+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">HouseHolder 变换</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html" rel="alternate" type="text/html" title="HouseHolder 变换" /><published>2026-10-09T00:00:00+00:00</published><updated>2026-10-09T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder%20%E5%8F%98%E6%8D%A2</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html"><![CDATA[<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-16T02:01:33+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">HouseHolder 变换</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html" rel="alternate" type="text/html" title="HouseHolder 变换" /><published>2026-10-09T00:00:00+00:00</published><updated>2026-10-09T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder%20%E5%8F%98%E6%8D%A2</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html"><![CDATA[<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。</p>
 
 <p><strong>Householder 变换</strong>提供了另一种方法：通过<strong>镜面反射</strong>将向量映射到坐标轴方向，从而一次性消去多个元素。</p>
 
@@ -7,8 +7,9 @@
 <h1 id="定义">定义</h1>
 
 <p><strong>定义 2.1（Householder 变换）</strong><br />
-设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），$v\in\mathbb F^n$ 为非零向量。定义矩阵
-\(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}\in M_n(\mathbb F),\)</p>
+设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），$v\in\mathbb F^n$ 为非零向量。定义矩阵</p>
+
+\[H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}\in M_n(\mathbb F),\]
 
 <p>其中 $v^{\mathsf H}$ 为 $v$ 的共轭转置（实矩阵时为 $v^{\mathsf T}$）。称 $H$ 为<strong>Householder 变换矩阵</strong>，或称 <strong>Householder 反射矩阵</strong>，$v$ 称为 <strong>Householder 向量</strong>。</p>
 
@@ -16,31 +17,36 @@
 <ul>
   <li>当 $\mathbb F=\mathbb R$ 时，
 \(H=I-2\frac{vv^{\mathsf T}}{v^{\mathsf T}v}.\)</li>
+  <li></li>
   <li>当 $\mathbb F=\mathbb C$ 时，
 \(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}.\)</li>
 </ul>
 
-<p><strong>规范化形式</strong><br />
-若令 $u=v/|v|_2$，则 $|u|_2=1$，且
-\(H=I-2uu^{\mathsf H}.\)
-这种形式更简洁，便于理论分析。</p>
+<p><strong>规范化形式</strong>  这种形式更简洁，便于理论分析。
+若令 $u=v/|v|_2$，则 $|u|_2=1$</p>
+
+\[H=I-2uu^{\mathsf H}.\]
 
 <h1 id="几何意义">几何意义</h1>
 
 <p>Householder 变换是<strong>关于超平面的镜面反射</strong>。</p>
 
-<p>设 $u\in\mathbb F^n$ 为单位向量，超平面
-\(\mathcal P=\{x\in\mathbb F^n:\langle x,u\rangle=0\}=u^\perp.\)</p>
+<p>设 $u\in\mathbb F^n$ 为单位向量，超平面</p>
 
-<p>则对任意 $x\in\mathbb F^n$，可分解为
-\(x=x_{\parallel}+x_{\perp},\)</p>
+\[\mathcal P=\{x\in\mathbb F^n:\langle x,u\rangle=0\}=u^\perp.\]
 
-<p>其中
-\(x_{\parallel}=\langle x,u\rangle u\in\operatorname{span}(u),\qquad
-x_{\perp}=x-\langle x,u\rangle u\in u^\perp.\)</p>
+<p>则对任意 $x\in\mathbb F^n$，可分解为</p>
 
-<p>Householder 变换
-\(Hx=x-2\langle x,u\rangle u=x_{\perp}-x_{\parallel}\)</p>
+\[x=x_{\parallel}+x_{\perp},\]
+
+<p>其中</p>
+
+\[x_{\parallel}=\langle x,u\rangle u\in\operatorname{span}(u),\qquad
+x_{\perp}=x-\langle x,u\rangle u\in u^\perp.\]
+
+<p>Householder 变换</p>
+
+\[Hx=x-2\langle x,u\rangle u=x_{\perp}-x_{\parallel}\]
 
 <p>将 $x$ 的平行分量反向，垂直分量保持不变。因此 $H$ 是关于超平面 $u^\perp$ 的<strong>镜面反射</strong>。</p>
 
@@ -81,18 +87,21 @@ x_{\perp}=x-\langle x,u\rangle u\in u^\perp.\)</p>
 
 <p><strong>证明</strong></p>
 
-<p>(1)
-\(H^{\mathsf H}=(I-2uu^{\mathsf H})^{\mathsf H}=I-2uu^{\mathsf H}=H.\)</p>
+<p>(1)</p>
 
-<p>(2) 由 $u^{\mathsf H}u=1$，
-\(H^{\mathsf H}H=H^2=(I-2uu^{\mathsf H})^2=I-4uu^{\mathsf H}+4uu^{\mathsf H}uu^{\mathsf H}=I-4uu^{\mathsf H}+4uu^{\mathsf H}=I.\)</p>
+\[H^{\mathsf H}=(I-2uu^{\mathsf H})^{\mathsf H}=I-2uu^{\mathsf H}=H.\]
+
+<p>(2) 由 $u^{\mathsf H}u=1$，</p>
+
+\[H^{\mathsf H}H=H^2=(I-2uu^{\mathsf H})^2=I-4uu^{\mathsf H}+4uu^{\mathsf H}uu^{\mathsf H}=I-4uu^{\mathsf H}+4uu^{\mathsf H}=I.\]
 
 <p>又 $H^{\mathsf H}=H$，故 $HH^{\mathsf H}=I$。</p>
 
 <p>(3) 由 (2) 直接得 $H^2=I$。</p>
 
-<p>(4) 设 $u^\perp$ 的一组标准正交基为 $u_2,\dots,u_n$，则 ${u,u_2,\dots,u_n}$ 构成 $\mathbb F^n$ 的标准正交基。在此基下，$H$ 的矩阵表示为
-\(\operatorname{diag}(-1,1,\dots,1).\)
+<p>(4) 设 $u^\perp$ 的一组标准正交基为 $u_2,\dots,u_n$，则 ${u,u_2,\dots,u_n}$ 构成 $\mathbb F^n$ 的标准正交基。在此基下，$H$ 的矩阵表示为</p>
+
+<p>\(\operatorname{diag}(-1,1,\dots,1).\)
 故 $\det H=(-1)\cdot 1^{n-1}=-1$。</p>
 
 <p>(5) 由上述对角表示直接得到。</p>
@@ -113,72 +122,87 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 <h2 id="构造方法">构造方法</h2>
 
 <p><strong>定理 5.2.1</strong><br />
-设 $x\in\mathbb F^n$ 非零。令
-\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+设 $x\in\mathbb F^n$ 非零。令</p>
 
-<p>其中
-\(\operatorname{sgn}(x_1)=
+\[\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\]
+
+<p>其中</p>
+
+\[\operatorname{sgn}(x_1)=
 \begin{cases}
 \dfrac{x_1}{|x_1|},&amp; x_1\ne 0,\\
 1,&amp; x_1=0.
-\end{cases}\)</p>
+\end{cases}\]
 
-<p>定义
-\(v=x-\alpha e_1.\)</p>
+<p>定义</p>
 
-<p>则 $v\ne 0$，且
-\(Hx=\alpha e_1,\)</p>
+\[v=x-\alpha e_1.\]
 
-<p>其中
-\(H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}.\)</p>
+<p>则 $v\ne 0$，且</p>
+
+\[Hx=\alpha e_1,\]
+
+<p>其中</p>
+
+\[H=I-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}.\]
 
 <p><strong>证明</strong><br />
-首先计算 $v^{\mathsf H}v$：
-\(v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
-=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\)</p>
+首先计算 $v^{\mathsf H}v$：</p>
 
-<p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有
-\(|\alpha|^2=\|x\|_2^2,\qquad
-\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\)</p>
+\[v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
+=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\]
+
+<p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有</p>
+
+\[|\alpha|^2=\|x\|_2^2,\qquad
+\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\]
 
 \[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2|x_1|.\]
 
-<p>故
-\(v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
-=2\|x\|_2(\|x\|_2-|x_1|).\)</p>
+<p>故</p>
 
-<p>又
-\(v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
+\[v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
+=2\|x\|_2(\|x\|_2-|x_1|).\]
+
+<p>又</p>
+
+\[v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
 =\|x\|_2^2-\|x\|_2|x_1|
-=\|x\|_2(\|x\|_2-|x_1|).\)</p>
+=\|x\|_2(\|x\|_2-|x_1|).\]
 
-<p>因此
-\(\frac{2v^{\mathsf H}x}{v^{\mathsf H}v}=1.\)</p>
+<p>因此</p>
 
-<p>于是
-\(Hx=x-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}x
+\[\frac{2v^{\mathsf H}x}{v^{\mathsf H}v}=1.\]
+
+<p>于是</p>
+
+\[Hx=x-2\frac{vv^{\mathsf H}}{v^{\mathsf H}v}x
 =x-2\frac{v^{\mathsf H}x}{v^{\mathsf H}v}v
-=x-v.\)</p>
+=x-v.\]
 
-<p>而
-\(x-v=x-(x-\alpha e_1)=\alpha e_1.\)</p>
+<p>而</p>
+
+\[x-v=x-(x-\alpha e_1)=\alpha e_1.\]
 
 <p>故 $Hx=\alpha e_1$。</p>
 
 <h2 id="避免相消的选取">避免相消的选取</h2>
 
-<p>若直接取 $v=x-|x|_2e_1$，当 $x_1&gt;0$ 时，$v_1=x_1-|x|_2$ 可能发生<strong>相消</strong>（两个接近的数相减），导致精度损失。故取
-\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+<p>若直接取 $v=x-|x|_2e_1$，当 $x_1&gt;0$ 时，$v_1=x_1-|x|_2$ 可能发生<strong>相消</strong>（两个接近的数相减），导致精度损失。故取</p>
+
+\[\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\]
 
 <p>使得 $v_1=x_1+\operatorname{sgn}(x_1)|x|_2$ 为同号相加，避免相消。这是 Householder 变换数值稳定的关键。</p>
 
 <h2 id="符号约定">符号约定</h2>
 
-<p>在实数情形下，常取
-\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\)</p>
+<p>在实数情形下，常取</p>
 
-<p>则
-\(v=x+\operatorname{sgn}(x_1)\|x\|_2 e_1.\)</p>
+\[\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\]
+
+<p>则</p>
+
+\[v=x+\operatorname{sgn}(x_1)\|x\|_2 e_1.\]
 
 <p>若 $x_1=0$，取 $\alpha=-|x|_2$，$v=x+|x|_2e_1$。</p>
 
@@ -189,47 +213,58 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 <p>设 $A\in M_{m\times n}(\mathbb F)$，$m\ge n$。</p>
 
 <p><strong>第 1 步</strong><br />
-取 $A$ 的第一列 $x=A_{:,1}\in\mathbb F^m$，构造 Householder 矩阵 $H_1\in M_m(\mathbb F)$，使得
-\(H_1x=\alpha_1 e_1.\)</p>
+取 $A$ 的第一列 $x=A_{:,1}\in\mathbb F^m$，构造 Householder 矩阵 $H_1\in M_m(\mathbb F)$，使得</p>
 
-<p>令
-\(A^{(1)}=H_1A.\)</p>
+\[H_1x=\alpha_1 e_1.\]
 
-<p>则 $A^{(1)}$ 的第一列除第一个元素外全为零：
-\(A^{(1)}=\begin{pmatrix}
+<p>令</p>
+
+\[A^{(1)}=H_1A.\]
+
+<p>则 $A^{(1)}$ 的第一列除第一个元素外全为零：</p>
+
+\[A^{(1)}=\begin{pmatrix}
 \times&amp;\times&amp;\cdots&amp;\times\\
 0&amp;\times&amp;\cdots&amp;\times\\
 \vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
 0&amp;\times&amp;\cdots&amp;\times
-\end{pmatrix}.\)</p>
+\end{pmatrix}.\]
 
 <p><strong>第 $k$ 步</strong><br />
-设 $A^{(k-1)}$ 的前 $k-1$ 列已化为上三角形式。取 $A^{(k-1)}$ 第 $k$ 列中从第 $k$ 行到第 $m$ 行的子向量
-\(x=\begin{pmatrix}a_{k,k}^{(k-1)}\\a_{k+1,k}^{(k-1)}\\\vdots\\a_{m,k}^{(k-1)}\end{pmatrix}\in\mathbb F^{m-k+1}.\)</p>
+设 $A^{(k-1)}$ 的前 $k-1$ 列已化为上三角形式。取 $A^{(k-1)}$ 第 $k$ 列中从第 $k$ 行到第 $m$ 行的子向量</p>
 
-<p>构造 $(m-k+1)\times(m-k+1)$ 的 Householder 矩阵 $\tilde H_k$，使得
-\(\tilde H_kx=\alpha_k e_1.\)</p>
+\[x=\begin{pmatrix}a_{k,k}^{(k-1)}\\a_{k+1,k}^{(k-1)}\\\vdots\\a_{m,k}^{(k-1)}\end{pmatrix}\in\mathbb F^{m-k+1}.\]
 
-<p>令
-\(H_k=\begin{pmatrix}I_{k-1}&amp;0\\0&amp;\tilde H_k\end{pmatrix}\in M_m(\mathbb F).\)</p>
+<p>构造 $(m-k+1)\times(m-k+1)$ 的 Householder 矩阵 $\tilde H_k$，使得</p>
 
-<p>更新
-\(A^{(k)}=H_kA^{(k-1)}.\)</p>
+\[\tilde H_kx=\alpha_k e_1.\]
+
+<p>令</p>
+
+\[H_k=\begin{pmatrix}I_{k-1}&amp;0\\0&amp;\tilde H_k\end{pmatrix}\in M_m(\mathbb F).\]
+
+<p>更新</p>
+
+\[A^{(k)}=H_kA^{(k-1)}.\]
 
 <p><strong>最终</strong><br />
-经过 $n$ 步（或直到 $k=\min(m,n)$），得到
-\(R=H_n\cdots H_1A,\)</p>
+经过 $n$ 步（或直到 $k=\min(m,n)$），得到</p>
 
-<p>其中 $R$ 为上三角矩阵。令
-\(Q=H_1H_2\cdots H_n,\)</p>
+\[R=H_n\cdots H_1A,\]
 
-<p>则 $Q$ 为酉矩阵（正交矩阵），且
-\(A=QR.\)</p>
+<p>其中 $R$ 为上三角矩阵。令</p>
+
+\[Q=H_1H_2\cdots H_n,\]
+
+<p>则 $Q$ 为酉矩阵（正交矩阵），且</p>
+
+\[A=QR.\]
 
 <h2 id="计算量">计算量</h2>
 
-<p>每次 Householder 变换作用于 $m\times n$ 矩阵，计算量约为 $4mn$ 次浮点运算； 总计算量约为
-\(2mn^2-\frac{2}{3}n^3+O(mn).\)</p>
+<p>每次 Householder 变换作用于 $m\times n$ 矩阵，计算量约为 $4mn$ 次浮点运算； 总计算量约为</p>
+
+\[2mn^2-\frac{2}{3}n^3+O(mn).\]
 
 <h2 id="存储">存储</h2>
 
@@ -237,11 +272,13 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h2 id="数值稳定性">数值稳定性</h2>
 
-<p>Householder QR 分解是<strong>后向稳定</strong>的。存在 $\delta A$ 使得
-\(\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F,\)</p>
+<p>Householder QR 分解是<strong>后向稳定</strong>的。存在 $\delta A$ 使得</p>
 
-<p>且
-\(A+\delta A=QR,\)</p>
+\[\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F,\]
+
+<p>且</p>
+
+\[A+\delta A=QR,\]
 
 <p>其中 $Q$ 精确正交，$R$ 精确上三角。常数 $c$ 较小，与矩阵维数多项式相关。</p>
 
@@ -249,18 +286,21 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h2 id="解-axb">解 $Ax=b$</h2>
 
-<p>设 $A\in M_n(\mathbb F)$ 非奇异，$A=QR$。则
-\(Ax=b\iff QRx=b\iff Rx=Q^{\mathsf H}b.\)</p>
+<p>设 $A\in M_n(\mathbb F)$ 非奇异，$A=QR$。则</p>
+
+\[Ax=b\iff QRx=b\iff Rx=Q^{\mathsf H}b.\]
 
 <p>回代求解上三角方程组即可。</p>
 
 <h2 id="最小二乘问题">最小二乘问题</h2>
 
-<p>设 $A\in M_{m\times n}(\mathbb F)$ 列满秩，$m\ge n$。最小二乘问题
-\(\min_{x\in\mathbb F^n}\|Ax-b\|_2\)</p>
+<p>设 $A\in M_{m\times n}(\mathbb F)$ 列满秩，$m\ge n$。最小二乘问题</p>
 
-<p>的解为
-\(x=R^{-1}Q^{\mathsf H}b,\)</p>
+\[\min_{x\in\mathbb F^n}\|Ax-b\|_2\]
+
+<p>的解为</p>
+
+\[x=R^{-1}Q^{\mathsf H}b,\]
 
 <p>其中 $A=QR$，$R$ 为上三角矩阵。因 $|Ax-b|_2=|QRx-b|_2=|Rx-Q^{\mathsf H}b|_2$（$Q$ 保范数），最小化等价于解 $Rx=Q^{\mathsf H}b$。</p>
 
@@ -315,13 +355,15 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h2 id="构造-householder-变换">构造 Householder 变换</h2>
 
-<p>设
-\(x=\begin{pmatrix}3\\4\end{pmatrix}\in\mathbb R^2.\)</p>
+<p>设</p>
+
+\[x=\begin{pmatrix}3\\4\end{pmatrix}\in\mathbb R^2.\]
 
 <p>求 Householder 矩阵 $H$ 使得 $Hx=\alpha e_1$。</p>
 
-<p><strong>解</strong>：
-\(\|x\|_2=5,\qquad x_1=3&gt;0,\qquad \alpha=-\|x\|_2=-5.\)</p>
+<p><strong>解</strong>：</p>
+
+\[\|x\|_2=5,\qquad x_1=3&gt;0,\qquad \alpha=-\|x\|_2=-5.\]
 
 \[v=x-\alpha e_1=\begin{pmatrix}3\\4\end{pmatrix}-\begin{pmatrix}-5\\0\end{pmatrix}=\begin{pmatrix}8\\4\end{pmatrix}.\]
 
@@ -333,40 +375,49 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 =\begin{pmatrix}1-\frac{64}{40}&amp;-\frac{32}{40}\\-\frac{32}{40}&amp;1-\frac{16}{40}\end{pmatrix}
 =\begin{pmatrix}-\frac{3}{5}&amp;-\frac{4}{5}\\-\frac{4}{5}&amp;\frac{3}{5}\end{pmatrix}.\]
 
-<p>验证：
-\(Hx=\begin{pmatrix}-\frac{3}{5}&amp;-\frac{4}{5}\\-\frac{4}{5}&amp;\frac{3}{5}\end{pmatrix}\begin{pmatrix}3\\4\end{pmatrix}
+<p>验证：</p>
+
+\[Hx=\begin{pmatrix}-\frac{3}{5}&amp;-\frac{4}{5}\\-\frac{4}{5}&amp;\frac{3}{5}\end{pmatrix}\begin{pmatrix}3\\4\end{pmatrix}
 =\begin{pmatrix}-\frac{9}{5}-\frac{16}{5}\\-\frac{12}{5}+\frac{12}{5}\end{pmatrix}
-=\begin{pmatrix}-5\\0\end{pmatrix}=-5e_1.\)</p>
+=\begin{pmatrix}-5\\0\end{pmatrix}=-5e_1.\]
 
 <p>正确。</p>
 
 <h2 id="qr-分解">QR 分解</h2>
 
-<p>设
-\(A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}.\)</p>
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}.\]
 
 <p>用 Householder 变换求 QR 分解。</p>
 
-<p><strong>第 1 步</strong>：取第一列 $x=(1,1,0)^{\mathsf T}$。
-\(\|x\|_2=\sqrt2,\qquad x_1=1&gt;0,\qquad \alpha=-\sqrt2.\)</p>
+<p><strong>第 1 步</strong>：取第一列 $x=(1,1,0)^{\mathsf T}$。</p>
+
+\[\|x\|_2=\sqrt2,\qquad x_1=1&gt;0,\qquad \alpha=-\sqrt2.\]
 
 \[v_1=x-\alpha e_1=(1+\sqrt2,\,1,\,0)^{\mathsf T}.\]
 
-<p>\(H_1=I-2\frac{v_1v_1^{\mathsf T}}{v_1^{\mathsf T}v_1}.\)
-计算得
-\(H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;\frac{1}{\sqrt2}\\0&amp;1\end{pmatrix}.\)</p>
+\[H_1=I-2\frac{v_1v_1^{\mathsf T}}{v_1^{\mathsf T}v_1}.\]
 
-<p><strong>第 2 步</strong>：取第二列从第 2 行起的子向量 $x_2=(\frac{1}{\sqrt2},1)^{\mathsf T}$。
-\(\|x_2\|_2=\sqrt{\frac12+1}=\sqrt{\frac32},\qquad x_{2,1}=\frac{1}{\sqrt2}&gt;0,\qquad \alpha_2=-\sqrt{\frac32}.\)</p>
+<p>计算得</p>
 
-<p>构造 $\tilde H_2\in M_2(\mathbb R)$，令
-\(H_2=\begin{pmatrix}1&amp;0&amp;0\\0&amp;\tilde H_2\end{pmatrix}.\)</p>
+\[H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;\frac{1}{\sqrt2}\\0&amp;1\end{pmatrix}.\]
 
-<p>计算得
-\(R=H_2H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;-\sqrt{\frac32}\\0&amp;0\end{pmatrix}.\)</p>
+<p><strong>第 2 步</strong>：取第二列从第 2 行起的子向量 $x_2=(\frac{1}{\sqrt2},1)^{\mathsf T}$。</p>
 
-<p>最终
-\(Q=H_1H_2,\qquad A=QR.\)</p>
+\[\|x_2\|_2=\sqrt{\frac12+1}=\sqrt{\frac32},\qquad x_{2,1}=\frac{1}{\sqrt2}&gt;0,\qquad \alpha_2=-\sqrt{\frac32}.\]
+
+<p>构造 $\tilde H_2\in M_2(\mathbb R)$，令</p>
+
+\[H_2=\begin{pmatrix}1&amp;0&amp;0\\0&amp;\tilde H_2\end{pmatrix}.\]
+
+<p>计算得</p>
+
+\[R=H_2H_1A=\begin{pmatrix}-\sqrt2&amp;-\frac{1}{\sqrt2}\\0&amp;-\sqrt{\frac32}\\0&amp;0\end{pmatrix}.\]
+
+<p>最终</p>
+
+\[Q=H_1H_2,\qquad A=QR.\]
 
 <h1 id="应用">应用</h1>
 
@@ -392,14 +443,17 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
   <li>特征值：$-1$（一重），$1$（$n-1$ 重）。</li>
 </ul>
 
-<p><strong>构造方法</strong>：给定 $x\ne 0$，取
-\(\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\qquad v=x-\alpha e_1,\)</p>
+<p><strong>构造方法</strong>：给定 $x\ne 0$，取</p>
 
-<p>则
-\(Hx=\alpha e_1.\)</p>
+\[\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\qquad v=x-\alpha e_1,\]
 
-<p><strong>QR 分解</strong>：通过 $n$ 次 Householder 变换，将 $A$ 化为上三角矩阵 $R$：
-\(R=H_n\cdots H_1A,\qquad Q=H_1\cdots H_n,\qquad A=QR.\)</p>
+<p>则</p>
+
+\[Hx=\alpha e_1.\]
+
+<p><strong>QR 分解</strong>：通过 $n$ 次 Householder 变换，将 $A$ 化为上三角矩阵 $R$：</p>
+
+\[R=H_n\cdots H_1A,\qquad Q=H_1\cdots H_n,\qquad A=QR.\]
 
 <p><strong>优点</strong>：</p>
 <ol>
