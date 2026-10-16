@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>最小二乘（QR 法） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="最小二乘（QR 法）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-10T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="最小二乘（QR 法）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-10T00:00:00+00:00","datePublished":"2026-10-10T00:00:00+00:00","description":"xxxxxx","headline":"最小二乘（QR 法）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 最小二乘（QR 法） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="最小二乘问题">最小二乘问题</h1>
+
+<h2 id="问题陈述">问题陈述</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$，$m\ge n$，$\operatorname{rank}A=n$（列满秩），$b\in\mathbb R^m$。<strong>最小二乘问题</strong>为</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2.\]
+
+<p>即求 $x\in\mathbb R^n$，使残差 $r=Ax-b$ 的欧几里得范数最小。</p>
+
+<h2 id="几何意义">几何意义</h2>
+
+<p>当 $m&gt;n$ 时，方程组 $Ax=b$ 通常无解，因 $b$ 一般不在 $\operatorname{Col}(A)$ 中。最小二乘问题寻找 $x$，使 $Ax$ 尽可能接近 $b$。</p>
+
+<p>$Ax$ 遍历子空间</p>
+
+\[\mathcal S=\operatorname{Col}(A)\subseteq\mathbb R^m.\]
+
+<p>问题等价于：在 $\mathcal S$ 中找一点 $p$，使 $|p-b|_2$ 最小。由正交投影定理，最优 $p$ 是 $b$ 在 $\mathcal S$ 上的正交投影。</p>
+
+<h1 id="qr-分解回顾">QR 分解回顾</h1>
+
+<h2 id="经济型-qr-分解">经济型 QR 分解</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$ 列满秩。其<strong>经济型 QR 分解</strong>为</p>
+
+\[A=Q_1R_1,\]
+
+<p>其中</p>
+
+\[Q_1\in\mathbb R^{m\times n},\qquad Q_1^{\mathsf T}Q_1=I_n,\]
+
+\[R_1\in\mathbb R^{n\times n}\text{ 上三角，且 }r_{ii}\ne 0.\]
+
+<h2 id="全型-qr-分解">全型 QR 分解</h2>
+
+<p><strong>全型 QR 分解</strong>为</p>
+
+\[A=QR,\]
+
+<p>其中</p>
+
+\[Q\in M_m(\mathbb R)\text{ 正交},\qquad R=\begin{pmatrix}R_1\\0\end{pmatrix}\in\mathbb R^{m\times n}.\]
+
+<p>两者关系：</p>
+
+\[Q=[Q_1\ Q_2],\qquad A=Q_1R_1.\]
+
+<h2 id="关键性质">关键性质</h2>
+
+<ol>
+  <li><strong>标准正交列</strong>：$Q_1^{\mathsf T}Q_1=I_n$；</li>
+  <li><strong>保范数</strong>：对任意 $y\in\mathbb R^n$，</li>
+</ol>
+
+\[\|Q_1y\|_2=\|y\|_2;\]
+
+<ol>
+  <li><strong>正交分解</strong>：对任意 $b\in\mathbb R^m$，</li>
+</ol>
+
+\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
+
+<p>其中</p>
+
+\[Q_1Q_1^{\mathsf T}b\in\operatorname{Col}(Q_1)=\operatorname{Col}(A),\]
+
+\[(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp=\operatorname{Col}(A)^\perp,\]
+
+<p>且两项正交。</p>
+
+<h1 id="qr-法求解最小二乘的原理">QR 法求解最小二乘的原理</h1>
+
+<h2 id="残差的等价变形">残差的等价变形</h2>
+
+<p>将 $A=Q_1R_1$ 代入残差：</p>
+
+\[\|Ax-b\|_2=\|Q_1R_1x-b\|_2.\]
+
+<p>利用正交分解</p>
+
+\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
+
+<p>得</p>
+
+\[Q_1R_1x-b=Q_1R_1x-Q_1Q_1^{\mathsf T}b-(I-Q_1Q_1^{\mathsf T})b.\]
+
+<p>令</p>
+
+\[u=Q_1(R_1x-Q_1^{\mathsf T}b)\in\operatorname{Col}(Q_1),\]
+
+\[v=-(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp.\]
+
+<p>由 $u\perp v$ 及勾股定理，</p>
+
+\[\|Q_1R_1x-b\|_2^2=\|u\|_2^2+\|v\|_2^2.\]
+
+<p>由 $Q_1$ 保范数，</p>
+
+\[\|u\|_2^2=\|Q_1(R_1x-Q_1^{\mathsf T}b)\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>故</p>
+
+\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
+
+<h2 id="最小化">最小化</h2>
+
+<p>第二项</p>
+
+\[\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\]
+
+<p>与 $x$ 无关，为常数。因此</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2^2
+=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2+\min_{x\in\mathbb R^n}\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>等价于最小化</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>因 $R_1$ 为可逆上三角矩阵，方程</p>
+
+\[R_1x=Q_1^{\mathsf T}b\]
+
+<p>有唯一解，且此时第一项为零，达到最小值。</p>
+
+<h2 id="最优解">最优解</h2>
+
+\[x=R_1^{-1}Q_1^{\mathsf T}b.\]
+
+<p>最小残差为</p>
+
+\[\min_x\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
+
+<p>即 $b$ 在 $\operatorname{Col}(A)^\perp$ 上的分量。</p>
+
+<h2 id="几何解释">几何解释</h2>
+
+<p>最小二乘问题等价于求 $b$ 在 $\mathcal S=\operatorname{Col}(A)=\operatorname{Col}(Q_1)$ 上的正交投影。</p>
+
+<p>QR 分解将 $b$ 分解为</p>
+
+\[b=\underbrace{Q_1Q_1^{\mathsf T}b}_{\in\mathcal S}+\underbrace{(I-Q_1Q_1^{\mathsf T})b}_{\in\mathcal S^\perp}.\]
+
+<p>最小二乘解 $x^*$ 使</p>
+
+\[Ax^*=Q_1R_1x^*=Q_1Q_1^{\mathsf T}b,\]
+
+<p>即 $Ax^*$ 恰好是 $b$ 在 $\mathcal S$ 上的投影。残差</p>
+
+\[b-Ax^*=(I-Q_1Q_1^{\mathsf T})b\]
+
+<p>垂直于 $\mathcal S$。</p>
+
+<h1 id="正确性证明">正确性证明</h1>
+
+<p><strong>定理 4.1</strong><br />
+设 $A\in\mathbb R^{m\times n}$ 列满秩，$b\in\mathbb R^m$，$A=Q_1R_1$ 为经济型 QR 分解。则</p>
+
+\[x^*=R_1^{-1}Q_1^{\mathsf T}b\]
+
+<p>是最小二乘问题</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2\]
+
+<p>的唯一解。</p>
+
+<p><strong>证明</strong></p>
+
+<p><strong>(1) 最优性</strong></p>
+
+<p>对任意 $x\in\mathbb R^n$，由 §3.1，</p>
+
+\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
+
+<p>第二项非负且与 $x$ 无关。第一项</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2\ge 0,\]
+
+<p>等号成立当且仅当</p>
+
+\[R_1x=Q_1^{\mathsf T}b.\]
+
+<p>因 $R_1$ 可逆，该方程有唯一解 $x^*=R_1^{-1}Q_1^{\mathsf T}b$。故</p>
+
+\[\|Ax^*-b\|_2^2=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\le\|Ax-b\|_2^2,\qquad\forall x\in\mathbb R^n.\]
+
+<p><strong>(2) 唯一性</strong></p>
+
+<p>若 $x$ 也是最优解，则</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2=0,\]
+
+<p>即 $R_1x=Q_1^{\mathsf T}b$。因 $R_1$ 可逆，$x=x^*$。</p>
+
+<p><strong>(3) 与正规方程一致</strong></p>
+
+<p>由 $A=Q_1R_1$，</p>
+
+\[A^{\mathsf T}A=R_1^{\mathsf T}Q_1^{\mathsf T}Q_1R_1=R_1^{\mathsf T}R_1,\]
+
+\[A^{\mathsf T}b=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
+
+<p>正规方程为</p>
+
+\[R_1^{\mathsf T}R_1x=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
+
+<p>因 $R_1^{\mathsf T}$ 可逆，等价于</p>
+
+\[R_1x=Q_1^{\mathsf T}b.\]
+
+<p>故 $x^*$ 满足正规方程，与最小二乘的经典结论一致。$\square$</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>算法 5.1（QR 法解最小二乘）</strong></p>
+
+<ol>
+  <li>计算 $A$ 的经济型 QR 分解：</li>
+</ol>
+
+\[A=Q_1R_1,\qquad Q_1\in\mathbb R^{m\times n},\quad R_1\in\mathbb R^{n\times n}\text{ 上三角}.\]
+
+<ol>
+  <li>计算</li>
+</ol>
+
+\[c=Q_1^{\mathsf T}b\in\mathbb R^n.\]
+
+<ol>
+  <li>回代求解上三角方程组</li>
+</ol>
+
+\[R_1x=c.\]
+
+<p>即</p>
+
+\[x_i=\frac{1}{r_{ii}}\left(c_i-\sum_{j=i+1}^{n}r_{ij}x_j\right),\qquad i=n,n-1,\dots,1.\]
+
+<h1 id="计算量与数值稳定性">计算量与数值稳定性</h1>
+
+<h2 id="计算量">计算量</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>QR 分解</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>计算 $Q_1^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>回代</td>
+      <td>$n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$2mn^2-\frac23n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="与正规方程对比">与正规方程对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="数值稳定性">数值稳定性</h2>
+
+<p><strong>定理 6.3.1</strong><br />
+设 $\hat x$ 为 QR 法得到的浮点最小二乘解，$x$ 为精确解。则</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)\,\epsilon+O(\epsilon^2),\]
+
+<p>其中 $\kappa(A)=|A|_2|A^+|_2$ 为条件数，$\epsilon$ 为机器精度。</p>
+
+<p><strong>对比正规方程</strong>：</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)^2\,\epsilon+O(\epsilon^2).\]
+
+<p>QR 法的误差与 $\kappa(A)$ 成正比，而正规方程与 $\kappa(A)^2$ 成正比。QR 法数值稳定性显著优于正规方程。</p>
+
+<p><strong>原因</strong>：正规方程中 $A^{\mathsf T}A$ 的条件数为 $\kappa(A)^2$，放大误差；QR 法中 $Q_1$ 为正交矩阵，不放大误差，$R_1$ 的条件数等于 $\kappa(A)$。</p>
+
+<h1 id="例题">例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
+
+<h2 id="qr-分解">QR 分解</h2>
+
+<p>由前文例题，经济型 QR 分解为</p>
+
+\[Q_1=\begin{pmatrix}
+-\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt6}\\
+-\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt6}\\
+0&amp;\frac{2}{\sqrt6}
+\end{pmatrix},\qquad
+R_1=\begin{pmatrix}
+-\sqrt2&amp;-\frac{1}{\sqrt2}\\
+0&amp;-\sqrt{\frac32}
+\end{pmatrix}.\]
+
+<h2 id="计算-cq_1mathsf-tb">计算 $c=Q_1^{\mathsf T}b$</h2>
+
+\[Q_1^{\mathsf T}b=
+\begin{pmatrix}
+-\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt2}&amp;0\\
+-\frac{1}{\sqrt6}&amp;\frac{1}{\sqrt6}&amp;\frac{2}{\sqrt6}
+\end{pmatrix}
+\begin{pmatrix}1\\2\\3\end{pmatrix}
+=
+\begin{pmatrix}
+-\frac{3}{\sqrt2}\\
+\frac{7}{\sqrt6}
+\end{pmatrix}.\]
+
+<h2 id="回代求解-r_1xc">回代求解 $R_1x=c$</h2>
+
+\[-\sqrt{\frac32}\,x_2=\frac{7}{\sqrt6}
+\implies x_2=-\frac73,\]
+
+\[-\sqrt2\,x_1-\frac{1}{\sqrt2}x_2=-\frac{3}{\sqrt2}
+\implies x_1=\frac83.\]
+
+<p>故</p>
+
+\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix}.\]
+
+<h2 id="验证">验证</h2>
+
+<p>计算正规方程：</p>
+
+\[A^{\mathsf T}A=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\qquad
+A^{\mathsf T}b=\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<p>解得</p>
+
+\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix},\]
+
+<p>与 QR 法一致。</p>
+
+<p>最小残差：</p>
+
+\[\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
+
+<p>计算得</p>
+
+\[(I-Q_1Q_1^{\mathsf T})b=
+\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix},\]
+
+\[\|Ax-b\|_2=\sqrt{\frac{16}{3}}=\frac{4}{\sqrt3}.\]
+
+<h2 id="八优缺点">八、优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>数值稳定（条件数 $\kappa(A)$ 而非 $\kappa(A)^2$）；</li>
+  <li>计算量适中（约 $2mn^2-\frac23n^3$）；</li>
+  <li>可复用 QR 分解处理多个右端项；</li>
+  <li>几何意义清晰（正交投影）。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>计算量略大于正规方程；</li>
+  <li>需要存储 $Q_1$（或 Householder 向量）；</li>
+  <li>对稀疏矩阵可能引入填充。</li>
+</ol>
+
+<h1 id="总结">总结</h1>
+
+\[\text{QR 法解最小二乘：}A=Q_1R_1\implies x=R_1^{-1}Q_1^{\mathsf T}b.\]
+
+<p><strong>核心原理</strong>：</p>
+
+<ol>
+  <li>最小二乘问题等价于求 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影；</li>
+  <li>QR 分解将 $A$ 化为 $Q_1R_1$，其中 $Q_1$ 具有标准正交列；</li>
+  <li>将残差分解为 $\operatorname{Col}(Q_1)$ 和 $\operatorname{Col}(Q_1)^\perp$ 两部分，利用正交性和勾股定理分离出与 $x$ 无关的常数项；</li>
+  <li>最小化等价于解上三角方程组 $R_1x=Q_1^{\mathsf T}b$。</li>
+</ol>
+
+<p><strong>与正规方程对比</strong>：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>较小</td>
+      <td>较大</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>良态问题</td>
+      <td>通用</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：QR 法是最小二乘问题的标准方法，兼顾稳定性与效率。当 $A$ 病态时，QR 法明显优于正规方程。若精度要求极高或 $A$ 接近奇异，可采用 SVD。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

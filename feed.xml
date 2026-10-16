@@ -1,4 +1,1344 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-16T02:01:33+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">HouseHolder 变换</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html" rel="alternate" type="text/html" title="HouseHolder 变换" /><published>2026-10-09T00:00:00+00:00</published><updated>2026-10-09T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder%20%E5%8F%98%E6%8D%A2</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html"><![CDATA[<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-16T03:49:47+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">正交投影矩阵</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/12/%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5.html" rel="alternate" type="text/html" title="正交投影矩阵" /><published>2026-10-12T00:00:00+00:00</published><updated>2026-10-12T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/12/%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/12/%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1%E7%9F%A9%E9%98%B5.html"><![CDATA[<h1 id="投影的直观概念">投影的直观概念</h1>
+
+<p>在欧几里得空间 $\mathbb R^n$ 中，给定一个子空间 $\mathcal S$，任意向量 $b\in\mathbb R^n$ 都可以唯一地分解为</p>
+
+\[b=p+e,\qquad p\in\mathcal S,\quad e\in\mathcal S^\perp.\]
+
+<p>其中 $p$ 称为 $b$ 在 $\mathcal S$ 上的<strong>正交投影</strong>，$e$ 称为<strong>残差</strong>。</p>
+
+<p>若将这一操作表示为线性变换，则存在唯一的矩阵 $P$ 使得对任意 $b$，</p>
+
+\[Pb=p.\]
+
+<p>称 $P$ 为子空间 $\mathcal S$ 上的<strong>正交投影矩阵</strong>。</p>
+
+<h1 id="定义">定义</h1>
+
+<p><strong>定义 2.1（正交投影矩阵）</strong><br />
+设 $\mathcal S\subseteq\mathbb R^n$ 为子空间。若矩阵 $P\in M_n(\mathbb R)$ 满足：对任意 $b\in\mathbb R^n$，</p>
+
+\[Pb=\operatorname{proj}_{\mathcal S}(b),\]
+
+<p>即 $Pb\in\mathcal S$ 且 $b-Pb\perp\mathcal S$，则称 $P$ 为 $\mathcal S$ 上的<strong>正交投影矩阵</strong>。</p>
+
+<p><strong>定理 2.2（等价刻画）</strong><br />
+矩阵 $P\in M_n(\mathbb R)$ 是正交投影矩阵，当且仅当</p>
+
+\[P^2=P,\qquad P^{\mathsf T}=P.\]
+
+<p>即 $P$ 是<strong>幂等</strong>且<strong>对称</strong>的。</p>
+
+<p><strong>证明</strong></p>
+
+<p><strong>必要性</strong>：设 $P$ 为 $\mathcal S$ 上的正交投影矩阵。</p>
+
+<p>(1) <strong>幂等性</strong>：对任意 $b$，$Pb\in\mathcal S$。对 $Pb$ 再投影，因其已在 $\mathcal S$ 中，故</p>
+
+\[P(Pb)=Pb.\]
+
+<p>即 $P^2b=Pb$ 对任意 $b$ 成立，故 $P^2=P$。</p>
+
+<p>(2) <strong>对称性</strong>：对任意 $x,y\in\mathbb R^n$，</p>
+
+\[\langle Px,y\rangle=\langle Px,(I-P)y+Py\rangle.\]
+
+<p>因 $Px\in\mathcal S$，$(I-P)y\perp\mathcal S$，故</p>
+
+\[\langle Px,(I-P)y\rangle=0.\]
+
+<p>因 $Py\in\mathcal S$ 且 $Px\in\mathcal S$，且 $x-Px\perp\mathcal S$，故</p>
+
+\[\langle Px,Py\rangle=\langle x-Px+ Px,Py\rangle=\langle x,Py\rangle.\]
+
+<p>于是</p>
+
+\[\langle Px,y\rangle=\langle x,Py\rangle.\]
+
+<p>即 $P^{\mathsf T}=P$。</p>
+
+<p><strong>充分性</strong>：设 $P^2=P$，$P^{\mathsf T}=P$。令 $\mathcal S=\operatorname{Col}(P)$。对任意 $b$，</p>
+
+\[b=Pb+(I-P)b.\]
+
+<p>$Pb\in\mathcal S$。对任意 $y\in\mathcal S$，存在 $x$ 使 $y=Px$。则</p>
+
+\[\langle (I-P)b,y\rangle
+=((I-P)b)^{\mathsf T}Px
+=b^{\mathsf T}(I-P)^{\mathsf T}Px
+=b^{\mathsf T}(I-P)Px
+=b^{\mathsf T}(P-P^2)x=0.\]
+
+<p>故 $(I-P)b\perp\mathcal S$。因此 $Pb=\operatorname{proj}_{\mathcal S}(b)$。</p>
+
+<h1 id="标准正交列表示">标准正交列表示</h1>
+
+<p><strong>定理 3.1</strong><br />
+设 $Q\in\mathbb R^{m\times n}$ 具有标准正交列，即</p>
+
+\[Q^{\mathsf T}Q=I_n.\]
+
+<p>令 $\mathcal S=\operatorname{Col}(Q)$。则 $\mathcal S$ 上的正交投影矩阵为</p>
+
+\[P=QQ^{\mathsf T}\in M_m(\mathbb R).\]
+
+<p><strong>证明</strong></p>
+
+<p>(1) <strong>对称性</strong>：</p>
+
+\[P^{\mathsf T}=(QQ^{\mathsf T})^{\mathsf T}=QQ^{\mathsf T}=P.\]
+
+<p>(2) <strong>幂等性</strong>：</p>
+
+\[P^2=QQ^{\mathsf T}QQ^{\mathsf T}=Q(Q^{\mathsf T}Q)Q^{\mathsf T}=QI_nQ^{\mathsf T}=QQ^{\mathsf T}=P.\]
+
+<p>(3) <strong>值域</strong>：对任意 $y=Qx\in\operatorname{Col}(Q)$，</p>
+
+\[Py=QQ^{\mathsf T}Qx=Qx=y.\]
+
+<p>故 $\operatorname{Col}(Q)\subseteq\operatorname{Col}(P)$。反之 $Pz=QQ^{\mathsf T}z\in\operatorname{Col}(Q)$，故 $\operatorname{Col}(P)\subseteq\operatorname{Col}(Q)$。因此 $\operatorname{Col}(P)=\operatorname{Col}(Q)=\mathcal S$。</p>
+
+<p>(4) <strong>正交性</strong>：对任意 $b$，</p>
+
+\[b-Pb=(I-QQ^{\mathsf T})b.\]
+
+<p>对 $Q$ 的每一列 $q_j$，</p>
+
+\[q_j^{\mathsf T}(I-QQ^{\mathsf T})b
+=q_j^{\mathsf T}b-q_j^{\mathsf T}QQ^{\mathsf T}b.\]
+
+<p>因 $q_j^{\mathsf T}Q=e_j^{\mathsf T}$，故</p>
+
+\[q_j^{\mathsf T}QQ^{\mathsf T}b=e_j^{\mathsf T}Q^{\mathsf T}b=q_j^{\mathsf T}b.\]
+
+<p>因此 $q_j^{\mathsf T}(b-Pb)=0$，即 $b-Pb\perp\operatorname{Col}(Q)=\mathcal S$。</p>
+
+<p>由定理 2.2，$P=QQ^{\mathsf T}$ 是 $\mathcal S$ 上的正交投影矩阵。$\square$</p>
+
+<p><strong>几何解释</strong>：对任意 $b\in\mathbb R^m$，</p>
+
+\[Pb=QQ^{\mathsf T}b=\sum_{i=1}^n(q_i^{\mathsf T}b)q_i,\]
+
+<p>即 $b$ 在标准正交基 $q_1,\dots,q_n$ 上的展开。</p>
+
+<h1 id="一般子空间的投影矩阵">一般子空间的投影矩阵</h1>
+
+<p>若子空间 $\mathcal S=\operatorname{Col}(A)$，其中 $A\in\mathbb R^{m\times n}$ 列满秩，但列不正交，则不能直接用 $AA^{\mathsf T}$。此时投影矩阵为</p>
+
+\[P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}.\]
+
+<p><strong>证明</strong></p>
+
+<p>(1) <strong>对称性</strong>：</p>
+
+\[P^{\mathsf T}=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}=P.\]
+
+<p>因 $A^{\mathsf T}A$ 对称，其逆也对称。</p>
+
+<p>(2) <strong>幂等性</strong>：</p>
+
+\[P^2=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}A(A^{\mathsf T}A)^{-1}A^{\mathsf T}
+=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}=P.\]
+
+<p>(3) <strong>值域</strong>：显然 $\operatorname{Col}(P)\subseteq\operatorname{Col}(A)$。反之，对 $y=Ax\in\operatorname{Col}(A)$，</p>
+
+\[Py=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}Ax=Ax=y.\]
+
+<p>故 $\operatorname{Col}(P)=\operatorname{Col}(A)=\mathcal S$。</p>
+
+<p>由定理 2.2，$P$ 为正交投影矩阵。$\square$</p>
+
+<p><strong>与标准正交列的关系</strong>：若 $A=Q_1R_1$ 为经济型 QR 分解，则</p>
+
+\[P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}
+=Q_1R_1(R_1^{\mathsf T}Q_1^{\mathsf T}Q_1R_1)^{-1}R_1^{\mathsf T}Q_1^{\mathsf T}
+=Q_1Q_1^{\mathsf T}.\]
+
+<p>QR 分解将一般投影矩阵化为 $Q_1Q_1^{\mathsf T}$ 的简洁形式。</p>
+
+<hr />
+
+<h1 id="基本性质">基本性质</h1>
+
+<p><strong>定理 5.1</strong><br />
+设 $P$ 为 $\mathcal S\subseteq\mathbb R^n$ 上的正交投影矩阵。则：</p>
+
+<ol>
+  <li><strong>幂等</strong>：$P^2=P$；</li>
+  <li><strong>对称</strong>：$P^{\mathsf T}=P$；</li>
+  <li><strong>值域</strong>：$\operatorname{Col}(P)=\mathcal S$；</li>
+  <li><strong>核</strong>：$\ker P=\mathcal S^\perp$；</li>
+  <li><strong>特征值</strong>：$P$ 的特征值只能为 $0$ 或 $1$；</li>
+  <li><strong>秩</strong>：$\operatorname{rank}(P)=\operatorname{tr}(P)=\dim\mathcal S$；</li>
+  <li><strong>正交补的投影</strong>：$I-P$ 是 $\mathcal S^\perp$ 上的正交投影矩阵；</li>
+  <li><strong>谱分解</strong>：存在正交矩阵 $U$，使得</li>
+</ol>
+
+\[P=U\begin{pmatrix}I_r&amp;0\\0&amp;0\end{pmatrix}U^{\mathsf T},\qquad r=\dim\mathcal S.\]
+
+<ol>
+  <li><strong>范数</strong>：$|P|_2=1$（若 $\mathcal S\ne{0}$）；</li>
+  <li><strong>保序</strong>：$|Pb|_2\le|b|_2$，等号当且仅当 $b\in\mathcal S$。</li>
+</ol>
+
+<p><strong>证明</strong></p>
+
+<p>(1)(2) 已证。</p>
+
+<p>(3) 由定理 2.2 证明中已得。</p>
+
+<p>(4) $Pb=0\iff b-Pb=b\iff b\perp\mathcal S$（因 $Pb\in\mathcal S$ 且 $b-Pb\perp\mathcal S$，若 $Pb=0$ 则 $b=b-Pb\perp\mathcal S$）。</p>
+
+<p>(5) 设 $Pv=\lambda v$，$v\ne 0$。则</p>
+
+\[\lambda v=Pv=P^2v=\lambda^2v,\]
+
+<p>故 $\lambda^2=\lambda$，即 $\lambda=0$ 或 $1$。</p>
+
+<p>(6) 因 $P$ 可正交对角化，特征值为 $1$（重数 $r=\dim\mathcal S$）和 $0$。故 $\operatorname{rank}P=r=\operatorname{tr}P$。</p>
+
+<p>(7) $(I-P)^2=I-2P+P^2=I-P$，$(I-P)^{\mathsf T}=I-P$。其值域为 $\ker P=\mathcal S^\perp$。</p>
+
+<p>(8) 取 $\mathcal S$ 的标准正交基 $q_1,\dots,q_r$ 和 $\mathcal S^\perp$ 的标准正交基 $q_{r+1},\dots,q_n$，令 $U=[q_1\ \cdots\ q_n]$，则</p>
+
+\[P=\sum_{i=1}^r q_iq_i^{\mathsf T}=U\begin{pmatrix}I_r&amp;0\\0&amp;0\end{pmatrix}U^{\mathsf T}.\]
+
+<p>(9) 对任意 $b$，$|Pb|_2\le|b|_2$（因 $Pb$ 是 $b$ 的分量）。且存在 $b\in\mathcal S$ 使 $|Pb|_2=|b|_2$，故 $|P|_2=1$。</p>
+
+<p>(10) 由 $|b|_2^2=|Pb|_2^2+|(I-P)b|_2^2\ge|Pb|_2^2$，得 $|Pb|_2\le|b|_2$。等号当且仅当 $(I-P)b=0$，即 $b\in\mathcal S$。</p>
+
+<hr />
+
+<h1 id="谱分解与秩一分解">谱分解与秩一分解</h1>
+
+<p><strong>定理 6.1（谱分解）</strong><br />
+设 $P$ 为秩 $r$ 的正交投影矩阵。则存在标准正交向量 $q_1,\dots,q_r\in\mathcal S$，使得</p>
+
+\[P=\sum_{i=1}^r q_iq_i^{\mathsf T}.\]
+
+<p><strong>证明</strong><br />
+取 $\mathcal S$ 的标准正交基 $q_1,\dots,q_r$，则对任意 $b$，</p>
+
+\[Pb=\sum_{i=1}^r(q_i^{\mathsf T}b)q_i=\sum_{i=1}^r q_iq_i^{\mathsf T}b.\]
+
+<p>故</p>
+
+\[P=\sum_{i=1}^r q_iq_i^{\mathsf T}.\]
+
+<p>$\square$</p>
+
+<p>每个 $q_iq_i^{\mathsf T}$ 是到一维子空间 $\operatorname{span}(q_i)$ 的正交投影矩阵。因此，任意正交投影矩阵可分解为若干秩一投影矩阵之和。</p>
+
+<p><strong>推论 6.2</strong><br />
+正交投影矩阵的迹等于其秩：</p>
+
+\[\operatorname{tr}(P)=\sum_{i=1}^r\operatorname{tr}(q_iq_i^{\mathsf T})=\sum_{i=1}^r q_i^{\mathsf T}q_i=r.\]
+
+<h1 id="投影矩阵与最小二乘">投影矩阵与最小二乘</h1>
+
+<p><strong>定理 7.1</strong><br />
+设 $A\in\mathbb R^{m\times n}$ 列满秩，$b\in\mathbb R^m$。最小二乘问题</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2\]
+
+<p>的最优解 $x^*$ 满足</p>
+
+\[Ax^*=Pb,\]
+
+<p>其中</p>
+
+\[P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\]
+
+<p>是到 $\operatorname{Col}(A)$ 上的正交投影矩阵。</p>
+
+<p><strong>证明</strong><br />
+由正交投影定理，最优 $Ax^<em>$ 是 $b$ 在 $\operatorname{Col}(A)$ 上的投影，即 $Ax^</em>=Pb$。</p>
+
+<p><strong>几何意义</strong>：最小二乘问题的解 $x^<em>$ 使 $Ax^</em>$ 成为 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影，残差 $b-Ax^*$ 垂直于 $\operatorname{Col}(A)$。</p>
+
+<h1 id="例题">例题</h1>
+
+<h2 id="投影到一维子空间">投影到一维子空间</h2>
+
+<p>设</p>
+
+\[q=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\\0\end{pmatrix}\in\mathbb R^3.\]
+
+<p>验证 $|q|_2=1$。则到 $\operatorname{span}(q)$ 上的投影矩阵为</p>
+
+\[P=qq^{\mathsf T}
+=\frac12\begin{pmatrix}1&amp;1&amp;0\\1&amp;1&amp;0\\0&amp;0&amp;0\end{pmatrix}.\]
+
+<p>对 $b=(1,2,3)^{\mathsf T}$，</p>
+
+\[Pb=\frac12\begin{pmatrix}3\\3\\0\end{pmatrix}
+=\begin{pmatrix}\frac32\\\frac32\\0\end{pmatrix}.\]
+
+<p>残差</p>
+
+\[b-Pb=\begin{pmatrix}-\frac12\\\frac12\\3\end{pmatrix},\]
+
+<p>与 $q$ 正交：</p>
+
+\[q^{\mathsf T}(b-Pb)=\frac{1}{\sqrt2}\left(-\frac12+\frac12+0\right)=0.\]
+
+<h2 id="投影到二维子空间">投影到二维子空间</h2>
+
+<p>设</p>
+
+\[Q=\frac{1}{\sqrt2}\begin{pmatrix}1&amp;1\\1&amp;-1\\0&amp;0\end{pmatrix}\in\mathbb R^{3\times 2}.\]
+
+<p>验证 $Q^{\mathsf T}Q=I_2$。则</p>
+
+\[P=QQ^{\mathsf T}
+=\frac12\begin{pmatrix}1&amp;1\\1&amp;-1\\0&amp;0\end{pmatrix}
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;-1&amp;0\end{pmatrix}
+=\begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;0\end{pmatrix}.\]
+
+<p>即 $P$ 是到 $xy$ 平面的投影矩阵。</p>
+
+<h2 id="一般子空间">一般子空间</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1\\1\\0\end{pmatrix},\qquad
+\mathcal S=\operatorname{span}(A).\]
+
+<p>则</p>
+
+\[A^{\mathsf T}A=2,\qquad
+P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}
+=\frac12\begin{pmatrix}1&amp;1&amp;0\\1&amp;1&amp;0\\0&amp;0&amp;0\end{pmatrix}.\]
+
+<p>与例 8.1 一致。</p>
+
+<h1 id="正交投影与非正交投影">正交投影与非正交投影</h1>
+
+<p><strong>定义 9.1（一般投影矩阵）</strong><br />
+若矩阵 $P$ 满足 $P^2=P$，但不要求 $P^{\mathsf T}=P$，则称 $P$ 为<strong>投影矩阵</strong>（非正交投影）。其值域为 $\operatorname{Col}(P)$，核为 $\ker P$，且</p>
+
+\[\mathbb R^n=\operatorname{Col}(P)\oplus\ker P.\]
+
+<p>但 $\operatorname{Col}(P)$ 与 $\ker P$ 不一定正交。</p>
+
+<p><strong>正交投影与一般投影的对比</strong>：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>性质</th>
+      <th>正交投影</th>
+      <th>一般投影</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>定义</td>
+      <td>$P^2=P$，$P^{\mathsf T}=P$</td>
+      <td>$P^2=P$</td>
+    </tr>
+    <tr>
+      <td>值域与核</td>
+      <td>正交</td>
+      <td>不一定正交</td>
+    </tr>
+    <tr>
+      <td>特征值</td>
+      <td>$0$ 或 $1$</td>
+      <td>任意（但满足 $\lambda^2=\lambda$）</td>
+    </tr>
+    <tr>
+      <td>范数</td>
+      <td>$|P|_2=1$</td>
+      <td>$|P|_2\ge 1$</td>
+    </tr>
+    <tr>
+      <td>最小二乘</td>
+      <td>适用</td>
+      <td>不适用</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>例</strong>：</p>
+
+\[P=\begin{pmatrix}1&amp;1\\0&amp;0\end{pmatrix}\]
+
+<p>满足 $P^2=P$，但 $P^{\mathsf T}\ne P$，是一般投影矩阵。</p>
+
+<h1 id="总结">总结</h1>
+
+\[\text{正交投影矩阵：}P^2=P,\quad P^{\mathsf T}=P.\]
+
+<p><strong>核心性质</strong>：</p>
+<ul>
+  <li>幂等：$P^2=P$；</li>
+  <li>对称：$P^{\mathsf T}=P$；</li>
+  <li>值域：$\operatorname{Col}(P)=\mathcal S$；</li>
+  <li>核：$\ker P=\mathcal S^\perp$；</li>
+  <li>特征值：$0$ 或 $1$；</li>
+  <li>秩：$\operatorname{rank}P=\operatorname{tr}P=\dim\mathcal S$；</li>
+  <li>谱分解：$P=\sum_{i=1}^r q_iq_i^{\mathsf T}$。</li>
+</ul>
+
+<p><strong>两种表示</strong>：</p>
+
+\[P=QQ^{\mathsf T}\quad(Q^{\mathsf T}Q=I),\qquad
+P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\quad(A\text{ 列满秩}).\]
+
+<p><strong>几何意义</strong>：将向量正交分解为子空间分量与正交补分量，$Pb$ 是 $b$ 在子空间上的投影，$b-Pb$ 垂直于子空间。</p>
+
+<p><strong>应用</strong>：</p>
+<ul>
+  <li>最小二乘问题的几何解释；</li>
+  <li>QR 分解、SVD 中的投影表示；</li>
+  <li>正交投影、子空间分解；</li>
+  <li>数值线性代数中的基本工具。</li>
+</ul>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小二乘（正规方程法）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html" rel="alternate" type="text/html" title="最小二乘（正规方程法）" /><published>2026-10-11T00:00:00+00:00</published><updated>2026-10-11T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%88%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html"><![CDATA[<h1 id="最小二乘问题">最小二乘问题</h1>
+
+<h2 id="问题陈述">问题陈述</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$，$m\ge n$，$\operatorname{rank}A=n$（列满秩），$b\in\mathbb R^m$。<strong>最小二乘问题</strong>为
+\(\min_{x\in\mathbb R^n}\|Ax-b\|_2.\)</p>
+
+<p>即求 $x\in\mathbb R^n$，使残差</p>
+
+\[r=Ax-b\]
+
+<p>的欧几里得范数最小。</p>
+
+<h2 id="超定方程组">超定方程组</h2>
+
+<p>当 $m&gt;n$ 时，方程组 $Ax=b$ 是<strong>超定的</strong>：方程个数多于未知量个数，通常无精确解。最小二乘问题寻找使残差范数最小的近似解。</p>
+
+<p><strong>例</strong>：</p>
+
+\[\begin{cases}
+x_1+x_2=1,\\
+x_1=2,\\
+x_2=3.
+\end{cases}\]
+
+<p>三个方程，两个未知量。无精确解，但可求最小二乘解。</p>
+
+<h2 id="几何意义">几何意义</h2>
+
+<p>$Ax$ 遍历子空间</p>
+
+\[\mathcal S=\operatorname{Col}(A)=\{Ax:x\in\mathbb R^n\}\subseteq\mathbb R^m.\]
+
+<p>最小二乘问题等价于：在 $\mathcal S$ 中找一点 $p$，使 $|p-b|_2$ 最小。由正交投影定理，最优 $p$ 是 $b$ 在 $\mathcal S$ 上的正交投影。</p>
+
+<h1 id="正交投影原理">正交投影原理</h1>
+
+<h2 id="正交投影定理">正交投影定理</h2>
+
+<p><strong>定理 2.1.1（正交投影的存在唯一性）</strong><br />
+设 $\mathcal S\subseteq\mathbb R^m$ 为子空间，$b\in\mathbb R^m$。则存在唯一的 $p\in\mathcal S$，使得</p>
+
+\[\|p-b\|_2=\min_{y\in\mathcal S}\|y-b\|_2,\]
+
+<p>且 $p$ 满足</p>
+
+\[b-p\perp\mathcal S.\]
+
+<p>称 $p$ 为 $b$ 在 $\mathcal S$ 上的<strong>正交投影</strong>。</p>
+
+<p><strong>证明</strong><br />
+取 $\mathcal S$ 的一组标准正交基 $q_1,\dots,q_n$，令</p>
+
+\[p=\sum_{i=1}^n\langle b,q_i\rangle q_i,\qquad e=b-p.\]
+
+<p>则 $p\in\mathcal S$，且对每个 $j$，</p>
+
+\[\langle e,q_j\rangle=\langle b,q_j\rangle-\sum_{i=1}^n\langle b,q_i\rangle\langle q_i,q_j\rangle
+=\langle b,q_j\rangle-\langle b,q_j\rangle=0.\]
+
+<p>故 $e\perp\mathcal S$。</p>
+
+<p>对任意 $y\in\mathcal S$，$y-p\in\mathcal S$，故 $\langle y-p,e\rangle=0$。由勾股定理，</p>
+
+\[\|y-b\|_2^2=\|(y-p)+e\|_2^2=\|y-p\|_2^2+\|e\|_2^2\ge\|e\|_2^2=\|p-b\|_2^2.\]
+
+<p>等号成立当且仅当 $y=p$，故 $p$ 唯一。</p>
+
+<h2 id="应用到最小二乘">应用到最小二乘</h2>
+
+<p>取 $\mathcal S=\operatorname{Col}(A)$。最小二乘问题的最优解 $p=Ax$ 是 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影，满足</p>
+
+\[b-Ax\perp\operatorname{Col}(A).\]
+
+<h1 id="正规方程的推导">正规方程的推导</h1>
+
+<h2 id="正交性条件">正交性条件</h2>
+
+<p>$b-Ax\perp\operatorname{Col}(A)$ 等价于 $b-Ax$ 与 $A$ 的每一列正交，即</p>
+
+\[A^{\mathsf T}(b-Ax)=0.\]
+
+<p>展开：</p>
+
+\[A^{\mathsf T}b-A^{\mathsf T}Ax=0,\]
+
+<p>即</p>
+
+\[A^{\mathsf T}Ax=A^{\mathsf T}b.\]
+
+<p>这就是<strong>正规方程</strong>（normal equations）。</p>
+
+<h2 id="解的存在唯一性">解的存在唯一性</h2>
+
+<p><strong>定理 3.2.1</strong><br />
+若 $A\in\mathbb R^{m\times n}$ 列满秩，则 $A^{\mathsf T}A\in M_n(\mathbb R)$ 对称正定，从而可逆。正规方程有唯一解</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<p><strong>证明</strong></p>
+
+<p><strong>(1) 对称性</strong>：</p>
+
+\[(A^{\mathsf T}A)^{\mathsf T}=A^{\mathsf T}A.\]
+
+<p><strong>(2) 正定性</strong>：对任意非零 $y\in\mathbb R^n$，</p>
+
+\[y^{\mathsf T}A^{\mathsf T}Ay=\|Ay\|_2^2.\]
+
+<p>因 $A$ 列满秩，$Ay\ne 0$，故 $|Ay|_2^2&gt;0$。因此 $A^{\mathsf T}A$ 正定，特别地可逆。</p>
+
+<p><strong>(3) 解</strong>：由 $A^{\mathsf T}A$ 可逆，正规方程有唯一解</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<h2 id="最优性验证">最优性验证</h2>
+
+<p><strong>定理 3.3.1</strong><br />
+设 $x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b$，则对任意 $y\in\mathbb R^n$，</p>
+
+\[\|Ax-b\|_2\le\|Ay-b\|_2.\]
+
+<p><strong>证明</strong><br />
+令 $r=b-Ax$。由正规方程，</p>
+
+\[A^{\mathsf T}r=A^{\mathsf T}(b-Ax)=A^{\mathsf T}b-A^{\mathsf T}Ax=0.\]
+
+<p>故 $r\perp\operatorname{Col}(A)$。</p>
+
+<p>对任意 $y\in\mathbb R^n$，</p>
+
+\[Ay-b=(Ax-b)+A(y-x)=r+A(y-x).\]
+
+<p>因 $r\perp\operatorname{Col}(A)$，而 $A(y-x)\in\operatorname{Col}(A)$，由勾股定理，</p>
+
+\[\|Ay-b\|_2^2=\|r\|_2^2+\|A(y-x)\|_2^2\ge\|r\|_2^2=\|Ax-b\|_2^2.\]
+
+<p>等号成立当且仅当 $A(y-x)=0$，即 $y=x$（因 $A$ 列满秩）。$\square$</p>
+
+<h2 id="最小残差">最小残差</h2>
+
+<p>最小残差为</p>
+
+\[\min_x\|Ax-b\|_2=\|b-Ax\|_2=\|(I-P)b\|_2,\]
+
+<p>其中</p>
+
+\[P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\]
+
+<p>是到 $\operatorname{Col}(A)$ 上的正交投影矩阵。</p>
+
+<h1 id="几何解释">几何解释</h1>
+
+<h2 id="投影分解">投影分解</h2>
+
+<p>将 $b$ 正交分解为</p>
+
+\[b=Ax+(b-Ax),\]
+
+<p>其中</p>
+
+\[Ax\in\operatorname{Col}(A),\qquad b-Ax\in\operatorname{Col}(A)^\perp.\]
+
+<p>最小二乘解 $x$ 使 $Ax$ 成为 $b$ 在 $\operatorname{Col}(A)$ 上的投影。</p>
+
+<h2 id="图示">图示</h2>
+
+<p>在 $\mathbb R^m$ 中，$\operatorname{Col}(A)$ 是一个 $n$ 维子空间（$n&lt;m$）。$b$ 一般不在其中。最小二乘解对应 $b$ 到该子空间的垂直投影：</p>
+<ul>
+  <li>$Ax$：投影点；</li>
+  <li>$b-Ax$：垂直残差；</li>
+  <li>$|b-Ax|_2$：最短距离。</li>
+</ul>
+
+<h2 id="正交性条件-1">正交性条件</h2>
+
+<p>残差 $r=b-Ax$ 与 $A$ 的每一列正交：</p>
+
+\[A^{\mathsf T}r=0.\]
+
+<p>这是最小二乘解的特征性质，也是正规方程的来源。</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>算法 5.1（正规方程法）</strong></p>
+
+<ol>
+  <li>计算</li>
+</ol>
+
+\[G=A^{\mathsf T}A\in M_n(\mathbb R),\qquad c=A^{\mathsf T}b\in\mathbb R^n.\]
+
+<ol>
+  <li>解对称正定方程组</li>
+</ol>
+
+\[Gx=c.\]
+
+<p>可用 Cholesky 分解：$G=LL^{\mathsf T}$，然后前代与回代求解。</p>
+<ol>
+  <li>得到最小二乘解 $x$。</li>
+</ol>
+
+<h2 id="cholesky-分解求解">Cholesky 分解求解</h2>
+
+<p>因 $G=A^{\mathsf T}A$ 对称正定，存在唯一的 Cholesky 分解</p>
+
+\[G=LL^{\mathsf T},\qquad L\text{ 下三角，}l_{ii}&gt;0.\]
+
+<p>则</p>
+
+\[Gx=c\iff LL^{\mathsf T}x=c.\]
+
+<p>令 $y=L^{\mathsf T}x$，则</p>
+
+\[Ly=c\quad\text{（前代）},\]
+
+\[L^{\mathsf T}x=y\quad\text{（回代）}.\]
+
+<h2 id="计算量">计算量</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>计算 $G=A^{\mathsf T}A$</td>
+      <td>$mn^2$</td>
+    </tr>
+    <tr>
+      <td>计算 $c=A^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>Cholesky 分解</td>
+      <td>$\frac13n^3$</td>
+    </tr>
+    <tr>
+      <td>前代与回代</td>
+      <td>$2n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$mn^2+\frac13n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="数值稳定性">数值稳定性</h1>
+
+<h2 id="条件数平方问题">条件数平方问题</h2>
+
+<p>正规方程的核心缺陷是<strong>条件数平方</strong>。设</p>
+
+\[\kappa(A)=\|A\|_2\|A^+\|_2\]
+
+<p>为 $A$ 的条件数（$A^+$ 为 Moore–Penrose 伪逆）。则</p>
+
+\[\kappa(A^{\mathsf T}A)=\kappa(A)^2.\]
+
+<p>这意味着：</p>
+<ul>
+  <li>若 $\kappa(A)=10^k$，则 $\kappa(A^{\mathsf T}A)=10^{2k}$；</li>
+  <li>计算 $A^{\mathsf T}A$ 会损失约 $k$ 位有效数字；</li>
+  <li>求解正规方程的解的误差约为 $\kappa(A)^2\epsilon$，而非 $\kappa(A)\epsilon$。</li>
+</ul>
+
+<h2 id="误差估计">误差估计</h2>
+
+<p><strong>定理 6.2.1</strong><br />
+设 $\hat x$ 为正规方程法得到的浮点解，$x$ 为精确最小二乘解。则</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)^2\,\epsilon+O(\epsilon^2),\]
+
+<p>其中 $\epsilon$ 为机器精度，$c$ 为与 $m,n$ 相关的常数。</p>
+
+<p><strong>对比 QR 分解</strong>：</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)\,\epsilon+O(\epsilon^2).\]
+
+<p>QR 分解的误差与 $\kappa(A)$ 成正比，而正规方程与 $\kappa(A)^2$ 成正比。</p>
+
+<h2 id="病态问题示例">病态问题示例</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\ \epsilon&amp;0\\0&amp;\epsilon\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\1\\1\end{pmatrix},\qquad \epsilon=10^{-8}.\]
+
+<p>则</p>
+
+\[A^{\mathsf T}A=\begin{pmatrix}1+\epsilon^2&amp;1\\1&amp;1+\epsilon^2\end{pmatrix}.\]
+
+<p>计算得</p>
+
+\[\kappa(A)\approx\frac{1}{\epsilon}=10^8,\qquad
+\kappa(A^{\mathsf T}A)\approx\frac{1}{\epsilon^2}=10^{16}.\]
+
+<p>在双精度（$\epsilon_{\text{mach}}\approx10^{-16}$）下，正规方程法可能完全失去精度，而 QR 分解仍能得到较好结果。</p>
+
+<h2 id="数值稳定的改进">数值稳定的改进</h2>
+
+<p><strong>迭代改进</strong>：在正规方程法求得 $\hat x$ 后，计算残差</p>
+
+\[r=b-A\hat x,\]
+
+<p>再解</p>
+
+\[A^{\mathsf T}A\,\delta=A^{\mathsf T}r,\]
+
+<p>更新</p>
+
+\[\hat x\leftarrow\hat x+\delta.\]
+
+<p>重复直至收敛。可部分弥补精度损失，但无法根本解决条件数平方问题。</p>
+
+<h1 id="例题">例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
+
+<h3 id="71-计算正规方程">7.1 计算正规方程</h3>
+
+\[A^{\mathsf T}A=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}
+=
+\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\]
+
+\[A^{\mathsf T}b=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}1\\2\\3\end{pmatrix}
+=
+\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<h2 id="解正规方程">解正规方程</h2>
+
+\[\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}
+\begin{pmatrix}x_1\\x_2\end{pmatrix}
+=
+\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<p>由 Cramer 法则：</p>
+
+\[x_1=\frac{2\cdot3-1\cdot4}{2\cdot2-1\cdot1}=\frac{2}{3},\]
+
+\[x_2=\frac{2\cdot4-1\cdot3}{3}=\frac{5}{3}.\]
+
+<p>故</p>
+
+\[x=\begin{pmatrix}\frac23\\\frac53\end{pmatrix}.\]
+
+<h2 id="验证">验证</h2>
+
+\[Ax=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}
+\begin{pmatrix}\frac23\\\frac53\end{pmatrix}
+=
+\begin{pmatrix}\frac73\\\frac23\\\frac53\end{pmatrix}.\]
+
+<p>残差</p>
+
+\[b-Ax=\begin{pmatrix}1-\frac73\\2-\frac23\\3-\frac53\end{pmatrix}
+=\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix}.\]
+
+<p>验证正交性：</p>
+
+\[A^{\mathsf T}(b-Ax)=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix}
+=\begin{pmatrix}0\\0\end{pmatrix}.\]
+
+<p>正确。</p>
+
+<p>最小残差：</p>
+
+\[\|Ax-b\|_2=\sqrt{\frac{16}{3}}=\frac{4}{\sqrt3}.\]
+
+<h1 id="与-qr-分解的比较">与 QR 分解的比较</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>实现复杂度</td>
+      <td>简单</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：</p>
+<ul>
+  <li>当 $A$ 良态（$\kappa(A)$ 不大）时，正规方程法计算量小，可用；</li>
+  <li>当 $A$ 病态或精度要求高时，应采用 QR 分解或 SVD。</li>
+</ul>
+
+<h1 id="优缺点">优缺点</h1>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>推导简洁，几何直观；</li>
+  <li>计算量较小（约 $mn^2+\frac13n^3$）；</li>
+  <li>可结合 Cholesky 分解高效求解；</li>
+  <li>矩阵 $A^{\mathsf T}A$ 对称正定，有现成高效算法。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>条件数平方 $\kappa(A)^2$，数值不稳定；</li>
+  <li>对病态问题精度损失严重；</li>
+  <li>显式计算 $A^{\mathsf T}A$ 可能引入额外误差；</li>
+  <li>当 $A$ 接近奇异时，$A^{\mathsf T}A$ 可能严重病态甚至数值奇异。</li>
+</ol>
+
+<p><strong>适用场景</strong></p>
+<ul>
+  <li>小规模问题；</li>
+  <li>良态矩阵（$\kappa(A)$ 不大）；</li>
+  <li>对精度要求不高的场合；</li>
+  <li>需要快速求解且矩阵条件数可控。</li>
+</ul>
+
+<p><strong>替代方法</strong></p>
+<ul>
+  <li>QR 分解（条件数 $\kappa(A)$，稳定）；</li>
+  <li>SVD（最稳定，但计算量大）。</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+\[\text{正规方程法：}A^{\mathsf T}Ax=A^{\mathsf T}b\implies x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<p><strong>原理</strong>：</p>
+<ol>
+  <li>最小二乘问题等价于求 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影；</li>
+  <li>正交性条件 $b-Ax\perp\operatorname{Col}(A)$ 给出 $A^{\mathsf T}(b-Ax)=0$；</li>
+  <li>展开得正规方程 $A^{\mathsf T}Ax=A^{\mathsf T}b$；</li>
+  <li>若 $A$ 列满秩，$A^{\mathsf T}A$ 对称正定，有唯一解。</li>
+</ol>
+
+<p><strong>几何意义</strong>：残差 $b-Ax$ 垂直于 $\operatorname{Col}(A)$，$Ax$ 是 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影。</p>
+
+<p><strong>核心公式</strong>：</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b,\qquad
+P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}.\]
+
+<p><strong>数值稳定性</strong>：条件数 $\kappa(A)^2$，是正规方程法的主要缺陷。对病态问题，应采用 QR 分解或 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小二乘（QR 法）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html" rel="alternate" type="text/html" title="最小二乘（QR 法）" /><published>2026-10-10T00:00:00+00:00</published><updated>2026-10-10T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%88QR%20%E6%B3%95%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html"><![CDATA[<h1 id="最小二乘问题">最小二乘问题</h1>
+
+<h2 id="问题陈述">问题陈述</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$，$m\ge n$，$\operatorname{rank}A=n$（列满秩），$b\in\mathbb R^m$。<strong>最小二乘问题</strong>为</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2.\]
+
+<p>即求 $x\in\mathbb R^n$，使残差 $r=Ax-b$ 的欧几里得范数最小。</p>
+
+<h2 id="几何意义">几何意义</h2>
+
+<p>当 $m&gt;n$ 时，方程组 $Ax=b$ 通常无解，因 $b$ 一般不在 $\operatorname{Col}(A)$ 中。最小二乘问题寻找 $x$，使 $Ax$ 尽可能接近 $b$。</p>
+
+<p>$Ax$ 遍历子空间</p>
+
+\[\mathcal S=\operatorname{Col}(A)\subseteq\mathbb R^m.\]
+
+<p>问题等价于：在 $\mathcal S$ 中找一点 $p$，使 $|p-b|_2$ 最小。由正交投影定理，最优 $p$ 是 $b$ 在 $\mathcal S$ 上的正交投影。</p>
+
+<h1 id="qr-分解回顾">QR 分解回顾</h1>
+
+<h2 id="经济型-qr-分解">经济型 QR 分解</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$ 列满秩。其<strong>经济型 QR 分解</strong>为</p>
+
+\[A=Q_1R_1,\]
+
+<p>其中</p>
+
+\[Q_1\in\mathbb R^{m\times n},\qquad Q_1^{\mathsf T}Q_1=I_n,\]
+
+\[R_1\in\mathbb R^{n\times n}\text{ 上三角，且 }r_{ii}\ne 0.\]
+
+<h2 id="全型-qr-分解">全型 QR 分解</h2>
+
+<p><strong>全型 QR 分解</strong>为</p>
+
+\[A=QR,\]
+
+<p>其中</p>
+
+\[Q\in M_m(\mathbb R)\text{ 正交},\qquad R=\begin{pmatrix}R_1\\0\end{pmatrix}\in\mathbb R^{m\times n}.\]
+
+<p>两者关系：</p>
+
+\[Q=[Q_1\ Q_2],\qquad A=Q_1R_1.\]
+
+<h2 id="关键性质">关键性质</h2>
+
+<ol>
+  <li><strong>标准正交列</strong>：$Q_1^{\mathsf T}Q_1=I_n$；</li>
+  <li><strong>保范数</strong>：对任意 $y\in\mathbb R^n$，</li>
+</ol>
+
+\[\|Q_1y\|_2=\|y\|_2;\]
+
+<ol>
+  <li><strong>正交分解</strong>：对任意 $b\in\mathbb R^m$，</li>
+</ol>
+
+\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
+
+<p>其中</p>
+
+\[Q_1Q_1^{\mathsf T}b\in\operatorname{Col}(Q_1)=\operatorname{Col}(A),\]
+
+\[(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp=\operatorname{Col}(A)^\perp,\]
+
+<p>且两项正交。</p>
+
+<h1 id="qr-法求解最小二乘的原理">QR 法求解最小二乘的原理</h1>
+
+<h2 id="残差的等价变形">残差的等价变形</h2>
+
+<p>将 $A=Q_1R_1$ 代入残差：</p>
+
+\[\|Ax-b\|_2=\|Q_1R_1x-b\|_2.\]
+
+<p>利用正交分解</p>
+
+\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
+
+<p>得</p>
+
+\[Q_1R_1x-b=Q_1R_1x-Q_1Q_1^{\mathsf T}b-(I-Q_1Q_1^{\mathsf T})b.\]
+
+<p>令</p>
+
+\[u=Q_1(R_1x-Q_1^{\mathsf T}b)\in\operatorname{Col}(Q_1),\]
+
+\[v=-(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp.\]
+
+<p>由 $u\perp v$ 及勾股定理，</p>
+
+\[\|Q_1R_1x-b\|_2^2=\|u\|_2^2+\|v\|_2^2.\]
+
+<p>由 $Q_1$ 保范数，</p>
+
+\[\|u\|_2^2=\|Q_1(R_1x-Q_1^{\mathsf T}b)\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>故</p>
+
+\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
+
+<h2 id="最小化">最小化</h2>
+
+<p>第二项</p>
+
+\[\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\]
+
+<p>与 $x$ 无关，为常数。因此</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2^2
+=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2+\min_{x\in\mathbb R^n}\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>等价于最小化</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
+
+<p>因 $R_1$ 为可逆上三角矩阵，方程</p>
+
+\[R_1x=Q_1^{\mathsf T}b\]
+
+<p>有唯一解，且此时第一项为零，达到最小值。</p>
+
+<h2 id="最优解">最优解</h2>
+
+\[x=R_1^{-1}Q_1^{\mathsf T}b.\]
+
+<p>最小残差为</p>
+
+\[\min_x\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
+
+<p>即 $b$ 在 $\operatorname{Col}(A)^\perp$ 上的分量。</p>
+
+<h2 id="几何解释">几何解释</h2>
+
+<p>最小二乘问题等价于求 $b$ 在 $\mathcal S=\operatorname{Col}(A)=\operatorname{Col}(Q_1)$ 上的正交投影。</p>
+
+<p>QR 分解将 $b$ 分解为</p>
+
+\[b=\underbrace{Q_1Q_1^{\mathsf T}b}_{\in\mathcal S}+\underbrace{(I-Q_1Q_1^{\mathsf T})b}_{\in\mathcal S^\perp}.\]
+
+<p>最小二乘解 $x^*$ 使</p>
+
+\[Ax^*=Q_1R_1x^*=Q_1Q_1^{\mathsf T}b,\]
+
+<p>即 $Ax^*$ 恰好是 $b$ 在 $\mathcal S$ 上的投影。残差</p>
+
+\[b-Ax^*=(I-Q_1Q_1^{\mathsf T})b\]
+
+<p>垂直于 $\mathcal S$。</p>
+
+<h1 id="正确性证明">正确性证明</h1>
+
+<p><strong>定理 4.1</strong><br />
+设 $A\in\mathbb R^{m\times n}$ 列满秩，$b\in\mathbb R^m$，$A=Q_1R_1$ 为经济型 QR 分解。则</p>
+
+\[x^*=R_1^{-1}Q_1^{\mathsf T}b\]
+
+<p>是最小二乘问题</p>
+
+\[\min_{x\in\mathbb R^n}\|Ax-b\|_2\]
+
+<p>的唯一解。</p>
+
+<p><strong>证明</strong></p>
+
+<p><strong>(1) 最优性</strong></p>
+
+<p>对任意 $x\in\mathbb R^n$，由 §3.1，</p>
+
+\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
+
+<p>第二项非负且与 $x$ 无关。第一项</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2\ge 0,\]
+
+<p>等号成立当且仅当</p>
+
+\[R_1x=Q_1^{\mathsf T}b.\]
+
+<p>因 $R_1$ 可逆，该方程有唯一解 $x^*=R_1^{-1}Q_1^{\mathsf T}b$。故</p>
+
+\[\|Ax^*-b\|_2^2=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\le\|Ax-b\|_2^2,\qquad\forall x\in\mathbb R^n.\]
+
+<p><strong>(2) 唯一性</strong></p>
+
+<p>若 $x$ 也是最优解，则</p>
+
+\[\|R_1x-Q_1^{\mathsf T}b\|_2^2=0,\]
+
+<p>即 $R_1x=Q_1^{\mathsf T}b$。因 $R_1$ 可逆，$x=x^*$。</p>
+
+<p><strong>(3) 与正规方程一致</strong></p>
+
+<p>由 $A=Q_1R_1$，</p>
+
+\[A^{\mathsf T}A=R_1^{\mathsf T}Q_1^{\mathsf T}Q_1R_1=R_1^{\mathsf T}R_1,\]
+
+\[A^{\mathsf T}b=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
+
+<p>正规方程为</p>
+
+\[R_1^{\mathsf T}R_1x=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
+
+<p>因 $R_1^{\mathsf T}$ 可逆，等价于</p>
+
+\[R_1x=Q_1^{\mathsf T}b.\]
+
+<p>故 $x^*$ 满足正规方程，与最小二乘的经典结论一致。$\square$</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>算法 5.1（QR 法解最小二乘）</strong></p>
+
+<ol>
+  <li>计算 $A$ 的经济型 QR 分解：</li>
+</ol>
+
+\[A=Q_1R_1,\qquad Q_1\in\mathbb R^{m\times n},\quad R_1\in\mathbb R^{n\times n}\text{ 上三角}.\]
+
+<ol>
+  <li>计算</li>
+</ol>
+
+\[c=Q_1^{\mathsf T}b\in\mathbb R^n.\]
+
+<ol>
+  <li>回代求解上三角方程组</li>
+</ol>
+
+\[R_1x=c.\]
+
+<p>即</p>
+
+\[x_i=\frac{1}{r_{ii}}\left(c_i-\sum_{j=i+1}^{n}r_{ij}x_j\right),\qquad i=n,n-1,\dots,1.\]
+
+<h1 id="计算量与数值稳定性">计算量与数值稳定性</h1>
+
+<h2 id="计算量">计算量</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>QR 分解</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>计算 $Q_1^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>回代</td>
+      <td>$n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$2mn^2-\frac23n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="与正规方程对比">与正规方程对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="数值稳定性">数值稳定性</h2>
+
+<p><strong>定理 6.3.1</strong><br />
+设 $\hat x$ 为 QR 法得到的浮点最小二乘解，$x$ 为精确解。则</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)\,\epsilon+O(\epsilon^2),\]
+
+<p>其中 $\kappa(A)=|A|_2|A^+|_2$ 为条件数，$\epsilon$ 为机器精度。</p>
+
+<p><strong>对比正规方程</strong>：</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)^2\,\epsilon+O(\epsilon^2).\]
+
+<p>QR 法的误差与 $\kappa(A)$ 成正比，而正规方程与 $\kappa(A)^2$ 成正比。QR 法数值稳定性显著优于正规方程。</p>
+
+<p><strong>原因</strong>：正规方程中 $A^{\mathsf T}A$ 的条件数为 $\kappa(A)^2$，放大误差；QR 法中 $Q_1$ 为正交矩阵，不放大误差，$R_1$ 的条件数等于 $\kappa(A)$。</p>
+
+<h1 id="例题">例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
+
+<h2 id="qr-分解">QR 分解</h2>
+
+<p>由前文例题，经济型 QR 分解为</p>
+
+\[Q_1=\begin{pmatrix}
+-\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt6}\\
+-\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt6}\\
+0&amp;\frac{2}{\sqrt6}
+\end{pmatrix},\qquad
+R_1=\begin{pmatrix}
+-\sqrt2&amp;-\frac{1}{\sqrt2}\\
+0&amp;-\sqrt{\frac32}
+\end{pmatrix}.\]
+
+<h2 id="计算-cq_1mathsf-tb">计算 $c=Q_1^{\mathsf T}b$</h2>
+
+\[Q_1^{\mathsf T}b=
+\begin{pmatrix}
+-\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt2}&amp;0\\
+-\frac{1}{\sqrt6}&amp;\frac{1}{\sqrt6}&amp;\frac{2}{\sqrt6}
+\end{pmatrix}
+\begin{pmatrix}1\\2\\3\end{pmatrix}
+=
+\begin{pmatrix}
+-\frac{3}{\sqrt2}\\
+\frac{7}{\sqrt6}
+\end{pmatrix}.\]
+
+<h2 id="回代求解-r_1xc">回代求解 $R_1x=c$</h2>
+
+\[-\sqrt{\frac32}\,x_2=\frac{7}{\sqrt6}
+\implies x_2=-\frac73,\]
+
+\[-\sqrt2\,x_1-\frac{1}{\sqrt2}x_2=-\frac{3}{\sqrt2}
+\implies x_1=\frac83.\]
+
+<p>故</p>
+
+\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix}.\]
+
+<h2 id="验证">验证</h2>
+
+<p>计算正规方程：</p>
+
+\[A^{\mathsf T}A=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\qquad
+A^{\mathsf T}b=\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<p>解得</p>
+
+\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix},\]
+
+<p>与 QR 法一致。</p>
+
+<p>最小残差：</p>
+
+\[\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
+
+<p>计算得</p>
+
+\[(I-Q_1Q_1^{\mathsf T})b=
+\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix},\]
+
+\[\|Ax-b\|_2=\sqrt{\frac{16}{3}}=\frac{4}{\sqrt3}.\]
+
+<h2 id="八优缺点">八、优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>数值稳定（条件数 $\kappa(A)$ 而非 $\kappa(A)^2$）；</li>
+  <li>计算量适中（约 $2mn^2-\frac23n^3$）；</li>
+  <li>可复用 QR 分解处理多个右端项；</li>
+  <li>几何意义清晰（正交投影）。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>计算量略大于正规方程；</li>
+  <li>需要存储 $Q_1$（或 Householder 向量）；</li>
+  <li>对稀疏矩阵可能引入填充。</li>
+</ol>
+
+<h1 id="总结">总结</h1>
+
+\[\text{QR 法解最小二乘：}A=Q_1R_1\implies x=R_1^{-1}Q_1^{\mathsf T}b.\]
+
+<p><strong>核心原理</strong>：</p>
+
+<ol>
+  <li>最小二乘问题等价于求 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影；</li>
+  <li>QR 分解将 $A$ 化为 $Q_1R_1$，其中 $Q_1$ 具有标准正交列；</li>
+  <li>将残差分解为 $\operatorname{Col}(Q_1)$ 和 $\operatorname{Col}(Q_1)^\perp$ 两部分，利用正交性和勾股定理分离出与 $x$ 无关的常数项；</li>
+  <li>最小化等价于解上三角方程组 $R_1x=Q_1^{\mathsf T}b$。</li>
+</ol>
+
+<p><strong>与正规方程对比</strong>：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>较小</td>
+      <td>较大</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>良态问题</td>
+      <td>通用</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：QR 法是最小二乘问题的标准方法，兼顾稳定性与效率。当 $A$ 病态时，QR 法明显优于正规方程。若精度要求极高或 $A$ 接近奇异，可采用 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">HouseHolder 变换</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html" rel="alternate" type="text/html" title="HouseHolder 变换" /><published>2026-10-09T00:00:00+00:00</published><updated>2026-10-09T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder%20%E5%8F%98%E6%8D%A2</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html"><![CDATA[<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。</p>
 
 <p><strong>Householder 变换</strong>提供了另一种方法：通过<strong>镜面反射</strong>将向量映射到坐标轴方向，从而一次性消去多个元素。</p>
 
@@ -3864,1562 +5204,4 @@ x.\]
 
 <p><strong><code class="language-plaintext highlighter-rouge">std::any</code> 是 C++17 的类型擦除容器，能保存任意类型的单个值，并在运行期安全取回。
 它用类型擦除实现，通常有小对象优化。访问用 <code class="language-plaintext highlighter-rouge">any_cast</code>，类型不匹配时抛异常或返回 <code class="language-plaintext highlighter-rouge">nullptr</code>。
-它适合类型在运行期确定的场景，但不适合高性能路径。在线性代数库里很少需要 <code class="language-plaintext highlighter-rouge">any</code>，因为矩阵类型通常在编译期确定。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="cpp17" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">optional</title><link href="https://xdevil.top/cpp/2026/10/02/optional.html" rel="alternate" type="text/html" title="optional" /><published>2026-10-02T00:00:00+00:00</published><updated>2026-10-02T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/10/02/optional</id><content type="html" xml:base="https://xdevil.top/cpp/2026/10/02/optional.html"><![CDATA[<p><code class="language-plaintext highlighter-rouge">std::optional</code> 是 C++17 引入的<strong>可能无值的容器</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code> 里。
-它表示“要么有一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的值，要么什么都没有”。它是 <code class="language-plaintext highlighter-rouge">nullptr</code>、特殊哨兵值、<code class="language-plaintext highlighter-rouge">bool + T</code> 组合的类型安全替代品。</p>
-
-<h1 id="是什么">是什么</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code> 是一个可能包含 <code class="language-plaintext highlighter-rouge">T</code> 类型值、也可能为空的容器。</strong></p>
-
-<p>一句话：<strong><code class="language-plaintext highlighter-rouge">optional</code> 是“可能有值”的容器：它要么装一个 <code class="language-plaintext highlighter-rouge">T</code>，要么什么都不装。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>        <span class="c1">// 有值</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span><span class="p">;</span>             <span class="c1">// 空</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o3</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// 空</span>
-</code></pre></div></div>
-
-<h1 id="为什么需要-optional">为什么需要 <code class="language-plaintext highlighter-rouge">optional</code></h1>
-
-<h2 id="问题函数可能返回没有值">问题：函数可能返回“没有值”</h2>
-
-<p>假设一个函数查找整数，可能找到，也可能找不到。</p>
-
-<p><strong>方案 1：返回指针</strong>,问题：</p>
-
-<ul>
-  <li>需要动态分配或返回内部指针。</li>
-  <li>调用者需要判空。</li>
-  <li>所有权不清晰。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p><strong>方案 2：返回 <code class="language-plaintext highlighter-rouge">bool</code> + 输出参数</strong>,问题：</p>
-
-<ul>
-  <li>调用者必须先构造 <code class="language-plaintext highlighter-rouge">out</code>。</li>
-  <li>接口不直观。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p><strong>方案 3：返回哨兵值</strong>, 问题：</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">-1</code> 可能是合法值。</li>
-  <li>哨兵值污染值域。
-    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>   <span class="c1">// 返回 -1 表示找不到</span>
-</code></pre></div>    </div>
-  </li>
-</ul>
-
-<p><strong>方案 4：抛异常</strong>,问题：</p>
-
-<ul>
-  <li>异常开销大。</li>
-  <li>“找不到”不是异常情况。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>   <span class="c1">// 找不到抛异常</span>
-</code></pre></div></div>
-
-<h2 id="optional-的解法"><code class="language-plaintext highlighter-rouge">optional</code> 的解法</h2>
-<p>清晰、类型安全、零开销。</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">);</span>
-
-<span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="s">"foo"</span><span class="p">);</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
-<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"not found"</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="基本用法">基本用法</h1>
-
-<h2 id="定义与初始化">定义与初始化</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span><span class="p">;</span>                    <span class="c1">// 空</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>               <span class="c1">// 有值 42</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o3</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>     <span class="c1">// 空</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o4</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_optional</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>  <span class="c1">// 有值 42</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o5</span><span class="p">{</span><span class="mi">42</span><span class="p">};</span>                <span class="c1">// 有值 42</span>
-</code></pre></div></div>
-
-<h2 id="检查是否有值">检查是否有值</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span> <span class="p">{</span> <span class="cm">/* 有值 */</span> <span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 有值，隐式转 bool */</span> <span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 空 */</span> <span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="访问值">访问值</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">o</span><span class="p">;</span>          <span class="c1">// 解引用</span>
-<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>   <span class="c1">// 取值，空时抛 std::bad_optional_access</span>
-
-<span class="c1">// 空时返回默认值</span>
-<span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 有值返回 42，空返回 0</span>
-</code></pre></div></div>
-
-<h2 id="修改值">修改值</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
-
-<span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 赋值</span>
-<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">// 原地构造</span>
-<span class="n">o</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>           <span class="c1">// 清空</span>
-
-<span class="n">o</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>    <span class="c1">// 清空</span>
-</code></pre></div></div>
-
-<h2 id="比较">比较</h2>
-<p><code class="language-plaintext highlighter-rouge">optional</code> 支持所有比较运算符：</p>
-
-<ul>
-  <li>两个 <code class="language-plaintext highlighter-rouge">optional</code> 比较：先比是否有值，再比值。</li>
-  <li><code class="language-plaintext highlighter-rouge">optional</code> 与 <code class="language-plaintext highlighter-rouge">T</code> 比较：<code class="language-plaintext highlighter-rouge">optional</code> 有值时比值。</li>
-  <li><code class="language-plaintext highlighter-rouge">optional</code> 与 <code class="language-plaintext highlighter-rouge">nullopt</code> 比较：判断是否为空。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">d</span><span class="p">;</span>         <span class="c1">// 空</span>
-
-<span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// true</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="p">;</span>   <span class="c1">// false</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">d</span><span class="p">;</span>   <span class="c1">// false</span>
-<span class="n">d</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// true</span>
-</code></pre></div></div>
-
-<p>排序规则：</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">nullopt &lt; 任何有值的 optional</code>。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>         <span class="c1">// 空</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="c1">// 有值</span>
-<span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// true，空小于有值</span>
-</code></pre></div></div>
-
-<h1 id="optional-的实现原理"><code class="language-plaintext highlighter-rouge">optional</code> 的实现原理</h1>
-
-<h2 id="存储">存储</h2>
-
-<p><code class="language-plaintext highlighter-rouge">optional</code> 内部通常是一个<strong>联合体 + bool 标志</strong>：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
-    <span class="k">union</span> <span class="n">storage</span> <span class="p">{</span>
-        <span class="kt">char</span> <span class="n">empty</span><span class="p">;</span>
-        <span class="n">T</span> <span class="n">value</span><span class="p">;</span>
-        <span class="n">storage</span><span class="p">()</span> <span class="o">:</span> <span class="n">empty</span><span class="p">()</span> <span class="p">{}</span>
-        <span class="o">~</span><span class="n">storage</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="p">}</span> <span class="n">storage_</span><span class="p">;</span>
-    <span class="kt">bool</span> <span class="n">has_value_</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">storage</code> 是联合体，要么是空的 <code class="language-plaintext highlighter-rouge">char</code>，要么是 <code class="language-plaintext highlighter-rouge">T</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">has_value_</code> 记录当前是否有值。</li>
-  <li>构造函数根据是否有值，决定是否 placement new 构造 <code class="language-plaintext highlighter-rouge">T</code>。</li>
-  <li>析构函数根据 <code class="language-plaintext highlighter-rouge">has_value_</code>，决定是否调用 <code class="language-plaintext highlighter-rouge">T</code> 的析构。</li>
-</ul>
-
-<h2 id="大小">大小</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">);</span>      <span class="c1">// 通常是 8</span>
-<span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">);</span>   <span class="c1">// 通常是 16</span>
-<span class="k">sizeof</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">);</span>     <span class="c1">// 通常是 2</span>
-</code></pre></div></div>
-
-<p>一般等于：</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sizeof(T) + 对齐填充 + 1（bool）+ 对齐填充
-</code></pre></div></div>
-
-<h2 id="零开销">零开销</h2>
-
-<p>如果 <code class="language-plaintext highlighter-rouge">T</code> 有一个“不可能的值”可以表示空，<code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code> 可以做到零开销。但标准库的 <code class="language-plaintext highlighter-rouge">optional</code> 不保证这一点，通常多一个 <code class="language-plaintext highlighter-rouge">bool</code>。</p>
-
-<h2 id="optionalt-不合法"><code class="language-plaintext highlighter-rouge">optional&lt;T&amp;&gt;</code> 不合法</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 编译错误</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">optional</code> 不能存引用。如果需要“可能无值的引用”，用 <code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">std::reference_wrapper&lt;T&gt;</code>。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h1 id="optional-的常用操作"><code class="language-plaintext highlighter-rouge">optional</code> 的常用操作</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>操作</th>
-      <th>作用</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o = x</code></td>
-      <td>赋值</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o.emplace(args...)</code></td>
-      <td>原地构造</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o.reset()</code></td>
-      <td>清空</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o.has_value()</code></td>
-      <td>是否有值</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o.value()</code></td>
-      <td>取值，空时抛异常</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o.value_or(default)</code></td>
-      <td>取值，空时返回默认</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">*o</code></td>
-      <td>解引用</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o-&gt;member</code></td>
-      <td>访问成员</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">o == other</code></td>
-      <td>比较</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::make_optional(...)</code></td>
-      <td>工厂函数</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::nullopt</code></td>
-      <td>空值常量</td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="value_or-的细节"><code class="language-plaintext highlighter-rouge">value_or</code> 的细节</h1>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o1</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o2</span><span class="p">;</span>
-
-<span class="n">o1</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 42</span>
-<span class="n">o2</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">// 0</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">value_or</code> 的返回类型是 <code class="language-plaintext highlighter-rouge">T</code>，不是 <code class="language-plaintext highlighter-rouge">T&amp;</code>。所以：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
-<span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="s">"default"</span><span class="p">);</span>   <span class="c1">// 返回 std::string，不是引用</span>
-</code></pre></div></div>
-
-<p>如果 <code class="language-plaintext highlighter-rouge">T</code> 是移动-only 类型：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">);</span>   <span class="c1">// OK，移动</span>
-</code></pre></div></div>
-
-<h1 id="optional-的实际用途"><code class="language-plaintext highlighter-rouge">optional</code> 的实际用途</h1>
-
-<h2 id="函数返回可能无值">函数返回可能无值</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">parse_int</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">stoi</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="配置项">配置项</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">config</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port_</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">host_</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">set_port</span><span class="p">(</span><span class="kt">int</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">port_</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">port_</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="缓存">缓存</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">cache</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">value_t</span><span class="o">&gt;</span> <span class="n">cached_</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="k">const</span> <span class="n">value_t</span><span class="o">&amp;</span> <span class="n">get</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">cached_</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">cached_</span> <span class="o">=</span> <span class="n">compute</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="o">*</span><span class="n">cached_</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="延迟初始化">延迟初始化</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">heavy_object</span><span class="o">&gt;</span> <span class="n">obj</span><span class="p">;</span>
-<span class="c1">// 需要时再初始化</span>
-<span class="n">obj</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span>
-</code></pre></div></div>
-
-<h2 id="成员可能不存在">成员可能不存在</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">person</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">nickname</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="可选参数">可选参数</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">connect</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">port</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h1 id="optional-vs-其他工具"><code class="language-plaintext highlighter-rouge">optional</code> vs 其他工具</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code></th>
-      <th><code class="language-plaintext highlighter-rouge">variant&lt;Ts...&gt;</code></th>
-      <th><code class="language-plaintext highlighter-rouge">any</code></th>
-      <th><code class="language-plaintext highlighter-rouge">T*</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>可能无值</td>
-      <td>✅</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>类型数量</td>
-      <td>1</td>
-      <td>编译期多个</td>
-      <td>任意</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td>存储</td>
-      <td>内联</td>
-      <td>内联</td>
-      <td>可能堆</td>
-      <td>指针</td>
-    </tr>
-    <tr>
-      <td>类型安全</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td>性能</td>
-      <td>高</td>
-      <td>高</td>
-      <td>较低</td>
-      <td>高</td>
-    </tr>
-    <tr>
-      <td>头文件</td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;any&gt;</code></td>
-      <td>语言</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="选择原则">选择原则</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>需求</th>
-      <th>用哪个</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>可能有一个值，可能没有</td>
-      <td><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code></td>
-    </tr>
-    <tr>
-      <td>多个已知类型选一个</td>
-      <td><code class="language-plaintext highlighter-rouge">variant&lt;Ts...&gt;</code></td>
-    </tr>
-    <tr>
-      <td>任意类型，运行期确定</td>
-      <td><code class="language-plaintext highlighter-rouge">any</code></td>
-    </tr>
-    <tr>
-      <td>引用可能为空</td>
-      <td><code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">optional&lt;reference_wrapper&lt;T&gt;&gt;</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="optional-的常见陷阱"><code class="language-plaintext highlighter-rouge">optional</code> 的常见陷阱</h1>
-
-<h2 id="optionalbool"><code class="language-plaintext highlighter-rouge">optional&lt;bool&gt;</code></h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
-<span class="c1">// o 有三个状态：空、false、true</span>
-</code></pre></div></div>
-
-<p>容易混淆：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 有值，但是 false 还是 true？ */</span> <span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 值是 true */</span> <span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">value_or</span><span class="p">(</span><span class="nb">false</span><span class="p">))</span> <span class="p">{</span> <span class="cm">/* 值是 true */</span> <span class="p">}</span>
-</code></pre></div></div>
-
-<p>推荐用 <code class="language-plaintext highlighter-rouge">optional&lt;bool&gt;</code> 表示三态，但要注意区分“有值”和“值为真”。</p>
-
-<h2 id="optionalt-和-t-的隐式转换"><code class="language-plaintext highlighter-rouge">optional&lt;T&gt;</code> 和 <code class="language-plaintext highlighter-rouge">T</code> 的隐式转换</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 错误：不能隐式转换</span>
-<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">o</span><span class="p">;</span>  <span class="c1">// OK</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">optional</code> 不隐式转换成 <code class="language-plaintext highlighter-rouge">T</code>，必须显式解引用。</p>
-
-<h2 id="value-抛异常"><code class="language-plaintext highlighter-rouge">value()</code> 抛异常</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>   <span class="c1">// 抛 std::bad_optional_access</span>
-</code></pre></div></div>
-
-<p>用 <code class="language-plaintext highlighter-rouge">value_or</code> 或先检查。</p>
-
-<h2 id="optionalt-不合法-1"><code class="language-plaintext highlighter-rouge">optional&lt;T&amp;&gt;</code> 不合法</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 编译错误</span>
-</code></pre></div></div>
-
-<p>用 <code class="language-plaintext highlighter-rouge">T*</code> 或 <code class="language-plaintext highlighter-rouge">reference_wrapper</code>。</p>
-
-<h2 id="嵌套-optional">嵌套 <code class="language-plaintext highlighter-rouge">optional</code></h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>合法，但访问需要两层：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">o</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="o">**</span><span class="n">o</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="比较的陷阱">比较的陷阱</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>         <span class="c1">// 空</span>
-<span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="c1">// 有值</span>
-
-<span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>    <span class="c1">// true，空小于有值</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// false</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>  <span class="c1">// true</span>
-</code></pre></div></div>
-
-<p>空 <code class="language-plaintext highlighter-rouge">optional</code> 和 <code class="language-plaintext highlighter-rouge">nullopt</code> 相等，但不等于有值的 <code class="language-plaintext highlighter-rouge">optional</code>。</p>
-
-<h2 id="optional-的拷贝开销"><code class="language-plaintext highlighter-rouge">optional</code> 的拷贝开销</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">copy</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>   <span class="c1">// 拷贝整个字符串</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">optional</code> 的拷贝会拷贝 <code class="language-plaintext highlighter-rouge">T</code>，可能开销大。</p>
-
-<h2 id="emplace-的参数"><code class="language-plaintext highlighter-rouge">emplace</code> 的参数</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">o</span><span class="p">;</span>
-<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">});</span>   <span class="c1">// 错误：initializer_list 推导问题</span>
-<span class="n">o</span><span class="p">.</span><span class="n">emplace</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">});</span>  <span class="c1">// 不推荐</span>
-<span class="n">o</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>  <span class="c1">// OK</span>
-</code></pre></div></div>
-
-<h2 id="optional-和-constexpr"><code class="language-plaintext highlighter-rouge">optional</code> 和 <code class="language-plaintext highlighter-rouge">constexpr</code></h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="k">static_assert</span><span class="p">(</span><span class="o">*</span><span class="n">o</span> <span class="o">==</span> <span class="mi">42</span><span class="p">);</span>   <span class="c1">// OK</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">optional</code> 在 C++17 里不是完全 <code class="language-plaintext highlighter-rouge">constexpr</code>，C++20 改进了一些。</p>
-
-<h1 id="optional-的源码级细节"><code class="language-plaintext highlighter-rouge">optional</code> 的源码级细节</h1>
-
-<h2 id="libstdc-的实现">libstdc++ 的实现</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
-    <span class="k">using</span> <span class="n">_Stored_type</span> <span class="o">=</span> <span class="n">remove_cv_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
-
-    <span class="k">struct</span> <span class="nc">_Empty_byte</span> <span class="p">{</span> <span class="p">};</span>
-
-    <span class="k">union</span> <span class="n">_Storage</span> <span class="p">{</span>
-        <span class="k">constexpr</span> <span class="n">_Storage</span><span class="p">()</span> <span class="o">:</span> <span class="n">_M_empty</span><span class="p">()</span> <span class="p">{}</span>
-        <span class="n">_Empty_byte</span> <span class="n">_M_empty</span><span class="p">;</span>
-        <span class="n">_Stored_type</span> <span class="n">_M_value</span><span class="p">;</span>
-    <span class="p">};</span>
-
-    <span class="n">_Storage</span> <span class="n">_M_storage</span><span class="p">;</span>
-    <span class="kt">bool</span> <span class="n">_M_engaged</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h2 id="libc-的实现">libc++ 的实现</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">optional</span> <span class="p">{</span>
-    <span class="k">union</span> <span class="n">__storage</span> <span class="p">{</span>
-        <span class="kt">char</span> <span class="n">__empty_</span><span class="p">;</span>
-        <span class="n">T</span> <span class="n">__value_</span><span class="p">;</span>
-    <span class="p">};</span>
-    <span class="n">__storage</span> <span class="n">__s_</span><span class="p">;</span>
-    <span class="kt">bool</span> <span class="n">__engaged_</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p>两者都用：</p>
-
-<ul>
-  <li>联合体存储（空字节或值）。</li>
-  <li><code class="language-plaintext highlighter-rouge">bool</code> 标记是否有值。</li>
-</ul>
-
-<h1 id="一张总表">一张总表</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>特性</th>
-      <th><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>引入版本</td>
-      <td>C++17</td>
-    </tr>
-    <tr>
-      <td>头文件</td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;optional&gt;</code></td>
-    </tr>
-    <tr>
-      <td>保存类型</td>
-      <td>一个 <code class="language-plaintext highlighter-rouge">T</code> 或空</td>
-    </tr>
-    <tr>
-      <td>类型确定</td>
-      <td>编译期</td>
-    </tr>
-    <tr>
-      <td>类型安全</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>是否可空</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>是否可比较</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>是否可拷贝</td>
-      <td>✅（如果 <code class="language-plaintext highlighter-rouge">T</code> 可拷贝）</td>
-    </tr>
-    <tr>
-      <td>是否可移动</td>
-      <td>✅（如果 <code class="language-plaintext highlighter-rouge">T</code> 可移动）</td>
-    </tr>
-    <tr>
-      <td>性能</td>
-      <td>高（内联，无堆分配）</td>
-    </tr>
-    <tr>
-      <td>典型用途</td>
-      <td>可能无值的返回、可选参数、缓存</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h1 id="一句话总结">一句话总结</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::optional&lt;T&gt;</code> 是 C++17 的“可能无值”容器，同一时刻要么装一个 <code class="language-plaintext highlighter-rouge">T</code>，要么为空。
-它用联合体 + bool 实现，零堆分配，类型安全。用 <code class="language-plaintext highlighter-rouge">has_value</code>、<code class="language-plaintext highlighter-rouge">value</code>、<code class="language-plaintext highlighter-rouge">value_or</code>、<code class="language-plaintext highlighter-rouge">*</code> 访问。
-它替代了指针、哨兵值、<code class="language-plaintext highlighter-rouge">bool + 输出参数</code>，适合表示“可能没有结果”。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="cpp17" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">variant</title><link href="https://xdevil.top/cpp/2026/09/27/variant.html" rel="alternate" type="text/html" title="variant" /><published>2026-09-27T00:00:00+00:00</published><updated>2026-09-27T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/27/variant</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/27/variant.html"><![CDATA[<p><code class="language-plaintext highlighter-rouge">std::variant</code> 是 C++17 引入的<strong>类型安全的联合体</strong>，定义在 <code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code> 里。它能在同一块存储中保存多种类型之一，并且知道当前是哪一个。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代化替代品。</p>
-
-<h1 id="是什么">是什么</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是一个类型安全的联合体：任意时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。</strong></p>
-
-<p>一句话： <strong><code class="language-plaintext highlighter-rouge">variant</code> 是“多选一”的容器：它可能装 <code class="language-plaintext highlighter-rouge">T1</code>，可能装 <code class="language-plaintext highlighter-rouge">T2</code>，可能装 <code class="language-plaintext highlighter-rouge">T3</code>……但同一时刻只能装一个。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-<span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 现在装 int</span>
-<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 现在装 double</span>
-<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 现在装 std::string</span>
-</code></pre></div></div>
-
-<h1 id="为什么需要-variant">为什么需要 <code class="language-plaintext highlighter-rouge">variant</code></h1>
-
-<h2 id="问题union-不安全">问题：<code class="language-plaintext highlighter-rouge">union</code> 不安全</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">union</span> <span class="n">U</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">d</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>   <span class="c1">// 错误：非平凡类型不能在 union 里</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">union</code> 的问题：</p>
-
-<ol>
-  <li><strong>不知道当前存的是哪个成员</strong>，需要手动加标签。</li>
-  <li><strong>不能放非平凡类型</strong>（有构造/析构函数的类型）。</li>
-  <li><strong>不管理生命周期</strong>，需要手动调用构造/析构。</li>
-  <li><strong>没有类型安全</strong>，读错成员是未定义行为。</li>
-</ol>
-
-<h2 id="variant-的解法"><code class="language-plaintext highlighter-rouge">variant</code> 的解法</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 类型安全，知道当前是 string</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">variant</code> 自动管理：</p>
-
-<ul>
-  <li>当前是哪个类型（标签）。</li>
-  <li>生命周期（构造/析构）。</li>
-  <li>类型安全访问（<code class="language-plaintext highlighter-rouge">get</code> 检查类型）。</li>
-  <li>异常安全（如果切换类型时抛异常）。</li>
-</ul>
-
-<hr />
-
-<h1 id="基本用法">基本用法</h1>
-
-<p>定义：<code class="language-plaintext highlighter-rouge">v</code> 可以存 <code class="language-plaintext highlighter-rouge">int</code>、<code class="language-plaintext highlighter-rouge">double</code>、<code class="language-plaintext highlighter-rouge">std::string</code> 三者之一。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>默认构造： <strong>第一个备选类型必须可默认构造</strong>，否则 <code class="language-plaintext highlighter-rouge">variant</code> 不能默认构造。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 默认是第一个类型 int，值为 0</span>
-</code></pre></div></div>
-
-<p>赋值时，<code class="language-plaintext highlighter-rouge">variant</code> 会：</p>
-
-<ol>
-  <li>销毁当前值。</li>
-  <li>构造新值。</li>
-  <li>更新类型标签。</li>
-</ol>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>              <span class="c1">// 存 int</span>
-<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>            <span class="c1">// 存 double</span>
-<span class="n">v</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>         <span class="c1">// 存 std::string</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"world"</span><span class="p">);</span>  <span class="c1">// 存 std::string</span>
-</code></pre></div></div>
-
-<p>访问：<code class="language-plaintext highlighter-rouge">std::get</code></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>          <span class="c1">// OK</span>
-<span class="c1">// double d = std::get&lt;double&gt;(v); // 抛 std::bad_variant_access</span>
-
-<span class="n">v</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>
-<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>    <span class="c1">// OK</span>
-</code></pre></div></div>
-
-<p>按索引访问：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 第 0 个类型 int</span>
-</code></pre></div></div>
-
-<p>检查当前类型</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>     <span class="c1">// true</span>
-<span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>  <span class="c1">// false</span>
-</code></pre></div></div>
-
-<p>获取类型索引：<code class="language-plaintext highlighter-rouge">index()</code> 返回当前激活类型的下标。如果 <code class="language-plaintext highlighter-rouge">variant</code> 是 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code>，返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">v</span><span class="p">.</span><span class="n">index</span><span class="p">();</span>   <span class="c1">// 0，第一个类型</span>
-</code></pre></div></div>
-
-<p>安全访问：<code class="language-plaintext highlighter-rouge">std::get_if</code> 返回指针，类型不匹配时返回 <code class="language-plaintext highlighter-rouge">nullptr</code>，不抛异常。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get_if</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">))</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>   <span class="c1">// v 是 int</span>
-<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"not int"</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="visit访问-variant-的标准方式"><code class="language-plaintext highlighter-rouge">visit</code>：访问 <code class="language-plaintext highlighter-rouge">variant</code> 的标准方式</h1>
-
-<p><code class="language-plaintext highlighter-rouge">std::visit</code> 是访问 <code class="language-plaintext highlighter-rouge">variant</code> 的推荐方式，它对当前类型调用一个可调用对象。<code class="language-plaintext highlighter-rouge">visit</code> 会根据 <code class="language-plaintext highlighter-rouge">v</code> 的当前类型，调用 lambda 的对应重载。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p>更复杂的例子</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">printer</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">printer</span><span class="p">{},</span> <span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">if constexpr</code></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">using</span> <span class="n">T</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="k">if</span> <span class="k">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nf">constexpr</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"other</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">visit</code> + <code class="language-plaintext highlighter-rouge">overloaded</code>
-这是 C++17 的惯用法，用继承合并多个 lambda。</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">overloaded</span> <span class="o">:</span> <span class="n">Fs</span><span class="p">...</span> <span class="p">{</span>
-    <span class="k">using</span> <span class="n">Fs</span><span class="o">::</span><span class="k">operator</span><span class="p">()...;</span>
-<span class="p">};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Fs</span><span class="p">&gt;</span>
-<span class="n">overloaded</span><span class="p">(</span><span class="n">Fs</span><span class="p">...)</span> <span class="o">-&gt;</span> <span class="n">overloaded</span><span class="o">&lt;</span><span class="n">Fs</span><span class="p">...</span><span class="o">&gt;</span><span class="p">;</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">overloaded</span><span class="p">{</span>
-    <span class="p">[](</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"int: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
-    <span class="p">[](</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"double: "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">},</span>
-    <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"string: "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">},</span> <span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h1 id="monostate让-variant-可默认构造"><code class="language-plaintext highlighter-rouge">monostate</code>：让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造</h1>
-
-<p><code class="language-plaintext highlighter-rouge">std::variant</code> 要求第一个备选类型可默认构造。如果所有类型都不可默认构造：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">NoDefault</span> <span class="p">{</span>
-    <span class="n">NoDefault</span><span class="p">()</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
-    <span class="n">NoDefault</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{}</span>
-<span class="p">};</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误</span>
-</code></pre></div></div>
-
-<p>用 <code class="language-plaintext highlighter-rouge">std::monostate</code> 作为第一个备选：<code class="language-plaintext highlighter-rouge">monostate</code> 是一个空类型，表示“空状态”。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">monostate</span><span class="p">,</span> <span class="n">NoDefault</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// OK</span>
-</code></pre></div></div>
-
-<h1 id="variant-的实现原理"><code class="language-plaintext highlighter-rouge">variant</code> 的实现原理</h1>
-
-<p>存储</p>
-
-<p><code class="language-plaintext highlighter-rouge">variant</code> 内部通常是：</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">union</code> 保存所有类型的存储。</li>
-  <li><code class="language-plaintext highlighter-rouge">index_</code> 记录当前是哪个类型。</li>
-  <li>用<strong>对齐</strong>确保 <code class="language-plaintext highlighter-rouge">union</code> 能容纳所有类型。</li>
-  <li>用<strong>大小</strong>取所有类型的最大者。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span> <span class="nc">Ts</span><span class="p">&gt;</span>
-<span class="k">class</span> <span class="nc">variant</span> <span class="p">{</span>
-    <span class="k">union</span> <span class="n">storage</span> <span class="p">{</span>
-        <span class="n">T1</span> <span class="n">t1</span><span class="p">;</span>
-        <span class="n">T2</span> <span class="n">t2</span><span class="p">;</span>
-        <span class="c1">// ...</span>
-    <span class="p">}</span> <span class="n">storage_</span><span class="p">;</span>
-    <span class="kt">size_t</span> <span class="n">index_</span><span class="p">;</span>   <span class="c1">// 当前激活类型</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<p>生命周期管理</p>
-
-<ul>
-  <li>构造：在 <code class="language-plaintext highlighter-rouge">union</code> 上 placement new。</li>
-  <li>析构：调用当前类型的析构函数。</li>
-  <li>赋值：先析构旧值，再构造新值。</li>
-</ul>
-
-<p>异常安全,如果切换类型时新值构造抛异常：</p>
-
-<ul>
-  <li>旧值已经析构。</li>
-  <li>新值没构造成功。</li>
-  <li><code class="language-plaintext highlighter-rouge">variant</code> 进入 <code class="language-plaintext highlighter-rouge">valueless_by_exception</code> 状态。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">valueless_by_exception</span><span class="p">())</span> <span class="p">{</span>
-    <span class="c1">// v 没有值</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>这是 <code class="language-plaintext highlighter-rouge">variant</code> 最尴尬的状态。<code class="language-plaintext highlighter-rouge">index()</code> 返回 <code class="language-plaintext highlighter-rouge">variant_npos</code>。</p>
-
-<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
-
-<p>只有在以下情况才会出现：</p>
-
-<ol>
-  <li>切换类型时，旧类型析构成功。</li>
-  <li>新类型构造抛异常。</li>
-  <li>且新类型不是 <code class="language-plaintext highlighter-rouge">nothrow</code> 构造。</li>
-</ol>
-
-<p>现代实现尽量避免这个状态。</p>
-
-<h1 id="variant-vs-union-vs-any"><code class="language-plaintext highlighter-rouge">variant</code> vs <code class="language-plaintext highlighter-rouge">union</code> vs <code class="language-plaintext highlighter-rouge">any</code></h1>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th><code class="language-plaintext highlighter-rouge">union</code></th>
-      <th><code class="language-plaintext highlighter-rouge">variant</code></th>
-      <th><code class="language-plaintext highlighter-rouge">any</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>类型安全</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>类型数量</td>
-      <td>编译期固定</td>
-      <td>编译期固定</td>
-      <td>运行期任意</td>
-    </tr>
-    <tr>
-      <td>知道当前类型</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>非平凡类型</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>生命周期管理</td>
-      <td>手动</td>
-      <td>自动</td>
-      <td>自动</td>
-    </tr>
-    <tr>
-      <td>头文件</td>
-      <td>语言</td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;variant&gt;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;any&gt;</code></td>
-    </tr>
-    <tr>
-      <td>用途</td>
-      <td>底层</td>
-      <td>多选一</td>
-      <td>任意类型</td>
-    </tr>
-  </tbody>
-</table>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">union</code>：C 风格，不安全。</li>
-  <li><code class="language-plaintext highlighter-rouge">variant</code>：C++17，类型安全的联合体。</li>
-  <li><code class="language-plaintext highlighter-rouge">any</code>：C++17，可以装任意类型，但访问需要知道类型。</li>
-</ul>
-
-<h1 id="variant-的常用操作"><code class="language-plaintext highlighter-rouge">variant</code> 的常用操作</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>操作</th>
-      <th>作用</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">v = x</code></td>
-      <td>赋值，切换类型</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">v.index()</code></td>
-      <td>当前类型索引</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">v.valueless_by_exception()</code></td>
-      <td>是否无值</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::get&lt;T&gt;(v)</code></td>
-      <td>按类型访问，不匹配抛异常</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::get&lt;I&gt;(v)</code></td>
-      <td>按索引访问</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::get_if&lt;T&gt;(&amp;v)</code></td>
-      <td>按类型访问，不匹配返回 <code class="language-plaintext highlighter-rouge">nullptr</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::holds_alternative&lt;T&gt;(v)</code></td>
-      <td>检查当前类型</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::visit(f, v)</code></td>
-      <td>对当前类型调用 <code class="language-plaintext highlighter-rouge">f</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::variant_size_v&lt;V&gt;</code></td>
-      <td>备选类型数量</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">std::variant_alternative_t&lt;I, V&gt;</code></td>
-      <td>第 <code class="language-plaintext highlighter-rouge">I</code> 个备选类型</td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="variant-的实际用途"><code class="language-plaintext highlighter-rouge">variant</code> 的实际用途</h1>
-
-<p>表示多态值</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Value</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="mi">42</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">};</span>
-</code></pre></div></div>
-
-<p>解析结果</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">ParseResult</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Success</span><span class="p">,</span> <span class="n">Error</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="n">ParseResult</span> <span class="nf">parse</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p>状态机</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">State</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">Idle</span><span class="p">,</span> <span class="n">Running</span><span class="p">,</span> <span class="n">Stopped</span><span class="o">&gt;</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>JSON 值</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Json</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span><span class="p">,</span>
-    <span class="kt">bool</span><span class="p">,</span>
-    <span class="kt">double</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Json</span><span class="o">&gt;</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">Json</span><span class="o">&gt;</span>
-<span class="o">&gt;</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>错误处理</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">error_code</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h1 id="variant-的常见陷阱"><code class="language-plaintext highlighter-rouge">variant</code> 的常见陷阱</h1>
-
-<p>默认构造要求</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">NoDefault</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 错误：NoDefault 不可默认构造</span>
-</code></pre></div></div>
-
-<p>用 <code class="language-plaintext highlighter-rouge">monostate</code> 解决。</p>
-
-<p>重复类型</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但 get&lt;int&gt; 有歧义</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">std::get&lt;int&gt;(v)</code> 编译错误，因为 <code class="language-plaintext highlighter-rouge">int</code> 出现两次。用索引访问：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">valueless_by_exception</code></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">Thrower</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-<span class="k">try</span> <span class="p">{</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">Thrower</span><span class="p">{};</span>   <span class="c1">// 构造抛异常</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
-    <span class="c1">// v 可能 valueless</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">get</code> 抛异常</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   <span class="c1">// 抛 std::bad_variant_access</span>
-</code></pre></div></div>
-
-<p>用 <code class="language-plaintext highlighter-rouge">get_if</code> 避免异常。</p>
-
-<p>引用类型</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">double</span><span class="o">&amp;&gt;</span> <span class="n">v</span><span class="p">;</span>   <span class="c1">// 合法，但要小心生命周期</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">visit</code> 返回值</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">([](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">},</span> <span class="n">v</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p>所有分支的返回类型必须一致，或者能推导出公共类型。</p>
-
-<p><code class="language-plaintext highlighter-rouge">visit</code> 多参数</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">);</span>   <span class="c1">// f 必须能处理所有类型组合</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">v1</code> 有 N 种类型，<code class="language-plaintext highlighter-rouge">v2</code> 有 M 种类型，<code class="language-plaintext highlighter-rouge">f</code> 必须能处理 N×M 种组合。</p>
-
-<h1 id="一句话总结">一句话总结</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::variant&lt;Ts...&gt;</code> 是 C++17 的类型安全联合体，同一时刻只保存 <code class="language-plaintext highlighter-rouge">Ts...</code> 中的一个值。它自动管理生命周期和类型标签，用 <code class="language-plaintext highlighter-rouge">get</code>、<code class="language-plaintext highlighter-rouge">get_if</code>、<code class="language-plaintext highlighter-rouge">visit</code> 访问。<code class="language-plaintext highlighter-rouge">monostate</code> 用于让 <code class="language-plaintext highlighter-rouge">variant</code> 可默认构造。它是 <code class="language-plaintext highlighter-rouge">union</code> 的现代替代品，用于表示“多选一”的类型。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="cpp17" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">decltype &amp;amp; declval</title><link href="https://xdevil.top/cpp/2026/09/26/decltype-&-declval.html" rel="alternate" type="text/html" title="decltype &amp;amp; declval" /><published>2026-09-26T00:00:00+00:00</published><updated>2026-09-26T00:00:00+00:00</updated><id>https://xdevil.top/cpp/2026/09/26/decltype%20&amp;%20declval</id><content type="html" xml:base="https://xdevil.top/cpp/2026/09/26/decltype-&amp;-declval.html"><![CDATA[<h1 id="decltype"><code class="language-plaintext highlighter-rouge">decltype</code></h1>
-
-<h2 id="是什么">是什么</h2>
-
-<p><strong><code class="language-plaintext highlighter-rouge">decltype(expr)</code> 是一个说明符：输入一个表达式，返回它的类型，不求值。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>        <span class="c1">// y 是 int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// z 是 double</span>
-</code></pre></div></div>
-
-<h2 id="三条规则">三条规则</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th><code class="language-plaintext highlighter-rouge">e</code> 的形式</th>
-      <th><code class="language-plaintext highlighter-rouge">decltype(e)</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>未加括号的标识符或类成员访问</td>
-      <td>该标识符声明时的类型</td>
-    </tr>
-    <tr>
-      <td>左值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;</code></td>
-    </tr>
-    <tr>
-      <td>纯右值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T</code></td>
-    </tr>
-    <tr>
-      <td>将亡值表达式</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>     <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span>    <span class="c1">// const int</span>
-<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span>   <span class="c1">// int&amp;，加括号变成左值表达式</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>     <span class="c1">// int&amp;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// int，纯右值</span>
-</code></pre></div></div>
-
-<h2 id="与-auto-的区别">与 <code class="language-plaintext highlighter-rouge">auto</code> 的区别</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th><code class="language-plaintext highlighter-rouge">auto</code></th>
-      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>推导依据</td>
-      <td>初始化表达式，按值推导</td>
-      <td>表达式的类型，精确推导</td>
-    </tr>
-    <tr>
-      <td>引用</td>
-      <td>去掉引用</td>
-      <td>保留引用</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">const</code></td>
-      <td>去掉顶层 <code class="language-plaintext highlighter-rouge">const</code></td>
-      <td>保留 <code class="language-plaintext highlighter-rouge">const</code></td>
-    </tr>
-    <tr>
-      <td>数组</td>
-      <td>退化为指针</td>
-      <td>保留数组类型</td>
-    </tr>
-    <tr>
-      <td>用途</td>
-      <td>变量声明</td>
-      <td>返回类型、SFINAE、元编程</td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
-<span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-<span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>          <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="n">b</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// int&amp;</span>
-
-<span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cx</span><span class="p">;</span>         <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// const int</span>
-</code></pre></div></div>
-
-<h2 id="decltypeautoc14"><code class="language-plaintext highlighter-rouge">decltype(auto)</code>（C++14）</h2>
-
-<p>按 <code class="language-plaintext highlighter-rouge">decltype</code> 规则推导返回类型，保留引用和 <code class="language-plaintext highlighter-rouge">const</code>。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>   <span class="c1">// 返回 int&amp;，因为 x 是左值</span>
-<span class="k">auto</span> <span class="nf">f</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>             <span class="c1">// 返回 int，按值</span>
-</code></pre></div></div>
-
-<h2 id="典型用途">典型用途</h2>
-
-<p><strong>1. 返回类型推导（C++11 尾置返回类型）</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">add</span><span class="p">(</span><span class="n">A</span> <span class="n">a</span><span class="p">,</span> <span class="n">B</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><strong>2. SFINAE</strong>： <code class="language-plaintext highlighter-rouge">t.foo()</code> 不合法 → <code class="language-plaintext highlighter-rouge">decltype</code> 替换失败 → SFINAE。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">f</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">())</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><strong>3. 类型萃取</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="实现原理">实现原理</h2>
-
-<p><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，不是标准库组件。以 Clang 和 GCC 为例：</p>
-
-<p><strong>整体流程：</strong></p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>源码: decltype(expr)
-    ↓
-[Parser] 解析为 DecltypeType 节点 / DECLTYPE_TYPE 树节点
-    ↓
-[Sema] 对 expr 进行类型推导，得到 UnderlyingType
-    ↓
-[AST] 生成 DecltypeType(E, UnderlyingType)
-    ↓
-[CodeGen] 直接使用 UnderlyingType，不做额外计算
-</code></pre></div></div>
-
-<p><strong>Clang：</strong></p>
-
-<ul>
-  <li>AST 节点：<code class="language-plaintext highlighter-rouge">DecltypeType</code>，保存 <code class="language-plaintext highlighter-rouge">Expr *E</code> 和 <code class="language-plaintext highlighter-rouge">QualType UnderlyingType</code>。</li>
-  <li>Sema 阶段先分析表达式的值类别和类型，再按规则决定 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">DecltypeType</code> 不被唯一化（每个 <code class="language-plaintext highlighter-rouge">decltype</code> 有自己的 AST 节点）。</li>
-  <li>Lambda 中 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 有上下文敏感的特殊处理。</li>
-  <li>CodeGen 直接使用 <code class="language-plaintext highlighter-rouge">UnderlyingType</code>，<code class="language-plaintext highlighter-rouge">decltype</code> 不产生运行时行为。</li>
-</ul>
-
-<p><strong>GCC：</strong></p>
-
-<ul>
-  <li>树节点：<code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code>，定义在 <code class="language-plaintext highlighter-rouge">cp-tree.def</code>。</li>
-  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_EXPR</code> 取出内部表达式。</li>
-  <li>宏 <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE_ID_EXPR_OR_MEMBER_ACCESS_P</code> 标记是否为“未加括号的标识符或成员访问”。</li>
-  <li>模板中始终视为依赖类型，实例化时由 <code class="language-plaintext highlighter-rouge">tsubst</code> 重新计算。</li>
-</ul>
-
-<p><strong>关键设计要点：</strong></p>
-
-<table>
-  <thead>
-    <tr>
-      <th>要点</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>不求值</td>
-      <td>操作数在 Unevaluated 上下文中分析</td>
-    </tr>
-    <tr>
-      <td>保留引用和 cv</td>
-      <td>与 auto 不同，不退化类型</td>
-    </tr>
-    <tr>
-      <td>括号规则</td>
-      <td><code class="language-plaintext highlighter-rouge">decltype(x)</code> 与 <code class="language-plaintext highlighter-rouge">decltype((x))</code> 不同</td>
-    </tr>
-    <tr>
-      <td>依赖类型</td>
-      <td>模板中始终 dependent，实例化时才确定</td>
-    </tr>
-    <tr>
-      <td>不唯一化</td>
-      <td>每个 decltype 表达式有独立 AST 节点</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="常见陷阱">常见陷阱</h2>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1">// int</span>
-<span class="k">decltype</span><span class="p">((</span><span class="n">x</span><span class="p">))</span> <span class="c1">// int&amp;，加括号改变结果</span>
-
-<span class="kt">int</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">();</span>
-<span class="k">decltype</span><span class="p">(</span><span class="n">f</span><span class="p">())</span>  <span class="c1">// int&amp;</span>
-<span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">();</span>  <span class="c1">// int</span>
-
-<span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="o">++</span><span class="p">)</span>  <span class="c1">// int，x++ 不求值</span>
-<span class="k">decltype</span><span class="p">(</span><span class="o">++</span><span class="n">x</span><span class="p">)</span>  <span class="c1">// int&amp;，++x 不求值</span>
-</code></pre></div></div>
-
-<h1 id="declval"><code class="language-plaintext highlighter-rouge">declval</code></h1>
-
-<h2 id="是什么-1">是什么</h2>
-
-<p><strong><code class="language-plaintext highlighter-rouge">std::declval&lt;T&gt;()</code> 是函数模板，返回 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>，但不构造对象。用于编译期类型推导。</strong></p>
-
-<p>一句话： <strong>在编译期“假装”有一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，只用于 <code class="language-plaintext highlighter-rouge">decltype</code>、<code class="language-plaintext highlighter-rouge">sizeof</code>、<code class="language-plaintext highlighter-rouge">noexcept</code> 等不求值上下文。</strong></p>
-
-<h2 id="实现原理-1">实现原理</h2>
-
-<p>标准定义（<code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code>）：<strong>只有声明，没有定义。</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="n">add_rvalue_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>libstdc++ 实际源码：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-  <span class="n">_GLIBCXX_CONSTEXPR</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span>
-  <span class="n">declval</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
-</code></pre></div></div>
-
-<p>libc++ 实际源码：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="n">_LIBCPP_HIDE_FROM_ABI</span> <span class="k">typename</span> <span class="n">add_rvalue_reference</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">declval</span><span class="p">()</span> <span class="n">_NOEXCEPT</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="为什么没有函数体">为什么没有函数体</h2>
-
-<p><code class="language-plaintext highlighter-rouge">declval</code> 只用于<strong>不求值上下文</strong>：这些上下文里函数不会被实际调用，编译器只需返回类型。</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">decltype(declval&lt;T&gt;().foo())</code></li>
-  <li><code class="language-plaintext highlighter-rouge">sizeof(declval&lt;T&gt;())</code></li>
-  <li><code class="language-plaintext highlighter-rouge">noexcept(declval&lt;T&gt;().foo())</code></li>
-</ul>
-
-<p>如果用户真调用：这是<strong>故意设计</strong>：防止运行期调用，只在链接期报错。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>   <span class="c1">// 链接错误：未定义的引用</span>
-</code></pre></div></div>
-
-<h2 id="为什么用-add_rvalue_reference_tt-而不是-t">为什么用 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code> 而不是 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></h2>
-
-<p>因为 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 对某些类型不合法：</p>
-
-<table>
-  <thead>
-    <tr>
-      <th><code class="language-plaintext highlighter-rouge">T</code></th>
-      <th><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code></th>
-      <th><code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp; &amp;&amp;</code> → <code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-      <td><code class="language-plaintext highlighter-rouge">int&amp;&amp;</code></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">void</code></td>
-      <td><code class="language-plaintext highlighter-rouge">void&amp;&amp;</code> 不合法</td>
-      <td><code class="language-plaintext highlighter-rouge">void</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><code class="language-plaintext highlighter-rouge">add_rvalue_reference</code> 的源码：用 <code class="language-plaintext highlighter-rouge">__void_t&lt;_Tp&amp;&amp;&gt;</code> 做 SFINAE 检测 <code class="language-plaintext highlighter-rouge">T&amp;&amp;</code> 是否合法。</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span> <span class="p">{</span>
-    <span class="k">typedef</span> <span class="n">_Tp</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// 回退：T&amp;&amp; 不合法时返回 T（处理 void）</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">__void_t</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&amp;&amp;&gt;&gt;</span> <span class="p">{</span>
-    <span class="k">typedef</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span> <span class="n">type</span><span class="p">;</span>   <span class="c1">// T&amp;&amp; 合法时返回 T&amp;&amp;</span>
-<span class="p">};</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">add_rvalue_reference</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">__add_rvalue_reference_helper</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<h2 id="为什么-noexcept">为什么 <code class="language-plaintext highlighter-rouge">noexcept</code></h2>
-
-<p><code class="language-plaintext highlighter-rouge">declval</code> 没有函数体，逻辑上不可能抛异常。标 <code class="language-plaintext highlighter-rouge">noexcept</code> 让它在 <code class="language-plaintext highlighter-rouge">noexcept</code> 表达式里可用：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">constexpr</span> <span class="kt">bool</span> <span class="nf">is_nothrow_foo</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">noexcept</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">());</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h1 id="decltype-与-declval-的配合"><code class="language-plaintext highlighter-rouge">decltype</code> 与 <code class="language-plaintext highlighter-rouge">declval</code> 的配合</h1>
-
-<h2 id="为什么需要配合">为什么需要配合</h2>
-
-<p>在 <code class="language-plaintext highlighter-rouge">decltype</code> 里需要一个 <code class="language-plaintext highlighter-rouge">T</code> 类型的对象，<code class="language-plaintext highlighter-rouge">declval</code> 解决了这个问题：</p>
-
-<ul>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T{}.foo()</code>：<code class="language-plaintext highlighter-rouge">T</code> 可能没有默认构造函数。</li>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T().foo()</code>：同上。</li>
-  <li>不能写 <code class="language-plaintext highlighter-rouge">T t; t.foo()</code>：<code class="language-plaintext highlighter-rouge">decltype</code> 里不能声明变量。</li>
-</ul>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span>
-</code></pre></div></div>
-
-<p>配合流程</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>declval&lt;T&gt;()  →  返回 T&amp;&amp;，假装有 T 对象
-    ↓
-.foo()        →  调用成员函数
-    ↓
-decltype(...) →  推导返回类型
-    ↓
-不合法        →  SFINAE
-</code></pre></div></div>
-
-<h2 id="典型用例">典型用例</h2>
-
-<p><strong>检测成员函数</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_foo</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_foo</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">().</span><span class="n">foo</span><span class="p">())</span><span class="o">&gt;&gt;</span>
-    <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>检测运算符</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_plus</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">has_plus</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>推导表达式类型</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">A</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">B</span><span class="p">&gt;</span>
-<span class="k">using</span> <span class="n">add_result_t</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="p">);</span>
-</code></pre></div></div>
-
-<p><strong>检测可转换性</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_convertible</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">From</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">To</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_convertible</span><span class="o">&lt;</span><span class="n">From</span><span class="p">,</span> <span class="n">To</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span>
-    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">To</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">From</span><span class="o">&gt;</span><span class="p">())</span>
-<span class="p">)</span><span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<p><strong>检测迭代器</strong></p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="o">=</span> <span class="kt">void</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_iterable</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">false_type</span> <span class="p">{};</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
-<span class="k">struct</span> <span class="nc">is_iterable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">void_t</span><span class="o">&lt;</span>
-    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())),</span>
-    <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()))</span>
-<span class="o">&gt;&gt;</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">true_type</span> <span class="p">{};</span>
-</code></pre></div></div>
-
-<h2 id="libstdc-中的-declval-实现细节">libstdc++ 中的 <code class="language-plaintext highlighter-rouge">declval</code> 实现细节</h2>
-
-<p>标准库自身也用 <code class="language-plaintext highlighter-rouge">decltype</code> + 重载决议实现 <code class="language-plaintext highlighter-rouge">declval</code>：</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">_Up</span> <span class="o">=</span> <span class="n">_Tp</span><span class="o">&amp;&amp;</span><span class="p">&gt;</span>
-<span class="n">_Up</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="n">_Tp</span> <span class="nf">__declval</span><span class="p">(</span><span class="kt">long</span><span class="p">);</span>
-
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">_Tp</span><span class="p">&gt;</span>
-<span class="k">auto</span> <span class="nf">declval</span><span class="p">()</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">__declval</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
-</code></pre></div></div>
-
-<ul>
-  <li>第一个重载返回 <code class="language-plaintext highlighter-rouge">_Up = _Tp&amp;&amp;</code>。</li>
-  <li>第二个重载返回 <code class="language-plaintext highlighter-rouge">_Tp</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">__declval&lt;_Tp&gt;(0)</code> 优先匹配第一个（<code class="language-plaintext highlighter-rouge">int</code> 比 <code class="language-plaintext highlighter-rouge">long</code> 更匹配）。</li>
-  <li>如果 <code class="language-plaintext highlighter-rouge">_Tp&amp;&amp;</code> 不合法，第一个重载 SFINAE 失败，回退到第二个。</li>
-  <li>用 <code class="language-plaintext highlighter-rouge">decltype</code> 推导最终返回类型。</li>
-</ul>
-
-<h1 id="对照总表">对照总表</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>维度</th>
-      <th><code class="language-plaintext highlighter-rouge">decltype</code></th>
-      <th><code class="language-plaintext highlighter-rouge">declval</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>类型</td>
-      <td>编译器关键字</td>
-      <td>函数模板</td>
-    </tr>
-    <tr>
-      <td>头文件</td>
-      <td>无（语言特性）</td>
-      <td><code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
-    </tr>
-    <tr>
-      <td>输入</td>
-      <td>表达式</td>
-      <td>类型 <code class="language-plaintext highlighter-rouge">T</code></td>
-    </tr>
-    <tr>
-      <td>输出</td>
-      <td>表达式的类型</td>
-      <td><code class="language-plaintext highlighter-rouge">T&amp;&amp;</code>（假想对象）</td>
-    </tr>
-    <tr>
-      <td>是否求值</td>
-      <td>否</td>
-      <td>否</td>
-    </tr>
-    <tr>
-      <td>是否有定义</td>
-      <td>—</td>
-      <td>只有声明</td>
-    </tr>
-    <tr>
-      <td>是否可调用</td>
-      <td>—</td>
-      <td>不能实际调用</td>
-    </tr>
-    <tr>
-      <td>典型用途</td>
-      <td>返回类型、SFINAE</td>
-      <td><code class="language-plaintext highlighter-rouge">decltype</code> 内部提供假想对象</td>
-    </tr>
-    <tr>
-      <td>源码位置</td>
-      <td>Clang <code class="language-plaintext highlighter-rouge">DecltypeType</code> / GCC <code class="language-plaintext highlighter-rouge">DECLTYPE_TYPE</code></td>
-      <td>libstdc++ / libc++ <code class="language-plaintext highlighter-rouge">&lt;utility&gt;</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="总结">总结</h1>
-
-<p><strong><code class="language-plaintext highlighter-rouge">decltype</code> 是编译器关键字，在 Sema 阶段按值类别推导表达式类型，存入 AST 节点，CodeGen 直接使用结果，不产生运行时逻辑。</strong></p>
-
-<p><strong><code class="language-plaintext highlighter-rouge">declval</code> 是一个只有声明的函数模板，返回 <code class="language-plaintext highlighter-rouge">add_rvalue_reference_t&lt;T&gt;</code>，在编译期假装有 <code class="language-plaintext highlighter-rouge">T</code> 对象，只用于不求值上下文。两者配合是 SFINAE 检测成员、运算符、返回类型的核心工具。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="模板元泛型编程" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+它适合类型在运行期确定的场景，但不适合高性能路径。在线性代数库里很少需要 <code class="language-plaintext highlighter-rouge">any</code>，因为矩阵类型通常在编译期确定。</strong></p>]]></content><author><name>Devil</name></author><category term="cpp" /><category term="cpp17" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

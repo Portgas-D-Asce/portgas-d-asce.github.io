@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>最小二乘（正规方程法） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="最小二乘（正规方程法）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="最小二乘（正规方程法）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-11T00:00:00+00:00","datePublished":"2026-10-11T00:00:00+00:00","description":"xxxxxx","headline":"最小二乘（正规方程法）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/11/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B%E6%B3%95.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 最小二乘（正规方程法） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="最小二乘问题">最小二乘问题</h1>
+
+<h2 id="问题陈述">问题陈述</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$，$m\ge n$，$\operatorname{rank}A=n$（列满秩），$b\in\mathbb R^m$。<strong>最小二乘问题</strong>为
+\(\min_{x\in\mathbb R^n}\|Ax-b\|_2.\)</p>
+
+<p>即求 $x\in\mathbb R^n$，使残差</p>
+
+\[r=Ax-b\]
+
+<p>的欧几里得范数最小。</p>
+
+<h2 id="超定方程组">超定方程组</h2>
+
+<p>当 $m&gt;n$ 时，方程组 $Ax=b$ 是<strong>超定的</strong>：方程个数多于未知量个数，通常无精确解。最小二乘问题寻找使残差范数最小的近似解。</p>
+
+<p><strong>例</strong>：</p>
+
+\[\begin{cases}
+x_1+x_2=1,\\
+x_1=2,\\
+x_2=3.
+\end{cases}\]
+
+<p>三个方程，两个未知量。无精确解，但可求最小二乘解。</p>
+
+<h2 id="几何意义">几何意义</h2>
+
+<p>$Ax$ 遍历子空间</p>
+
+\[\mathcal S=\operatorname{Col}(A)=\{Ax:x\in\mathbb R^n\}\subseteq\mathbb R^m.\]
+
+<p>最小二乘问题等价于：在 $\mathcal S$ 中找一点 $p$，使 $|p-b|_2$ 最小。由正交投影定理，最优 $p$ 是 $b$ 在 $\mathcal S$ 上的正交投影。</p>
+
+<h1 id="正交投影原理">正交投影原理</h1>
+
+<h2 id="正交投影定理">正交投影定理</h2>
+
+<p><strong>定理 2.1.1（正交投影的存在唯一性）</strong><br />
+设 $\mathcal S\subseteq\mathbb R^m$ 为子空间，$b\in\mathbb R^m$。则存在唯一的 $p\in\mathcal S$，使得</p>
+
+\[\|p-b\|_2=\min_{y\in\mathcal S}\|y-b\|_2,\]
+
+<p>且 $p$ 满足</p>
+
+\[b-p\perp\mathcal S.\]
+
+<p>称 $p$ 为 $b$ 在 $\mathcal S$ 上的<strong>正交投影</strong>。</p>
+
+<p><strong>证明</strong><br />
+取 $\mathcal S$ 的一组标准正交基 $q_1,\dots,q_n$，令</p>
+
+\[p=\sum_{i=1}^n\langle b,q_i\rangle q_i,\qquad e=b-p.\]
+
+<p>则 $p\in\mathcal S$，且对每个 $j$，</p>
+
+\[\langle e,q_j\rangle=\langle b,q_j\rangle-\sum_{i=1}^n\langle b,q_i\rangle\langle q_i,q_j\rangle
+=\langle b,q_j\rangle-\langle b,q_j\rangle=0.\]
+
+<p>故 $e\perp\mathcal S$。</p>
+
+<p>对任意 $y\in\mathcal S$，$y-p\in\mathcal S$，故 $\langle y-p,e\rangle=0$。由勾股定理，</p>
+
+\[\|y-b\|_2^2=\|(y-p)+e\|_2^2=\|y-p\|_2^2+\|e\|_2^2\ge\|e\|_2^2=\|p-b\|_2^2.\]
+
+<p>等号成立当且仅当 $y=p$，故 $p$ 唯一。</p>
+
+<h2 id="应用到最小二乘">应用到最小二乘</h2>
+
+<p>取 $\mathcal S=\operatorname{Col}(A)$。最小二乘问题的最优解 $p=Ax$ 是 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影，满足</p>
+
+\[b-Ax\perp\operatorname{Col}(A).\]
+
+<h1 id="正规方程的推导">正规方程的推导</h1>
+
+<h2 id="正交性条件">正交性条件</h2>
+
+<p>$b-Ax\perp\operatorname{Col}(A)$ 等价于 $b-Ax$ 与 $A$ 的每一列正交，即</p>
+
+\[A^{\mathsf T}(b-Ax)=0.\]
+
+<p>展开：</p>
+
+\[A^{\mathsf T}b-A^{\mathsf T}Ax=0,\]
+
+<p>即</p>
+
+\[A^{\mathsf T}Ax=A^{\mathsf T}b.\]
+
+<p>这就是<strong>正规方程</strong>（normal equations）。</p>
+
+<h2 id="解的存在唯一性">解的存在唯一性</h2>
+
+<p><strong>定理 3.2.1</strong><br />
+若 $A\in\mathbb R^{m\times n}$ 列满秩，则 $A^{\mathsf T}A\in M_n(\mathbb R)$ 对称正定，从而可逆。正规方程有唯一解</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<p><strong>证明</strong></p>
+
+<p><strong>(1) 对称性</strong>：</p>
+
+\[(A^{\mathsf T}A)^{\mathsf T}=A^{\mathsf T}A.\]
+
+<p><strong>(2) 正定性</strong>：对任意非零 $y\in\mathbb R^n$，</p>
+
+\[y^{\mathsf T}A^{\mathsf T}Ay=\|Ay\|_2^2.\]
+
+<p>因 $A$ 列满秩，$Ay\ne 0$，故 $|Ay|_2^2&gt;0$。因此 $A^{\mathsf T}A$ 正定，特别地可逆。</p>
+
+<p><strong>(3) 解</strong>：由 $A^{\mathsf T}A$ 可逆，正规方程有唯一解</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<h2 id="最优性验证">最优性验证</h2>
+
+<p><strong>定理 3.3.1</strong><br />
+设 $x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b$，则对任意 $y\in\mathbb R^n$，</p>
+
+\[\|Ax-b\|_2\le\|Ay-b\|_2.\]
+
+<p><strong>证明</strong><br />
+令 $r=b-Ax$。由正规方程，</p>
+
+\[A^{\mathsf T}r=A^{\mathsf T}(b-Ax)=A^{\mathsf T}b-A^{\mathsf T}Ax=0.\]
+
+<p>故 $r\perp\operatorname{Col}(A)$。</p>
+
+<p>对任意 $y\in\mathbb R^n$，</p>
+
+\[Ay-b=(Ax-b)+A(y-x)=r+A(y-x).\]
+
+<p>因 $r\perp\operatorname{Col}(A)$，而 $A(y-x)\in\operatorname{Col}(A)$，由勾股定理，</p>
+
+\[\|Ay-b\|_2^2=\|r\|_2^2+\|A(y-x)\|_2^2\ge\|r\|_2^2=\|Ax-b\|_2^2.\]
+
+<p>等号成立当且仅当 $A(y-x)=0$，即 $y=x$（因 $A$ 列满秩）。$\square$</p>
+
+<h2 id="最小残差">最小残差</h2>
+
+<p>最小残差为</p>
+
+\[\min_x\|Ax-b\|_2=\|b-Ax\|_2=\|(I-P)b\|_2,\]
+
+<p>其中</p>
+
+\[P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\]
+
+<p>是到 $\operatorname{Col}(A)$ 上的正交投影矩阵。</p>
+
+<h1 id="几何解释">几何解释</h1>
+
+<h2 id="投影分解">投影分解</h2>
+
+<p>将 $b$ 正交分解为</p>
+
+\[b=Ax+(b-Ax),\]
+
+<p>其中</p>
+
+\[Ax\in\operatorname{Col}(A),\qquad b-Ax\in\operatorname{Col}(A)^\perp.\]
+
+<p>最小二乘解 $x$ 使 $Ax$ 成为 $b$ 在 $\operatorname{Col}(A)$ 上的投影。</p>
+
+<h2 id="图示">图示</h2>
+
+<p>在 $\mathbb R^m$ 中，$\operatorname{Col}(A)$ 是一个 $n$ 维子空间（$n&lt;m$）。$b$ 一般不在其中。最小二乘解对应 $b$ 到该子空间的垂直投影：</p>
+<ul>
+  <li>$Ax$：投影点；</li>
+  <li>$b-Ax$：垂直残差；</li>
+  <li>$|b-Ax|_2$：最短距离。</li>
+</ul>
+
+<h2 id="正交性条件-1">正交性条件</h2>
+
+<p>残差 $r=b-Ax$ 与 $A$ 的每一列正交：</p>
+
+\[A^{\mathsf T}r=0.\]
+
+<p>这是最小二乘解的特征性质，也是正规方程的来源。</p>
+
+<h1 id="算法步骤">算法步骤</h1>
+
+<p><strong>算法 5.1（正规方程法）</strong></p>
+
+<ol>
+  <li>计算</li>
+</ol>
+
+\[G=A^{\mathsf T}A\in M_n(\mathbb R),\qquad c=A^{\mathsf T}b\in\mathbb R^n.\]
+
+<ol>
+  <li>解对称正定方程组</li>
+</ol>
+
+\[Gx=c.\]
+
+<p>可用 Cholesky 分解：$G=LL^{\mathsf T}$，然后前代与回代求解。</p>
+<ol>
+  <li>得到最小二乘解 $x$。</li>
+</ol>
+
+<h2 id="cholesky-分解求解">Cholesky 分解求解</h2>
+
+<p>因 $G=A^{\mathsf T}A$ 对称正定，存在唯一的 Cholesky 分解</p>
+
+\[G=LL^{\mathsf T},\qquad L\text{ 下三角，}l_{ii}&gt;0.\]
+
+<p>则</p>
+
+\[Gx=c\iff LL^{\mathsf T}x=c.\]
+
+<p>令 $y=L^{\mathsf T}x$，则</p>
+
+\[Ly=c\quad\text{（前代）},\]
+
+\[L^{\mathsf T}x=y\quad\text{（回代）}.\]
+
+<h2 id="计算量">计算量</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>计算 $G=A^{\mathsf T}A$</td>
+      <td>$mn^2$</td>
+    </tr>
+    <tr>
+      <td>计算 $c=A^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>Cholesky 分解</td>
+      <td>$\frac13n^3$</td>
+    </tr>
+    <tr>
+      <td>前代与回代</td>
+      <td>$2n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$mn^2+\frac13n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="数值稳定性">数值稳定性</h1>
+
+<h2 id="条件数平方问题">条件数平方问题</h2>
+
+<p>正规方程的核心缺陷是<strong>条件数平方</strong>。设</p>
+
+\[\kappa(A)=\|A\|_2\|A^+\|_2\]
+
+<p>为 $A$ 的条件数（$A^+$ 为 Moore–Penrose 伪逆）。则</p>
+
+\[\kappa(A^{\mathsf T}A)=\kappa(A)^2.\]
+
+<p>这意味着：</p>
+<ul>
+  <li>若 $\kappa(A)=10^k$，则 $\kappa(A^{\mathsf T}A)=10^{2k}$；</li>
+  <li>计算 $A^{\mathsf T}A$ 会损失约 $k$ 位有效数字；</li>
+  <li>求解正规方程的解的误差约为 $\kappa(A)^2\epsilon$，而非 $\kappa(A)\epsilon$。</li>
+</ul>
+
+<h2 id="误差估计">误差估计</h2>
+
+<p><strong>定理 6.2.1</strong><br />
+设 $\hat x$ 为正规方程法得到的浮点解，$x$ 为精确最小二乘解。则</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)^2\,\epsilon+O(\epsilon^2),\]
+
+<p>其中 $\epsilon$ 为机器精度，$c$ 为与 $m,n$ 相关的常数。</p>
+
+<p><strong>对比 QR 分解</strong>：</p>
+
+\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)\,\epsilon+O(\epsilon^2).\]
+
+<p>QR 分解的误差与 $\kappa(A)$ 成正比，而正规方程与 $\kappa(A)^2$ 成正比。</p>
+
+<h2 id="病态问题示例">病态问题示例</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\ \epsilon&amp;0\\0&amp;\epsilon\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\1\\1\end{pmatrix},\qquad \epsilon=10^{-8}.\]
+
+<p>则</p>
+
+\[A^{\mathsf T}A=\begin{pmatrix}1+\epsilon^2&amp;1\\1&amp;1+\epsilon^2\end{pmatrix}.\]
+
+<p>计算得</p>
+
+\[\kappa(A)\approx\frac{1}{\epsilon}=10^8,\qquad
+\kappa(A^{\mathsf T}A)\approx\frac{1}{\epsilon^2}=10^{16}.\]
+
+<p>在双精度（$\epsilon_{\text{mach}}\approx10^{-16}$）下，正规方程法可能完全失去精度，而 QR 分解仍能得到较好结果。</p>
+
+<h2 id="数值稳定的改进">数值稳定的改进</h2>
+
+<p><strong>迭代改进</strong>：在正规方程法求得 $\hat x$ 后，计算残差</p>
+
+\[r=b-A\hat x,\]
+
+<p>再解</p>
+
+\[A^{\mathsf T}A\,\delta=A^{\mathsf T}r,\]
+
+<p>更新</p>
+
+\[\hat x\leftarrow\hat x+\delta.\]
+
+<p>重复直至收敛。可部分弥补精度损失，但无法根本解决条件数平方问题。</p>
+
+<h1 id="例题">例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
+
+<h3 id="71-计算正规方程">7.1 计算正规方程</h3>
+
+\[A^{\mathsf T}A=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}
+=
+\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\]
+
+\[A^{\mathsf T}b=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}1\\2\\3\end{pmatrix}
+=
+\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<h2 id="解正规方程">解正规方程</h2>
+
+\[\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}
+\begin{pmatrix}x_1\\x_2\end{pmatrix}
+=
+\begin{pmatrix}3\\4\end{pmatrix}.\]
+
+<p>由 Cramer 法则：</p>
+
+\[x_1=\frac{2\cdot3-1\cdot4}{2\cdot2-1\cdot1}=\frac{2}{3},\]
+
+\[x_2=\frac{2\cdot4-1\cdot3}{3}=\frac{5}{3}.\]
+
+<p>故</p>
+
+\[x=\begin{pmatrix}\frac23\\\frac53\end{pmatrix}.\]
+
+<h2 id="验证">验证</h2>
+
+\[Ax=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix}
+\begin{pmatrix}\frac23\\\frac53\end{pmatrix}
+=
+\begin{pmatrix}\frac73\\\frac23\\\frac53\end{pmatrix}.\]
+
+<p>残差</p>
+
+\[b-Ax=\begin{pmatrix}1-\frac73\\2-\frac23\\3-\frac53\end{pmatrix}
+=\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix}.\]
+
+<p>验证正交性：</p>
+
+\[A^{\mathsf T}(b-Ax)=
+\begin{pmatrix}1&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix}
+=\begin{pmatrix}0\\0\end{pmatrix}.\]
+
+<p>正确。</p>
+
+<p>最小残差：</p>
+
+\[\|Ax-b\|_2=\sqrt{\frac{16}{3}}=\frac{4}{\sqrt3}.\]
+
+<h1 id="与-qr-分解的比较">与 QR 分解的比较</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>实现复杂度</td>
+      <td>简单</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：</p>
+<ul>
+  <li>当 $A$ 良态（$\kappa(A)$ 不大）时，正规方程法计算量小，可用；</li>
+  <li>当 $A$ 病态或精度要求高时，应采用 QR 分解或 SVD。</li>
+</ul>
+
+<h1 id="优缺点">优缺点</h1>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>推导简洁，几何直观；</li>
+  <li>计算量较小（约 $mn^2+\frac13n^3$）；</li>
+  <li>可结合 Cholesky 分解高效求解；</li>
+  <li>矩阵 $A^{\mathsf T}A$ 对称正定，有现成高效算法。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>条件数平方 $\kappa(A)^2$，数值不稳定；</li>
+  <li>对病态问题精度损失严重；</li>
+  <li>显式计算 $A^{\mathsf T}A$ 可能引入额外误差；</li>
+  <li>当 $A$ 接近奇异时，$A^{\mathsf T}A$ 可能严重病态甚至数值奇异。</li>
+</ol>
+
+<p><strong>适用场景</strong></p>
+<ul>
+  <li>小规模问题；</li>
+  <li>良态矩阵（$\kappa(A)$ 不大）；</li>
+  <li>对精度要求不高的场合；</li>
+  <li>需要快速求解且矩阵条件数可控。</li>
+</ul>
+
+<p><strong>替代方法</strong></p>
+<ul>
+  <li>QR 分解（条件数 $\kappa(A)$，稳定）；</li>
+  <li>SVD（最稳定，但计算量大）。</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+\[\text{正规方程法：}A^{\mathsf T}Ax=A^{\mathsf T}b\implies x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b.\]
+
+<p><strong>原理</strong>：</p>
+<ol>
+  <li>最小二乘问题等价于求 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影；</li>
+  <li>正交性条件 $b-Ax\perp\operatorname{Col}(A)$ 给出 $A^{\mathsf T}(b-Ax)=0$；</li>
+  <li>展开得正规方程 $A^{\mathsf T}Ax=A^{\mathsf T}b$；</li>
+  <li>若 $A$ 列满秩，$A^{\mathsf T}A$ 对称正定，有唯一解。</li>
+</ol>
+
+<p><strong>几何意义</strong>：残差 $b-Ax$ 垂直于 $\operatorname{Col}(A)$，$Ax$ 是 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影。</p>
+
+<p><strong>核心公式</strong>：</p>
+
+\[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b,\qquad
+P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}.\]
+
+<p><strong>数值稳定性</strong>：条件数 $\kappa(A)^2$，是正规方程法的主要缺陷。对病态问题，应采用 QR 分解或 SVD。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
