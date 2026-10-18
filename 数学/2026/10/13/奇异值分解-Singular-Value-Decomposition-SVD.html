@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>奇异值分解（Singular Value Decomposition，SVD） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-13T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-13T00:00:00+00:00","datePublished":"2026-10-13T00:00:00+00:00","description":"xxxxxx","headline":"奇异值分解（Singular Value Decomposition，SVD）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 奇异值分解（Singular Value Decomposition，SVD） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="引言">引言</h1>
+
+<p>奇异值分解（Singular Value Decomposition，简称 SVD）是线性代数中最重要、最通用的矩阵分解之一。它适用于<strong>任意</strong> $m\times n$ 矩阵，无论方阵与否、是否满秩、是否可对角化。SVD 在数值线性代数、统计学、信号处理、机器学习等领域都有核心应用。</p>
+
+<p>SVD 的核心思想：任意矩阵 $A$ 都可以分解为</p>
+
+\[A=U\Sigma V^{\mathsf T},\]
+
+<p>其中 $U,V$ 为正交矩阵，$\Sigma$ 为对角矩阵（对角线元素非负且按降序排列）。这三个因子分别对应：</p>
+<ul>
+  <li>$V$：输入空间的标准正交基；</li>
+  <li>$\Sigma$：沿各方向的伸缩比例（奇异值）；</li>
+  <li>$U$：输出空间的标准正交基。</li>
+</ul>
+
+<h1 id="定义">定义</h1>
+
+<p><strong>定义 2.1（奇异值分解）</strong><br />
+设 $A\in\mathbb R^{m\times n}$。若存在正交矩阵 $U\in M_m(\mathbb R)$、$V\in M_n(\mathbb R)$ 和对角矩阵 $\Sigma\in\mathbb R^{m\times n}$，使得</p>
+
+\[A=U\Sigma V^{\mathsf T},\]
+
+<p>则称其为 $A$ 的<strong>奇异值分解</strong>。其中：</p>
+<ul>
+  <li>$U=[u_1\ u_2\ \cdots\ u_m]\in M_m(\mathbb R)$，$U^{\mathsf T}U=UU^{\mathsf T}=I_m$；</li>
+  <li>$V=[v_1\ v_2\ \cdots\ v_n]\in M_n(\mathbb R)$，$V^{\mathsf T}V=VV^{\mathsf T}=I_n$；</li>
+  <li>$\Sigma\in\mathbb R^{m\times n}$ 为对角矩阵：</li>
+</ul>
+
+\[\Sigma=\begin{pmatrix}
+\sigma_1&amp;&amp;&amp;&amp;\\
+&amp;\sigma_2&amp;&amp;&amp;\\
+&amp;&amp;\ddots&amp;&amp;\\
+&amp;&amp;&amp;\sigma_r&amp;\\
+&amp;&amp;&amp;&amp;\ddots
+\end{pmatrix},\]
+
+<p>其中</p>
+
+\[\sigma_1\ge\sigma_2\ge\cdots\ge\sigma_r&gt;0,\qquad r=\operatorname{rank}A,\]
+
+<p>其余元素为零。</p>
+
+<p><strong>约定</strong>：$\sigma_1,\dots,\sigma_r$ 称为 $A$ 的<strong>奇异值</strong>；$u_1,\dots,u_r$ 称为<strong>左奇异向量</strong>；$v_1,\dots,v_r$ 称为<strong>右奇异向量</strong>。</p>
+
+<p><strong>复情形</strong>：若 $A\in\mathbb C^{m\times n}$，则 $U,V$ 为酉矩阵，$V^{\mathsf T}$ 替换为 $V^{\mathsf H}$：</p>
+
+\[A=U\Sigma V^{\mathsf H}.\]
+
+<h1 id="存在性定理">存在性定理</h1>
+
+<p><strong>定理 3.1（SVD 的存在性）</strong></p>
+
+<p>设 $A\in\mathbb R^{m\times n}$，则 $A$ 存在奇异值分解 $A=U\Sigma V^{\mathsf T}$。</p>
+
+<p><strong>证明</strong></p>
+
+<p>考虑对称半正定矩阵 $A^{\mathsf T}A\in M_n(\mathbb R)$。因 $A^{\mathsf T}A$ 对称，存在正交对角化：</p>
+
+\[A^{\mathsf T}A=V\Lambda V^{\mathsf T},\]
+
+<p>其中 $V=[v_1\ \cdots\ v_n]$ 为正交矩阵，$\Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$，$\lambda_1\ge\cdots\ge\lambda_n\ge 0$。</p>
+
+<p>令</p>
+
+\[\sigma_i=\sqrt{\lambda_i},\qquad i=1,\dots,n.\]
+
+<p>因 $\lambda_i\ge 0$，故 $\sigma_i\ge 0$。设 $r=\operatorname{rank}A$，则</p>
+
+\[\sigma_1\ge\cdots\ge\sigma_r&gt;0,\qquad \sigma_{r+1}=\cdots=\sigma_n=0.\]
+
+<p>对 $i=1,\dots,r$，定义</p>
+
+\[u_i=\frac{1}{\sigma_i}Av_i\in\mathbb R^m.\]
+
+<p>则</p>
+
+\[u_i^{\mathsf T}u_j=\frac{1}{\sigma_i\sigma_j}v_i^{\mathsf T}A^{\mathsf T}Av_j
+=\frac{1}{\sigma_i\sigma_j}v_i^{\mathsf T}(\lambda_j v_j)
+=\frac{\lambda_j}{\sigma_i\sigma_j}\delta_{ij}
+=\delta_{ij}.\]
+
+<p>故 $u_1,\dots,u_r$ 标准正交。</p>
+
+<p>将 $u_1,\dots,u_r$ 扩充为 $\mathbb R^m$ 的标准正交基</p>
+
+\[u_1,\dots,u_r,u_{r+1},\dots,u_m,\]
+
+<p>令</p>
+
+\[U=[u_1\ \cdots\ u_m]\in M_m(\mathbb R),\qquad
+V=[v_1\ \cdots\ v_n]\in M_n(\mathbb R).\]
+
+<p>两者均为正交矩阵。</p>
+
+<p>对 $i\le r$，</p>
+
+\[Av_i=\sigma_i u_i.\]
+
+<p>对 $i&gt;r$，$\sigma_i=0$，且 $A^{\mathsf T}Av_i=0$，故</p>
+
+\[\|Av_i\|_2^2=v_i^{\mathsf T}A^{\mathsf T}Av_i=0,\]
+
+<p>即 $Av_i=0=\sigma_i u_i$。因此对所有 $i$，</p>
+
+\[Av_i=\sigma_i u_i.\]
+
+<p>写成矩阵形式：</p>
+
+\[AV=U\Sigma,\]
+
+<p>其中 $\Sigma=\operatorname{diag}(\sigma_1,\dots,\sigma_r,0,\dots,0)\in\mathbb R^{m\times n}$。于是</p>
+
+\[A=U\Sigma V^{\mathsf T}.\]
+
+<h1 id="奇异值与特征值的关系">奇异值与特征值的关系</h1>
+
+<p><strong>定理 4.1</strong></p>
+
+<p>设 $A=U\Sigma V^{\mathsf T}$ 为 $A$ 的 SVD。则：</p>
+
+<ol>
+  <li>$A^{\mathsf T}A=V\Sigma^{\mathsf T}\Sigma V^{\mathsf T}$。因此 $A^{\mathsf T}A$ 的特征值为 $\sigma_i^2$，对应特征向量为 $v_i$；</li>
+  <li>$AA^{\mathsf T}=U\Sigma\Sigma^{\mathsf T}U^{\mathsf T}$。因此 $AA^{\mathsf T}$ 的特征值为 $\sigma_i^2$，对应特征向量为 $u_i$；</li>
+  <li>$A$ 的非零奇异值个数等于 $\operatorname{rank}A$；</li>
+  <li>$|A|_2=\sigma_1$（谱范数）；</li>
+  <li>$|A|_F=\sqrt{\sigma_1^2+\cdots+\sigma_r^2}$（Frobenius 范数）；</li>
+  <li>$\det A=\prod_{i=1}^n\sigma_i$（若 $m=n$）。</li>
+</ol>
+
+<p><strong>证明</strong></p>
+
+<p>(1)</p>
+
+\[A^{\mathsf T}A=(U\Sigma V^{\mathsf T})^{\mathsf T}(U\Sigma V^{\mathsf T})
+=V\Sigma^{\mathsf T}U^{\mathsf T}U\Sigma V^{\mathsf T}
+=V(\Sigma^{\mathsf T}\Sigma)V^{\mathsf T}.\]
+
+<p>因 $\Sigma^{\mathsf T}\Sigma=\operatorname{diag}(\sigma_1^2,\dots,\sigma_n^2)$，故 $A^{\mathsf T}A$ 的特征值为 $\sigma_i^2$。</p>
+
+<p>(2) 类似。</p>
+
+<p>(3) $\sigma_i&gt;0$ 当且仅当 $i\le r$，而 $r=\operatorname{rank}A$。</p>
+
+<p>(4) 对任意 $x\in\mathbb R^n$，</p>
+
+\[\|Ax\|_2=\|U\Sigma V^{\mathsf T}x\|_2=\|\Sigma V^{\mathsf T}x\|_2.\]
+
+<p>令 $y=V^{\mathsf T}x$，$|y|_2=|x|_2$，则</p>
+
+\[\|\Sigma y\|_2^2=\sum_{i=1}^r\sigma_i^2y_i^2\le\sigma_1^2\sum_{i=1}^r y_i^2\le\sigma_1^2\|y\|_2^2.\]
+
+<p>故 $|A|_2\le\sigma_1$。取 $x=v_1$，则 $Ax=\sigma_1u_1$，$|Ax|_2=\sigma_1$，故 $|A|_2=\sigma_1$。</p>
+
+<p>(5) $|A|<em>F^2=\operatorname{tr}(A^{\mathsf T}A)=\operatorname{tr}(\Sigma^{\mathsf T}\Sigma)=\sum</em>{i=1}^r\sigma_i^2$。</p>
+
+<p>(6) 若 $m=n$，</p>
+
+\[\det A=\det U\cdot\det\Sigma\cdot\det V=\pm\prod_{i=1}^n\sigma_i.\]
+
+<p>因 $\det U=\pm1$，$\det V=\pm1$，取适当符号约定得 $\det A=\prod_{i=1}^n\sigma_i$。</p>
+
+<h1 id="几何意义">几何意义</h1>
+
+<h2 id="线性变换的几何分解">线性变换的几何分解</h2>
+
+<p>将 $A$ 看作线性变换 $A:\mathbb R^n\to\mathbb R^m$。SVD 将其分解为三个步骤：</p>
+
+<ol>
+  <li><strong>旋转/反射</strong>：$V^{\mathsf T}$ 将输入向量 $x$ 旋转到标准正交基 $v_1,\dots,v_n$ 上；</li>
+  <li><strong>伸缩</strong>：$\Sigma$ 沿各坐标轴方向伸缩，比例分别为 $\sigma_1,\dots,\sigma_r$（其他方向缩为 $0$）；</li>
+  <li><strong>旋转/反射</strong>：$U$ 将结果旋转到输出空间的标准正交基 $u_1,\dots,u_m$ 上。</li>
+</ol>
+
+<p><strong>几何图像</strong>：任意线性变换可视为“旋转 → 伸缩 → 旋转”的复合。</p>
+
+<h2 id="单位球的像">单位球的像</h2>
+
+<p>考虑 $\mathbb R^n$ 中的单位球</p>
+
+\[B=\{x\in\mathbb R^n:\|x\|_2\le 1\}.\]
+
+<p>则</p>
+
+\[A(B)=\{Ax:\|x\|_2\le 1\}\]
+
+<p>是 $\mathbb R^m$ 中的一个<strong>椭球</strong>，其半轴长度为 $\sigma_1,\dots,\sigma_r$，方向为 $u_1,\dots,u_r$。这给出了奇异值的几何意义：<strong>奇异值是从单位球到椭球的各方向伸缩比例</strong>。</p>
+
+<h2 id="秩的几何意义">秩的几何意义</h2>
+
+<p>若 $r=\operatorname{rank}A&lt;n$，则 $\sigma_{r+1}=\cdots=\sigma_n=0$，椭球退化为 $r$ 维子空间中的椭球。这对应 $A$ 的像空间 $\operatorname{Col}(A)$ 的维数为 $r$。</p>
+
+<h1 id="紧奇异值分解与截断-svd">紧奇异值分解与截断 SVD</h1>
+
+<h2 id="紧-svd">紧 SVD</h2>
+
+<p>若 $\operatorname{rank}A=r$，则只有 $r$ 个非零奇异值。将 $U,V$ 分块：</p>
+
+\[U=[U_r\ U_{m-r}],\qquad V=[V_r\ V_{n-r}],\]
+
+<p>其中</p>
+
+\[U_r=[u_1\ \cdots\ u_r]\in\mathbb R^{m\times r},\qquad
+V_r=[v_1\ \cdots\ v_r]\in\mathbb R^{n\times r}.\]
+
+<p>则</p>
+
+\[A=U_r\Sigma_r V_r^{\mathsf T},\]
+
+<p>其中 $\Sigma_r=\operatorname{diag}(\sigma_1,\dots,\sigma_r)\in M_r(\mathbb R)$。称其为<strong>紧 SVD</strong>。</p>
+
+<p><strong>注</strong>：紧 SVD 与全 SVD 等价，但只保留非零奇异值对应的部分，节省存储。</p>
+
+<h2 id="截断-svd">截断 SVD</h2>
+
+<p>设 $\sigma_1\ge\cdots\ge\sigma_r&gt;0$。对 $k&lt;r$，定义</p>
+
+\[A_k=\sum_{i=1}^k\sigma_iu_iv_i^{\mathsf T}=U_k\Sigma_kV_k^{\mathsf T}.\]
+
+<p>称 $A_k$ 为 $A$ 的<strong>截断 SVD</strong>（或秩 $k$ 近似）。</p>
+
+<p><strong>定理 6.2.1（Eckart–Young–Mirsky）</strong><br />
+在所有秩不超过 $k$ 的 $m\times n$ 矩阵中，$A_k$ 是 $A$ 的最佳逼近：</p>
+
+\[\|A-A_k\|_2=\min_{\operatorname{rank}B\le k}\|A-B\|_2=\sigma_{k+1},\]
+
+\[\|A-A_k\|_F=\min_{\operatorname{rank}B\le k}\|A-B\|_F=\sqrt{\sum_{i=k+1}^r\sigma_i^2}.\]
+
+<p><strong>证明思路</strong>：利用奇异值的极小极大刻画</p>
+
+\[\sigma_{k+1}=\min_{\dim\mathcal S=k}\max_{x\in\mathcal S^\perp,\|x\|=1}\|Ax\|_2,\]
+
+<p>可证谱范数结论。Frobenius 范数结论类似。</p>
+
+<p><strong>应用</strong>：图像压缩、数据降维、潜在语义分析、推荐系统。</p>
+
+<h1 id="与特征值分解的关系">与特征值分解的关系</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>特征值分解</th>
+      <th>奇异值分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>适用矩阵</td>
+      <td>可对角化方阵</td>
+      <td>任意矩阵</td>
+    </tr>
+    <tr>
+      <td>形式</td>
+      <td>$A=PDP^{-1}$</td>
+      <td>$A=U\Sigma V^{\mathsf T}$</td>
+    </tr>
+    <tr>
+      <td>因子</td>
+      <td>$P$ 特征向量，$D$ 特征值</td>
+      <td>$U,V$ 正交，$\Sigma$ 奇异值</td>
+    </tr>
+    <tr>
+      <td>特征值/奇异值</td>
+      <td>可正可负可复</td>
+      <td>非负</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>一般</td>
+      <td>极稳定</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$O(n^3)$</td>
+      <td>$O(mn^2)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>关系</strong>：</p>
+<ul>
+  <li>$A^{\mathsf T}A$ 的特征值是 $A$ 的奇异值的平方；</li>
+  <li>$A$ 的奇异值是 $A^{\mathsf T}A$ 特征值的平方根；</li>
+  <li>SVD 可看作特征值分解在任意矩阵上的推广。</li>
+</ul>
+
+<h1 id="计算-svd-的方法">计算 SVD 的方法</h1>
+
+<h2 id="通过-amathsf-ta-的特征值分解">通过 $A^{\mathsf T}A$ 的特征值分解</h2>
+
+<ol>
+  <li>计算 $A^{\mathsf T}A$；</li>
+  <li>对 $A^{\mathsf T}A$ 做特征值分解 $A^{\mathsf T}A=V\Lambda V^{\mathsf T}$；</li>
+  <li>奇异值 $\sigma_i=\sqrt{\lambda_i}$；</li>
+  <li>右奇异向量 $v_i$ 为 $A^{\mathsf T}A$ 的特征向量；</li>
+  <li>左奇异向量 $u_i=\dfrac{1}{\sigma_i}Av_i$（对 $\sigma_i&gt;0$）。</li>
+</ol>
+
+<p><strong>缺点</strong>：$A^{\mathsf T}A$ 条件数为 $\kappa(A)^2$，数值不稳定。</p>
+
+<h2 id="golubkahan-算法">Golub–Kahan 算法</h2>
+
+<p><strong>步骤</strong>：</p>
+
+<ol>
+  <li><strong>双对角化</strong>：用 Householder 变换将 $A$ 化为上双对角矩阵 $B$：</li>
+</ol>
+
+\[A=U_1BV_1^{\mathsf T},\]
+
+<p>其中 $B$ 为上双对角矩阵。</p>
+
+<ol>
+  <li><strong>双对角 SVD</strong>：对 $B$ 迭代应用 QR 算法，得到</li>
+</ol>
+
+\[B=U_2\Sigma V_2^{\mathsf T}.\]
+
+<ol>
+  <li><strong>组合</strong>：</li>
+</ol>
+
+\[A=(U_1U_2)\Sigma(V_1V_2)^{\mathsf T}=U\Sigma V^{\mathsf T}.\]
+
+<p><strong>计算量</strong>：约 $4mn^2-4n^3/3$（$m\ge n$）。</p>
+
+<p><strong>数值稳定性</strong>：Golub–Kahan 算法后向稳定，是 LAPACK 中 SVD 的标准实现（<code class="language-plaintext highlighter-rouge">dgesvd</code>、<code class="language-plaintext highlighter-rouge">dgesdd</code>）。</p>
+
+<h2 id="jacobi-svd">Jacobi SVD</h2>
+
+<p>分为单边 Jacobi SVD 与双边 Jacobi SVD</p>
+
+<h2 id="对比">对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>(A^{\mathsf T}A)</th>
+      <th>Golub–Kahan</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>原理</strong></td>
+      <td>对称特征值分解</td>
+      <td>双对角化 + QR 迭代</td>
+      <td>列正交化</td>
+      <td>行列同时对角化</td>
+    </tr>
+    <tr>
+      <td><strong>稳定性</strong></td>
+      <td>差（条件数平方）</td>
+      <td>后向稳定</td>
+      <td>后向稳定 + 高相对精度</td>
+      <td>后向稳定 + 高相对精度</td>
+    </tr>
+    <tr>
+      <td><strong>小奇异值相对精度</strong></td>
+      <td>差</td>
+      <td>一般</td>
+      <td>高</td>
+      <td>高</td>
+    </tr>
+    <tr>
+      <td><strong>计算量</strong></td>
+      <td>最低</td>
+      <td>低</td>
+      <td>较高</td>
+      <td>最高</td>
+    </tr>
+    <tr>
+      <td><strong>并行性</strong></td>
+      <td>好</td>
+      <td>中等</td>
+      <td>好</td>
+      <td>较差</td>
+    </tr>
+    <tr>
+      <td><strong>实现复杂度</strong></td>
+      <td>简单</td>
+      <td>中等</td>
+      <td>简单</td>
+      <td>较复杂</td>
+    </tr>
+    <tr>
+      <td><strong>典型实现</strong></td>
+      <td>教学代码</td>
+      <td>LAPACK <code class="language-plaintext highlighter-rouge">dgesvd</code></td>
+      <td>LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code></td>
+      <td>小规模实现</td>
+    </tr>
+    <tr>
+      <td><strong>适用场景</strong></td>
+      <td>良态小矩阵</td>
+      <td>通用、大规模</td>
+      <td>高精度、并行</td>
+      <td>小规模、高精度</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="svd-的应用">SVD 的应用</h1>
+
+<h2 id="数据压缩">数据压缩</h2>
+
+<p>将图像矩阵 $A$ 做 SVD，只保留前 $k$ 个奇异值：</p>
+
+\[A\approx A_k=U_k\Sigma_kV_k^{\mathsf T}.\]
+
+<p>存储量从 $mn$ 降为 $k(m+n+1)$。当 $k\ll\min(m,n)$ 时，压缩效果显著。</p>
+
+<h2 id="最小二乘">最小二乘</h2>
+
+<p>SVD 可解任意（包括秩亏）最小二乘问题：</p>
+
+\[x^*=V\Sigma^+U^{\mathsf T}b,\]
+
+<p>其中 $\Sigma^+$ 为 $\Sigma$ 的伪逆。这是最稳定的最小二乘方法。</p>
+
+<h2 id="主成分分析pca">主成分分析（PCA）</h2>
+
+<p>对数据中心化后的矩阵 $X$ 做 SVD，右奇异向量给出主成分方向，奇异值平方给出方差贡献。</p>
+
+<h2 id="潜在语义分析lsa">潜在语义分析（LSA）</h2>
+
+<p>对词-文档矩阵做截断 SVD，提取潜在语义结构。</p>
+
+<h2 id="推荐系统">推荐系统</h2>
+
+<p>对用户-物品评分矩阵做截断 SVD，填补缺失值。</p>
+
+<h2 id="图像去噪">图像去噪</h2>
+
+<p>小奇异值通常对应噪声，截断 SVD 可去噪。</p>
+
+<h2 id="矩阵求逆与伪逆">矩阵求逆与伪逆</h2>
+
+\[A^+=V\Sigma^+U^{\mathsf T}.\]
+
+<p>适用于任意矩阵（包括奇异矩阵）。</p>
+
+<h2 id="数值秩与条件数">数值秩与条件数</h2>
+
+<ul>
+  <li>数值秩：大于阈值 $\epsilon$ 的奇异值个数；</li>
+  <li>条件数：$\kappa(A)=\sigma_1/\sigma_r$（$r=\operatorname{rank}A$）。</li>
+</ul>
+
+<h1 id="例题">例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}3&amp;0\\0&amp;-2\\0&amp;0\end{pmatrix}\in\mathbb R^{3\times 2}.\]
+
+<h2 id="计算-svd">计算 SVD</h2>
+
+\[A^{\mathsf T}A=\begin{pmatrix}9&amp;0\\0&amp;4\end{pmatrix}.\]
+
+<p>特征值为 $9,4$，特征向量为 $e_1,e_2$。故</p>
+
+\[\sigma_1=3,\qquad\sigma_2=2,\qquad
+V=\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}=I_2.\]
+
+<p>右奇异向量 $v_1=e_1$，$v_2=e_2$。</p>
+
+<p>左奇异向量：</p>
+
+\[u_1=\frac{1}{\sigma_1}Av_1=\frac13\begin{pmatrix}3\\0\\0\end{pmatrix}=\begin{pmatrix}1\\0\\0\end{pmatrix},\]
+
+\[u_2=\frac{1}{\sigma_2}Av_2=\frac12\begin{pmatrix}0\\-2\\0\end{pmatrix}=\begin{pmatrix}0\\-1\\0\end{pmatrix}.\]
+
+<p>扩充为 $\mathbb R^3$ 的标准正交基：</p>
+
+\[u_3=\begin{pmatrix}0\\0\\1\end{pmatrix}.\]
+
+<p>故</p>
+
+\[U=\begin{pmatrix}1&amp;0&amp;0\\0&amp;-1&amp;0\\0&amp;0&amp;1\end{pmatrix},\qquad
+\Sigma=\begin{pmatrix}3&amp;0\\0&amp;2\\0&amp;0\end{pmatrix},\qquad
+V=I_2.\]
+
+<p>验证：</p>
+
+\[U\Sigma V^{\mathsf T}=
+\begin{pmatrix}1&amp;0&amp;0\\0&amp;-1&amp;0\\0&amp;0&amp;1\end{pmatrix}
+\begin{pmatrix}3&amp;0\\0&amp;2\\0&amp;0\end{pmatrix}
+=
+\begin{pmatrix}3&amp;0\\0&amp;-2\\0&amp;0\end{pmatrix}=A.\]
+
+<h2 id="截断-svd-1">截断 SVD</h2>
+
+<p>秩 1 近似：</p>
+
+\[A_1=\sigma_1u_1v_1^{\mathsf T}
+=3\begin{pmatrix}1\\0\\0\end{pmatrix}\begin{pmatrix}1&amp;0\end{pmatrix}
+=\begin{pmatrix}3&amp;0\\0&amp;0\\0&amp;0\end{pmatrix}.\]
+
+<p>误差：</p>
+
+\[\|A-A_1\|_2=\sigma_2=2.\]
+
+<h1 id="总结">总结</h1>
+
+\[\text{SVD：}A=U\Sigma V^{\mathsf T},\quad U,V\text{ 正交},\quad\Sigma\text{ 对角非负。}\]
+
+<p><strong>核心性质</strong>：</p>
+<ul>
+  <li>适用于任意 $m\times n$ 矩阵；</li>
+  <li>奇异值唯一且按降序排列；</li>
+  <li>奇异值非负，个数等于 $\operatorname{rank}A$；</li>
+  <li>$|A|_2=\sigma_1$，$|A|_F=\sqrt{\sum\sigma_i^2}$；</li>
+  <li>$A^{\mathsf T}A$ 的特征值为 $\sigma_i^2$；</li>
+  <li>单位球的像是半轴为 $\sigma_i$ 的椭球。</li>
+</ul>
+
+<p><strong>三种形式</strong>：</p>
+<ul>
+  <li>全 SVD：$U\in M_m$，$V\in M_n$，$\Sigma\in\mathbb R^{m\times n}$；</li>
+  <li>紧 SVD：$A=U_r\Sigma_rV_r^{\mathsf T}$，只保留非零奇异值；</li>
+  <li>截断 SVD：$A_k=U_k\Sigma_kV_k^{\mathsf T}$，最佳秩 $k$ 逼近。</li>
+</ul>
+
+<p><strong>重要应用</strong>：</p>
+<ul>
+  <li>数据压缩、降维（PCA、LSA）；</li>
+  <li>最小二乘、伪逆；</li>
+  <li>数值秩、条件数；</li>
+  <li>图像去噪、推荐系统。</li>
+</ul>
+
+<p><strong>计算方法</strong>：Golub–Kahan 算法（双对角化 + QR 迭代），数值稳定，是 LAPACK 的标准实现。</p>
+
+<p>SVD 是线性代数中最深刻、最通用的分解，被誉为“线性代数的瑞士军刀”，在理论分析与实际应用中都具有不可替代的地位。</p>
+
+<h1 id="附-a-u_imathsf-tu_j--推导">附 A: $u_i^{\mathsf T}u_j$  推导</h1>
+
+<p>分两种情形：</p>
+
+<p><strong>当 $i=j$ 时</strong>：</p>
+
+\[u_i^{\mathsf T}u_i=\frac{\lambda_i}{\sigma_i^2}.\]
+
+<p>由 $\sigma_i=\sqrt{\lambda_i}$，得 $\sigma_i^2=\lambda_i$，故</p>
+
+\[u_i^{\mathsf T}u_i=\frac{\lambda_i}{\lambda_i}=1.\]
+
+<p><strong>当 $i\ne j$ 时</strong>：</p>
+
+\[u_i^{\mathsf T}u_j=0.\]
+
+<p>因此</p>
+
+\[u_i^{\mathsf T}u_j=\delta_{ij},\qquad i,j=1,\dots,r.\]
+
+<h1 id="附-b-av_i0-推导">附 B： $Av_i=0$ 推导</h1>
+
+<h2 id="为什么-amathsf-tav_i0">为什么 $A^{\mathsf T}Av_i=0$</h2>
+
+<p>因为 $v_i$ 是 $A^{\mathsf T}A$ 的特征向量，对应特征值 $\lambda_i$。当 $i&gt;r$ 时，$\lambda_i=0$，所以</p>
+
+\[A^{\mathsf T}Av_i=\lambda_i v_i=0\cdot v_i=0.\]
+
+<p>这就是 $A^{\mathsf T}Av_i=0$ 的来源。</p>
+
+<h2 id="为什么由-amathsf-tav_i0-推出-av_i0">为什么由 $A^{\mathsf T}Av_i=0$ 推出 $Av_i=0$</h2>
+
+<p>计算</p>
+
+\[\|Av_i\|_2^2=(Av_i)^{\mathsf T}(Av_i)=v_i^{\mathsf T}A^{\mathsf T}Av_i=v_i^{\mathsf T}0=0.\]
+
+<p>范数为零当且仅当向量为零，故</p>
+
+\[Av_i=0.\]
+
+<h1 id="附-camathsf-ta-半正定推导">附 C：$A^{\mathsf T}A$ 半正定推导</h1>
+
+<h2 id="命题">命题</h2>
+
+<p>设 $A\in\mathbb R^{m\times n}$ 为任意实矩阵。则 $A^{\mathsf T}A\in\mathbb R^{n\times n}$ 是<strong>对称半正定矩阵</strong>。</p>
+
+<h2 id="定义-1">定义</h2>
+
+<p><strong>对称</strong>：若 $M^{\mathsf T}=M$，则称 $M$ 为对称矩阵。</p>
+
+<p><strong>半正定</strong>：若 $M$ 对称，且对任意 $x\in\mathbb R^n$，$x^{\mathsf T}Mx\ge 0$，则称 $M$ 为半正定矩阵。</p>
+
+<p><strong>正定</strong>：若对任意 $x\ne 0$，$x^{\mathsf T}Mx&gt;0$，则称 $M$ 为正定矩阵。</p>
+
+<h2 id="证明">证明</h2>
+
+<p>对称性：$(A^{\mathsf T}A)^{\mathsf T} =A^{\mathsf T}(A^{\mathsf T})^{\mathsf T} =A^{\mathsf T}A.$</p>
+
+<p>半正定： 对任意 $x\in\mathbb R^n$，$x^{\mathsf T}(A^{\mathsf T}A)x =(Ax)^{\mathsf T}(Ax)=|Ax|_2^2 \ge 0.$</p>
+
+<p>故，$A^{\mathsf T}A$ 是对称半正定矩阵。</p>
+
+<h2 id="推论">推论</h2>
+
+<ol>
+  <li><strong>特征值非负</strong></li>
+</ol>
+
+<p>因 $A^{\mathsf T}A$ 对称半正定，其特征值 $\lambda_1,\dots,\lambda_n$ 均为实数且</p>
+
+\[\lambda_i\ge 0,\qquad i=1,\dots,n.\]
+
+<ol>
+  <li><strong>秩相等</strong></li>
+</ol>
+
+\[\operatorname{rank}(A^{\mathsf T}A)=\operatorname{rank}A.\]
+
+<p>证明：$\ker(A^{\mathsf T}A)=\ker A$。若 $Ax=0$，则 $A^{\mathsf T}Ax=0$；反之若 $A^{\mathsf T}Ax=0$，则</p>
+
+\[0=x^{\mathsf T}A^{\mathsf T}Ax=\|Ax\|_2^2,\]
+
+<p>故 $Ax=0$。因此零空间相同，由秩—零化度定理得秩相等。</p>
+
+<ol>
+  <li><strong>正定性条件</strong></li>
+</ol>
+
+<p>$A^{\mathsf T}A$ 正定当且仅当 $A$ 列满秩，即 $\operatorname{rank}A=n$。<br />
+证明：若 $A$ 列满秩，则对 $x\ne 0$，$Ax\ne 0$，故</p>
+
+\[x^{\mathsf T}A^{\mathsf T}Ax=\|Ax\|_2^2&gt;0.\]
+
+<p>反之，若 $A^{\mathsf T}A$ 正定，则 $\ker(A^{\mathsf T}A)={0}$，即 $\ker A={0}$，故 $A$ 列满秩。</p>
+
+<ol>
+  <li><strong>复情形</strong></li>
+</ol>
+
+<p>若 $A\in\mathbb C^{m\times n}$，则 $A^{\mathsf H}A$ 是 Hermite 半正定矩阵：</p>
+
+\[(A^{\mathsf H}A)^{\mathsf H}=A^{\mathsf H}A,\]
+
+\[x^{\mathsf H}A^{\mathsf H}Ax=\|Ax\|_2^2\ge 0,\qquad \forall x\in\mathbb C^n.\]
+
+<p>其特征值为非负实数。</p>
+
+<hr />
+
+<h2 id="结论">结论</h2>
+
+\[\text{对任意实矩阵 }A,\ A^{\mathsf T}A\text{ 一定是对称半正定矩阵。}\]
+
+\[若 A 列满秩，则 A^{\mathsf T}A 正定。该性质是正规方程、最小二乘、SVD 等理论的基础。\]
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
