@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>奇异值分解（Singular Value Decomposition，SVD） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-14T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-14T00:00:00+00:00","datePublished":"2026-10-14T00:00:00+00:00","description":"xxxxxx","headline":"奇异值分解（Singular Value Decomposition，SVD）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 奇异值分解（Singular Value Decomposition，SVD） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="jacobi-svd">Jacobi SVD</h1>
+
+<h2 id="一概述">一、概述</h2>
+
+<p><strong>Jacobi SVD</strong> 是一类通过<strong>迭代正交变换</strong>计算奇异值分解的数值算法。其思想源于 Jacobi 用于对称矩阵特征值分解的方法，后推广到 SVD 的计算。</p>
+
+<p>与基于双对角化的 Golub–Kahan 算法不同，Jacobi SVD 不追求有限步的精确分解，而是通过反复施加<strong>平面旋转</strong>（Jacobi 旋转），逐步消去矩阵中的非正交分量或非对角元素，使矩阵收敛到列正交形式或对角形式，从而提取奇异值和奇异向量。</p>
+
+<p>Jacobi SVD 分为两类：</p>
+<ul>
+  <li><strong>单边 Jacobi SVD</strong>：只从右侧施加旋转，使列向量两两正交；</li>
+  <li><strong>双边 Jacobi SVD</strong>：同时从左右两侧施加旋转，直接逼近对角形式。</li>
+</ul>
+
+<hr />
+
+<h2 id="二jacobi-旋转">二、Jacobi 旋转</h2>
+
+<h3 id="21-定义">2.1 定义</h3>
+
+<p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong><br />
+设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
+
+\[J(p,q,\theta)=\begin{pmatrix}
+1&amp;&amp;&amp;&amp;&amp;&amp;\\
+&amp;\ddots&amp;&amp;&amp;&amp;&amp;\\
+&amp;&amp;c&amp;&amp;&amp;s&amp;&amp;\\
+&amp;&amp;&amp;\ddots&amp;&amp;&amp;\\
+&amp;&amp;&amp;-s&amp;&amp;c&amp;&amp;\\
+&amp;&amp;&amp;&amp;&amp;\ddots&amp;\\
+&amp;&amp;&amp;&amp;&amp;&amp;1
+\end{pmatrix},\]
+
+<p>其中 $c=\cos\theta$，$s=\sin\theta$，$c$ 位于 $(p,p)$ 和 $(q,q)$，$s$ 位于 $(p,q)$，$-s$ 位于 $(q,p)$，其余位置为单位矩阵元素。称 $J(p,q,\theta)$ 为 <strong>Jacobi 旋转</strong>。</p>
+
+<h3 id="22-基本性质">2.2 基本性质</h3>
+
+<ol>
+  <li><strong>正交性</strong>：</li>
+</ol>
+
+\[J^{\mathsf T}J=JJ^{\mathsf T}=I.\]
+
+<ol>
+  <li><strong>行列式</strong>：</li>
+</ol>
+
+\[\det J=c^2+s^2=1.\]
+
+<ol>
+  <li><strong>作用效果</strong>：右乘 $J(p,q,\theta)$ 只改变矩阵的第 $p$ 列和第 $q$ 列：</li>
+</ol>
+
+\[(AJ)_{:,p}=cA_{:,p}-sA_{:,q},\qquad
+   (AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
+
+<p>左乘 $J^{\mathsf T}(p,q,\theta)$ 只改变第 $p$ 行和第 $q$ 行。</p>
+
+<ol>
+  <li><strong>消元能力</strong>：给定向量 $x=(x_p,x_q)^{\mathsf T}$，可选择 $c,s$ 使得</li>
+</ol>
+
+\[\begin{pmatrix}c&amp;s\\-s&amp;c\end{pmatrix}\begin{pmatrix}x_p\\x_q\end{pmatrix}
+   =\begin{pmatrix}r\\0\end{pmatrix},\]
+
+<p>其中 $r=\sqrt{x_p^2+x_q^2}$。即通过旋转将一个分量消为零。</p>
+
+<h3 id="23-旋转参数的构造">2.3 旋转参数的构造</h3>
+
+<p>给定 $x=(x_p,x_q)^{\mathsf T}$，要消去 $x_q$，取</p>
+
+\[r=\sqrt{x_p^2+x_q^2},\qquad c=\frac{x_p}{r},\qquad s=-\frac{x_q}{r}.\]
+
+<p>则</p>
+
+\[\begin{pmatrix}c&amp;s\\-s&amp;c\end{pmatrix}\begin{pmatrix}x_p\\x_q\end{pmatrix}
+=\begin{pmatrix}r\\0\end{pmatrix}.\]
+
+<p>若 $x_p=x_q=0$，取 $c=1$，$s=0$。</p>
+
+<hr />
+
+<h2 id="三单边-jacobi-svd">三、单边 Jacobi SVD</h2>
+
+<h3 id="31-核心思想">3.1 核心思想</h3>
+
+<p>单边 Jacobi SVD 只从<strong>右侧</strong>对矩阵施加 Jacobi 旋转，即反复更新列向量，使它们两两正交。当所有列都足够正交时，矩阵的列范数即为奇异值，归一化后的列即为左奇异向量。</p>
+
+<p>设初始矩阵为 $A_0=A\in\mathbb R^{m\times n}$。第 $k$ 步的更新为</p>
+
+\[A_{k+1}=A_kJ_k,\]
+
+<p>其中 $J_k$ 是作用于某两列 $(p,q)$ 的 Jacobi 旋转。同时累积所有旋转：</p>
+
+\[V=J_1J_2\cdots J_k\cdots.\]
+
+<p>当 $A_k$ 的列充分正交后，记最终矩阵为 $G$，则</p>
+
+\[G=AV=U\Sigma,\]
+
+<p>其中 $U$ 的列是 $G$ 各列归一化后的单位向量，$\Sigma$ 的对角元是 $G$ 各列的 2-范数。</p>
+
+<h3 id="32-旋转参数的构造">3.2 旋转参数的构造</h3>
+
+<p>给定两列 $x=A_{:,p}$ 和 $y=A_{:,q}$，目标是找一个 $2\times 2$ 正交矩阵 $R$，使得</p>
+
+\[[x\ \ y]R=[x'\ \ y']\]
+
+<p>满足 $x’^{\mathsf T}y’=0$。</p>
+
+<p>等价地，这等价于将 Gram 矩阵 $A^{\mathsf T}A$ 的 $(p,q)$ 元消为零。记</p>
+
+\[a_{pp}=\|x\|_2^2,\qquad a_{qq}=\|y\|_2^2,\qquad a_{pq}=x^{\mathsf T}y.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>若 $</td>
+      <td>a_{pq}</td>
+      <td>$ 相对于 $\sqrt{a_{pp}a_{qq}}$ 足够小，则跳过。否则计算旋转参数：</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\tau=\frac{a_{qq}-a_{pp}}{2a_{pq}},\]
+
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}},\]
+
+\[c=\frac{1}{\sqrt{1+t^2}},\qquad s=ct.\]
+
+<p>然后对两列施加变换：</p>
+
+\[(x',y')=(x,y)\begin{pmatrix}c&amp;s\\-s&amp;c\end{pmatrix}.\]
+
+<p>右奇异向量矩阵 $V$ 的对应两列也施加相同的旋转。</p>
+
+<p><strong>推导</strong>：<br />
+设旋转后新列为</p>
+
+\[x'=cx-sy,\qquad y'=sx+cy.\]
+
+<p>要求 $x’^{\mathsf T}y’=0$：</p>
+
+\[(cx-sy)^{\mathsf T}(sx+cy)=cs\|x\|^2+(c^2-s^2)x^{\mathsf T}y-sc\|y\|^2=0.\]
+
+<p>令 $t=s/c$，得</p>
+
+\[t\|x\|^2+(1-t^2)x^{\mathsf T}y-t\|y\|^2=0.\]
+
+<p>整理得</p>
+
+\[a_{pq}t^2+(a_{qq}-a_{pp})t-a_{pq}=0.\]
+
+<p>解此二次方程并取绝对值较小的根（保证数值稳定），即得上述 $t$ 的公式。</p>
+
+<h3 id="33-算法流程">3.3 算法流程</h3>
+
+<p>以 $m\times n$ 矩阵（$m\ge n$）为例，输出 $A=U\Sigma V^{\mathsf T}$：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G = A
+V = I_n
+repeat:
+    for p = 1 to n-1:
+        for q = p+1 to n:
+            计算 a_pp = ||G(:,p)||², a_qq = ||G(:,q)||², a_pq = G(:,p)^T G(:,q)
+            if |a_pq| 足够小:
+                跳过
+            else:
+                由 τ, t, c, s 构造旋转
+                G(:, [p,q]) = G(:, [p,q]) * [[c, s], [-s, c]]
+                V(:, [p,q]) = V(:, [p,q]) * [[c, s], [-s, c]]
+until G 的列足够正交
+for i = 1 to n:
+    σ_i = ||G(:,i)||₂
+    u_i = G(:,i) / σ_i
+返回 U = [u_1,...,u_n], Σ = diag(σ_i), V
+</code></pre></div></div>
+
+<p><strong>收敛判据</strong>：</p>
+
+\[\max_{p\ne q}\frac{|a_{pq}|}{\sqrt{a_{pp}a_{qq}}}\le\text{tol},\]
+
+<p>或等价的正交性度量。</p>
+
+<h3 id="34-收敛性">3.4 收敛性</h3>
+
+<p><strong>定理 3.4.1（二次收敛）</strong><br />
+在循环 Jacobi 策略下，非对角部分的范数以二次速率趋于零。即存在常数 $C$，使得</p>
+
+\[\operatorname{off}(A_{k+1})\le C\cdot\operatorname{off}(A_k)^2,\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>其中 $\operatorname{off}(A)=\sqrt{\sum_{p\ne q}</td>
+      <td>a_{pq}</td>
+      <td>^2}$ 为 Gram 矩阵非对角部分的范数。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>证明思路</strong>：每次旋转精确消去一个非对角元，同时对其他非对角元的影响是二阶小量。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>。</p>
+
+<h3 id="35-高相对精度">3.5 高相对精度</h3>
+
+<p><strong>定理 3.5.1（Demmel–Veselić）</strong><br />
+设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则单边 Jacobi SVD 计算得到的奇异值满足</p>
+
+\[\frac{|\hat\sigma_i-\sigma_i|}{\sigma_i}\le O(n\epsilon)\kappa(X),\]
+
+<p>其中 $\epsilon$ 为机器精度。</p>
+
+<p><strong>意义</strong>：小奇异值也能保持高相对精度。这是 Jacobi 方法相对于 Golub–Kahan 的核心优势。Golub–Kahan 的双对角化会引入 $\kappa(A)\epsilon$ 量级的扰动，小奇异值的相对精度受限。</p>
+
+<h3 id="36-预处理与加速">3.6 预处理与加速</h3>
+
+<p>原始单边 Jacobi 可能需要较多扫描轮次。实践中常引入 <strong>QR 预处理</strong>：</p>
+
+<ol>
+  <li>计算带列主元的 QR 分解：</li>
+</ol>
+
+\[A\Pi=QR,\]
+
+<p>其中 $Q$ 正交，$R$ 上三角，$\Pi$ 为置换矩阵；</p>
+<ol>
+  <li>对 $R$ 应用单边 Jacobi SVD：</li>
+</ol>
+
+\[R=U_R\Sigma V_R^{\mathsf T};\]
+
+<ol>
+  <li>组合：</li>
+</ol>
+
+\[A=Q U_R\Sigma V_R^{\mathsf T}\Pi^{\mathsf T}.\]
+
+<p>由于 $R$ 是上三角矩阵，列之间的正交化更容易，收敛通常只需少数几轮扫描。该策略在 LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 等例程中被采用。</p>
+
+<hr />
+
+<h2 id="四双边-jacobi-svd">四、双边 Jacobi SVD</h2>
+
+<h3 id="41-核心思想">4.1 核心思想</h3>
+
+<p>双边 Jacobi SVD 同时对矩阵的<strong>行和列</strong>施加 Jacobi 旋转，试图直接消去非对角元素，将矩阵变为对角矩阵。</p>
+
+<p>设当前工作矩阵为 $G\in M_n(\mathbb R)$（矩形矩阵可先通过 QR 分解预处理为上三角矩阵）。在每一步，选取一对指标 $(p,q)$，寻找两个旋转矩阵 $J$（右乘）和 $K$（左乘），使得更新后的矩阵</p>
+
+\[G\leftarrow K^{\mathsf T}GJ\]
+
+<p>在 $(p,q)$ 和 $(q,p)$ 位置上的元素变为零。</p>
+
+<h3 id="42-旋转参数的构造">4.2 旋转参数的构造</h3>
+
+<p>给定 $2\times 2$ 子矩阵</p>
+
+\[\begin{pmatrix}g_{pp}&amp;g_{pq}\\g_{qp}&amp;g_{qq}\end{pmatrix},\]
+
+<p>目标是找正交矩阵 $K,J$，使得</p>
+
+\[K^{\mathsf T}\begin{pmatrix}g_{pp}&amp;g_{pq}\\g_{qp}&amp;g_{qq}\end{pmatrix}J
+=\begin{pmatrix}\sigma_1&amp;0\\0&amp;\sigma_2\end{pmatrix}.\]
+
+<p>这等价于求该 $2\times 2$ 子矩阵的 SVD。可通过以下步骤实现：</p>
+
+<ol>
+  <li><strong>消去 $g_{qp}$</strong>：左乘旋转 $K_1$，使第二行第一列变为零；</li>
+  <li><strong>消去 $g_{pq}$</strong>：右乘旋转 $J_1$，使第一行第二列变为零；</li>
+  <li><strong>调整符号</strong>：必要时调整符号使对角元非负。</li>
+</ol>
+
+<p>具体地，可通过计算该 $2\times 2$ 矩阵的 SVD 得到 $K,J$，然后嵌入 $n$ 阶矩阵。</p>
+
+<h3 id="43-算法流程">4.3 算法流程</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G = A (方阵，或经 QR 预处理后的上三角矩阵)
+U = I_n
+V = I_n
+repeat:
+    off = 0
+    for p = 1 to n-1:
+        for q = p+1 to n:
+            提取 2x2 子矩阵 [[G(p,p), G(p,q)], [G(q,p), G(q,q)]]
+            计算其 SVD，得到 2x2 旋转 K_2, J_2
+            嵌入为 n 阶矩阵 K, J
+            G = K^T * G * J
+            U = U * K
+            V = V * J
+            off += |G(p,q)|² + |G(q,p)|²
+until off 足够小
+返回 U, Σ = diag(G), V
+</code></pre></div></div>
+
+<h3 id="44-收敛性">4.4 收敛性</h3>
+
+<p>与单边方法类似，双边 Jacobi 也以二次速率收敛。每次旋转精确消去两个非对角元（$(p,q)$ 和 $(q,p)$），同时对其他元素的影响是二阶小量。</p>
+
+<h3 id="45-高相对精度">4.5 高相对精度</h3>
+
+<p>双边方法同样具有高相对精度，对小奇异值表现良好。原因与单边方法相同：全程使用正交变换，不放大条件数。</p>
+
+<hr />
+
+<h2 id="五单边与双边-jacobi-svd-的对比">五、单边与双边 Jacobi SVD 的对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>作用对象</td>
+      <td>仅右乘旋转，更新列</td>
+      <td>左右同时施加旋转</td>
+    </tr>
+    <tr>
+      <td>更新成本</td>
+      <td>较低（仅列更新）</td>
+      <td>较高（行列均更新）</td>
+    </tr>
+    <tr>
+      <td>累积矩阵</td>
+      <td>仅 $V$</td>
+      <td>$U$ 和 $V$ 均需累积</td>
+    </tr>
+    <tr>
+      <td>相对精度</td>
+      <td>高</td>
+      <td>也高，但更新成本更大</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>列对级并行</td>
+      <td>行列耦合，并行较复杂</td>
+    </tr>
+    <tr>
+      <td>收敛速度</td>
+      <td>二次收敛</td>
+      <td>二次收敛</td>
+    </tr>
+    <tr>
+      <td>典型实现</td>
+      <td>LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code></td>
+      <td>部分小规模实现</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度需求、并行计算</td>
+      <td>小规模稠密矩阵</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：</p>
+<ul>
+  <li>若追求<strong>小奇异值的相对精度</strong>或需要<strong>并行化</strong>，单边方法是更自然的选择；</li>
+  <li>若处理的是<strong>小规模矩阵</strong>且希望获得直接的实现，双边方法在某些场景下仍有其价值；</li>
+  <li>两者都远优于基于双对角化的传统方法在相对精度上的表现。</li>
+</ul>
+
+<hr />
+
+<h2 id="六与其他-svd-算法的比较">六、与其他 SVD 算法的比较</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>相对精度</th>
+      <th>计算量</th>
+      <th>并行性</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Golub–Kahan</td>
+      <td>后向稳定</td>
+      <td>一般</td>
+      <td>$4mn^2-\frac43n^3$</td>
+      <td>中等</td>
+      <td>通用、大规模</td>
+    </tr>
+    <tr>
+      <td>单边 Jacobi</td>
+      <td>后向稳定 + 高相对精度</td>
+      <td>高</td>
+      <td>较高</td>
+      <td>好</td>
+      <td>高精度、并行</td>
+    </tr>
+    <tr>
+      <td>双边 Jacobi</td>
+      <td>后向稳定 + 高相对精度</td>
+      <td>高</td>
+      <td>高</td>
+      <td>较差</td>
+      <td>小规模</td>
+    </tr>
+    <tr>
+      <td>$A^{\mathsf T}A$ 特征值分解</td>
+      <td>差（条件数平方）</td>
+      <td>差</td>
+      <td>低</td>
+      <td>好</td>
+      <td>教学、良态小矩阵</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Golub–Kahan</strong> 是 LAPACK 中 <code class="language-plaintext highlighter-rouge">dgesvd</code> 的标准实现，计算量最小，适用于大规模矩阵。但其双对角化过程会引入 $\kappa(A)$ 量级的扰动，小奇异值的相对精度不如 Jacobi 方法。</p>
+
+<p><strong>Jacobi 方法</strong>的相对精度优势在以下场景中尤为重要：</p>
+<ul>
+  <li>量子化学中的原子/分子能量计算；</li>
+  <li>需要精确小奇异值的统计问题；</li>
+  <li>病态矩阵的谱分析。</li>
+</ul>
+
+<hr />
+
+<h2 id="七应用场景">七、应用场景</h2>
+
+<ol>
+  <li><strong>高精度需求</strong>：量子化学、数值线性代数中的谱分析；</li>
+  <li><strong>并行计算</strong>：单边 Jacobi 的列对级并行适合 GPU 和分布式计算；</li>
+  <li><strong>小规模稠密矩阵</strong>：双边 Jacobi 在小矩阵上表现良好；</li>
+  <li><strong>预处理后的 QR 分解</strong>：单边 Jacobi 结合 QR 预处理，兼顾精度与效率；</li>
+  <li><strong>教学与算法研究</strong>：Jacobi 旋转的几何直观使其成为理解 SVD 的优良工具。</li>
+</ol>
+
+<hr />
+
+<h2 id="八总结">八、总结</h2>
+
+\[\boxed{\text{Jacobi SVD：通过迭代 Jacobi 旋转，逐步正交化列或对角化矩阵，计算 SVD。}}\]
+
+<p><strong>核心思想</strong>：</p>
+<ul>
+  <li><strong>单边</strong>：只右乘旋转，使列两两正交，列范数即为奇异值；</li>
+  <li><strong>双边</strong>：左右同时旋转，直接消去非对角元素，逼近对角形式。</li>
+</ul>
+
+<p><strong>共同优点</strong>：</p>
+<ol>
+  <li><strong>高相对精度</strong>：小奇异值也能保持较高的相对精度；</li>
+  <li><strong>二次收敛</strong>：接近收敛时每轮扫描大幅削减误差；</li>
+  <li><strong>实现简单</strong>：旋转参数有显式公式。</li>
+</ol>
+
+<p><strong>主要区别</strong>：</p>
+<ul>
+  <li>单边计算量较低，并行友好，适合大规模并行计算；</li>
+  <li>双边计算量较大，并行较复杂，适合小规模稠密矩阵。</li>
+</ul>
+
+<p><strong>典型实现</strong>：LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 采用单边 Jacobi 结合 QR 预处理，是高精度 SVD 的标准工具之一。</p>
+
+<p>Jacobi SVD 与 Golub–Kahan 算法互为补充：前者以高相对精度和并行性见长，后者以计算效率和通用性著称。实际选择取决于问题对精度、规模和并行资源的具体要求。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
