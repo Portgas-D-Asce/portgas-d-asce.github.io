@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-21T09:05:40+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Jacobi 法求解对称矩阵特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="Jacobi 法求解对称矩阵特征值" /><published>2026-10-17T00:00:00+00:00</published><updated>2026-10-17T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi%20%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-21T10:19:36+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Jacobi 法求解对称矩阵特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="Jacobi 法求解对称矩阵特征值" /><published>2026-10-17T00:00:00+00:00</published><updated>2026-10-17T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi%20%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
 
 <hr />
 
@@ -169,7 +169,7 @@
   </tbody>
 </table>
 
-\[t=\frac{\operatorname{sgn}(\tau)}{\vert \tau\vert +\sqrt{1+\tau^2}}.\]
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}}.\]
 
 <p>其中</p>
 
@@ -219,7 +219,21 @@
     <ul>
       <li>对 $p=1,\dots,n-1$，$q=p+1,\dots,n$：
         <ul>
-          <li>若 $\vert a_{pq}\vert $ 足够小（如 $\vert a_{pq}\vert \le\text{tol}\cdot\sqrt{\vert a_{pp}a_{qq}\vert }$），跳过；</li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>若 $</td>
+                  <td>a_{pq}</td>
+                  <td>$ 足够小（如 $</td>
+                  <td>a_{pq}</td>
+                  <td>\le\text{tol}\cdot\sqrt{</td>
+                  <td>a_{pp}a_{qq}</td>
+                  <td>}$），跳过；</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
           <li>否则，计算 $\tau,t,c,s$，构造 $J(p,q,\theta)$；</li>
           <li>更新：</li>
         </ul>
@@ -288,7 +302,7 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
   <li><strong>最大非对角元</strong>：</li>
 </ol>
 
-\[\max_{i\ne j}\vert a_{ij}\vert \le\text{tol}.\]
+\[\max_{i\ne j}|a_{ij}|\le\text{tol}.\]
 
 <h2 id="44-例题">4.4 例题</h2>
 
@@ -425,7 +439,7 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
 <p><strong>定理 7.2.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则 Jacobi 法计算得到的特征值满足</p>
 
-\[\frac{\vert \hat\lambda_i-\lambda_i\vert }{\vert \lambda_i\vert }\le O(n\epsilon)\kappa(X).\]
+\[\frac{|\hat\lambda_i-\lambda_i|}{|\lambda_i|}\le O(n\epsilon)\kappa(X).\]
 
 <p>即<strong>小特征值也能保持高相对精度</strong>。</p>
 
@@ -437,15 +451,52 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
 
 <h1 id="八与其他方法的对比">八、与其他方法的对比</h1>
 
-<p>\vert  项目 \vert  Jacobi 法 \vert  对称 QR 迭代 \vert 
-\vert —\vert —\vert —\vert 
-\vert  是否需要三对角化 \vert  不需要 \vert  需要 \vert 
-\vert  收敛方式 \vert  二次收敛，&lt;10 轮扫描 \vert  三对角 QR，快速收敛 \vert 
-\vert  总计算量 \vert  $O(n^3\log\log(1/\epsilon))$ \vert  $O(n^3)$ \vert 
-\vert  速度 \vert  较慢 \vert  最快（只求特征值） \vert 
-\vert  小特征值相对精度 \vert  高 \vert  一般 \vert 
-\vert  并行性 \vert  好（旋转可并行） \vert  较差（QR 迭代串行） \vert 
-\vert  适用场景 \vert  高精度、并行 \vert  通用、速度优先 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>Jacobi 法</th>
+      <th>对称 QR 迭代</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>是否需要三对角化</td>
+      <td>不需要</td>
+      <td>需要</td>
+    </tr>
+    <tr>
+      <td>收敛方式</td>
+      <td>二次收敛，&lt;10 轮扫描</td>
+      <td>三对角 QR，快速收敛</td>
+    </tr>
+    <tr>
+      <td>总计算量</td>
+      <td>$O(n^3\log\log(1/\epsilon))$</td>
+      <td>$O(n^3)$</td>
+    </tr>
+    <tr>
+      <td>速度</td>
+      <td>较慢</td>
+      <td>最快（只求特征值）</td>
+    </tr>
+    <tr>
+      <td>小特征值相对精度</td>
+      <td>高</td>
+      <td>一般</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>好（旋转可并行）</td>
+      <td>较差（QR 迭代串行）</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度、并行</td>
+      <td>通用、速度优先</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>结论</strong>：</p>
 <ul>
@@ -947,11 +998,11 @@ while 未对角化:
 <p><strong>定理 3.4.1（带 Wilkinson 位移的 QR 迭代）</strong><br />
 设 $T$ 为对称三对角矩阵，特征值互异。带 Wilkinson 位移的隐式 QR 迭代产生的次对角元满足</p>
 
-\[\vert t_{i+1,i}^{(k)}\vert =O(\vert \lambda_{i+1}-\lambda_i\vert ^k)\quad\text{（渐近）},\]
+\[|t_{i+1,i}^{(k)}|=O(|\lambda_{i+1}-\lambda_i|^k)\quad\text{（渐近）},\]
 
 <p>且当 $t_{n,n-1}^{(k)}\to0$ 时，收敛速度为<strong>三次</strong>：</p>
 
-\[\vert t_{n,n-1}^{(k+1)}\vert =O\left(\vert t_{n,n-1}^{(k)}\vert ^3\right).\]
+\[|t_{n,n-1}^{(k+1)}|=O\left(|t_{n,n-1}^{(k)}|^3\right).\]
 
 <p><strong>证明思路</strong>：Wilkinson 位移是最近特征值的二阶近似，QR 迭代等价于以该位移为参数的逆幂法，故局部三次收敛。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>, §8.3。</p>
 
@@ -1070,11 +1121,11 @@ while 未对角化:
 
 <p><strong>定义 1.1（特征值与特征向量）</strong></p>
 
-<p>设 $A\in M_n(\mathbb F)$。若存在非零向量 $x\in\mathbb F^n$ 和标量 $\lambda\in\mathbb F$，使得</p>
+<p>设 \(A\in M_n(\mathbb F)\)。若存在非零向量 \(x\in\mathbb F^n\) 和标量 \(\lambda\in\mathbb F\)，使得</p>
 
 \[Ax=\lambda x,\]
 
-<p>则称 $\lambda$ 为 $A$ 的<strong>特征值</strong>，$x$ 为对应的<strong>特征向量</strong>。</p>
+<p>则称 \(\lambda\) 为 \(A\) 的<strong>特征值</strong>，\(x\) 为对应的<strong>特征向量</strong>。</p>
 
 <h2 id="特征多项式">特征多项式</h2>
 
@@ -1082,21 +1133,21 @@ while 未对角化:
 
 \[p(\lambda)=\det(\lambda I-A)\]
 
-<p>的根。对 $n$ 阶矩阵，$p(\lambda)$ 是 $n$ 次多项式，故 $A$ 在复数域上恰有 $n$ 个特征值（计重数）。</p>
+<p>的根。对 \(n\) 阶矩阵，\(p(\lambda)\) 是 \(n\) 次多项式，故 \(A\) 在复数域上恰有 \(n\) 个特征值（计重数）。</p>
 
 <h2 id="为什么要迭代法">为什么要迭代法</h2>
 
-<p>直接求特征多项式根的方法（如 QR 算法）计算量为 $O(n^3)$，适用于中小规模矩阵。但对于<strong>大规模稀疏矩阵</strong>，显式构造矩阵或做 $O(n^3)$ 分解不可行。此时需要<strong>只依赖于矩阵-向量乘法</strong> $Ax$ 的迭代方法。</p>
+<p>直接求特征多项式根的方法（如 QR 算法）计算量为 \(O(n^3)\)，适用于中小规模矩阵。但对于<strong>大规模稀疏矩阵</strong>，显式构造矩阵或做 \(O(n^3)\) 分解不可行。此时需要<strong>只依赖于矩阵-向量乘法</strong> \(Ax\) 的迭代方法。</p>
 
 <p><strong>幂法、逆幂法、Rayleigh 商迭代</strong>都属于此类迭代方法。</p>
 
 <h2 id="基本假设">基本假设</h2>
 
-<p>设 $A$ 可对角化，其特征值为</p>
+<p>设 \(A\) 可对角化，其特征值为</p>
 
-\[\vert \lambda_1\vert &gt;\vert \lambda_2\vert \ge\cdots\ge\vert \lambda_n\vert ,\]
+\[|\lambda_1|&gt;|\lambda_2|\ge\cdots\ge|\lambda_n|,\]
 
-<p>对应的特征向量 $v_1,\dots,v_n$ 线性无关。称 $\lambda_1$ 为<strong>主特征值</strong>，$v_1$ 为<strong>主特征向量</strong>。</p>
+<p>对应的特征向量 \(v_1,\dots,v_n\) 线性无关。称 \(\lambda_1\) 为<strong>主特征值</strong>，\(v_1\) 为<strong>主特征向量</strong>。</p>
 
 <h1 id="幂法power-method">幂法（Power Method）</h1>
 
@@ -1104,7 +1155,7 @@ while 未对角化:
 
 <p>幂法利用矩阵反复作用于向量，使向量逐渐对齐到主特征向量方向。</p>
 
-<p><strong>直观</strong>：若 $x=\sum_{i=1}^n c_i v_i$，则</p>
+<p><strong>直观</strong>：若 \(x=\sum_{i=1}^n c_i v_i\)，则</p>
 
 \[A^kx=\sum_{i=1}^n c_i\lambda_i^k v_i
 =\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
@@ -1112,9 +1163,9 @@ while 未对角化:
 <table>
   <tbody>
     <tr>
-      <td>因 $</td>
+      <td>因 $$</td>
       <td>\lambda_i/\lambda_1</td>
-      <td>&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</td>
+      <td>&lt;1\(（\)i\ge2\(），当\)k\to\infty\(时，第二项趋于零，故\)A^kx\(的方向趋于\)v_1$$。</td>
     </tr>
   </tbody>
 </table>
@@ -1124,8 +1175,8 @@ while 未对角化:
 <p><strong>算法 2.2.1（幂法）</strong></p>
 
 <ol>
-  <li>选取初始向量 $x^{(0)}\ne 0$（通常随机选取或取全 1 向量）；</li>
-  <li>对 $k=0,1,2,\dots$：</li>
+  <li>选取初始向量 \(x^{(0)}\ne 0\)（通常随机选取或取全 1 向量）；</li>
+  <li>对 \(k=0,1,2,\dots\)：</li>
 </ol>
 
 \[y^{(k+1)}=Ax^{(k)},\]
@@ -1135,10 +1186,10 @@ while 未对角化:
 \[\lambda^{(k+1)}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}\quad\text{（Rayleigh 商估计）}.\]
 
 <ol>
-  <li>当 $|x^{(k+1)}-x^{(k)}|_2&lt;\text{tol}$ 或 $|Ax^{(k)}-\lambda^{(k)}x^{(k)}|_2&lt;\text{tol}$ 时停止。</li>
+  <li>当 \(\|x^{(k+1)}-x^{(k)}\|_2&lt;\text{tol}\) 或 \(\|Ax^{(k)}-\lambda^{(k)}x^{(k)}\|_2&lt;\text{tol}\) 时停止。</li>
 </ol>
 
-<p><strong>输出</strong>：$\lambda^{(k)}\approx\lambda_1$，$x^{(k)}\approx v_1$。</p>
+<p><strong>输出</strong>：\(\lambda^{(k)}\approx\lambda_1\)，\(x^{(k)}\approx v_1\)。</p>
 
 <h2 id="收敛性">收敛性</h2>
 
@@ -1147,72 +1198,112 @@ while 未对角化:
 <table>
   <tbody>
     <tr>
-      <td>设 $A$ 可对角化，$</td>
+      <td>设 \(A\) 可对角化，$$</td>
       <td>\lambda_1</td>
       <td>&gt;</td>
       <td>\lambda_2</td>
       <td>\ge\cdots\ge</td>
       <td>\lambda_n</td>
-      <td>$，且初始向量 $x^{(0)}$ 在主特征向量方向上的分量 $c_1\ne 0$。则幂法产生的 $x^{(k)}$ 满足</td>
+      <td>\(，且初始向量\)x^{(0)}\(在主特征向量方向上的分量\)c_1\ne 0\(。则幂法产生的\)x^{(k)}$$ 满足</td>
     </tr>
   </tbody>
 </table>
 
-\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left\vert \frac{\lambda_2}{\lambda_1}\right\vert ^k\right),\]
+\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right),\]
 
-\[\vert \lambda^{(k)}-\lambda_1\vert =O\left(\left\vert \frac{\lambda_2}{\lambda_1}\right\vert ^k\right).\]
+\[|\lambda^{(k)}-\lambda_1|=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right).\]
 
 <p><strong>证明思路</strong><br />
-设 $x^{(0)}=\sum_{i=1}^n c_i v_i$，$c_1\ne 0$。则</p>
+设 \(x^{(0)}=\sum_{i=1}^n c_i v_i\)，\(c_1\ne 0\)。则</p>
 
 \[A^kx^{(0)}=\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
 
-<p>归一化后，误差由 $\left\vert \dfrac{\lambda_2}{\lambda_1}\right\vert ^k$ 控制。$\square$</p>
+<table>
+  <tbody>
+    <tr>
+      <td>归一化后，误差由 $$\left</td>
+      <td>\dfrac{\lambda_2}{\lambda_1}\right</td>
+      <td>^k\(控制。\)\square$$</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>收敛速率</strong>：线性收敛，收敛因子为</p>
 
-\[\left\vert \frac{\lambda_2}{\lambda_1}\right\vert .\]
+\[\left|\frac{\lambda_2}{\lambda_1}\right|.\]
 
-<p>当 $\vert \lambda_2\vert \approx\vert \lambda_1\vert $ 时收敛很慢。</p>
+<table>
+  <tbody>
+    <tr>
+      <td>当 $$</td>
+      <td>\lambda_2</td>
+      <td>\approx</td>
+      <td>\lambda_1</td>
+      <td>$$ 时收敛很慢。</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="优缺点">优缺点</h2>
 
 <p><strong>优点</strong></p>
 <ol>
   <li>实现极其简单；</li>
-  <li>每步只需一次矩阵-向量乘法，计算量 $O(\text{nnz}(A))$；</li>
+  <li>每步只需一次矩阵-向量乘法，计算量 \(O(\text{nnz}(A))\)；</li>
   <li>适用于大规模稀疏矩阵。</li>
 </ol>
 
 <p><strong>缺点</strong></p>
 <ol>
   <li>只能求主特征值（模最大者）；</li>
-  <li>收敛速度依赖于 $\vert \lambda_2/\lambda_1\vert $，可能很慢；</li>
-  <li>若 $c_1=0$（初始向量与 $v_1$ 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
-  <li>若 $\vert \lambda_1\vert =\vert \lambda_2\vert $（如 $-\lambda_1$），则不收敛。</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>收敛速度依赖于 $$</td>
+          <td>\lambda_2/\lambda_1</td>
+          <td>$$，可能很慢；</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>若 \(c_1=0\)（初始向量与 \(v_1\) 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>若 $$</td>
+          <td>\lambda_1</td>
+          <td>=</td>
+          <td>\lambda_2</td>
+          <td>\(（如\)-\lambda_1$$），则不收敛。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
 </ol>
 
 <h1 id="逆幂法inverse-power-method">逆幂法（Inverse Power Method）</h1>
 
 <h2 id="核心思想-1">核心思想</h2>
 
-<p>逆幂法将幂法应用于 $(A-\mu I)^{-1}$，从而求<strong>最接近 $\mu$</strong> 的特征值。</p>
+<p>逆幂法将幂法应用于 \((A-\mu I)^{-1}\)，从而求<strong>最接近 \(\mu\)</strong> 的特征值。</p>
 
-<p><strong>观察</strong>：若 $Av_i=\lambda_i v_i$，则</p>
+<p><strong>观察</strong>：若 \(Av_i=\lambda_i v_i\)，则</p>
 
 \[(A-\mu I)^{-1}v_i=\frac{1}{\lambda_i-\mu}v_i.\]
 
-<p>即 $(A-\mu I)^{-1}$ 的特征值为 $\dfrac{1}{\lambda_i-\mu}$，特征向量不变。</p>
+<p>即 \((A-\mu I)^{-1}\) 的特征值为 \(\dfrac{1}{\lambda_i-\mu}\)，特征向量不变。</p>
 
-<p>若 $\mu$ 接近某个特征值 $\lambda_j$，则 $\dfrac{1}{\lambda_j-\mu}$ 的模最大，故对 $(A-\mu I)^{-1}$ 做幂法会收敛到 $v_j$。</p>
+<p>若 \(\mu\) 接近某个特征值 \(\lambda_j\)，则 \(\dfrac{1}{\lambda_j-\mu}\) 的模最大，故对 \((A-\mu I)^{-1}\) 做幂法会收敛到 \(v_j\)。</p>
 
 <h2 id="算法-1">算法</h2>
 
 <p><strong>算法 3.2.1（逆幂法）</strong></p>
 
 <ol>
-  <li>选取位移 $\mu$（接近目标特征值）和初始向量 $x^{(0)}\ne 0$；</li>
-  <li>对 $k=0,1,2,\dots$：
+  <li>选取位移 \(\mu\)（接近目标特征值）和初始向量 \(x^{(0)}\ne 0\)；</li>
+  <li>对 \(k=0,1,2,\dots\)：
     <ul>
       <li>解线性方程组</li>
     </ul>
@@ -1237,38 +1328,38 @@ while 未对角化:
   <li>收敛判据同幂法。</li>
 </ol>
 
-<p><strong>注</strong>：实际实现中，$(A-\mu I)$ 的 LU 分解只需计算一次，每步只需前代与回代，计算量 $O(n^2)$（稠密）或 $O(\text{nnz})$（稀疏）。</p>
+<p><strong>注</strong>：实际实现中，\((A-\mu I)\) 的 LU 分解只需计算一次，每步只需前代与回代，计算量 \(O(n^2)\)（稠密）或 \(O(\text{nnz})\)（稀疏）。</p>
 
 <h2 id="收敛性-1">收敛性</h2>
 
 <p><strong>定理 3.3.1</strong></p>
 
-<p>设 $\lambda_j$ 是 $A$ 的特征值，$\mu$ 接近 $\lambda_j$，且</p>
+<p>设 \(\lambda_j\) 是 \(A\) 的特征值，\(\mu\) 接近 \(\lambda_j\)，且</p>
 
-\[\frac{1}{\vert \lambda_j-\mu\vert }&gt;\frac{1}{\vert \lambda_i-\mu\vert },\qquad\forall i\ne j.\]
+\[\frac{1}{|\lambda_j-\mu|}&gt;\frac{1}{|\lambda_i-\mu|},\qquad\forall i\ne j.\]
 
-<p>则逆幂法产生的 $x^{(k)}$ 收敛到 $v_j$，收敛因子为</p>
+<p>则逆幂法产生的 \(x^{(k)}\) 收敛到 \(v_j\)，收敛因子为</p>
 
-\[\max_{i\ne j}\left\vert \frac{\lambda_j-\mu}{\lambda_i-\mu}\right\vert .\]
+\[\max_{i\ne j}\left|\frac{\lambda_j-\mu}{\lambda_i-\mu}\right|.\]
 
-<p><strong>证明思路</strong>：对 $(A-\mu I)^{-1}$ 应用幂法收敛性定理。$\square$</p>
+<p><strong>证明思路</strong>：对 \((A-\mu I)^{-1}\) 应用幂法收敛性定理。\(\square\)</p>
 
-<p><strong>关键</strong>：若 $\mu$ 非常接近 $\lambda_j$，收敛极快；若 $\mu$ 恰好等于 $\lambda_j$，则一步收敛（但 $(A-\mu I)$ 奇异，需特殊处理）。</p>
+<p><strong>关键</strong>：若 \(\mu\) 非常接近 \(\lambda_j\)，收敛极快；若 \(\mu\) 恰好等于 \(\lambda_j\)，则一步收敛（但 \((A-\mu I)\) 奇异，需特殊处理）。</p>
 
 <h2 id="优缺点-1">优缺点</h2>
 
 <p><strong>优点</strong></p>
 <ol>
-  <li>可求<strong>任意指定</strong>的特征值（通过选取 $\mu$）；</li>
-  <li>若 $\mu$ 接近目标特征值，收敛极快；</li>
+  <li>可求<strong>任意指定</strong>的特征值（通过选取 \(\mu\)）；</li>
+  <li>若 \(\mu\) 接近目标特征值，收敛极快；</li>
   <li>适用于大规模稀疏矩阵（若线性方程组可高效求解）。</li>
 </ol>
 
 <p><strong>缺点</strong></p>
 <ol>
   <li>需要解线性方程组，每步计算量大于幂法；</li>
-  <li>需要预先知道 $\mu$ 的近似值；</li>
-  <li>若 $\mu$ 恰好是特征值，$(A-\mu I)$ 奇异，需特殊处理。</li>
+  <li>需要预先知道 \(\mu\) 的近似值；</li>
+  <li>若 \(\mu\) 恰好是特征值，\((A-\mu I)\) 奇异，需特殊处理。</li>
 </ol>
 
 <h1 id="rayleigh-商rayleigh-quotient">Rayleigh 商（Rayleigh Quotient）</h1>
@@ -1277,15 +1368,15 @@ while 未对角化:
 
 <p><strong>定义 4.1（Rayleigh 商）</strong></p>
 
-<p>设 $A\in M_n(\mathbb R)$ 为对称矩阵，$x\in\mathbb R^n$，$x\ne 0$。称</p>
+<p>设 \(A\in M_n(\mathbb R)\) 为对称矩阵，\(x\in\mathbb R^n\)，\(x\ne 0\)。称</p>
 
 \[R(x)=\frac{x^{\mathsf T}Ax}{x^{\mathsf T}x}\]
 
-<p>为 $A$ 在 $x$ 处的 <strong>Rayleigh 商</strong>。</p>
+<p>为 \(A\) 在 \(x\) 处的 <strong>Rayleigh 商</strong>。</p>
 
-<p>若 $|x|_2=1$，则 $R(x)=x^{\mathsf T}Ax$。</p>
+<p>若 \(\|x\|_2=1\)，则 \(R(x)=x^{\mathsf T}Ax\)。</p>
 
-<p><strong>复情形</strong>：若 $A$ 为 Hermite 矩阵，$x\in\mathbb C^n$，则</p>
+<p><strong>复情形</strong>：若 \(A\) 为 Hermite 矩阵，\(x\in\mathbb C^n\)，则</p>
 
 \[R(x)=\frac{x^{\mathsf H}Ax}{x^{\mathsf H}x}.\]
 
@@ -1293,7 +1384,7 @@ while 未对角化:
 
 <p><strong>定理 4.2.1</strong></p>
 
-<p>设 $A$ 对称，特征值为 $\lambda_1\le\cdots\le\lambda_n$。则对任意 $x\ne 0$，</p>
+<p>设 \(A\) 对称，特征值为 \(\lambda_1\le\cdots\le\lambda_n\)。则对任意 \(x\ne 0\)，</p>
 
 \[\lambda_1\le R(x)\le\lambda_n.\]
 
@@ -1302,53 +1393,53 @@ while 未对角化:
 \[\min_{x\ne 0}R(x)=\lambda_1,\qquad\max_{x\ne 0}R(x)=\lambda_n.\]
 
 <p><strong>证明</strong><br />
-将 $x$ 按 $A$ 的标准正交特征向量 $v_1,\dots,v_n$ 展开：$x=\sum_{i=1}^n c_i v_i$。则</p>
+将 \(x\) 按 \(A\) 的标准正交特征向量 \(v_1,\dots,v_n\) 展开：\(x=\sum_{i=1}^n c_i v_i\)。则</p>
 
 \[R(x)=\frac{\sum_{i=1}^n\lambda_i c_i^2}{\sum_{i=1}^n c_i^2}.\]
 
-<p>这是 $\lambda_i$ 的加权平均，故介于 $\lambda_1$ 与 $\lambda_n$ 之间。取 $x=v_1$ 或 $x=v_n$ 达到端点。$\square$</p>
+<p>这是 \(\lambda_i\) 的加权平均，故介于 \(\lambda_1\) 与 \(\lambda_n\) 之间。取 \(x=v_1\) 或 \(x=v_n\) 达到端点。\(\square\)</p>
 
 <p><strong>定理 4.2.2（驻点性质）</strong><br />
-设 $A$ 对称。则 $x$ 是 $A$ 的特征向量当且仅当 $x$ 是 $R(x)$ 的驻点，即</p>
+设 \(A\) 对称。则 \(x\) 是 \(A\) 的特征向量当且仅当 \(x\) 是 \(R(x)\) 的驻点，即</p>
 
 \[\nabla R(x)=0.\]
 
-<p>此时 $R(x)$ 等于对应的特征值。</p>
+<p>此时 \(R(x)\) 等于对应的特征值。</p>
 
 <p><strong>证明</strong><br />
 计算梯度：</p>
 
 \[\nabla R(x)=\frac{2(Ax-R(x)x)}{x^{\mathsf T}x}.\]
 
-<p>故 $\nabla R(x)=0\iff Ax=R(x)x$，即 $x$ 是特征向量，$R(x)$ 是对应特征值。$\square$</p>
+<p>故 \(\nabla R(x)=0\iff Ax=R(x)x\)，即 \(x\) 是特征向量，\(R(x)\) 是对应特征值。\(\square\)</p>
 
 <h2 id="最优性">最优性</h2>
 
 <p><strong>定理 4.3.1（Rayleigh 商的最优性）</strong></p>
 
-<p>设 $A$ 对称，$x$ 是 $v$ 的近似，$|x|_2=1$，$|x-v|_2=\epsilon$。则</p>
+<p>设 \(A\) 对称，\(x\) 是 \(v\) 的近似，\(\|x\|_2=1\)，\(\|x-v\|_2=\epsilon\)。则</p>
 
-\[\vert R(x)-\lambda\vert =O(\epsilon^2),\]
+\[|R(x)-\lambda|=O(\epsilon^2),\]
 
-<p>其中 $\lambda$ 是对应于 $v$ 的特征值。</p>
+<p>其中 \(\lambda\) 是对应于 \(v\) 的特征值。</p>
 
 <p><strong>证明</strong><br />
-将 $x$ 按特征向量展开：$x=\sqrt{1-\epsilon^2}\,v+\epsilon w$，其中 $w\perp v$，$|w|_2=1$。则</p>
+将 \(x\) 按特征向量展开：\(x=\sqrt{1-\epsilon^2}\,v+\epsilon w\)，其中 \(w\perp v\)，\(\|w\|_2=1\)。则</p>
 
 \[R(x)=(1-\epsilon^2)\lambda+\epsilon^2 w^{\mathsf T}Aw.\]
 
 <p>故</p>
 
-\[\vert R(x)-\lambda\vert =\epsilon^2\vert w^{\mathsf T}Aw-\lambda\vert \le\epsilon^2(\lambda_n-\lambda_1).\]
+\[|R(x)-\lambda|=\epsilon^2|w^{\mathsf T}Aw-\lambda|\le\epsilon^2(\lambda_n-\lambda_1).\]
 
-<p>$\square$</p>
+\[\square\]
 
-<p><strong>意义</strong>：Rayleigh 商对特征向量的误差是<strong>二阶</strong>的。即使 $x$ 只有一阶精度，$R(x)$ 已有二阶精度。这使 Rayleigh 商成为极好的特征值估计。</p>
+<p><strong>意义</strong>：Rayleigh 商对特征向量的误差是<strong>二阶</strong>的。即使 \(x\) 只有一阶精度，\(R(x)\) 已有二阶精度。这使 Rayleigh 商成为极好的特征值估计。</p>
 
 <h2 id="应用">应用</h2>
 
 <ol>
-  <li><strong>特征值估计</strong>：给定近似特征向量 $x$，用 $R(x)$ 估计特征值；</li>
+  <li><strong>特征值估计</strong>：给定近似特征向量 \(x\)，用 \(R(x)\) 估计特征值；</li>
   <li><strong>Rayleigh 商迭代</strong>：用 Rayleigh 商作为位移，加速收敛；</li>
   <li><strong>特征值定位</strong>：Rayleigh 商的范围给出特征值的界；</li>
   <li><strong>有限元方法</strong>：Rayleigh 商用于估计振动频率。</li>
@@ -1358,7 +1449,7 @@ while 未对角化:
 
 <h2 id="核心思想-2">核心思想</h2>
 
-<p>Rayleigh 商迭代是<strong>逆幂法</strong>的改进：将位移 $\mu$ 取为当前向量的 Rayleigh 商，即</p>
+<p>Rayleigh 商迭代是<strong>逆幂法</strong>的改进：将位移 \(\mu\) 取为当前向量的 Rayleigh 商，即</p>
 
 \[\mu_k=R(x^{(k)})=\frac{(x^{(k)})^{\mathsf T}Ax^{(k)}}{(x^{(k)})^{\mathsf T}x^{(k)}}.\]
 
@@ -1369,8 +1460,8 @@ while 未对角化:
 <p><strong>算法 5.2.1（Rayleigh 商迭代）</strong></p>
 
 <ol>
-  <li>选取初始向量 $x^{(0)}$，$|x^{(0)}|_2=1$；</li>
-  <li>对 $k=0,1,2,\dots$：
+  <li>选取初始向量 \(x^{(0)}\)，\(\|x^{(0)}\|_2=1\)；</li>
+  <li>对 \(k=0,1,2,\dots\)：
     <ul>
       <li>计算 Rayleigh 商：</li>
     </ul>
@@ -1398,31 +1489,41 @@ while 未对角化:
 \[\mu_{k+1}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}.\]
 
 <ol>
-  <li>当 $\vert \mu_{k+1}-\mu_k\vert &lt;\text{tol}$ 时停止。</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>当 $$</td>
+          <td>\mu_{k+1}-\mu_k</td>
+          <td>&lt;\text{tol}$$ 时停止。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
 </ol>
 
-<p><strong>输出</strong>：$\mu_{k+1}\approx\lambda$，$x^{(k+1)}\approx v$。</p>
+<p><strong>输出</strong>：\(\mu_{k+1}\approx\lambda\)，\(x^{(k+1)}\approx v\)。</p>
 
 <h2 id="收敛性-2">收敛性</h2>
 
 <p><strong>定理 5.3.1（三次收敛）</strong></p>
 
-<p>设 $A$ 对称，$x^{(k)}$ 充分接近某特征向量 $v_j$，对应特征值 $\lambda_j$。则 Rayleigh 商迭代产生的 $\mu_k$ 和 $x^{(k)}$ 满足</p>
+<p>设 \(A\) 对称，\(x^{(k)}\) 充分接近某特征向量 \(v_j\)，对应特征值 \(\lambda_j\)。则 Rayleigh 商迭代产生的 \(\mu_k\) 和 \(x^{(k)}\) 满足</p>
 
-\[\vert \mu_{k+1}-\lambda_j\vert =O(\vert \mu_k-\lambda_j\vert ^3),\]
+\[|\mu_{k+1}-\lambda_j|=O(|\mu_k-\lambda_j|^3),\]
 
 \[\|x^{(k+1)}-(\pm v_j)\|_2=O(\|x^{(k)}-(\pm v_j)\|_2^3).\]
 
 <p><strong>证明思路</strong><br />
-Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中 $\epsilon_k=|x^{(k)}-v_j|$。逆幂法以 $\mu_k$ 为位移，收敛因子为</p>
+Rayleigh 商本身是二阶近似：\(|\mu_k-\lambda_j|=O(\epsilon_k^2)\)，其中 \(\epsilon_k=\|x^{(k)}-v_j\|\)。逆幂法以 \(\mu_k\) 为位移，收敛因子为</p>
 
-\[\left\vert \frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right\vert =O(\epsilon_k^2).\]
+\[\left|\frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right|=O(\epsilon_k^2).\]
 
 <p>故</p>
 
 \[\epsilon_{k+1}=O(\epsilon_k\cdot\epsilon_k^2)=O(\epsilon_k^3).\]
 
-<p>即三次收敛。$\square$</p>
+<p>即三次收敛。\(\square\)</p>
 
 <p><strong>意义</strong>：Rayleigh 商迭代是<strong>收敛最快的特征值迭代方法之一</strong>。一旦接近特征值，每次迭代有效数字约增加三倍。</p>
 
@@ -1437,25 +1538,66 @@ Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中
 
 <p><strong>缺点</strong></p>
 <ol>
-  <li>每步需解线性方程组 $(A-\mu_kI)y=x^{(k)}$，且 $\mu_k$ 每步变化，<strong>无法预先分解</strong>，每步计算量为 $O(n^3)$（稠密）；</li>
+  <li>每步需解线性方程组 \((A-\mu_kI)y=x^{(k)}\)，且 \(\mu_k\) 每步变化，<strong>无法预先分解</strong>，每步计算量为 \(O(n^3)\)（稠密）；</li>
   <li>需要好的初始向量，否则可能不收敛或收敛到其他特征值；</li>
-  <li>若 $\mu_k$ 恰好等于特征值，$(A-\mu_kI)$ 奇异，需特殊处理；</li>
+  <li>若 \(\mu_k\) 恰好等于特征值，\((A-\mu_kI)\) 奇异，需特殊处理；</li>
   <li>对非对称矩阵，收敛性理论较复杂。</li>
 </ol>
 
 <h2 id="与其他方法的关系">与其他方法的关系</h2>
 
-<p>\vert  方法 \vert  位移 $\mu$ \vert  收敛速度 \vert  每步计算量 \vert 
-\vert —\vert —\vert —\vert —\vert 
-\vert  幂法 \vert  无 \vert  线性，因子 $|\lambda_2/\lambda_1|$ \vert  $O(\text{nnz})$ \vert 
-\vert  逆幂法 \vert  固定 $\mu$ \vert  线性，因子 $\max|\lambda_j-\mu|/|\lambda_i-\mu|$ \vert  一次分解 + $O(n^2)$ \vert 
-\vert  Rayleigh 商迭代 \vert  $\mu_k=R(x^{(k)})$ \vert  三次 \vert  每步 $O(n^3)$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>位移 \(\mu\)</th>
+      <th>收敛速度</th>
+      <th>每步计算量</th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>幂法</td>
+      <td>无</td>
+      <td>线性，因子 $$</td>
+      <td>\lambda_2/\lambda_1</td>
+      <td>$$</td>
+      <td>\(O(\text{nnz})\)</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>逆幂法</td>
+      <td>固定 \(\mu\)</td>
+      <td>线性，因子 $$\max</td>
+      <td>\lambda_j-\mu</td>
+      <td>/</td>
+      <td>\lambda_i-\mu</td>
+      <td>$$</td>
+      <td>一次分解 + \(O(n^2)\)</td>
+    </tr>
+    <tr>
+      <td>Rayleigh 商迭代</td>
+      <td>\(\mu_k=R(x^{(k)})\)</td>
+      <td>三次</td>
+      <td>每步 \(O(n^3)\)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>关系</strong>：</p>
 <ul>
-  <li>逆幂法是幂法应用于 $(A-\mu I)^{-1}$；</li>
-  <li>Rayleigh 商迭代是逆幂法取 $\mu=\mu_k=R(x^{(k)})$；</li>
-  <li>若 Rayleigh 商迭代中固定 $\mu$（不更新），则退化为逆幂法。</li>
+  <li>逆幂法是幂法应用于 \((A-\mu I)^{-1}\)；</li>
+  <li>Rayleigh 商迭代是逆幂法取 \(\mu=\mu_k=R(x^{(k)})\)；</li>
+  <li>若 Rayleigh 商迭代中固定 \(\mu\)（不更新），则退化为逆幂法。</li>
 </ul>
 
 <h1 id="例题">例题</h1>
@@ -1473,7 +1615,7 @@ x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[x^{(2)}=\frac{Ax^{(1)}}{\|Ax^{(1)}\|}=\frac{(4,1)^{\mathsf T}}{\sqrt{17}}.\]
 
-<p>方向趋于 $(1,0)^{\mathsf T}=v_1$，$\lambda_1=2$。</p>
+<p>方向趋于 \((1,0)^{\mathsf T}=v_1\)，\(\lambda_1=2\)。</p>
 
 <h2 id="逆幂法">逆幂法</h2>
 
@@ -1486,7 +1628,7 @@ x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[(A-\mu I)^{-1}=\begin{pmatrix}\frac{1}{1.1}&amp;0\\0&amp;\frac{1}{0.1}\end{pmatrix}.\]
 
-<p>对 $(A-\mu I)^{-1}$ 做幂法，收敛到 $v_2=(0,1)^{\mathsf T}$，$\lambda_2=1$。</p>
+<p>对 \((A-\mu I)^{-1}\) 做幂法，收敛到 \(v_2=(0,1)^{\mathsf T}\)，\(\lambda_2=1\)。</p>
 
 <h2 id="rayleigh-商">Rayleigh 商</h2>
 
@@ -1499,7 +1641,7 @@ x=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[R(x)=x^{\mathsf T}Ax=\frac12(2+1)=\frac32.\]
 
-<p>介于 $\lambda_1=1$ 与 $\lambda_2=2$ 之间。</p>
+<p>介于 \(\lambda_1=1\) 与 \(\lambda_2=2\) 之间。</p>
 
 <h2 id="rayleigh-商迭代">Rayleigh 商迭代</h2>
 
@@ -1525,7 +1667,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[\mu_1=R(x^{(1)})=\frac12(2+1)=\frac32.\]
 
-<p>此时 $x^{(1)}$ 已是特征向量（对应 $\lambda=1$ 或 $2$ 的叠加），继续迭代将收敛到某个特征值。若初始向量更接近 $v_1$，则收敛到 $\lambda_1=2$。</p>
+<p>此时 \(x^{(1)}\) 已是特征向量（对应 \(\lambda=1\) 或 \(2\) 的叠加），继续迭代将收敛到某个特征值。若初始向量更接近 \(v_1\)，则收敛到 \(\lambda_1=2\)。</p>
 
 <hr />
 
@@ -1545,7 +1687,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 <p><strong>选择原则</strong>：</p>
 <ol>
   <li><strong>只求主特征值</strong>：幂法；</li>
-  <li><strong>求指定特征值</strong>：逆幂法（需 $\mu$ 近似）；</li>
+  <li><strong>求指定特征值</strong>：逆幂法（需 \(\mu\) 近似）；</li>
   <li><strong>高精度特征值估计</strong>：Rayleigh 商；</li>
   <li><strong>快速收敛（中小规模）</strong>：Rayleigh 商迭代。</li>
 </ol>
@@ -1671,7 +1813,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[\tau=\frac{a_{qq}-a_{pp}}{2a_{pq}},\]
 
-\[t=\frac{\operatorname{sgn}(\tau)}{\vert \tau\vert +\sqrt{1+\tau^2}},\]
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}},\]
 
 \[c=\frac{1}{\sqrt{1+t^2}},\qquad s=ct.\]
 
@@ -1709,8 +1851,8 @@ V = I_n
 repeat:
     for p = 1 to n-1:
         for q = p+1 to n:
-            计算 a_pp = \vert \vert G(:,p)\vert \vert ², a_qq = \vert \vert G(:,q)\vert \vert ², a_pq = G(:,p)^T G(:,q)
-            if \vert a_pq\vert  足够小:
+            计算 a_pp = ||G(:,p)||², a_qq = ||G(:,q)||², a_pq = G(:,p)^T G(:,q)
+            if |a_pq| 足够小:
                 跳过
             else:
                 由 τ, t, c, s 构造旋转
@@ -1718,14 +1860,14 @@ repeat:
                 V(:, [p,q]) = V(:, [p,q]) * [[c, s], [-s, c]]
 until G 的列足够正交
 for i = 1 to n:
-    σ_i = \vert \vert G(:,i)\vert \vert ₂
+    σ_i = ||G(:,i)||₂
     u_i = G(:,i) / σ_i
 返回 U = [u_1,...,u_n], Σ = diag(σ_i), V
 </code></pre></div></div>
 
 <p><strong>收敛判据</strong>：</p>
 
-\[\max_{p\ne q}\frac{\vert a_{pq}\vert }{\sqrt{a_{pp}a_{qq}}}\le\text{tol},\]
+\[\max_{p\ne q}\frac{|a_{pq}|}{\sqrt{a_{pp}a_{qq}}}\le\text{tol},\]
 
 <p>或等价的正交性度量。</p>
 
@@ -1753,7 +1895,7 @@ for i = 1 to n:
 <p><strong>定理 3.5.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则单边 Jacobi SVD 计算得到的奇异值满足</p>
 
-\[\frac{\vert \hat\sigma_i-\sigma_i\vert }{\sigma_i}\le O(n\epsilon)\kappa(X),\]
+\[\frac{|\hat\sigma_i-\sigma_i|}{\sigma_i}\le O(n\epsilon)\kappa(X),\]
 
 <p>其中 $\epsilon$ 为机器精度。</p>
 
@@ -1833,7 +1975,7 @@ repeat:
             G = K^T * G * J
             U = U * K
             V = V * J
-            off += \vert G(p,q)\vert ² + \vert G(q,p)\vert ²
+            off += |G(p,q)|² + |G(q,p)|²
 until off 足够小
 返回 U, Σ = diag(G), V
 </code></pre></div></div>
@@ -1848,16 +1990,57 @@ until off 足够小
 
 <h1 id="单边与双边-jacobi-svd-的对比">单边与双边 Jacobi SVD 的对比</h1>
 
-<p>\vert  项目 \vert  单边 Jacobi \vert  双边 Jacobi \vert 
-\vert —\vert —\vert —\vert 
-\vert  作用对象 \vert  仅右乘旋转，更新列 \vert  左右同时施加旋转 \vert 
-\vert  更新成本 \vert  较低（仅列更新） \vert  较高（行列均更新） \vert 
-\vert  累积矩阵 \vert  仅 $V$ \vert  $U$ 和 $V$ 均需累积 \vert 
-\vert  相对精度 \vert  高 \vert  也高，但更新成本更大 \vert 
-\vert  并行性 \vert  列对级并行 \vert  行列耦合，并行较复杂 \vert 
-\vert  收敛速度 \vert  二次收敛 \vert  二次收敛 \vert 
-\vert  典型实现 \vert  LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code> \vert  部分小规模实现 \vert 
-\vert  适用场景 \vert  高精度需求、并行计算 \vert  小规模稠密矩阵 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>作用对象</td>
+      <td>仅右乘旋转，更新列</td>
+      <td>左右同时施加旋转</td>
+    </tr>
+    <tr>
+      <td>更新成本</td>
+      <td>较低（仅列更新）</td>
+      <td>较高（行列均更新）</td>
+    </tr>
+    <tr>
+      <td>累积矩阵</td>
+      <td>仅 $V$</td>
+      <td>$U$ 和 $V$ 均需累积</td>
+    </tr>
+    <tr>
+      <td>相对精度</td>
+      <td>高</td>
+      <td>也高，但更新成本更大</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>列对级并行</td>
+      <td>行列耦合，并行较复杂</td>
+    </tr>
+    <tr>
+      <td>收敛速度</td>
+      <td>二次收敛</td>
+      <td>二次收敛</td>
+    </tr>
+    <tr>
+      <td>典型实现</td>
+      <td>LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code></td>
+      <td>部分小规模实现</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度需求、并行计算</td>
+      <td>小规模稠密矩阵</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>结论</strong>：</p>
 <ul>
@@ -1868,12 +2051,52 @@ until off 足够小
 
 <h1 id="与其他-svd-算法的比较">与其他 SVD 算法的比较</h1>
 
-<p>\vert  方法 \vert  数值稳定性 \vert  相对精度 \vert  计算量 \vert  并行性 \vert  适用场景 \vert 
-\vert —\vert —\vert —\vert —\vert —\vert —\vert 
-\vert  Golub–Kahan \vert  后向稳定 \vert  一般 \vert  $4mn^2-\frac43n^3$ \vert  中等 \vert  通用、大规模 \vert 
-\vert  单边 Jacobi \vert  后向稳定 + 高相对精度 \vert  高 \vert  较高 \vert  好 \vert  高精度、并行 \vert 
-\vert  双边 Jacobi \vert  后向稳定 + 高相对精度 \vert  高 \vert  高 \vert  较差 \vert  小规模 \vert 
-\vert  $A^{\mathsf T}A$ 特征值分解 \vert  差（条件数平方） \vert  差 \vert  低 \vert  好 \vert  教学、良态小矩阵 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>相对精度</th>
+      <th>计算量</th>
+      <th>并行性</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Golub–Kahan</td>
+      <td>后向稳定</td>
+      <td>一般</td>
+      <td>$4mn^2-\frac43n^3$</td>
+      <td>中等</td>
+      <td>通用、大规模</td>
+    </tr>
+    <tr>
+      <td>单边 Jacobi</td>
+      <td>后向稳定 + 高相对精度</td>
+      <td>高</td>
+      <td>较高</td>
+      <td>好</td>
+      <td>高精度、并行</td>
+    </tr>
+    <tr>
+      <td>双边 Jacobi</td>
+      <td>后向稳定 + 高相对精度</td>
+      <td>高</td>
+      <td>高</td>
+      <td>较差</td>
+      <td>小规模</td>
+    </tr>
+    <tr>
+      <td>$A^{\mathsf T}A$ 特征值分解</td>
+      <td>差（条件数平方）</td>
+      <td>差</td>
+      <td>低</td>
+      <td>好</td>
+      <td>教学、良态小矩阵</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>Golub–Kahan</strong> 是 LAPACK 中 <code class="language-plaintext highlighter-rouge">dgesvd</code> 的标准实现，计算量最小，适用于大规模矩阵。但其双对角化过程会引入 $\kappa(A)$ 量级的扰动，小奇异值的相对精度不如 Jacobi 方法。</p>
 
@@ -1954,7 +2177,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
 <p>对 Gram 矩阵 $H=G^{\mathsf T}G$，称</p>
 
 \[\operatorname{off}(G)
-=\sqrt{\sum_{p\ne q}\vert h_{pq}\vert ^2}
+=\sqrt{\sum_{p\ne q}|h_{pq}|^2}
 =\sqrt{\sum_{p\ne q}\bigl(G_{:,p}^{\mathsf T}G_{:,q}\bigr)^2}\]
 
 <p>为 $G$ 的<strong>非对角范数</strong>（off-diagonal norm）。</p>
@@ -1966,7 +2189,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
 <p>由于各列范数不同，绝对内积的大小不能直接比较，通常使用<strong>归一化非对角范数</strong>：</p>
 
 \[\operatorname{off}_{\text{rel}}(G)
-=\sqrt{\sum_{p\ne q}\frac{\vert h_{pq}\vert ^2}{h_{pp}h_{qq}}}
+=\sqrt{\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}}}
 =\sqrt{\sum_{p\ne q}\left(\frac{G_{:,p}^{\mathsf T}G_{:,q}}{\|G_{:,p}\|_2\|G_{:,q}\|_2}\right)^2}.\]
 
 <p>这正是所有列对<strong>夹角余弦</strong>的平方和，取值在 $[0,n(n-1)]$ 之间，0 表示完全正交。归一化版本更适合作为收敛判据，因为它不受列尺度影响。</p>
@@ -2008,7 +2231,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
     for p = 1 to n-1:
         for q = p+1 to n:
             计算 h_pp, h_qq, h_pq
-            if \vert h_pq\vert  / sqrt(h_pp*h_qq) &gt; eps:
+            if |h_pq| / sqrt(h_pp*h_qq) &gt; eps:
                 构造并施加 Jacobi 旋转，更新 G 的第 p,q 列及 V 的第 p,q 列
     off_curr = off_rel(G)          // 本轮扫描后的非对角范数
 until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或停滞
@@ -2020,7 +2243,7 @@ until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或
   <li><strong>不必显式计算 Gram 矩阵</strong>：只需在扫描过程中累加</li>
 </ol>
 
-\[\sum_{p\ne q}\frac{\vert h_{pq}\vert ^2}{h_{pp}h_{qq}},\]
+\[\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}},\]
 
 <p>最后开方即可。</p>
 
@@ -2038,15 +2261,36 @@ until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或
 
 <h2 id="与双边-jacobi-的区别">与双边 Jacobi 的区别</h2>
 
-<p>\vert  项目 \vert  单边 Jacobi \vert  双边 Jacobi \vert 
-\vert —\vert —\vert —\vert 
-\vert  非对角范数的对象 \vert  Gram 矩阵 $G^{\mathsf T}G$ 的非对角元 \vert  工作矩阵 $G$ 本身的非对角元 \vert 
-\vert  含义 \vert  列向量的非正交性 \vert  矩阵偏离对角形式的程度 \vert 
-\vert  收敛目标 \vert  列两两正交 \vert  矩阵对角化 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>非对角范数的对象</td>
+      <td>Gram 矩阵 $G^{\mathsf T}G$ 的非对角元</td>
+      <td>工作矩阵 $G$ 本身的非对角元</td>
+    </tr>
+    <tr>
+      <td>含义</td>
+      <td>列向量的非正交性</td>
+      <td>矩阵偏离对角形式的程度</td>
+    </tr>
+    <tr>
+      <td>收敛目标</td>
+      <td>列两两正交</td>
+      <td>矩阵对角化</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>双边 Jacobi 中，“off-diagonal 范数”指</p>
 
-\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}\vert g_{pq}\vert ^2},\]
+\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}|g_{pq}|^2},\]
 
 <p>即矩阵本身非对角元素的总量。而单边 Jacobi 中，它指的是 Gram 矩阵的非对角元，物理意义不同。</p>
 
@@ -2302,14 +2546,47 @@ V_r=[v_1\ \cdots\ v_r]\in\mathbb R^{n\times r}.\]
 
 <h1 id="与特征值分解的关系">与特征值分解的关系</h1>
 
-<p>\vert  项目 \vert  特征值分解 \vert  奇异值分解 \vert 
-\vert —\vert —\vert —\vert 
-\vert  适用矩阵 \vert  可对角化方阵 \vert  任意矩阵 \vert 
-\vert  形式 \vert  $A=PDP^{-1}$ \vert  $A=U\Sigma V^{\mathsf T}$ \vert 
-\vert  因子 \vert  $P$ 特征向量，$D$ 特征值 \vert  $U,V$ 正交，$\Sigma$ 奇异值 \vert 
-\vert  特征值/奇异值 \vert  可正可负可复 \vert  非负 \vert 
-\vert  数值稳定性 \vert  一般 \vert  极稳定 \vert 
-\vert  计算量 \vert  $O(n^3)$ \vert  $O(mn^2)$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>特征值分解</th>
+      <th>奇异值分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>适用矩阵</td>
+      <td>可对角化方阵</td>
+      <td>任意矩阵</td>
+    </tr>
+    <tr>
+      <td>形式</td>
+      <td>$A=PDP^{-1}$</td>
+      <td>$A=U\Sigma V^{\mathsf T}$</td>
+    </tr>
+    <tr>
+      <td>因子</td>
+      <td>$P$ 特征向量，$D$ 特征值</td>
+      <td>$U,V$ 正交，$\Sigma$ 奇异值</td>
+    </tr>
+    <tr>
+      <td>特征值/奇异值</td>
+      <td>可正可负可复</td>
+      <td>非负</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>一般</td>
+      <td>极稳定</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$O(n^3)$</td>
+      <td>$O(mn^2)$</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>关系</strong>：</p>
 <ul>
@@ -3006,13 +3283,42 @@ P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}
 
 <p><strong>正交投影与一般投影的对比</strong>：</p>
 
-<p>\vert  性质 \vert  正交投影 \vert  一般投影 \vert 
-\vert —\vert —\vert —\vert 
-\vert  定义 \vert  $P^2=P$，$P^{\mathsf T}=P$ | $P^2=P$ |
-| 值域与核 | 正交 | 不一定正交 |
-| 特征值 | $0$ 或 $1$ \vert  任意（但满足 $\lambda^2=\lambda$） \vert 
-\vert  范数 \vert  $|P|_2=1$ \vert  $|P|_2\ge 1$ \vert 
-\vert  最小二乘 \vert  适用 \vert  不适用 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>性质</th>
+      <th>正交投影</th>
+      <th>一般投影</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>定义</td>
+      <td>$P^2=P$，$P^{\mathsf T}=P$</td>
+      <td>$P^2=P$</td>
+    </tr>
+    <tr>
+      <td>值域与核</td>
+      <td>正交</td>
+      <td>不一定正交</td>
+    </tr>
+    <tr>
+      <td>特征值</td>
+      <td>$0$ 或 $1$</td>
+      <td>任意（但满足 $\lambda^2=\lambda$）</td>
+    </tr>
+    <tr>
+      <td>范数</td>
+      <td>$|P|_2=1$</td>
+      <td>$|P|_2\ge 1$</td>
+    </tr>
+    <tr>
+      <td>最小二乘</td>
+      <td>适用</td>
+      <td>不适用</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>例</strong>：</p>
 
@@ -3269,13 +3575,36 @@ x_2=3.
 
 <h2 id="计算量">计算量</h2>
 
-<p>\vert  步骤 \vert  计算量 \vert 
-\vert —\vert —\vert 
-\vert  计算 $G=A^{\mathsf T}A$ \vert  $mn^2$ \vert 
-\vert  计算 $c=A^{\mathsf T}b$ \vert  $2mn$ \vert 
-\vert  Cholesky 分解 \vert  $\frac13n^3$ \vert 
-\vert  前代与回代 \vert  $2n^2$ \vert 
-\vert  总计 \vert  $mn^2+\frac13n^3+O(mn)$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>计算 $G=A^{\mathsf T}A$</td>
+      <td>$mn^2$</td>
+    </tr>
+    <tr>
+      <td>计算 $c=A^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>Cholesky 分解</td>
+      <td>$\frac13n^3$</td>
+    </tr>
+    <tr>
+      <td>前代与回代</td>
+      <td>$2n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$mn^2+\frac13n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
 
 <h1 id="数值稳定性">数值稳定性</h1>
 
@@ -3410,14 +3739,47 @@ b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
 
 <h1 id="与-qr-分解的比较">与 QR 分解的比较</h1>
 
-<p>\vert  项目 \vert  正规方程 \vert  QR 分解 \vert 
-\vert —\vert —\vert —\vert 
-\vert  方程 \vert  $A^{\mathsf T}Ax=A^{\mathsf T}b$ \vert  $R_1x=Q_1^{\mathsf T}b$ \vert 
-\vert  条件数 \vert  $\kappa(A)^2$ \vert  $\kappa(A)$ \vert 
-\vert  计算量 \vert  $mn^2+\frac13n^3$ \vert  $2mn^2-\frac23n^3$ \vert 
-\vert  数值稳定性 \vert  差 \vert  好 \vert 
-\vert  实现复杂度 \vert  简单 \vert  中等 \vert 
-\vert  适用场景 \vert  小规模、良态问题 \vert  通用、病态问题 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>实现复杂度</td>
+      <td>简单</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>结论</strong>：</p>
 <ul>
@@ -3719,22 +4081,71 @@ P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}.\]
 
 <h2 id="计算量">计算量</h2>
 
-<p>\vert  步骤 \vert  计算量 \vert 
-\vert —\vert —\vert 
-\vert  QR 分解 \vert  $2mn^2-\frac23n^3$ \vert 
-\vert  计算 $Q_1^{\mathsf T}b$ \vert  $2mn$ \vert 
-\vert  回代 \vert  $n^2$ \vert 
-\vert  总计 \vert  $2mn^2-\frac23n^3+O(mn)$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>步骤</th>
+      <th>计算量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>QR 分解</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>计算 $Q_1^{\mathsf T}b$</td>
+      <td>$2mn$</td>
+    </tr>
+    <tr>
+      <td>回代</td>
+      <td>$n^2$</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>$2mn^2-\frac23n^3+O(mn)$</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="与正规方程对比">与正规方程对比</h2>
 
-<p>\vert  项目 \vert  正规方程 \vert  QR 分解 \vert 
-\vert —\vert —\vert —\vert 
-\vert  方程 \vert  $A^{\mathsf T}Ax=A^{\mathsf T}b$ \vert  $R_1x=Q_1^{\mathsf T}b$ \vert 
-\vert  条件数 \vert  $\kappa(A)^2$ \vert  $\kappa(A)$ \vert 
-\vert  计算量 \vert  $mn^2+\frac13n^3$ \vert  $2mn^2-\frac23n^3$ \vert 
-\vert  数值稳定性 \vert  差 \vert  好 \vert 
-\vert  适用场景 \vert  小规模、良态问题 \vert  通用、病态问题 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>方程</td>
+      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
+      <td>$R_1x=Q_1^{\mathsf T}b$</td>
+    </tr>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>$mn^2+\frac13n^3$</td>
+      <td>$2mn^2-\frac23n^3$</td>
+    </tr>
+    <tr>
+      <td>数值稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>小规模、良态问题</td>
+      <td>通用、病态问题</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="数值稳定性">数值稳定性</h2>
 
@@ -3856,12 +4267,37 @@ A^{\mathsf T}b=\begin{pmatrix}3\\4\end{pmatrix}.\]
 
 <p><strong>与正规方程对比</strong>：</p>
 
-<p>\vert  项目 \vert  正规方程 \vert  QR 分解 \vert 
-\vert —\vert —\vert —\vert 
-\vert  条件数 \vert  $\kappa(A)^2$ \vert  $\kappa(A)$ \vert 
-\vert  稳定性 \vert  差 \vert  好 \vert 
-\vert  计算量 \vert  较小 \vert  较大 \vert 
-\vert  适用场景 \vert  良态问题 \vert  通用 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>正规方程</th>
+      <th>QR 分解</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>条件数</td>
+      <td>$\kappa(A)^2$</td>
+      <td>$\kappa(A)$</td>
+    </tr>
+    <tr>
+      <td>稳定性</td>
+      <td>差</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>计算量</td>
+      <td>较小</td>
+      <td>较大</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>良态问题</td>
+      <td>通用</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>结论</strong>：QR 法是最小二乘问题的标准方法，兼顾稳定性与效率。当 $A$ 病态时，QR 法明显优于正规方程。若精度要求极高或 $A$ 接近奇异，可采用 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">HouseHolder 变换</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html" rel="alternate" type="text/html" title="HouseHolder 变换" /><published>2026-10-09T00:00:00+00:00</published><updated>2026-10-09T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder%20%E5%8F%98%E6%8D%A2</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/09/HouseHolder-%E5%8F%98%E6%8D%A2.html"><![CDATA[<p>在数值线性代数中，常需要将向量或矩阵中的某些元素消为零。Gram–Schmidt 正交化通过投影实现这一点，但数值稳定性较差。</p>
 
@@ -3995,7 +4431,7 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 \[\operatorname{sgn}(x_1)=
 \begin{cases}
-\dfrac{x_1}{\vert x_1\vert },&amp; x_1\ne 0,\\
+\dfrac{x_1}{|x_1|},&amp; x_1\ne 0,\\
 1,&amp; x_1=0.
 \end{cases}\]
 
@@ -4015,25 +4451,25 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 首先计算 $v^{\mathsf H}v$：</p>
 
 \[v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
-=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+\vert \alpha\vert ^2.\]
+=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\]
 
 <p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有</p>
 
-\[\vert \alpha\vert ^2=\|x\|_2^2,\qquad
-\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2\vert x_1\vert ,\]
+\[|\alpha|^2=\|x\|_2^2,\qquad
+\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\]
 
-\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2\vert x_1\vert .\]
+\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2|x_1|.\]
 
 <p>故</p>
 
-\[v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2\vert x_1\vert 
-=2\|x\|_2(\|x\|_2-\vert x_1\vert ).\]
+\[v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
+=2\|x\|_2(\|x\|_2-|x_1|).\]
 
 <p>又</p>
 
 \[v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
-=\|x\|_2^2-\|x\|_2\vert x_1\vert 
-=\|x\|_2(\|x\|_2-\vert x_1\vert ).\]
+=\|x\|_2^2-\|x\|_2|x_1|
+=\|x\|_2(\|x\|_2-|x_1|).\]
 
 <p>因此</p>
 
@@ -4171,12 +4607,42 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h1 id="与其他变换的比较">与其他变换的比较</h1>
 
-<p>\vert  方法 \vert  数值稳定性 \vert  计算量 \vert  适用场景 \vert 
-\vert —\vert —\vert —\vert —\vert 
-\vert  经典 Gram–Schmidt \vert  差 \vert  $2mn^2$ \vert  教学、小规模 \vert 
-\vert  修正 Gram–Schmidt \vert  较好 \vert  $2mn^2$ \vert  中等规模、并行 \vert 
-\vert  Householder 变换 \vert  极好 \vert  $2mn^2-\frac23n^3$ \vert  通用、QR 分解标准 \vert 
-\vert  Givens 旋转 \vert  好 \vert  约 $3mn^2$ \vert  稀疏矩阵、并行 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>计算量</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>经典 Gram–Schmidt</td>
+      <td>差</td>
+      <td>$2mn^2$</td>
+      <td>教学、小规模</td>
+    </tr>
+    <tr>
+      <td>修正 Gram–Schmidt</td>
+      <td>较好</td>
+      <td>$2mn^2$</td>
+      <td>中等规模、并行</td>
+    </tr>
+    <tr>
+      <td>Householder 变换</td>
+      <td>极好</td>
+      <td>$2mn^2-\frac23n^3$</td>
+      <td>通用、QR 分解标准</td>
+    </tr>
+    <tr>
+      <td>Givens 旋转</td>
+      <td>好</td>
+      <td>约 $3mn^2$</td>
+      <td>稀疏矩阵、并行</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>特点对比</strong>：</p>
 
@@ -4424,7 +4890,7 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 <p>其中
 \(\operatorname{sgn}(x_1)=
 \begin{cases}
-\dfrac{x_1}{\vert x_1\vert },&amp; x_1\ne 0,\\
+\dfrac{x_1}{|x_1|},&amp; x_1\ne 0,\\
 1,&amp; x_1=0.
 \end{cases}\)</p>
 
@@ -4440,22 +4906,22 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 <p><strong>证明</strong><br />
 首先计算 $v^{\mathsf H}v$：
 \(v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
-=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+\vert \alpha\vert ^2.\)</p>
+=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\)</p>
 
 <p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有
-\(\vert \alpha\vert ^2=\|x\|_2^2,\qquad
-\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2\vert x_1\vert ,\)</p>
+\(|\alpha|^2=\|x\|_2^2,\qquad
+\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\)</p>
 
-\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2\vert x_1\vert .\]
+\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2|x_1|.\]
 
 <p>故
-\(v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2\vert x_1\vert 
-=2\|x\|_2(\|x\|_2-\vert x_1\vert ).\)</p>
+\(v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
+=2\|x\|_2(\|x\|_2-|x_1|).\)</p>
 
 <p>又
 \(v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
-=\|x\|_2^2-\|x\|_2\vert x_1\vert 
-=\|x\|_2(\|x\|_2-\vert x_1\vert ).\)</p>
+=\|x\|_2^2-\|x\|_2|x_1|
+=\|x\|_2(\|x\|_2-|x_1|).\)</p>
 
 <p>因此
 \(\frac{2v^{\mathsf H}x}{v^{\mathsf H}v}=1.\)</p>
@@ -4576,12 +5042,42 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h1 id="与其他变换的比较">与其他变换的比较</h1>
 
-<p>\vert  方法 \vert  数值稳定性 \vert  计算量 \vert  适用场景 \vert 
-\vert —\vert —\vert —\vert —\vert 
-\vert  经典 Gram–Schmidt \vert  差 \vert  $2mn^2$ \vert  教学、小规模 \vert 
-\vert  修正 Gram–Schmidt \vert  较好 \vert  $2mn^2$ \vert  中等规模、并行 \vert 
-\vert  Householder 变换 \vert  极好 \vert  $2mn^2-\frac23n^3$ \vert  通用、QR 分解标准 \vert 
-\vert  Givens 旋转 \vert  好 \vert  约 $3mn^2$ \vert  稀疏矩阵、并行 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>数值稳定性</th>
+      <th>计算量</th>
+      <th>适用场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>经典 Gram–Schmidt</td>
+      <td>差</td>
+      <td>$2mn^2$</td>
+      <td>教学、小规模</td>
+    </tr>
+    <tr>
+      <td>修正 Gram–Schmidt</td>
+      <td>较好</td>
+      <td>$2mn^2$</td>
+      <td>中等规模、并行</td>
+    </tr>
+    <tr>
+      <td>Householder 变换</td>
+      <td>极好</td>
+      <td>$2mn^2-\frac23n^3$</td>
+      <td>通用、QR 分解标准</td>
+    </tr>
+    <tr>
+      <td>Givens 旋转</td>
+      <td>好</td>
+      <td>约 $3mn^2$</td>
+      <td>稀疏矩阵、并行</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>特点对比</strong>：</p>
 

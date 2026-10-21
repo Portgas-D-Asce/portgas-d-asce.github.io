@@ -140,11 +140,28 @@ U_2=D^{-1}U_1=\begin{pmatrix}1&amp;\frac12\\0&amp;\frac13\end{pmatrix}.\)
 
 <p>由命题 1.3.1 知，一般 LU 分解因对角尺度可任意拆分而不唯一。为得到唯一分解，必须对 $L$ 或 $U$ 的对角线施加归一化条件。由此产生三种标准规范形式：</p>
 
-<p>\vert  归一化条件 \vert  名称 \vert 
-\vert —\vert —\vert 
-\vert  $L$ 单位下三角 \vert  Doolittle 分解 \vert 
-\vert  $U$ 单位上三角 \vert  Crout 分解 \vert 
-\vert  $L,U$ 均单位三角，对角尺度单独提取 \vert  LDU 分解 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>归一化条件</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$L$ 单位下三角</td>
+      <td>Doolittle 分解</td>
+    </tr>
+    <tr>
+      <td>$U$ 单位上三角</td>
+      <td>Crout 分解</td>
+    </tr>
+    <tr>
+      <td>$L,U$ 均单位三角，对角尺度单独提取</td>
+      <td>LDU 分解</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>三者的关系为：
 \(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
@@ -497,12 +514,52 @@ U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp
 
 <h3 id="对比表">对比表</h3>
 
-<p>\vert  分解 \vert  形式 \vert  $L$ 对角线 \vert  $U$ 对角线 \vert  唯一性条件 \vert  行列式 \vert 
-\vert —\vert —\vert —\vert —\vert —\vert —\vert 
-\vert  一般 LU \vert  $A=LU$ \vert  任意 \vert  任意 \vert  不唯一 \vert  — \vert 
-\vert  Doolittle \vert  $A=LU$ \vert  全为 $1$ \vert  $u_{ii}\ne 0$ \vert  $D_k\ne 0$ \vert  $\prod u_{ii}$ \vert 
-\vert  Crout \vert  $A=LU$ \vert  $l_{ii}\ne 0$ \vert  全为 $1$ \vert  $D_k\ne 0$ \vert  $\prod l_{ii}$ \vert 
-\vert  LDU \vert  $A=LDU$ \vert  全为 $1$ \vert  全为 $1$ \vert  $D_k\ne 0$ \vert  $\prod d_{ii}$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>分解</th>
+      <th>形式</th>
+      <th>$L$ 对角线</th>
+      <th>$U$ 对角线</th>
+      <th>唯一性条件</th>
+      <th>行列式</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一般 LU</td>
+      <td>$A=LU$</td>
+      <td>任意</td>
+      <td>任意</td>
+      <td>不唯一</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Doolittle</td>
+      <td>$A=LU$</td>
+      <td>全为 $1$</td>
+      <td>$u_{ii}\ne 0$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod u_{ii}$</td>
+    </tr>
+    <tr>
+      <td>Crout</td>
+      <td>$A=LU$</td>
+      <td>$l_{ii}\ne 0$</td>
+      <td>全为 $1$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod l_{ii}$</td>
+    </tr>
+    <tr>
+      <td>LDU</td>
+      <td>$A=LDU$</td>
+      <td>全为 $1$</td>
+      <td>全为 $1$</td>
+      <td>$D_k\ne 0$</td>
+      <td>$\prod d_{ii}$</td>
+    </tr>
+  </tbody>
+</table>
 
 <h1 id="带主元的-lu-分解扩展">带主元的 LU 分解（扩展）</h1>
 
@@ -523,7 +580,7 @@ U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp
 
 <ol>
   <li>选主元：求 $p\in{k,\dots,n}$ 使
-\(\vert a_{pk}\vert =\max_{k\le i\le n}\vert a_{ik}\vert .\)</li>
+\(|a_{pk}|=\max_{k\le i\le n}|a_{ik}|.\)</li>
   <li>交换第 $k$ 行与第 $p$ 行，同时更新 $P$ 及已算出的 $L$ 的前 $k-1$ 列。</li>
   <li>消元：
 \(l_{ik}=\frac{a_{ik}}{a_{kk}},\quad i=k+1,\dots,n;\)
@@ -556,7 +613,7 @@ U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp
 
 <ol>
   <li>在剩余子矩阵中找绝对值最大元素：
-\(\vert a_{pq}\vert =\max_{k\le i,j\le n}\vert a_{ij}\vert .\)</li>
+\(|a_{pq}|=\max_{k\le i,j\le n}|a_{ij}|.\)</li>
   <li>交换第 $k$ 行与第 $p$ 行；交换第 $k$ 列与第 $q$ 列；更新 $P,Q$。</li>
   <li>消元，同 PLU。</li>
 </ol>
@@ -567,13 +624,42 @@ U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp
 
 <p><strong>与 PLU 对比</strong></p>
 
-<p>\vert  项目 \vert  PLU \vert  PALU \vert 
-\vert —\vert —\vert —\vert 
-\vert  形式 \vert  $PA=LU$ \vert  $PAQ=LU$ \vert 
-\vert  主元选择 \vert  每列选最大 \vert  整个子矩阵选最大 \vert 
-\vert  稳定性 \vert  好 \vert  更好 \vert 
-\vert  实现复杂度 \vert  简单 \vert  复杂 \vert 
-\vert  实际使用 \vert  主流 \vert  特殊场合 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>PLU</th>
+      <th>PALU</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>形式</td>
+      <td>$PA=LU$</td>
+      <td>$PAQ=LU$</td>
+    </tr>
+    <tr>
+      <td>主元选择</td>
+      <td>每列选最大</td>
+      <td>整个子矩阵选最大</td>
+    </tr>
+    <tr>
+      <td>稳定性</td>
+      <td>好</td>
+      <td>更好</td>
+    </tr>
+    <tr>
+      <td>实现复杂度</td>
+      <td>简单</td>
+      <td>复杂</td>
+    </tr>
+    <tr>
+      <td>实际使用</td>
+      <td>主流</td>
+      <td>特殊场合</td>
+    </tr>
+  </tbody>
+</table>
 
 <h1 id="特殊矩阵的-lu-型分解扩展">特殊矩阵的 LU 型分解（扩展）</h1>
 
@@ -622,16 +708,84 @@ U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp
 
 <h1 id="总表">总表</h1>
 
-<p>\vert  名称 \vert  形式 \vert  适用矩阵 \vert  唯一性条件 \vert  计算量 \vert  数值稳定性 \vert 
-\vert —\vert —\vert —\vert —\vert —\vert —\vert 
-\vert  一般 LU \vert  $A=LU$ \vert  $D_k\ne 0$ \vert  不唯一 \vert  $\frac23n^3$ \vert  差 \vert 
-\vert  Doolittle \vert  $A=LU$，$L$ 单位下三角 | $D_k\ne 0$ | 唯一 | $\frac23n^3$ | 差 |
-| Crout | $A=LU$，$U$ 单位上三角 \vert  $D_k\ne 0$ \vert  唯一 \vert  $\frac23n^3$ \vert  差 \vert 
-\vert  LDU \vert  $A=LDU$ \vert  $D_k\ne 0$ \vert  唯一 \vert  $\frac23n^3$ \vert  差 \vert 
-\vert  PLU \vert  $PA=LU$ \vert  任意非奇异 \vert  唯一 \vert  $\frac23n^3+O(n^2)$ \vert  好 \vert 
-\vert  PALU \vert  $PAQ=LU$ \vert  任意非奇异 \vert  唯一 \vert  $\frac23n^3+O(n^2)$ \vert  更好 \vert 
-\vert  Cholesky \vert  $A=LL^{\mathsf T}$ \vert  对称正定 \vert  唯一 \vert  $\frac13n^3$ \vert  极好 \vert 
-\vert  LDLᵀ \vert  $A=LDL^{\mathsf T}$ \vert  对称，$D_k\ne 0$ \vert  唯一 \vert  $\frac13n^3$ \vert  好 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>形式</th>
+      <th>适用矩阵</th>
+      <th>唯一性条件</th>
+      <th>计算量</th>
+      <th>数值稳定性</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一般 LU</td>
+      <td>$A=LU$</td>
+      <td>$D_k\ne 0$</td>
+      <td>不唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>Doolittle</td>
+      <td>$A=LU$，$L$ 单位下三角</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>Crout</td>
+      <td>$A=LU$，$U$ 单位上三角</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>LDU</td>
+      <td>$A=LDU$</td>
+      <td>$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac23n^3$</td>
+      <td>差</td>
+    </tr>
+    <tr>
+      <td>PLU</td>
+      <td>$PA=LU$</td>
+      <td>任意非奇异</td>
+      <td>唯一</td>
+      <td>$\frac23n^3+O(n^2)$</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>PALU</td>
+      <td>$PAQ=LU$</td>
+      <td>任意非奇异</td>
+      <td>唯一</td>
+      <td>$\frac23n^3+O(n^2)$</td>
+      <td>更好</td>
+    </tr>
+    <tr>
+      <td>Cholesky</td>
+      <td>$A=LL^{\mathsf T}$</td>
+      <td>对称正定</td>
+      <td>唯一</td>
+      <td>$\frac13n^3$</td>
+      <td>极好</td>
+    </tr>
+    <tr>
+      <td>LDLᵀ</td>
+      <td>$A=LDL^{\mathsf T}$</td>
+      <td>对称，$D_k\ne 0$</td>
+      <td>唯一</td>
+      <td>$\frac13n^3$</td>
+      <td>好</td>
+    </tr>
+  </tbody>
+</table>
 
 <h1 id="结论">结论</h1>
 

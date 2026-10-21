@@ -83,11 +83,11 @@
 
 <p><strong>定义 1.1（特征值与特征向量）</strong></p>
 
-<p>设 $A\in M_n(\mathbb F)$。若存在非零向量 $x\in\mathbb F^n$ 和标量 $\lambda\in\mathbb F$，使得</p>
+<p>设 \(A\in M_n(\mathbb F)\)。若存在非零向量 \(x\in\mathbb F^n\) 和标量 \(\lambda\in\mathbb F\)，使得</p>
 
 \[Ax=\lambda x,\]
 
-<p>则称 $\lambda$ 为 $A$ 的<strong>特征值</strong>，$x$ 为对应的<strong>特征向量</strong>。</p>
+<p>则称 \(\lambda\) 为 \(A\) 的<strong>特征值</strong>，\(x\) 为对应的<strong>特征向量</strong>。</p>
 
 <h2 id="特征多项式">特征多项式</h2>
 
@@ -95,21 +95,21 @@
 
 \[p(\lambda)=\det(\lambda I-A)\]
 
-<p>的根。对 $n$ 阶矩阵，$p(\lambda)$ 是 $n$ 次多项式，故 $A$ 在复数域上恰有 $n$ 个特征值（计重数）。</p>
+<p>的根。对 \(n\) 阶矩阵，\(p(\lambda)\) 是 \(n\) 次多项式，故 \(A\) 在复数域上恰有 \(n\) 个特征值（计重数）。</p>
 
 <h2 id="为什么要迭代法">为什么要迭代法</h2>
 
-<p>直接求特征多项式根的方法（如 QR 算法）计算量为 $O(n^3)$，适用于中小规模矩阵。但对于<strong>大规模稀疏矩阵</strong>，显式构造矩阵或做 $O(n^3)$ 分解不可行。此时需要<strong>只依赖于矩阵-向量乘法</strong> $Ax$ 的迭代方法。</p>
+<p>直接求特征多项式根的方法（如 QR 算法）计算量为 \(O(n^3)\)，适用于中小规模矩阵。但对于<strong>大规模稀疏矩阵</strong>，显式构造矩阵或做 \(O(n^3)\) 分解不可行。此时需要<strong>只依赖于矩阵-向量乘法</strong> \(Ax\) 的迭代方法。</p>
 
 <p><strong>幂法、逆幂法、Rayleigh 商迭代</strong>都属于此类迭代方法。</p>
 
 <h2 id="基本假设">基本假设</h2>
 
-<p>设 $A$ 可对角化，其特征值为</p>
+<p>设 \(A\) 可对角化，其特征值为</p>
 
-\[\vert \lambda_1\vert &gt;\vert \lambda_2\vert \ge\cdots\ge\vert \lambda_n\vert ,\]
+\[|\lambda_1|&gt;|\lambda_2|\ge\cdots\ge|\lambda_n|,\]
 
-<p>对应的特征向量 $v_1,\dots,v_n$ 线性无关。称 $\lambda_1$ 为<strong>主特征值</strong>，$v_1$ 为<strong>主特征向量</strong>。</p>
+<p>对应的特征向量 \(v_1,\dots,v_n\) 线性无关。称 \(\lambda_1\) 为<strong>主特征值</strong>，\(v_1\) 为<strong>主特征向量</strong>。</p>
 
 <h1 id="幂法power-method">幂法（Power Method）</h1>
 
@@ -117,7 +117,7 @@
 
 <p>幂法利用矩阵反复作用于向量，使向量逐渐对齐到主特征向量方向。</p>
 
-<p><strong>直观</strong>：若 $x=\sum_{i=1}^n c_i v_i$，则</p>
+<p><strong>直观</strong>：若 \(x=\sum_{i=1}^n c_i v_i\)，则</p>
 
 \[A^kx=\sum_{i=1}^n c_i\lambda_i^k v_i
 =\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
@@ -125,9 +125,9 @@
 <table>
   <tbody>
     <tr>
-      <td>因 $</td>
+      <td>因 $$</td>
       <td>\lambda_i/\lambda_1</td>
-      <td>&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</td>
+      <td>&lt;1\(（\)i\ge2\(），当\)k\to\infty\(时，第二项趋于零，故\)A^kx\(的方向趋于\)v_1$$。</td>
     </tr>
   </tbody>
 </table>
@@ -137,8 +137,8 @@
 <p><strong>算法 2.2.1（幂法）</strong></p>
 
 <ol>
-  <li>选取初始向量 $x^{(0)}\ne 0$（通常随机选取或取全 1 向量）；</li>
-  <li>对 $k=0,1,2,\dots$：</li>
+  <li>选取初始向量 \(x^{(0)}\ne 0\)（通常随机选取或取全 1 向量）；</li>
+  <li>对 \(k=0,1,2,\dots\)：</li>
 </ol>
 
 \[y^{(k+1)}=Ax^{(k)},\]
@@ -148,10 +148,10 @@
 \[\lambda^{(k+1)}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}\quad\text{（Rayleigh 商估计）}.\]
 
 <ol>
-  <li>当 $|x^{(k+1)}-x^{(k)}|_2&lt;\text{tol}$ 或 $|Ax^{(k)}-\lambda^{(k)}x^{(k)}|_2&lt;\text{tol}$ 时停止。</li>
+  <li>当 \(\|x^{(k+1)}-x^{(k)}\|_2&lt;\text{tol}\) 或 \(\|Ax^{(k)}-\lambda^{(k)}x^{(k)}\|_2&lt;\text{tol}\) 时停止。</li>
 </ol>
 
-<p><strong>输出</strong>：$\lambda^{(k)}\approx\lambda_1$，$x^{(k)}\approx v_1$。</p>
+<p><strong>输出</strong>：\(\lambda^{(k)}\approx\lambda_1\)，\(x^{(k)}\approx v_1\)。</p>
 
 <h2 id="收敛性">收敛性</h2>
 
@@ -160,72 +160,112 @@
 <table>
   <tbody>
     <tr>
-      <td>设 $A$ 可对角化，$</td>
+      <td>设 \(A\) 可对角化，$$</td>
       <td>\lambda_1</td>
       <td>&gt;</td>
       <td>\lambda_2</td>
       <td>\ge\cdots\ge</td>
       <td>\lambda_n</td>
-      <td>$，且初始向量 $x^{(0)}$ 在主特征向量方向上的分量 $c_1\ne 0$。则幂法产生的 $x^{(k)}$ 满足</td>
+      <td>\(，且初始向量\)x^{(0)}\(在主特征向量方向上的分量\)c_1\ne 0\(。则幂法产生的\)x^{(k)}$$ 满足</td>
     </tr>
   </tbody>
 </table>
 
-\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left\vert \frac{\lambda_2}{\lambda_1}\right\vert ^k\right),\]
+\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right),\]
 
-\[\vert \lambda^{(k)}-\lambda_1\vert =O\left(\left\vert \frac{\lambda_2}{\lambda_1}\right\vert ^k\right).\]
+\[|\lambda^{(k)}-\lambda_1|=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right).\]
 
 <p><strong>证明思路</strong><br />
-设 $x^{(0)}=\sum_{i=1}^n c_i v_i$，$c_1\ne 0$。则</p>
+设 \(x^{(0)}=\sum_{i=1}^n c_i v_i\)，\(c_1\ne 0\)。则</p>
 
 \[A^kx^{(0)}=\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
 
-<p>归一化后，误差由 $\left\vert \dfrac{\lambda_2}{\lambda_1}\right\vert ^k$ 控制。$\square$</p>
+<table>
+  <tbody>
+    <tr>
+      <td>归一化后，误差由 $$\left</td>
+      <td>\dfrac{\lambda_2}{\lambda_1}\right</td>
+      <td>^k\(控制。\)\square$$</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>收敛速率</strong>：线性收敛，收敛因子为</p>
 
-\[\left\vert \frac{\lambda_2}{\lambda_1}\right\vert .\]
+\[\left|\frac{\lambda_2}{\lambda_1}\right|.\]
 
-<p>当 $\vert \lambda_2\vert \approx\vert \lambda_1\vert $ 时收敛很慢。</p>
+<table>
+  <tbody>
+    <tr>
+      <td>当 $$</td>
+      <td>\lambda_2</td>
+      <td>\approx</td>
+      <td>\lambda_1</td>
+      <td>$$ 时收敛很慢。</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="优缺点">优缺点</h2>
 
 <p><strong>优点</strong></p>
 <ol>
   <li>实现极其简单；</li>
-  <li>每步只需一次矩阵-向量乘法，计算量 $O(\text{nnz}(A))$；</li>
+  <li>每步只需一次矩阵-向量乘法，计算量 \(O(\text{nnz}(A))\)；</li>
   <li>适用于大规模稀疏矩阵。</li>
 </ol>
 
 <p><strong>缺点</strong></p>
 <ol>
   <li>只能求主特征值（模最大者）；</li>
-  <li>收敛速度依赖于 $\vert \lambda_2/\lambda_1\vert $，可能很慢；</li>
-  <li>若 $c_1=0$（初始向量与 $v_1$ 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
-  <li>若 $\vert \lambda_1\vert =\vert \lambda_2\vert $（如 $-\lambda_1$），则不收敛。</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>收敛速度依赖于 $$</td>
+          <td>\lambda_2/\lambda_1</td>
+          <td>$$，可能很慢；</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>若 \(c_1=0\)（初始向量与 \(v_1\) 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>若 $$</td>
+          <td>\lambda_1</td>
+          <td>=</td>
+          <td>\lambda_2</td>
+          <td>\(（如\)-\lambda_1$$），则不收敛。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
 </ol>
 
 <h1 id="逆幂法inverse-power-method">逆幂法（Inverse Power Method）</h1>
 
 <h2 id="核心思想-1">核心思想</h2>
 
-<p>逆幂法将幂法应用于 $(A-\mu I)^{-1}$，从而求<strong>最接近 $\mu$</strong> 的特征值。</p>
+<p>逆幂法将幂法应用于 \((A-\mu I)^{-1}\)，从而求<strong>最接近 \(\mu\)</strong> 的特征值。</p>
 
-<p><strong>观察</strong>：若 $Av_i=\lambda_i v_i$，则</p>
+<p><strong>观察</strong>：若 \(Av_i=\lambda_i v_i\)，则</p>
 
 \[(A-\mu I)^{-1}v_i=\frac{1}{\lambda_i-\mu}v_i.\]
 
-<p>即 $(A-\mu I)^{-1}$ 的特征值为 $\dfrac{1}{\lambda_i-\mu}$，特征向量不变。</p>
+<p>即 \((A-\mu I)^{-1}\) 的特征值为 \(\dfrac{1}{\lambda_i-\mu}\)，特征向量不变。</p>
 
-<p>若 $\mu$ 接近某个特征值 $\lambda_j$，则 $\dfrac{1}{\lambda_j-\mu}$ 的模最大，故对 $(A-\mu I)^{-1}$ 做幂法会收敛到 $v_j$。</p>
+<p>若 \(\mu\) 接近某个特征值 \(\lambda_j\)，则 \(\dfrac{1}{\lambda_j-\mu}\) 的模最大，故对 \((A-\mu I)^{-1}\) 做幂法会收敛到 \(v_j\)。</p>
 
 <h2 id="算法-1">算法</h2>
 
 <p><strong>算法 3.2.1（逆幂法）</strong></p>
 
 <ol>
-  <li>选取位移 $\mu$（接近目标特征值）和初始向量 $x^{(0)}\ne 0$；</li>
-  <li>对 $k=0,1,2,\dots$：
+  <li>选取位移 \(\mu\)（接近目标特征值）和初始向量 \(x^{(0)}\ne 0\)；</li>
+  <li>对 \(k=0,1,2,\dots\)：
     <ul>
       <li>解线性方程组</li>
     </ul>
@@ -250,38 +290,38 @@
   <li>收敛判据同幂法。</li>
 </ol>
 
-<p><strong>注</strong>：实际实现中，$(A-\mu I)$ 的 LU 分解只需计算一次，每步只需前代与回代，计算量 $O(n^2)$（稠密）或 $O(\text{nnz})$（稀疏）。</p>
+<p><strong>注</strong>：实际实现中，\((A-\mu I)\) 的 LU 分解只需计算一次，每步只需前代与回代，计算量 \(O(n^2)\)（稠密）或 \(O(\text{nnz})\)（稀疏）。</p>
 
 <h2 id="收敛性-1">收敛性</h2>
 
 <p><strong>定理 3.3.1</strong></p>
 
-<p>设 $\lambda_j$ 是 $A$ 的特征值，$\mu$ 接近 $\lambda_j$，且</p>
+<p>设 \(\lambda_j\) 是 \(A\) 的特征值，\(\mu\) 接近 \(\lambda_j\)，且</p>
 
-\[\frac{1}{\vert \lambda_j-\mu\vert }&gt;\frac{1}{\vert \lambda_i-\mu\vert },\qquad\forall i\ne j.\]
+\[\frac{1}{|\lambda_j-\mu|}&gt;\frac{1}{|\lambda_i-\mu|},\qquad\forall i\ne j.\]
 
-<p>则逆幂法产生的 $x^{(k)}$ 收敛到 $v_j$，收敛因子为</p>
+<p>则逆幂法产生的 \(x^{(k)}\) 收敛到 \(v_j\)，收敛因子为</p>
 
-\[\max_{i\ne j}\left\vert \frac{\lambda_j-\mu}{\lambda_i-\mu}\right\vert .\]
+\[\max_{i\ne j}\left|\frac{\lambda_j-\mu}{\lambda_i-\mu}\right|.\]
 
-<p><strong>证明思路</strong>：对 $(A-\mu I)^{-1}$ 应用幂法收敛性定理。$\square$</p>
+<p><strong>证明思路</strong>：对 \((A-\mu I)^{-1}\) 应用幂法收敛性定理。\(\square\)</p>
 
-<p><strong>关键</strong>：若 $\mu$ 非常接近 $\lambda_j$，收敛极快；若 $\mu$ 恰好等于 $\lambda_j$，则一步收敛（但 $(A-\mu I)$ 奇异，需特殊处理）。</p>
+<p><strong>关键</strong>：若 \(\mu\) 非常接近 \(\lambda_j\)，收敛极快；若 \(\mu\) 恰好等于 \(\lambda_j\)，则一步收敛（但 \((A-\mu I)\) 奇异，需特殊处理）。</p>
 
 <h2 id="优缺点-1">优缺点</h2>
 
 <p><strong>优点</strong></p>
 <ol>
-  <li>可求<strong>任意指定</strong>的特征值（通过选取 $\mu$）；</li>
-  <li>若 $\mu$ 接近目标特征值，收敛极快；</li>
+  <li>可求<strong>任意指定</strong>的特征值（通过选取 \(\mu\)）；</li>
+  <li>若 \(\mu\) 接近目标特征值，收敛极快；</li>
   <li>适用于大规模稀疏矩阵（若线性方程组可高效求解）。</li>
 </ol>
 
 <p><strong>缺点</strong></p>
 <ol>
   <li>需要解线性方程组，每步计算量大于幂法；</li>
-  <li>需要预先知道 $\mu$ 的近似值；</li>
-  <li>若 $\mu$ 恰好是特征值，$(A-\mu I)$ 奇异，需特殊处理。</li>
+  <li>需要预先知道 \(\mu\) 的近似值；</li>
+  <li>若 \(\mu\) 恰好是特征值，\((A-\mu I)\) 奇异，需特殊处理。</li>
 </ol>
 
 <h1 id="rayleigh-商rayleigh-quotient">Rayleigh 商（Rayleigh Quotient）</h1>
@@ -290,15 +330,15 @@
 
 <p><strong>定义 4.1（Rayleigh 商）</strong></p>
 
-<p>设 $A\in M_n(\mathbb R)$ 为对称矩阵，$x\in\mathbb R^n$，$x\ne 0$。称</p>
+<p>设 \(A\in M_n(\mathbb R)\) 为对称矩阵，\(x\in\mathbb R^n\)，\(x\ne 0\)。称</p>
 
 \[R(x)=\frac{x^{\mathsf T}Ax}{x^{\mathsf T}x}\]
 
-<p>为 $A$ 在 $x$ 处的 <strong>Rayleigh 商</strong>。</p>
+<p>为 \(A\) 在 \(x\) 处的 <strong>Rayleigh 商</strong>。</p>
 
-<p>若 $|x|_2=1$，则 $R(x)=x^{\mathsf T}Ax$。</p>
+<p>若 \(\|x\|_2=1\)，则 \(R(x)=x^{\mathsf T}Ax\)。</p>
 
-<p><strong>复情形</strong>：若 $A$ 为 Hermite 矩阵，$x\in\mathbb C^n$，则</p>
+<p><strong>复情形</strong>：若 \(A\) 为 Hermite 矩阵，\(x\in\mathbb C^n\)，则</p>
 
 \[R(x)=\frac{x^{\mathsf H}Ax}{x^{\mathsf H}x}.\]
 
@@ -306,7 +346,7 @@
 
 <p><strong>定理 4.2.1</strong></p>
 
-<p>设 $A$ 对称，特征值为 $\lambda_1\le\cdots\le\lambda_n$。则对任意 $x\ne 0$，</p>
+<p>设 \(A\) 对称，特征值为 \(\lambda_1\le\cdots\le\lambda_n\)。则对任意 \(x\ne 0\)，</p>
 
 \[\lambda_1\le R(x)\le\lambda_n.\]
 
@@ -315,53 +355,53 @@
 \[\min_{x\ne 0}R(x)=\lambda_1,\qquad\max_{x\ne 0}R(x)=\lambda_n.\]
 
 <p><strong>证明</strong><br />
-将 $x$ 按 $A$ 的标准正交特征向量 $v_1,\dots,v_n$ 展开：$x=\sum_{i=1}^n c_i v_i$。则</p>
+将 \(x\) 按 \(A\) 的标准正交特征向量 \(v_1,\dots,v_n\) 展开：\(x=\sum_{i=1}^n c_i v_i\)。则</p>
 
 \[R(x)=\frac{\sum_{i=1}^n\lambda_i c_i^2}{\sum_{i=1}^n c_i^2}.\]
 
-<p>这是 $\lambda_i$ 的加权平均，故介于 $\lambda_1$ 与 $\lambda_n$ 之间。取 $x=v_1$ 或 $x=v_n$ 达到端点。$\square$</p>
+<p>这是 \(\lambda_i\) 的加权平均，故介于 \(\lambda_1\) 与 \(\lambda_n\) 之间。取 \(x=v_1\) 或 \(x=v_n\) 达到端点。\(\square\)</p>
 
 <p><strong>定理 4.2.2（驻点性质）</strong><br />
-设 $A$ 对称。则 $x$ 是 $A$ 的特征向量当且仅当 $x$ 是 $R(x)$ 的驻点，即</p>
+设 \(A\) 对称。则 \(x\) 是 \(A\) 的特征向量当且仅当 \(x\) 是 \(R(x)\) 的驻点，即</p>
 
 \[\nabla R(x)=0.\]
 
-<p>此时 $R(x)$ 等于对应的特征值。</p>
+<p>此时 \(R(x)\) 等于对应的特征值。</p>
 
 <p><strong>证明</strong><br />
 计算梯度：</p>
 
 \[\nabla R(x)=\frac{2(Ax-R(x)x)}{x^{\mathsf T}x}.\]
 
-<p>故 $\nabla R(x)=0\iff Ax=R(x)x$，即 $x$ 是特征向量，$R(x)$ 是对应特征值。$\square$</p>
+<p>故 \(\nabla R(x)=0\iff Ax=R(x)x\)，即 \(x\) 是特征向量，\(R(x)\) 是对应特征值。\(\square\)</p>
 
 <h2 id="最优性">最优性</h2>
 
 <p><strong>定理 4.3.1（Rayleigh 商的最优性）</strong></p>
 
-<p>设 $A$ 对称，$x$ 是 $v$ 的近似，$|x|_2=1$，$|x-v|_2=\epsilon$。则</p>
+<p>设 \(A\) 对称，\(x\) 是 \(v\) 的近似，\(\|x\|_2=1\)，\(\|x-v\|_2=\epsilon\)。则</p>
 
-\[\vert R(x)-\lambda\vert =O(\epsilon^2),\]
+\[|R(x)-\lambda|=O(\epsilon^2),\]
 
-<p>其中 $\lambda$ 是对应于 $v$ 的特征值。</p>
+<p>其中 \(\lambda\) 是对应于 \(v\) 的特征值。</p>
 
 <p><strong>证明</strong><br />
-将 $x$ 按特征向量展开：$x=\sqrt{1-\epsilon^2}\,v+\epsilon w$，其中 $w\perp v$，$|w|_2=1$。则</p>
+将 \(x\) 按特征向量展开：\(x=\sqrt{1-\epsilon^2}\,v+\epsilon w\)，其中 \(w\perp v\)，\(\|w\|_2=1\)。则</p>
 
 \[R(x)=(1-\epsilon^2)\lambda+\epsilon^2 w^{\mathsf T}Aw.\]
 
 <p>故</p>
 
-\[\vert R(x)-\lambda\vert =\epsilon^2\vert w^{\mathsf T}Aw-\lambda\vert \le\epsilon^2(\lambda_n-\lambda_1).\]
+\[|R(x)-\lambda|=\epsilon^2|w^{\mathsf T}Aw-\lambda|\le\epsilon^2(\lambda_n-\lambda_1).\]
 
-<p>$\square$</p>
+\[\square\]
 
-<p><strong>意义</strong>：Rayleigh 商对特征向量的误差是<strong>二阶</strong>的。即使 $x$ 只有一阶精度，$R(x)$ 已有二阶精度。这使 Rayleigh 商成为极好的特征值估计。</p>
+<p><strong>意义</strong>：Rayleigh 商对特征向量的误差是<strong>二阶</strong>的。即使 \(x\) 只有一阶精度，\(R(x)\) 已有二阶精度。这使 Rayleigh 商成为极好的特征值估计。</p>
 
 <h2 id="应用">应用</h2>
 
 <ol>
-  <li><strong>特征值估计</strong>：给定近似特征向量 $x$，用 $R(x)$ 估计特征值；</li>
+  <li><strong>特征值估计</strong>：给定近似特征向量 \(x\)，用 \(R(x)\) 估计特征值；</li>
   <li><strong>Rayleigh 商迭代</strong>：用 Rayleigh 商作为位移，加速收敛；</li>
   <li><strong>特征值定位</strong>：Rayleigh 商的范围给出特征值的界；</li>
   <li><strong>有限元方法</strong>：Rayleigh 商用于估计振动频率。</li>
@@ -371,7 +411,7 @@
 
 <h2 id="核心思想-2">核心思想</h2>
 
-<p>Rayleigh 商迭代是<strong>逆幂法</strong>的改进：将位移 $\mu$ 取为当前向量的 Rayleigh 商，即</p>
+<p>Rayleigh 商迭代是<strong>逆幂法</strong>的改进：将位移 \(\mu\) 取为当前向量的 Rayleigh 商，即</p>
 
 \[\mu_k=R(x^{(k)})=\frac{(x^{(k)})^{\mathsf T}Ax^{(k)}}{(x^{(k)})^{\mathsf T}x^{(k)}}.\]
 
@@ -382,8 +422,8 @@
 <p><strong>算法 5.2.1（Rayleigh 商迭代）</strong></p>
 
 <ol>
-  <li>选取初始向量 $x^{(0)}$，$|x^{(0)}|_2=1$；</li>
-  <li>对 $k=0,1,2,\dots$：
+  <li>选取初始向量 \(x^{(0)}\)，\(\|x^{(0)}\|_2=1\)；</li>
+  <li>对 \(k=0,1,2,\dots\)：
     <ul>
       <li>计算 Rayleigh 商：</li>
     </ul>
@@ -411,31 +451,41 @@
 \[\mu_{k+1}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}.\]
 
 <ol>
-  <li>当 $\vert \mu_{k+1}-\mu_k\vert &lt;\text{tol}$ 时停止。</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>当 $$</td>
+          <td>\mu_{k+1}-\mu_k</td>
+          <td>&lt;\text{tol}$$ 时停止。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
 </ol>
 
-<p><strong>输出</strong>：$\mu_{k+1}\approx\lambda$，$x^{(k+1)}\approx v$。</p>
+<p><strong>输出</strong>：\(\mu_{k+1}\approx\lambda\)，\(x^{(k+1)}\approx v\)。</p>
 
 <h2 id="收敛性-2">收敛性</h2>
 
 <p><strong>定理 5.3.1（三次收敛）</strong></p>
 
-<p>设 $A$ 对称，$x^{(k)}$ 充分接近某特征向量 $v_j$，对应特征值 $\lambda_j$。则 Rayleigh 商迭代产生的 $\mu_k$ 和 $x^{(k)}$ 满足</p>
+<p>设 \(A\) 对称，\(x^{(k)}\) 充分接近某特征向量 \(v_j\)，对应特征值 \(\lambda_j\)。则 Rayleigh 商迭代产生的 \(\mu_k\) 和 \(x^{(k)}\) 满足</p>
 
-\[\vert \mu_{k+1}-\lambda_j\vert =O(\vert \mu_k-\lambda_j\vert ^3),\]
+\[|\mu_{k+1}-\lambda_j|=O(|\mu_k-\lambda_j|^3),\]
 
 \[\|x^{(k+1)}-(\pm v_j)\|_2=O(\|x^{(k)}-(\pm v_j)\|_2^3).\]
 
 <p><strong>证明思路</strong><br />
-Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中 $\epsilon_k=|x^{(k)}-v_j|$。逆幂法以 $\mu_k$ 为位移，收敛因子为</p>
+Rayleigh 商本身是二阶近似：\(|\mu_k-\lambda_j|=O(\epsilon_k^2)\)，其中 \(\epsilon_k=\|x^{(k)}-v_j\|\)。逆幂法以 \(\mu_k\) 为位移，收敛因子为</p>
 
-\[\left\vert \frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right\vert =O(\epsilon_k^2).\]
+\[\left|\frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right|=O(\epsilon_k^2).\]
 
 <p>故</p>
 
 \[\epsilon_{k+1}=O(\epsilon_k\cdot\epsilon_k^2)=O(\epsilon_k^3).\]
 
-<p>即三次收敛。$\square$</p>
+<p>即三次收敛。\(\square\)</p>
 
 <p><strong>意义</strong>：Rayleigh 商迭代是<strong>收敛最快的特征值迭代方法之一</strong>。一旦接近特征值，每次迭代有效数字约增加三倍。</p>
 
@@ -450,25 +500,66 @@ Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中
 
 <p><strong>缺点</strong></p>
 <ol>
-  <li>每步需解线性方程组 $(A-\mu_kI)y=x^{(k)}$，且 $\mu_k$ 每步变化，<strong>无法预先分解</strong>，每步计算量为 $O(n^3)$（稠密）；</li>
+  <li>每步需解线性方程组 \((A-\mu_kI)y=x^{(k)}\)，且 \(\mu_k\) 每步变化，<strong>无法预先分解</strong>，每步计算量为 \(O(n^3)\)（稠密）；</li>
   <li>需要好的初始向量，否则可能不收敛或收敛到其他特征值；</li>
-  <li>若 $\mu_k$ 恰好等于特征值，$(A-\mu_kI)$ 奇异，需特殊处理；</li>
+  <li>若 \(\mu_k\) 恰好等于特征值，\((A-\mu_kI)\) 奇异，需特殊处理；</li>
   <li>对非对称矩阵，收敛性理论较复杂。</li>
 </ol>
 
 <h2 id="与其他方法的关系">与其他方法的关系</h2>
 
-<p>\vert  方法 \vert  位移 $\mu$ \vert  收敛速度 \vert  每步计算量 \vert 
-\vert —\vert —\vert —\vert —\vert 
-\vert  幂法 \vert  无 \vert  线性，因子 $|\lambda_2/\lambda_1|$ \vert  $O(\text{nnz})$ \vert 
-\vert  逆幂法 \vert  固定 $\mu$ \vert  线性，因子 $\max|\lambda_j-\mu|/|\lambda_i-\mu|$ \vert  一次分解 + $O(n^2)$ \vert 
-\vert  Rayleigh 商迭代 \vert  $\mu_k=R(x^{(k)})$ \vert  三次 \vert  每步 $O(n^3)$ \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>位移 \(\mu\)</th>
+      <th>收敛速度</th>
+      <th>每步计算量</th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>幂法</td>
+      <td>无</td>
+      <td>线性，因子 $$</td>
+      <td>\lambda_2/\lambda_1</td>
+      <td>$$</td>
+      <td>\(O(\text{nnz})\)</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>逆幂法</td>
+      <td>固定 \(\mu\)</td>
+      <td>线性，因子 $$\max</td>
+      <td>\lambda_j-\mu</td>
+      <td>/</td>
+      <td>\lambda_i-\mu</td>
+      <td>$$</td>
+      <td>一次分解 + \(O(n^2)\)</td>
+    </tr>
+    <tr>
+      <td>Rayleigh 商迭代</td>
+      <td>\(\mu_k=R(x^{(k)})\)</td>
+      <td>三次</td>
+      <td>每步 \(O(n^3)\)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>关系</strong>：</p>
 <ul>
-  <li>逆幂法是幂法应用于 $(A-\mu I)^{-1}$；</li>
-  <li>Rayleigh 商迭代是逆幂法取 $\mu=\mu_k=R(x^{(k)})$；</li>
-  <li>若 Rayleigh 商迭代中固定 $\mu$（不更新），则退化为逆幂法。</li>
+  <li>逆幂法是幂法应用于 \((A-\mu I)^{-1}\)；</li>
+  <li>Rayleigh 商迭代是逆幂法取 \(\mu=\mu_k=R(x^{(k)})\)；</li>
+  <li>若 Rayleigh 商迭代中固定 \(\mu\)（不更新），则退化为逆幂法。</li>
 </ul>
 
 <h1 id="例题">例题</h1>
@@ -486,7 +577,7 @@ x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[x^{(2)}=\frac{Ax^{(1)}}{\|Ax^{(1)}\|}=\frac{(4,1)^{\mathsf T}}{\sqrt{17}}.\]
 
-<p>方向趋于 $(1,0)^{\mathsf T}=v_1$，$\lambda_1=2$。</p>
+<p>方向趋于 \((1,0)^{\mathsf T}=v_1\)，\(\lambda_1=2\)。</p>
 
 <h2 id="逆幂法">逆幂法</h2>
 
@@ -499,7 +590,7 @@ x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[(A-\mu I)^{-1}=\begin{pmatrix}\frac{1}{1.1}&amp;0\\0&amp;\frac{1}{0.1}\end{pmatrix}.\]
 
-<p>对 $(A-\mu I)^{-1}$ 做幂法，收敛到 $v_2=(0,1)^{\mathsf T}$，$\lambda_2=1$。</p>
+<p>对 \((A-\mu I)^{-1}\) 做幂法，收敛到 \(v_2=(0,1)^{\mathsf T}\)，\(\lambda_2=1\)。</p>
 
 <h2 id="rayleigh-商">Rayleigh 商</h2>
 
@@ -512,7 +603,7 @@ x=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[R(x)=x^{\mathsf T}Ax=\frac12(2+1)=\frac32.\]
 
-<p>介于 $\lambda_1=1$ 与 $\lambda_2=2$ 之间。</p>
+<p>介于 \(\lambda_1=1\) 与 \(\lambda_2=2\) 之间。</p>
 
 <h2 id="rayleigh-商迭代">Rayleigh 商迭代</h2>
 
@@ -538,7 +629,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 \[\mu_1=R(x^{(1)})=\frac12(2+1)=\frac32.\]
 
-<p>此时 $x^{(1)}$ 已是特征向量（对应 $\lambda=1$ 或 $2$ 的叠加），继续迭代将收敛到某个特征值。若初始向量更接近 $v_1$，则收敛到 $\lambda_1=2$。</p>
+<p>此时 \(x^{(1)}\) 已是特征向量（对应 \(\lambda=1\) 或 \(2\) 的叠加），继续迭代将收敛到某个特征值。若初始向量更接近 \(v_1\)，则收敛到 \(\lambda_1=2\)。</p>
 
 <hr />
 
@@ -558,7 +649,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 <p><strong>选择原则</strong>：</p>
 <ol>
   <li><strong>只求主特征值</strong>：幂法；</li>
-  <li><strong>求指定特征值</strong>：逆幂法（需 $\mu$ 近似）；</li>
+  <li><strong>求指定特征值</strong>：逆幂法（需 \(\mu\) 近似）；</li>
   <li><strong>高精度特征值估计</strong>：Rayleigh 商；</li>
   <li><strong>快速收敛（中小规模）</strong>：Rayleigh 商迭代。</li>
 </ol>

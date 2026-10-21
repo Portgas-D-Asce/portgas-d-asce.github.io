@@ -268,7 +268,7 @@
                 <span class="p">}</span>
 
                 <span class="c1">// 使用最小二乘法求解系数</span>
-                <span class="n">_coefficients</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">bdcSvd</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinU</span> <span class="err">\</span><span class="n">vert</span>  <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinV</span><span class="p">).</span><span class="n">solve</span><span class="p">(</span><span class="n">Y</span><span class="p">);</span>
+                <span class="n">_coefficients</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">bdcSvd</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinU</span> <span class="o">|</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeThinV</span><span class="p">).</span><span class="n">solve</span><span class="p">(</span><span class="n">Y</span><span class="p">);</span>
         <span class="p">}</span>
 
         <span class="kt">float</span> <span class="n">calculate_y</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>

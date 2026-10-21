@@ -398,11 +398,11 @@ while 未对角化:
 <p><strong>定理 3.4.1（带 Wilkinson 位移的 QR 迭代）</strong><br />
 设 $T$ 为对称三对角矩阵，特征值互异。带 Wilkinson 位移的隐式 QR 迭代产生的次对角元满足</p>
 
-\[\vert t_{i+1,i}^{(k)}\vert =O(\vert \lambda_{i+1}-\lambda_i\vert ^k)\quad\text{（渐近）},\]
+\[|t_{i+1,i}^{(k)}|=O(|\lambda_{i+1}-\lambda_i|^k)\quad\text{（渐近）},\]
 
 <p>且当 $t_{n,n-1}^{(k)}\to0$ 时，收敛速度为<strong>三次</strong>：</p>
 
-\[\vert t_{n,n-1}^{(k+1)}\vert =O\left(\vert t_{n,n-1}^{(k)}\vert ^3\right).\]
+\[|t_{n,n-1}^{(k+1)}|=O\left(|t_{n,n-1}^{(k)}|^3\right).\]
 
 <p><strong>证明思路</strong>：Wilkinson 位移是最近特征值的二阶近似，QR 迭代等价于以该位移为参数的逆幂法，故局部三次收敛。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>, §8.3。</p>
 

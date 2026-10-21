@@ -248,7 +248,7 @@
   </tbody>
 </table>
 
-\[t=\frac{\operatorname{sgn}(\tau)}{\vert \tau\vert +\sqrt{1+\tau^2}}.\]
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}}.\]
 
 <p>其中</p>
 
@@ -298,7 +298,21 @@
     <ul>
       <li>对 $p=1,\dots,n-1$，$q=p+1,\dots,n$：
         <ul>
-          <li>若 $\vert a_{pq}\vert $ 足够小（如 $\vert a_{pq}\vert \le\text{tol}\cdot\sqrt{\vert a_{pp}a_{qq}\vert }$），跳过；</li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>若 $</td>
+                  <td>a_{pq}</td>
+                  <td>$ 足够小（如 $</td>
+                  <td>a_{pq}</td>
+                  <td>\le\text{tol}\cdot\sqrt{</td>
+                  <td>a_{pp}a_{qq}</td>
+                  <td>}$），跳过；</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
           <li>否则，计算 $\tau,t,c,s$，构造 $J(p,q,\theta)$；</li>
           <li>更新：</li>
         </ul>
@@ -367,7 +381,7 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
   <li><strong>最大非对角元</strong>：</li>
 </ol>
 
-\[\max_{i\ne j}\vert a_{ij}\vert \le\text{tol}.\]
+\[\max_{i\ne j}|a_{ij}|\le\text{tol}.\]
 
 <h2 id="44-例题">4.4 例题</h2>
 
@@ -504,7 +518,7 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
 <p><strong>定理 7.2.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则 Jacobi 法计算得到的特征值满足</p>
 
-\[\frac{\vert \hat\lambda_i-\lambda_i\vert }{\vert \lambda_i\vert }\le O(n\epsilon)\kappa(X).\]
+\[\frac{|\hat\lambda_i-\lambda_i|}{|\lambda_i|}\le O(n\epsilon)\kappa(X).\]
 
 <p>即<strong>小特征值也能保持高相对精度</strong>。</p>
 
@@ -516,15 +530,52 @@ v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
 
 <h1 id="八与其他方法的对比">八、与其他方法的对比</h1>
 
-<p>\vert  项目 \vert  Jacobi 法 \vert  对称 QR 迭代 \vert 
-\vert —\vert —\vert —\vert 
-\vert  是否需要三对角化 \vert  不需要 \vert  需要 \vert 
-\vert  收敛方式 \vert  二次收敛，&lt;10 轮扫描 \vert  三对角 QR，快速收敛 \vert 
-\vert  总计算量 \vert  $O(n^3\log\log(1/\epsilon))$ \vert  $O(n^3)$ \vert 
-\vert  速度 \vert  较慢 \vert  最快（只求特征值） \vert 
-\vert  小特征值相对精度 \vert  高 \vert  一般 \vert 
-\vert  并行性 \vert  好（旋转可并行） \vert  较差（QR 迭代串行） \vert 
-\vert  适用场景 \vert  高精度、并行 \vert  通用、速度优先 \vert</p>
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>Jacobi 法</th>
+      <th>对称 QR 迭代</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>是否需要三对角化</td>
+      <td>不需要</td>
+      <td>需要</td>
+    </tr>
+    <tr>
+      <td>收敛方式</td>
+      <td>二次收敛，&lt;10 轮扫描</td>
+      <td>三对角 QR，快速收敛</td>
+    </tr>
+    <tr>
+      <td>总计算量</td>
+      <td>$O(n^3\log\log(1/\epsilon))$</td>
+      <td>$O(n^3)$</td>
+    </tr>
+    <tr>
+      <td>速度</td>
+      <td>较慢</td>
+      <td>最快（只求特征值）</td>
+    </tr>
+    <tr>
+      <td>小特征值相对精度</td>
+      <td>高</td>
+      <td>一般</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>好（旋转可并行）</td>
+      <td>较差（QR 迭代串行）</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度、并行</td>
+      <td>通用、速度优先</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>结论</strong>：</p>
 <ul>

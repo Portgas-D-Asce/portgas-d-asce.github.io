@@ -95,7 +95,7 @@ a_{m1}x_1+a_{m2}x_2+\cdots+a_{mn}x_n=b_m.
 
 <p><strong>增广矩阵</strong>定义为
 \((A\mid b)=
-\left(\begin{array}{cccc\vert c}
+\left(\begin{array}{cccc|c}
 a_{11}&amp;a_{12}&amp;\cdots&amp;a_{1n}&amp;b_1\\
 a_{21}&amp;a_{22}&amp;\cdots&amp;a_{2n}&amp;b_2\\
 \vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\vdots\\
@@ -285,7 +285,7 @@ Ux=y.
 <h2 id="部分主元法">部分主元法</h2>
 
 <p>在第 $k$ 步，选第 $k$ 列中从第 $k$ 行到第 $m$ 行绝对值最大的元素作为主元，交换到第 $k$ 行。即
-\(\vert a_{pk}\vert =\max_{k\le i\le m}\vert a_{ik}\vert .\)</p>
+\(|a_{pk}|=\max_{k\le i\le m}|a_{ik}|.\)</p>
 
 <table>
   <tbody>
@@ -304,7 +304,7 @@ Ux=y.
 <h2 id="增长因子">增长因子</h2>
 
 <p>定义增长因子
-\(\rho=\frac{\max_{i,j}\vert u_{ij}\vert }{\max_{i,j}\vert a_{ij}\vert }.\)</p>
+\(\rho=\frac{\max_{i,j}|u_{ij}|}{\max_{i,j}|a_{ij}|}.\)</p>
 
 <p>部分主元法最坏情况 $\rho\le 2^{n-1}$，实践中通常很小。完全主元法有更优的上界。</p>
 
@@ -339,21 +339,21 @@ Ux=y.
 \end{cases}\)</p>
 
 <p>增广矩阵：
-\(\left(\begin{array}{ccc\vert c}
+\(\left(\begin{array}{ccc|c}
 2&amp;1&amp;1&amp;1\\
 4&amp;3&amp;3&amp;1\\
 8&amp;7&amp;9&amp;1
 \end{array}\right).\)</p>
 
 <p><strong>第 1 步</strong>：$r_2\leftarrow r_2-2r_1$，$r_3\leftarrow r_3-4r_1$：
-\(\left(\begin{array}{ccc\vert c}
+\(\left(\begin{array}{ccc|c}
 2&amp;1&amp;1&amp;1\\
 0&amp;1&amp;1&amp;-1\\
 0&amp;3&amp;5&amp;-3
 \end{array}\right).\)</p>
 
 <p><strong>第 2 步</strong>：$r_3\leftarrow r_3-3r_2$：
-\(\left(\begin{array}{ccc\vert c}
+\(\left(\begin{array}{ccc|c}
 2&amp;1&amp;1&amp;1\\
 0&amp;1&amp;1&amp;-1\\
 0&amp;0&amp;2&amp;0
