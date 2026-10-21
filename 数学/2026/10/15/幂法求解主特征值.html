@@ -107,7 +107,7 @@
 
 <p>设 $A$ 可对角化，其特征值为</p>
 
-\[|\lambda_1|&gt;|\lambda_2|\ge\cdots\ge|\lambda_n|,\]
+\[\vert\lambda_1\vert&gt;\vert\lambda_2\vert\ge\cdots\ge\vert\lambda_n\vert,\]
 
 <p>对应的特征向量 $v_1,\dots,v_n$ 线性无关。称 $\lambda_1$ 为<strong>主特征值</strong>，$v_1$ 为<strong>主特征向量</strong>。</p>
 
@@ -122,15 +122,7 @@
 \[A^kx=\sum_{i=1}^n c_i\lambda_i^k v_i
 =\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
 
-<table>
-  <tbody>
-    <tr>
-      <td>因 $</td>
-      <td>\lambda_{i}/\lambda_{1}</td>
-      <td>&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</td>
-    </tr>
-  </tbody>
-</table>
+<p>因 $\vert\lambda_i/\lambda_1\vert&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</p>
 
 <h2 id="算法">算法</h2>
 
@@ -143,12 +135,12 @@
 
 \[y^{(k+1)}=Ax^{(k)},\]
 
-\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2}\quad\text{（归一化）},\]
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\\verty^{(k+1)}\\vert_2}\quad\text{（归一化）},\]
 
 \[\lambda^{(k+1)}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}\quad\text{（Rayleigh 商估计）}.\]
 
 <ol>
-  <li>当 $|x^{(k+1)}-x^{(k)}|_2&lt;\text{tol}$ 或 $|Ax^{(k)}-\lambda^{(k)}x^{(k)}|_2&lt;\text{tol}$ 时停止。</li>
+  <li>当 $\vertx^{(k+1)}-x^{(k)}\vert_2&lt;\text{tol}$ 或 $\vertAx^{(k)}-\lambda^{(k)}x^{(k)}\vert_2&lt;\text{tol}$ 时停止。</li>
 </ol>
 
 <p><strong>输出</strong>：$\lambda^{(k)}\approx\lambda_1$，$x^{(k)}\approx v_1$。</p>
@@ -157,54 +149,24 @@
 
 <p><strong>定理 2.3.1</strong></p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>设 $A$ 可对角化，$</td>
-      <td>\lambda_1</td>
-      <td>&gt;</td>
-      <td>\lambda_2</td>
-      <td>\ge\cdots\ge</td>
-      <td>\lambda_n</td>
-      <td>$，且初始向量 $x^{(0)}$ 在主特征向量方向上的分量 $c_1\ne 0$。则幂法产生的 $x^{(k)}$ 满足</td>
-    </tr>
-  </tbody>
-</table>
+<p>设 $A$ 可对角化，$\vert\lambda_1\vert&gt;\vert\lambda_2\vert\ge\cdots\ge\vert\lambda_n\vert$，且初始向量 $x^{(0)}$ 在主特征向量方向上的分量 $c_1\ne 0$。则幂法产生的 $x^{(k)}$ 满足</p>
 
-\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right),\]
+\[\\vertx^{(k)}-(\pm v_1)\\vert_2=O\left(\left\vert\frac{\lambda_2}{\lambda_1}\right\vert^k\right),\]
 
-\[|\lambda^{(k)}-\lambda_1|=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right).\]
+\[\vert\lambda^{(k)}-\lambda_1\vert=O\left(\left\vert\frac{\lambda_2}{\lambda_1}\right\vert^k\right).\]
 
 <p><strong>证明思路</strong><br />
 设 $x^{(0)}=\sum_{i=1}^n c_i v_i$，$c_1\ne 0$。则</p>
 
 \[A^kx^{(0)}=\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
 
-<table>
-  <tbody>
-    <tr>
-      <td>归一化后，误差由 $\left</td>
-      <td>\dfrac{\lambda_2}{\lambda_1}\right</td>
-      <td>^k$ 控制。$\square$</td>
-    </tr>
-  </tbody>
-</table>
+<p>归一化后，误差由 $\left\vert\dfrac{\lambda_2}{\lambda_1}\right\vert^k$ 控制。$\square$</p>
 
 <p><strong>收敛速率</strong>：线性收敛，收敛因子为</p>
 
-\[\left|\frac{\lambda_2}{\lambda_1}\right|.\]
+\[\left\vert\frac{\lambda_2}{\lambda_1}\right\vert.\]
 
-<table>
-  <tbody>
-    <tr>
-      <td>当 $</td>
-      <td>\lambda_2</td>
-      <td>\approx</td>
-      <td>\lambda_1</td>
-      <td>$ 时收敛很慢。</td>
-    </tr>
-  </tbody>
-</table>
+<p>当 $\vert\lambda_2\vert\approx\vert\lambda_1\vert$ 时收敛很慢。</p>
 
 <h2 id="优缺点">优缺点</h2>
 
@@ -218,31 +180,9 @@
 <p><strong>缺点</strong></p>
 <ol>
   <li>只能求主特征值（模最大者）；</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>收敛速度依赖于 $</td>
-          <td>\lambda_2/\lambda_1</td>
-          <td>$，可能很慢；</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>收敛速度依赖于 $\vert\lambda_2/\lambda_1\vert$，可能很慢；</li>
   <li>若 $c_1=0$（初始向量与 $v_1$ 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>若 $</td>
-          <td>\lambda_1</td>
-          <td>=</td>
-          <td>\lambda_2</td>
-          <td>$（如 $-\lambda_1$），则不收敛。</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>若 $\vert\lambda_1\vert=\vert\lambda_2\vert$（如 $-\lambda_1$），则不收敛。</li>
 </ol>
 
 <h1 id="逆幂法inverse-power-method">逆幂法（Inverse Power Method）</h1>
@@ -278,7 +218,7 @@
   <li>归一化：</li>
 </ul>
 
-\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2};\]
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\\verty^{(k+1)}\\vert_2};\]
 
 <ul>
   <li>估计特征值：</li>
@@ -298,11 +238,11 @@
 
 <p>设 $\lambda_j$ 是 $A$ 的特征值，$\mu$ 接近 $\lambda_j$，且</p>
 
-\[\frac{1}{|\lambda_j-\mu|}&gt;\frac{1}{|\lambda_i-\mu|},\qquad\forall i\ne j.\]
+\[\frac{1}{\vert\lambda_j-\mu\vert}&gt;\frac{1}{\vert\lambda_i-\mu\vert},\qquad\forall i\ne j.\]
 
 <p>则逆幂法产生的 $x^{(k)}$ 收敛到 $v_j$，收敛因子为</p>
 
-\[\max_{i\ne j}\left|\frac{\lambda_j-\mu}{\lambda_i-\mu}\right|.\]
+\[\max_{i\ne j}\left\vert\frac{\lambda_j-\mu}{\lambda_i-\mu}\right\vert.\]
 
 <p><strong>证明思路</strong>：对 $(A-\mu I)^{-1}$ 应用幂法收敛性定理。$\square$</p>
 
@@ -336,7 +276,7 @@
 
 <p>为 $A$ 在 $x$ 处的 <strong>Rayleigh 商</strong>。</p>
 
-<p>若 $|x|_2=1$，则 $R(x)=x^{\mathsf T}Ax$。</p>
+<p>若 $\vertx\vert_2=1$，则 $R(x)=x^{\mathsf T}Ax$。</p>
 
 <p><strong>复情形</strong>：若 $A$ 为 Hermite 矩阵，$x\in\mathbb C^n$，则</p>
 
@@ -379,20 +319,20 @@
 
 <p><strong>定理 4.3.1（Rayleigh 商的最优性）</strong></p>
 
-<p>设 $A$ 对称，$x$ 是 $v$ 的近似，$|x|_2=1$，$|x-v|_2=\epsilon$。则</p>
+<p>设 $A$ 对称，$x$ 是 $v$ 的近似，$\vertx\vert_2=1$，$\vertx-v\vert_2=\epsilon$。则</p>
 
-\[|R(x)-\lambda|=O(\epsilon^2),\]
+\[\vertR(x)-\lambda\vert=O(\epsilon^2),\]
 
 <p>其中 $\lambda$ 是对应于 $v$ 的特征值。</p>
 
 <p><strong>证明</strong><br />
-将 $x$ 按特征向量展开：$x=\sqrt{1-\epsilon^2}\,v+\epsilon w$，其中 $w\perp v$，$|w|_2=1$。则</p>
+将 $x$ 按特征向量展开：$x=\sqrt{1-\epsilon^2}\,v+\epsilon w$，其中 $w\perp v$，$\vertw\vert_2=1$。则</p>
 
 \[R(x)=(1-\epsilon^2)\lambda+\epsilon^2 w^{\mathsf T}Aw.\]
 
 <p>故</p>
 
-\[|R(x)-\lambda|=\epsilon^2|w^{\mathsf T}Aw-\lambda|\le\epsilon^2(\lambda_n-\lambda_1).\]
+\[\vertR(x)-\lambda\vert=\epsilon^2\vertw^{\mathsf T}Aw-\lambda\vert\le\epsilon^2(\lambda_n-\lambda_1).\]
 
 <p>$\square$</p>
 
@@ -422,7 +362,7 @@
 <p><strong>算法 5.2.1（Rayleigh 商迭代）</strong></p>
 
 <ol>
-  <li>选取初始向量 $x^{(0)}$，$|x^{(0)}|_2=1$；</li>
+  <li>选取初始向量 $x^{(0)}$，$\vertx^{(0)}\vert_2=1$；</li>
   <li>对 $k=0,1,2,\dots$：
     <ul>
       <li>计算 Rayleigh 商：</li>
@@ -442,7 +382,7 @@
   <li>归一化：</li>
 </ul>
 
-\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2};\]
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\\verty^{(k+1)}\\vert_2};\]
 
 <ul>
   <li>计算新的 Rayleigh 商：</li>
@@ -451,17 +391,7 @@
 \[\mu_{k+1}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}.\]
 
 <ol>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>当 $</td>
-          <td>\mu_{k+1}-\mu_k</td>
-          <td>&lt;\text{tol}$ 时停止。</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>当 $\vert\mu_{k+1}-\mu_k\vert&lt;\text{tol}$ 时停止。</li>
 </ol>
 
 <p><strong>输出</strong>：$\mu_{k+1}\approx\lambda$，$x^{(k+1)}\approx v$。</p>
@@ -472,14 +402,14 @@
 
 <p>设 $A$ 对称，$x^{(k)}$ 充分接近某特征向量 $v_j$，对应特征值 $\lambda_j$。则 Rayleigh 商迭代产生的 $\mu_k$ 和 $x^{(k)}$ 满足</p>
 
-\[|\mu_{k+1}-\lambda_j|=O(|\mu_k-\lambda_j|^3),\]
+\[\vert\mu_{k+1}-\lambda_j\vert=O(\vert\mu_k-\lambda_j\vert^3),\]
 
-\[\|x^{(k+1)}-(\pm v_j)\|_2=O(\|x^{(k)}-(\pm v_j)\|_2^3).\]
+\[\\vertx^{(k+1)}-(\pm v_j)\\vert_2=O(\\vertx^{(k)}-(\pm v_j)\\vert_2^3).\]
 
 <p><strong>证明思路</strong><br />
-Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中 $\epsilon_k=|x^{(k)}-v_j|$。逆幂法以 $\mu_k$ 为位移，收敛因子为</p>
+Rayleigh 商本身是二阶近似：$\vert\mu_k-\lambda_j\vert=O(\epsilon_k^2)$，其中 $\epsilon_k=\vertx^{(k)}-v_j\vert$。逆幂法以 $\mu_k$ 为位移，收敛因子为</p>
 
-\[\left|\frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right|=O(\epsilon_k^2).\]
+\[\left\vert\frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right\vert=O(\epsilon_k^2).\]
 
 <p>故</p>
 
@@ -508,52 +438,11 @@ Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中
 
 <h2 id="与其他方法的关系">与其他方法的关系</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>位移 $\mu$</th>
-      <th>收敛速度</th>
-      <th>每步计算量</th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>幂法</td>
-      <td>无</td>
-      <td>线性，因子 $</td>
-      <td>\lambda_2/\lambda_1</td>
-      <td>$</td>
-      <td>$O(\text{nnz})$</td>
-      <td> </td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>逆幂法</td>
-      <td>固定 $\mu$</td>
-      <td>线性，因子 $\max</td>
-      <td>\lambda_j-\mu</td>
-      <td>/</td>
-      <td>\lambda_i-\mu</td>
-      <td>$</td>
-      <td>一次分解 + $O(n^2)$</td>
-    </tr>
-    <tr>
-      <td>Rayleigh 商迭代</td>
-      <td>$\mu_k=R(x^{(k)})$</td>
-      <td>三次</td>
-      <td>每步 $O(n^3)$</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert 方法 \vert 位移 $\mu$ \vert 收敛速度 \vert 每步计算量 \vert
+\vert—\vert—\vert—\vert—\vert
+\vert 幂法 \vert 无 \vert 线性，因子 $\vert\lambda_2/\lambda_1\vert$ \vert $O(\text{nnz})$ \vert
+\vert 逆幂法 \vert 固定 $\mu$ \vert 线性，因子 $\max\vert\lambda_j-\mu\vert/\vert\lambda_i-\mu\vert$ \vert 一次分解 + $O(n^2)$ \vert
+\vert Rayleigh 商迭代 \vert $\mu_k=R(x^{(k)})$ \vert 三次 \vert 每步 $O(n^3)$ \vert</p>
 
 <p><strong>关系</strong>：</p>
 <ul>
@@ -573,9 +462,9 @@ x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
 
 <p>则</p>
 
-\[x^{(1)}=\frac{Ax^{(0)}}{\|Ax^{(0)}\|}=\frac{(2,1)^{\mathsf T}}{\sqrt5},\]
+\[x^{(1)}=\frac{Ax^{(0)}}{\\vertAx^{(0)}\\vert}=\frac{(2,1)^{\mathsf T}}{\sqrt5},\]
 
-\[x^{(2)}=\frac{Ax^{(1)}}{\|Ax^{(1)}\|}=\frac{(4,1)^{\mathsf T}}{\sqrt{17}}.\]
+\[x^{(2)}=\frac{Ax^{(1)}}{\\vertAx^{(1)}\\vert}=\frac{(4,1)^{\mathsf T}}{\sqrt{17}}.\]
 
 <p>方向趋于 $(1,0)^{\mathsf T}=v_1$，$\lambda_1=2$。</p>
 
@@ -636,7 +525,7 @@ x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
 <h1 id="总结">总结</h1>
 
 \[\begin{aligned}
-&amp;\text{幂法：反复 }x\leftarrow Ax/\|Ax\|,\text{ 求主特征值，线性收敛；}\\
+&amp;\text{幂法：反复 }x\leftarrow Ax/\\vertAx\\vert,\text{ 求主特征值，线性收敛；}\\
 &amp;\text{逆幂法：对 }(A-\mu I)^{-1}\text{ 做幂法，求最接近 }\mu\text{ 的特征值；}\\
 &amp;\text{Rayleigh 商：}R(x)=\frac{x^{\mathsf T}Ax}{x^{\mathsf T}x},\text{ 特征值的二阶估计；}\\
 &amp;\text{Rayleigh 商迭代：逆幂法取 }\mu=R(x^{(k)}),\text{ 三次收敛。}
