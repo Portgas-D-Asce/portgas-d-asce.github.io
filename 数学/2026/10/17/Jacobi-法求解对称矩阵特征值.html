@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>Jacobi 法求解对称矩阵特征值 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Jacobi 法求解对称矩阵特征值" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-17T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="Jacobi 法求解对称矩阵特征值" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-17T00:00:00+00:00","datePublished":"2026-10-17T00:00:00+00:00","description":"xxxxxx","headline":"Jacobi 法求解对称矩阵特征值","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> Jacobi 法求解对称矩阵特征值 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
+
+<hr />
+
+<h1 id="一问题与基本思想">一、问题与基本思想</h1>
+
+<h2 id="11-问题陈述">1.1 问题陈述</h2>
+
+<p>给定实对称矩阵 $A\in M_n(\mathbb R)$，求其全部特征值 $\lambda_1,\dots,\lambda_n$ 和对应的标准正交特征向量 $v_1,\dots,v_n$。</p>
+
+<p>由谱定理，存在正交矩阵 $Q$ 和对角矩阵 $\Lambda$，使得</p>
+
+\[A=Q\Lambda Q^{\mathsf T},\qquad \Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_n).\]
+
+<p>$Q$ 的列即为特征向量。</p>
+
+<h2 id="12-为什么对称矩阵重要">1.2 为什么对称矩阵重要</h2>
+
+<p>实对称矩阵的特征值全为实数，且可正交对角化。这使得对称特征值问题比一般矩阵简单：无需处理复特征值，只需寻找正交相似变换将 $A$ 化为对角形式。</p>
+
+<h2 id="13-jacobi-法的核心思想">1.3 Jacobi 法的核心思想</h2>
+
+\[\boxed{\text{反复选取一对非对角元，施加平面旋转使其变为零，逐步将矩阵对角化。}}\]
+
+<p>具体地：</p>
+<ol>
+  <li>选取 $p&lt;q$，构造一个 $n$ 阶正交矩阵 $J(p,q,\theta)$，使其只作用于第 $p$ 行/列和第 $q$ 行/列；</li>
+  <li>做相似变换 $A\leftarrow J^{\mathsf T}AJ$，使 $(p,q)$ 位置的元素变为零；</li>
+  <li>重复上述过程，非对角元的范数持续下降，最终收敛到对角矩阵；</li>
+  <li>累积所有旋转 $V=J_1J_2\cdots$，其列即为特征向量。</li>
+</ol>
+
+<p><strong>关键特点</strong>：Jacobi 法<strong>不需要</strong>先将矩阵三对角化，直接对稠密矩阵操作。这与 QR 迭代的流程不同。</p>
+
+<hr />
+
+<h1 id="二jacobi-旋转">二、Jacobi 旋转</h1>
+
+<h2 id="21-定义">2.1 定义</h2>
+
+<p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong><br />
+设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
+
+\[J(p,q,\theta)=\begin{pmatrix}
+1&amp;&amp;&amp;&amp;&amp;&amp;\\
+&amp;\ddots&amp;&amp;&amp;&amp;&amp;\\
+&amp;&amp;c&amp;&amp;&amp;s&amp;&amp;\\
+&amp;&amp;&amp;\ddots&amp;&amp;&amp;\\
+&amp;&amp;&amp;-s&amp;&amp;c&amp;&amp;\\
+&amp;&amp;&amp;&amp;&amp;\ddots&amp;\\
+&amp;&amp;&amp;&amp;&amp;&amp;1
+\end{pmatrix},\]
+
+<p>其中 $c=\cos\theta$，$s=\sin\theta$，$c$ 位于 $(p,p)$ 和 $(q,q)$，$s$ 位于 $(p,q)$，$-s$ 位于 $(q,p)$，其余位置为单位矩阵元素（未标出的对角元为 1，非对角元为 0）。</p>
+
+<h2 id="22-基本性质">2.2 基本性质</h2>
+
+<ol>
+  <li><strong>正交性</strong>：</li>
+</ol>
+
+\[J^{\mathsf T}J=JJ^{\mathsf T}=I.\]
+
+<ol>
+  <li><strong>行列式</strong>：</li>
+</ol>
+
+\[\det J=c^2+s^2=1.\]
+
+<ol>
+  <li><strong>作用效果</strong>：右乘 $J$ 只改变第 $p$ 列和第 $q$ 列：</li>
+</ol>
+
+\[(AJ)_{:,p}=cA_{:,p}-sA_{:,q},\qquad
+   (AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
+
+<p>左乘 $J^{\mathsf T}$ 只改变第 $p$ 行和第 $q$ 行。</p>
+
+<ol>
+  <li><strong>几何意义</strong>：在 $(p,q)$ 平面内旋转角度 $\theta$，其余坐标不变。</li>
+</ol>
+
+<h2 id="23-对称矩阵的相似变换">2.3 对称矩阵的相似变换</h2>
+
+<p>设 $A$ 对称，做相似变换</p>
+
+\[A'=J^{\mathsf T}AJ.\]
+
+<p>则 $A’$ 仍对称（因 $(J^{\mathsf T}AJ)^{\mathsf T}=J^{\mathsf T}A^{\mathsf T}J=J^{\mathsf T}AJ$）。</p>
+
+<p>$A’$ 的元素为：</p>
+<ul>
+  <li>对角线：</li>
+</ul>
+
+\[a'_{pp}=c^2a_{pp}-2csa_{pq}+s^2a_{qq},\]
+
+\[a'_{qq}=s^2a_{pp}+2csa_{pq}+c^2a_{qq}.\]
+
+<ul>
+  <li>与 $k\ne p,q$ 的交叉项：</li>
+</ul>
+
+\[a'_{pk}=ca_{pk}-sa_{qk},\qquad
+  a'_{qk}=sa_{pk}+ca_{qk},\]
+
+<p>以及由对称性 $a’<em>{kp}=a’</em>{pk}$，$a’<em>{kq}=a’</em>{qk}$。</p>
+<ul>
+  <li>目标元素：</li>
+</ul>
+
+\[a'_{pq}=cs(a_{pp}-a_{qq})+(c^2-s^2)a_{pq}.\]
+
+<ul>
+  <li>其他元素：</li>
+</ul>
+
+\[a'_{ij}=a_{ij},\qquad i,j\notin\{p,q\}.\]
+
+<p><strong>重要观察</strong>：虽然旋转只直接作用于第 $p,q$ 行/列，但第 $p,q$ 行/列上的<strong>所有</strong>元素都会改变。其他行/列的元素保持不变。</p>
+
+<hr />
+
+<h1 id="三旋转参数的构造">三、旋转参数的构造</h1>
+
+<h2 id="31-目标">3.1 目标</h2>
+
+<p>选取 $c,s$，使得</p>
+
+\[a'_{pq}=cs(a_{pp}-a_{qq})+(c^2-s^2)a_{pq}=0.\]
+
+<h2 id="32-推导">3.2 推导</h2>
+
+<p>令 $t=s/c$（即 $t=\tan\theta$），则 $c^2=1/(1+t^2)$，$s^2=t^2/(1+t^2)$，$cs=t/(1+t^2)$。代入 $a’_{pq}=0$：</p>
+
+\[\frac{t}{1+t^2}(a_{pp}-a_{qq})+\frac{1-t^2}{1+t^2}a_{pq}=0.\]
+
+<p>两边乘以 $1+t^2$：</p>
+
+\[t(a_{pp}-a_{qq})+(1-t^2)a_{pq}=0.\]
+
+<p>整理得</p>
+
+\[a_{pq}t^2+(a_{qq}-a_{pp})t-a_{pq}=0.\]
+
+<p>这是关于 $t$ 的二次方程。</p>
+
+<h2 id="33-数值稳定的解">3.3 数值稳定的解</h2>
+
+<p>令</p>
+
+\[\tau=\frac{a_{qq}-a_{pp}}{2a_{pq}}.\]
+
+<p>则方程化为</p>
+
+\[t^2+2\tau t-1=0.\]
+
+<p>其根为</p>
+
+\[t=-\tau\pm\sqrt{\tau^2+1}.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>取<strong>绝对值较小</strong>的根（保证旋转角 $</td>
+      <td>\theta</td>
+      <td>\le\pi/4$，数值稳定）：</td>
+    </tr>
+  </tbody>
+</table>
+
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}}.\]
+
+<p>其中</p>
+
+\[\operatorname{sgn}(\tau)=\begin{cases}1,&amp;\tau\ge0,\\-1,&amp;\tau&lt;0.\end{cases}\]
+
+<p>若 $\tau=0$（即 $a_{pp}=a_{qq}$），取 $t=1$（即 $\theta=\pi/4$）。</p>
+
+<p>然后</p>
+
+\[c=\frac{1}{\sqrt{1+t^2}},\qquad s=ct.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>验证</strong>：取绝对值较小的根，保证 $</td>
+      <td>t</td>
+      <td>\le1$，从而 $</td>
+      <td>\theta</td>
+      <td>\le\pi/4$，旋转角不会过大，数值稳定。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="34-特殊情况">3.4 特殊情况</h2>
+
+<p>若 $a_{pq}=0$，则无需旋转（跳过该对）。</p>
+
+<hr />
+
+<h1 id="四jacobi-算法">四、Jacobi 算法</h1>
+
+<h2 id="41-算法流程">4.1 算法流程</h2>
+
+<p><strong>算法 4.1.1（循环 Jacobi 法）</strong></p>
+
+<p>输入：对称矩阵 $A\in M_n(\mathbb R)$，容差 $\text{tol}$。
+输出：特征值 $\lambda_1,\dots,\lambda_n$，特征向量矩阵 $V$。</p>
+
+<ol>
+  <li>初始化：</li>
+</ol>
+
+\[A^{(0)}=A,\qquad V^{(0)}=I_n.\]
+
+<ol>
+  <li>对每一轮扫描 $k=0,1,2,\dots$：
+    <ul>
+      <li>对 $p=1,\dots,n-1$，$q=p+1,\dots,n$：
+        <ul>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>若 $</td>
+                  <td>a_{pq}</td>
+                  <td>$ 足够小（如 $</td>
+                  <td>a_{pq}</td>
+                  <td>\le\text{tol}\cdot\sqrt{</td>
+                  <td>a_{pp}a_{qq}</td>
+                  <td>}$），跳过；</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li>否则，计算 $\tau,t,c,s$，构造 $J(p,q,\theta)$；</li>
+          <li>更新：</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+\[A^{(k+1)}=J^{\mathsf T}A^{(k)}J,\qquad
+          V^{(k+1)}=V^{(k)}J.\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 计算非对角范数
+</code></pre></div></div>
+
+\[\operatorname{off}(A^{(k+1)})=\sqrt{\sum_{i\ne j}(a_{ij}^{(k+1)})^2}.\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 若 $\operatorname{off}(A^{(k+1)})\le\text{tol}$，停止。 3. 输出：$\lambda_i=a_{ii}$（最终矩阵的对角元），$V$ 的列为特征向量。
+</code></pre></div></div>
+
+<h2 id="42-更新公式高效实现">4.2 更新公式（高效实现）</h2>
+
+<p>每次旋转只更新第 $p,q$ 行/列，无需重新计算整个矩阵。具体地：</p>
+
+<p><strong>对角线</strong>：</p>
+
+\[a_{pp}\leftarrow a_{pp}-t\cdot a_{pq},\qquad
+a_{qq}\leftarrow a_{qq}+t\cdot a_{pq}.\]
+
+<p>（这里利用了 $a’<em>{pq}=0$ 和迹不变 $a’</em>{pp}+a’<em>{qq}=a</em>{pp}+a_{qq}$。）</p>
+
+<p><strong>交叉项</strong>（$k\ne p,q$）：</p>
+
+\[a_{kp}\leftarrow ca_{kp}-sa_{kq},\qquad
+a_{kq}\leftarrow sa_{kp}+ca_{kq}.\]
+
+<p>（注意：更新 $a_{kp}$ 和 $a_{kq}$ 时需用旧值，故先暂存。）</p>
+
+<p><strong>特征向量</strong>：</p>
+
+\[v_{kp}\leftarrow cv_{kp}-sv_{kq},\qquad
+v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
+
+<p><strong>目标元素</strong>：</p>
+
+\[a_{pq}\leftarrow0,\qquad a_{qp}\leftarrow0.\]
+
+<h2 id="43-收敛判据">4.3 收敛判据</h2>
+
+<p>常用的收敛判据：</p>
+
+<ol>
+  <li><strong>非对角范数</strong>：</li>
+</ol>
+
+\[\operatorname{off}(A)=\sqrt{\sum_{i\ne j}a_{ij}^2}\le\text{tol}.\]
+
+<ol>
+  <li><strong>归一化非对角范数</strong>：</li>
+</ol>
+
+\[\sqrt{\sum_{i\ne j}\frac{a_{ij}^2}{a_{ii}a_{jj}}}\le\text{tol}.\]
+
+<p>这更适合处理各元素量级差异大的情形。</p>
+
+<ol>
+  <li><strong>最大非对角元</strong>：</li>
+</ol>
+
+\[\max_{i\ne j}|a_{ij}|\le\text{tol}.\]
+
+<h2 id="44-例题">4.4 例题</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}.\]
+
+<p><strong>第 1 步</strong>：$p=1$，$q=2$，$a_{11}=a_{22}=2$，$a_{12}=1$。</p>
+
+\[\tau=\frac{a_{22}-a_{11}}{2a_{12}}=0.\]
+
+<p>取 $t=1$，$c=1/\sqrt2$，$s=1/\sqrt2$。</p>
+
+<p>更新：</p>
+
+\[a'_{11}=c^2a_{11}-2csa_{12}+s^2a_{22}=\frac12\cdot2-2\cdot\frac12\cdot1+\frac12\cdot2=1,\]
+
+\[a'_{22}=s^2a_{11}+2csa_{12}+c^2a_{22}=1+1+1=3,\]
+
+\[a'_{12}=0.\]
+
+<p>故</p>
+
+\[A'=\begin{pmatrix}1&amp;0\\0&amp;3\end{pmatrix}.\]
+
+<p>特征值为 $1,3$。</p>
+
+<p>特征向量：</p>
+
+\[V=J=\begin{pmatrix}\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt2}\\-\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt2}\end{pmatrix}.\]
+
+<p>$V$ 的列即为对应特征值的特征向量。</p>
+
+<p><strong>验证</strong>：$A$ 的特征值为 $2\pm1=3,1$。正确。</p>
+
+<hr />
+
+<h1 id="五收敛性">五、收敛性</h1>
+
+<h2 id="51-非对角范数单调递减">5.1 非对角范数单调递减</h2>
+
+<p><strong>定理 5.1.1</strong><br />
+每次旋转后，非对角范数满足</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2.\]
+
+<p><strong>证明</strong><br />
+相似变换保持 Frobenius 范数：</p>
+
+\[\|A'\|_F^2=\|A\|_F^2.\]
+
+<p>而</p>
+
+\[\|A\|_F^2=\sum_{i}a_{ii}^2+\operatorname{off}(A)^2.\]
+
+<p>旋转后 $a’<em>{pq}=0$，且对角线平方和增加 $2a</em>{pq}^2$（可验证），故</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2.\]
+
+<p>$\square$</p>
+
+<p><strong>推论</strong>：$\operatorname{off}(A^{(k)})$ 单调递减，且</p>
+
+\[\sum_{k}\operatorname{off}(A^{(k)})^2&lt;\infty,\]
+
+<p>故 $\operatorname{off}(A^{(k)})\to0$。即算法收敛到对角矩阵。</p>
+
+<h2 id="52-二次收敛">5.2 二次收敛</h2>
+
+<p><strong>定理 5.2.1</strong><br />
+在循环 Jacobi 策略下，当 $\operatorname{off}(A)$ 足够小时，每次扫描后</p>
+
+\[\operatorname{off}(A^{(k+1)})\le C\cdot\operatorname{off}(A^{(k)})^2,\]
+
+<p>其中 $C$ 为常数。</p>
+
+<p><strong>证明思路</strong>：每次旋转精确消去一个非对角元，同时对其他非对角元的影响是二阶小量。一轮扫描消去 $n(n-1)/2$ 个元素，累积效果使非对角范数按平方速率下降。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>, §8.5。</p>
+
+<p><strong>意义</strong>：一旦接近收敛，每轮扫描有效数字约翻倍。通常不到 10 轮扫描即可达到机器精度。</p>
+
+<h2 id="53-收敛速度的直观理解">5.3 收敛速度的直观理解</h2>
+
+<ul>
+  <li>初期：非对角元较大，每次旋转消去一个，范数线性下降；</li>
+  <li>后期：非对角元已很小，旋转对其他元素的影响是二阶的，范数平方下降；</li>
+  <li>总扫描轮数：通常 $O(\log\log(1/\epsilon))$，其中 $\epsilon$ 为机器精度。</li>
+</ul>
+
+<hr />
+
+<h1 id="六计算量与存储">六、计算量与存储</h1>
+
+<h2 id="61-计算量">6.1 计算量</h2>
+
+<p>每次旋转：</p>
+<ul>
+  <li>更新第 $p,q$ 行/列：约 $4n$ 次乘法；</li>
+  <li>更新特征向量：约 $4n$ 次乘法。</li>
+</ul>
+
+<p>一轮扫描有 $n(n-1)/2$ 次旋转，故每轮约</p>
+
+\[\frac{n(n-1)}{2}\cdot8n\approx4n^3\]
+
+<p>次运算。</p>
+
+<p>总计算量：</p>
+
+\[O(n^3\log\log(1/\epsilon)).\]
+
+<p>对于 $n\le1000$，通常小于 $10n^3$。</p>
+
+<h2 id="62-存储">6.2 存储</h2>
+
+<ul>
+  <li>$A$：$n\times n$（可原地更新）；</li>
+  <li>$V$：$n\times n$（累积旋转）；</li>
+  <li>总计 $2n^2$ 存储。</li>
+</ul>
+
+<hr />
+
+<h1 id="七数值稳定性与精度优势">七、数值稳定性与精度优势</h1>
+
+<h2 id="71-稳定性">7.1 稳定性</h2>
+
+<p>每次旋转 $J$ 为正交矩阵，相似变换 $J^{\mathsf T}AJ$ 不放大误差。算法是<strong>后向稳定</strong>的：</p>
+
+\[V^{\mathsf T}(A+\delta A)V=\Lambda,\qquad
+\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F.\]
+
+<h2 id="72-高相对精度">7.2 高相对精度</h2>
+
+<p><strong>定理 7.2.1（Demmel–Veselić）</strong><br />
+设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则 Jacobi 法计算得到的特征值满足</p>
+
+\[\frac{|\hat\lambda_i-\lambda_i|}{|\lambda_i|}\le O(n\epsilon)\kappa(X).\]
+
+<p>即<strong>小特征值也能保持高相对精度</strong>。</p>
+
+<p><strong>对比 QR 迭代</strong>：三对角化过程会引入 $\kappa(A)\epsilon$ 量级的扰动，小特征值的相对精度受限。Jacobi 法不经过三对角化，全程正交变换，故小特征值的相对精度更高。</p>
+
+<p><strong>应用</strong>：量子化学、结构动力学中，小特征值的相对精度至关重要，Jacobi 法是首选。</p>
+
+<hr />
+
+<h1 id="八与其他方法的对比">八、与其他方法的对比</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>Jacobi 法</th>
+      <th>对称 QR 迭代</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>是否需要三对角化</td>
+      <td>不需要</td>
+      <td>需要</td>
+    </tr>
+    <tr>
+      <td>收敛方式</td>
+      <td>二次收敛，&lt;10 轮扫描</td>
+      <td>三对角 QR，快速收敛</td>
+    </tr>
+    <tr>
+      <td>总计算量</td>
+      <td>$O(n^3\log\log(1/\epsilon))$</td>
+      <td>$O(n^3)$</td>
+    </tr>
+    <tr>
+      <td>速度</td>
+      <td>较慢</td>
+      <td>最快（只求特征值）</td>
+    </tr>
+    <tr>
+      <td>小特征值相对精度</td>
+      <td>高</td>
+      <td>一般</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>好（旋转可并行）</td>
+      <td>较差（QR 迭代串行）</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度、并行</td>
+      <td>通用、速度优先</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：</p>
+<ul>
+  <li>通用场景、只求特征值：对称 QR 迭代（LAPACK <code class="language-plaintext highlighter-rouge">dsyev</code>）；</li>
+  <li>高相对精度、并行环境：Jacobi 法；</li>
+  <li>小规模稠密矩阵：两者均可，Jacobi 实现更简单。</li>
+</ul>
+
+<hr />
+
+<h1 id="九总结">九、总结</h1>
+
+\[\boxed{
+\begin{aligned}
+&amp;\text{Jacobi 法：反复施加平面旋转，消去非对角元，逐步对角化对称矩阵。}\\
+&amp;\text{每步：}A\leftarrow J^{\mathsf T}AJ,\quad V\leftarrow VJ.\\
+&amp;\text{收敛：非对角范数单调递减，后期二次收敛，通常 &lt;10 轮扫描。}\\
+&amp;\text{优势：高相对精度、并行友好、实现简单。}\\
+&amp;\text{劣势：绝对速度较慢。}
+\end{aligned}}\]
+
+<p><strong>核心步骤</strong>：</p>
+<ol>
+  <li>选取 $(p,q)$，计算 $\tau,t,c,s$；</li>
+  <li>构造旋转 $J(p,q,\theta)$；</li>
+  <li>更新 $A$ 的第 $p,q$ 行/列（$a_{pq}$ 置零）；</li>
+  <li>累积 $V$；</li>
+  <li>检查非对角范数，收敛则停止。</li>
+</ol>
+
+<p><strong>最终结果</strong>：$A$ 的对角元为特征值，$V$ 的列为特征向量，且</p>
+
+\[A=V\Lambda V^{\mathsf T}.\]
+
+<p>Jacobi 法是求解对称特征值问题的经典方法，其高相对精度和并行性使其在特定领域（如量子化学、结构动力学）中不可替代。虽然通用数值库默认采用 QR 迭代，但 Jacobi 法在精度敏感的场景中仍是首选。</p>
+
+<h1 id="附-a-对角线元素平方和增加推导">附 A： 对角线元素平方和增加推导</h1>
+
+<p>这个结论来自对 $2\times 2$ 子块对角化后对角线元素变化的直接计算。下面严格推导。</p>
+
+<hr />
+
+<h2 id="一设定">一、设定</h2>
+
+<p>设 $A$ 对称，选取 $p&lt;q$，做相似变换</p>
+
+\[A'=J^{\mathsf T}AJ,\]
+
+<p>其中 $J=J(p,q,\theta)$，$c=\cos\theta$，$s=\sin\theta$。由前文，更新后的对角线元素为</p>
+
+\[a'_{pp}=c^2a_{pp}-2csa_{pq}+s^2a_{qq},\]
+
+\[a'_{qq}=s^2a_{pp}+2csa_{pq}+c^2a_{qq}.\]
+
+<hr />
+
+<h2 id="二计算对角线平方和的变化">二、计算对角线平方和的变化</h2>
+
+<p>考虑对角线平方和的变化量：</p>
+
+\[\Delta=(a'_{pp})^2+(a'_{qq})^2-(a_{pp}^2+a_{qq}^2).\]
+
+<p>将 $a’<em>{pp},a’</em>{qq}$ 代入，展开。为简化，记</p>
+
+\[u=a_{pp},\qquad v=a_{qq},\qquad w=a_{pq}.\]
+
+<p>则</p>
+
+\[a'_{pp}=c^2u-2csw+s^2v,\]
+
+\[a'_{qq}=s^2u+2csw+c^2v.\]
+
+<p>先计算 $a’<em>{pp}+a’</em>{qq}$：</p>
+
+\[a'_{pp}+a'_{qq}=(c^2+s^2)(u+v)=u+v.\]
+
+<p>即迹不变。</p>
+
+<p>再计算 $a’<em>{pp}-a’</em>{qq}$：</p>
+
+\[a'_{pp}-a'_{qq}=(c^2-s^2)(u-v)-4csw.\]
+
+<p>记 $c^2-s^2=\cos2\theta$，$2cs=\sin2\theta$，则</p>
+
+\[a'_{pp}-a'_{qq}=\cos2\theta\,(u-v)-2\sin2\theta\,w.\]
+
+<p>利用恒等式</p>
+
+\[(a'_{pp})^2+(a'_{qq})^2=\frac12\left[(a'_{pp}+a'_{qq})^2+(a'_{pp}-a'_{qq})^2\right],\]
+
+<p>以及</p>
+
+\[u^2+v^2=\frac12\left[(u+v)^2+(u-v)^2\right],\]
+
+<p>得</p>
+
+\[\Delta=\frac12\left[(a'_{pp}-a'_{qq})^2-(u-v)^2\right].\]
+
+<p>（因为 $a’<em>{pp}+a’</em>{qq}=u+v$，第一项相消。）</p>
+
+<p>代入 $a’<em>{pp}-a’</em>{qq}$：</p>
+
+\[(a'_{pp}-a'_{qq})^2=\left[\cos2\theta\,(u-v)-2\sin2\theta\,w\right]^2.\]
+
+<p>展开：</p>
+
+\[=\cos^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>减去 $(u-v)^2$：</p>
+
+\[(a'_{pp}-a'_{qq})^2-(u-v)^2
+=(\cos^2 2\theta-1)(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>因 $\cos^2 2\theta-1=-\sin^2 2\theta$，</p>
+
+\[=-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>于是</p>
+
+\[\Delta=\frac12\left[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2\right].\]
+
+<hr />
+
+<h2 id="三利用消元条件">三、利用消元条件</h2>
+
+<p>旋转角 $\theta$ 的选取使得 $a’_{pq}=0$。由前文，</p>
+
+\[a'_{pq}=cs(u-v)+(c^2-s^2)w=0.\]
+
+<p>即</p>
+
+\[\frac12\sin2\theta\,(u-v)+\cos2\theta\,w=0.\]
+
+<p>故</p>
+
+\[\sin2\theta\,(u-v)=-2\cos2\theta\,w.\]
+
+<p>将此代入 $\Delta$ 的表达式。先处理含 $(u-v)^2$ 和 $(u-v)w$ 的项：</p>
+
+\[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w.\]
+
+<p>由 $\sin2\theta\,(u-v)=-2\cos2\theta\,w$，得</p>
+
+\[\sin^2 2\theta\,(u-v)^2=4\cos^2 2\theta\,w^2,\]
+
+\[\sin2\theta\,(u-v)w=-2\cos2\theta\,w^2.\]
+
+<p>代入：</p>
+
+\[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w
+=-4\cos^2 2\theta\,w^2+8\cos^2 2\theta\,w^2
+=4\cos^2 2\theta\,w^2.\]
+
+<p>于是</p>
+
+\[\Delta=\frac12\left[4\cos^2 2\theta\,w^2+4\sin^2 2\theta\,w^2\right]
+=\frac12\cdot4w^2(\cos^2 2\theta+\sin^2 2\theta)
+=2w^2.\]
+
+<p>即</p>
+
+\[\boxed{\Delta=2a_{pq}^2.}\]
+
+<hr />
+
+<h2 id="四结论">四、结论</h2>
+
+\[(a'_{pp})^2+(a'_{qq})^2=(a_{pp})^2+(a_{qq})^2+2a_{pq}^2.\]
+
+<p><strong>直观解释</strong>：</p>
+<ul>
+  <li>相似变换保持 Frobenius 范数：$|A’|_F^2=|A|_F^2$；</li>
+  <li>非对角元 $a_{pq}$ 被消为零，其对 Frobenius 范数的贡献 $2a_{pq}^2$（因 $a_{pq}=a_{qp}$）转移到对角线上；</li>
+  <li>其他非对角元的变化对平方和的影响相互抵消，最终对角线平方和恰好增加 $2a_{pq}^2$。</li>
+</ul>
+
+<p>这保证了</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2,\]
+
+<p>即非对角范数单调递减。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-x: scroll;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>

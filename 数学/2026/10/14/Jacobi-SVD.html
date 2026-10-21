@@ -8,9 +8,9 @@
         <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
         <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
         <!-- Begin Jekyll SEO tag v2.9.1 -->
-<title>奇异值分解（Singular Value Decomposition，SVD） | Devil’s blog</title>
+<title>Jacobi SVD | Devil’s blog</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<meta property="og:title" content="Jacobi SVD" />
 <meta name="author" content="Devil" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="xxxxxx" />
@@ -24,9 +24,9 @@
 <meta property="article:modified_time" content="2026-10-14T00:00:00+00:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
-<meta name="twitter:title" content="奇异值分解（Singular Value Decomposition，SVD）" />
+<meta name="twitter:title" content="Jacobi SVD" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-14T00:00:00+00:00","datePublished":"2026-10-14T00:00:00+00:00","description":"xxxxxx","headline":"奇异值分解（Singular Value Decomposition，SVD）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-14T00:00:00+00:00","datePublished":"2026-10-14T00:00:00+00:00","description":"xxxxxx","headline":"Jacobi SVD","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"}</script>
 <!-- End Jekyll SEO tag -->
 
     </head>
@@ -55,7 +55,7 @@
         </style>
     
         <div id="header">
-    <div class="fontsz36 font-bold"> 奇异值分解（Singular Value Decomposition，SVD） </div>
+    <div class="fontsz36 font-bold"> Jacobi SVD </div>
 </div>
 
 <div id="article">
@@ -77,9 +77,7 @@
 #copyright div {
     margin-bottom: 12px;
 }
-</style><h1 id="jacobi-svd">Jacobi SVD</h1>
-
-<h2 id="一概述">一、概述</h2>
+</style><h1 id="概述">概述</h1>
 
 <p><strong>Jacobi SVD</strong> 是一类通过<strong>迭代正交变换</strong>计算奇异值分解的数值算法。其思想源于 Jacobi 用于对称矩阵特征值分解的方法，后推广到 SVD 的计算。</p>
 
@@ -91,14 +89,13 @@
   <li><strong>双边 Jacobi SVD</strong>：同时从左右两侧施加旋转，直接逼近对角形式。</li>
 </ul>
 
-<hr />
+<h1 id="jacobi-旋转">Jacobi 旋转</h1>
 
-<h2 id="二jacobi-旋转">二、Jacobi 旋转</h2>
+<h2 id="定义">定义</h2>
 
-<h3 id="21-定义">2.1 定义</h3>
+<p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong></p>
 
-<p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong><br />
-设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
+<p>设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
 
 \[J(p,q,\theta)=\begin{pmatrix}
 1&amp;&amp;&amp;&amp;&amp;&amp;\\
@@ -112,7 +109,7 @@
 
 <p>其中 $c=\cos\theta$，$s=\sin\theta$，$c$ 位于 $(p,p)$ 和 $(q,q)$，$s$ 位于 $(p,q)$，$-s$ 位于 $(q,p)$，其余位置为单位矩阵元素。称 $J(p,q,\theta)$ 为 <strong>Jacobi 旋转</strong>。</p>
 
-<h3 id="22-基本性质">2.2 基本性质</h3>
+<h2 id="基本性质">基本性质</h2>
 
 <ol>
   <li><strong>正交性</strong>：</li>
@@ -131,7 +128,7 @@
 </ol>
 
 \[(AJ)_{:,p}=cA_{:,p}-sA_{:,q},\qquad
-   (AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
+(AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
 
 <p>左乘 $J^{\mathsf T}(p,q,\theta)$ 只改变第 $p$ 行和第 $q$ 行。</p>
 
@@ -140,11 +137,11 @@
 </ol>
 
 \[\begin{pmatrix}c&amp;s\\-s&amp;c\end{pmatrix}\begin{pmatrix}x_p\\x_q\end{pmatrix}
-   =\begin{pmatrix}r\\0\end{pmatrix},\]
+=\begin{pmatrix}r\\0\end{pmatrix},\]
 
 <p>其中 $r=\sqrt{x_p^2+x_q^2}$。即通过旋转将一个分量消为零。</p>
 
-<h3 id="23-旋转参数的构造">2.3 旋转参数的构造</h3>
+<h2 id="旋转参数的构造">旋转参数的构造</h2>
 
 <p>给定 $x=(x_p,x_q)^{\mathsf T}$，要消去 $x_q$，取</p>
 
@@ -157,11 +154,9 @@
 
 <p>若 $x_p=x_q=0$，取 $c=1$，$s=0$。</p>
 
-<hr />
+<h1 id="单边-jacobi-svd">单边 Jacobi SVD</h1>
 
-<h2 id="三单边-jacobi-svd">三、单边 Jacobi SVD</h2>
-
-<h3 id="31-核心思想">3.1 核心思想</h3>
+<h2 id="核心思想">核心思想</h2>
 
 <p>单边 Jacobi SVD 只从<strong>右侧</strong>对矩阵施加 Jacobi 旋转，即反复更新列向量，使它们两两正交。当所有列都足够正交时，矩阵的列范数即为奇异值，归一化后的列即为左奇异向量。</p>
 
@@ -179,7 +174,7 @@
 
 <p>其中 $U$ 的列是 $G$ 各列归一化后的单位向量，$\Sigma$ 的对角元是 $G$ 各列的 2-范数。</p>
 
-<h3 id="32-旋转参数的构造">3.2 旋转参数的构造</h3>
+<h2 id="旋转参数的构造-1">旋转参数的构造</h2>
 
 <p>给定两列 $x=A_{:,p}$ 和 $y=A_{:,q}$，目标是找一个 $2\times 2$ 正交矩阵 $R$，使得</p>
 
@@ -232,7 +227,7 @@
 
 <p>解此二次方程并取绝对值较小的根（保证数值稳定），即得上述 $t$ 的公式。</p>
 
-<h3 id="33-算法流程">3.3 算法流程</h3>
+<h2 id="算法流程">算法流程</h2>
 
 <p>以 $m\times n$ 矩阵（$m\ge n$）为例，输出 $A=U\Sigma V^{\mathsf T}$：</p>
 
@@ -261,7 +256,7 @@ for i = 1 to n:
 
 <p>或等价的正交性度量。</p>
 
-<h3 id="34-收敛性">3.4 收敛性</h3>
+<h2 id="收敛性">收敛性</h2>
 
 <p><strong>定理 3.4.1（二次收敛）</strong><br />
 在循环 Jacobi 策略下，非对角部分的范数以二次速率趋于零。即存在常数 $C$，使得</p>
@@ -280,7 +275,7 @@ for i = 1 to n:
 
 <p><strong>证明思路</strong>：每次旋转精确消去一个非对角元，同时对其他非对角元的影响是二阶小量。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>。</p>
 
-<h3 id="35-高相对精度">3.5 高相对精度</h3>
+<h2 id="高相对精度">高相对精度</h2>
 
 <p><strong>定理 3.5.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则单边 Jacobi SVD 计算得到的奇异值满足</p>
@@ -291,7 +286,7 @@ for i = 1 to n:
 
 <p><strong>意义</strong>：小奇异值也能保持高相对精度。这是 Jacobi 方法相对于 Golub–Kahan 的核心优势。Golub–Kahan 的双对角化会引入 $\kappa(A)\epsilon$ 量级的扰动，小奇异值的相对精度受限。</p>
 
-<h3 id="36-预处理与加速">3.6 预处理与加速</h3>
+<h2 id="预处理与加速">预处理与加速</h2>
 
 <p>原始单边 Jacobi 可能需要较多扫描轮次。实践中常引入 <strong>QR 预处理</strong>：</p>
 
@@ -302,6 +297,7 @@ for i = 1 to n:
 \[A\Pi=QR,\]
 
 <p>其中 $Q$ 正交，$R$ 上三角，$\Pi$ 为置换矩阵；</p>
+
 <ol>
   <li>对 $R$ 应用单边 Jacobi SVD：</li>
 </ol>
@@ -316,11 +312,9 @@ for i = 1 to n:
 
 <p>由于 $R$ 是上三角矩阵，列之间的正交化更容易，收敛通常只需少数几轮扫描。该策略在 LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 等例程中被采用。</p>
 
-<hr />
+<h1 id="双边-jacobi-svd">双边 Jacobi SVD</h1>
 
-<h2 id="四双边-jacobi-svd">四、双边 Jacobi SVD</h2>
-
-<h3 id="41-核心思想">4.1 核心思想</h3>
+<h2 id="核心思想-1">核心思想</h2>
 
 <p>双边 Jacobi SVD 同时对矩阵的<strong>行和列</strong>施加 Jacobi 旋转，试图直接消去非对角元素，将矩阵变为对角矩阵。</p>
 
@@ -330,7 +324,7 @@ for i = 1 to n:
 
 <p>在 $(p,q)$ 和 $(q,p)$ 位置上的元素变为零。</p>
 
-<h3 id="42-旋转参数的构造">4.2 旋转参数的构造</h3>
+<h2 id="旋转参数的构造-2">旋转参数的构造</h2>
 
 <p>给定 $2\times 2$ 子矩阵</p>
 
@@ -351,7 +345,7 @@ for i = 1 to n:
 
 <p>具体地，可通过计算该 $2\times 2$ 矩阵的 SVD 得到 $K,J$，然后嵌入 $n$ 阶矩阵。</p>
 
-<h3 id="43-算法流程">4.3 算法流程</h3>
+<h2 id="算法流程-1">算法流程</h2>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G = A (方阵，或经 QR 预处理后的上三角矩阵)
 U = I_n
@@ -371,17 +365,15 @@ until off 足够小
 返回 U, Σ = diag(G), V
 </code></pre></div></div>
 
-<h3 id="44-收敛性">4.4 收敛性</h3>
+<h2 id="收敛性-1">收敛性</h2>
 
 <p>与单边方法类似，双边 Jacobi 也以二次速率收敛。每次旋转精确消去两个非对角元（$(p,q)$ 和 $(q,p)$），同时对其他元素的影响是二阶小量。</p>
 
-<h3 id="45-高相对精度">4.5 高相对精度</h3>
+<h2 id="高相对精度-1">高相对精度</h2>
 
 <p>双边方法同样具有高相对精度，对小奇异值表现良好。原因与单边方法相同：全程使用正交变换，不放大条件数。</p>
 
-<hr />
-
-<h2 id="五单边与双边-jacobi-svd-的对比">五、单边与双边 Jacobi SVD 的对比</h2>
+<h1 id="单边与双边-jacobi-svd-的对比">单边与双边 Jacobi SVD 的对比</h1>
 
 <table>
   <thead>
@@ -442,9 +434,7 @@ until off 足够小
   <li>两者都远优于基于双对角化的传统方法在相对精度上的表现。</li>
 </ul>
 
-<hr />
-
-<h2 id="六与其他-svd-算法的比较">六、与其他 SVD 算法的比较</h2>
+<h1 id="与其他-svd-算法的比较">与其他 SVD 算法的比较</h1>
 
 <table>
   <thead>
@@ -502,9 +492,7 @@ until off 足够小
   <li>病态矩阵的谱分析。</li>
 </ul>
 
-<hr />
-
-<h2 id="七应用场景">七、应用场景</h2>
+<h1 id="应用场景">应用场景</h1>
 
 <ol>
   <li><strong>高精度需求</strong>：量子化学、数值线性代数中的谱分析；</li>
@@ -514,11 +502,9 @@ until off 足够小
   <li><strong>教学与算法研究</strong>：Jacobi 旋转的几何直观使其成为理解 SVD 的优良工具。</li>
 </ol>
 
-<hr />
+<h1 id="总结">总结</h1>
 
-<h2 id="八总结">八、总结</h2>
-
-\[\boxed{\text{Jacobi SVD：通过迭代 Jacobi 旋转，逐步正交化列或对角化矩阵，计算 SVD。}}\]
+\[\text{Jacobi SVD：通过迭代 Jacobi 旋转，逐步正交化列或对角化矩阵，计算 SVD。}\]
 
 <p><strong>核心思想</strong>：</p>
 <ul>
@@ -542,6 +528,172 @@ until off 足够小
 <p><strong>典型实现</strong>：LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 采用单边 Jacobi 结合 QR 预处理，是高精度 SVD 的标准工具之一。</p>
 
 <p>Jacobi SVD 与 Golub–Kahan 算法互为补充：前者以高相对精度和并行性见长，后者以计算效率和通用性著称。实际选择取决于问题对精度、规模和并行资源的具体要求。</p>
+
+<h1 id="附-a-off-diagonal-范数">附 A： off-diagonal 范数</h1>
+
+<h2 id="单边-jacobi-svd-中的含义">单边 Jacobi SVD 中的含义</h2>
+
+<h3 id="单边-jacobi-的工作对象">单边 Jacobi 的工作对象</h3>
+
+<p>单边 Jacobi SVD 不直接对角化矩阵 $A$，而是反复右乘 Jacobi 旋转，使 $A$ 的<strong>列向量两两正交</strong>。设当前工作矩阵为</p>
+
+\[G\in\mathbb R^{m\times n},\qquad G_{:,1},\dots,G_{:,n}\text{ 为 }G\text{ 的列}.\]
+
+<p>理想收敛状态是</p>
+
+\[G_{:,p}^{\mathsf T}G_{:,q}=0,\qquad p\ne q.\]
+
+<h3 id="gram-矩阵">Gram 矩阵</h3>
+
+<p>列向量的正交性完全由 <strong>Gram 矩阵</strong> 刻画：</p>
+
+\[H=G^{\mathsf T}G\in M_n(\mathbb R),\qquad
+h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
+
+<ul>
+  <li>对角线元素 $h_{pp}=|G_{:,p}|_2^2$；</li>
+  <li>非对角线元素 $h_{pq}$（$p\ne q$）度量第 $p$ 列与第 $q$ 列的内积，即<strong>非正交程度</strong>。</li>
+</ul>
+
+<h3 id="off-diagonal-范数">off-diagonal 范数</h3>
+
+<p><strong>定义（off-diagonal 范数）</strong></p>
+
+<p>对 Gram 矩阵 $H=G^{\mathsf T}G$，称</p>
+
+\[\operatorname{off}(G)
+=\sqrt{\sum_{p\ne q}|h_{pq}|^2}
+=\sqrt{\sum_{p\ne q}\bigl(G_{:,p}^{\mathsf T}G_{:,q}\bigr)^2}\]
+
+<p>为 $G$ 的<strong>非对角范数</strong>（off-diagonal norm）。</p>
+
+<p>它衡量所有列对之间内积的总量，即<strong>整体非正交性</strong>。当 $\operatorname{off}(G)=0$ 时，$G$ 的列两两正交。</p>
+
+<h3 id="归一化版本">归一化版本</h3>
+
+<p>由于各列范数不同，绝对内积的大小不能直接比较，通常使用<strong>归一化非对角范数</strong>：</p>
+
+\[\operatorname{off}_{\text{rel}}(G)
+=\sqrt{\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}}}
+=\sqrt{\sum_{p\ne q}\left(\frac{G_{:,p}^{\mathsf T}G_{:,q}}{\|G_{:,p}\|_2\|G_{:,q}\|_2}\right)^2}.\]
+
+<p>这正是所有列对<strong>夹角余弦</strong>的平方和，取值在 $[0,n(n-1)]$ 之间，0 表示完全正交。归一化版本更适合作为收敛判据，因为它不受列尺度影响。</p>
+
+<h2 id="为什么需要计算它">为什么需要计算它</h2>
+
+<h3 id="作为收敛判据">作为收敛判据</h3>
+
+<p>单边 Jacobi SVD 是迭代算法，必须有一个<strong>停止准则</strong>。常见判据为</p>
+
+\[\operatorname{off}_{\text{rel}}(G)\le\text{tol},\]
+
+<p>其中 $\text{tol}$ 为预设容差（如 $10^{-14}$ 或与机器精度相关）。</p>
+
+<p>每轮扫描（对所有列对 $(p,q)$ 施加一次旋转）后计算一次 $\operatorname{off}_{\text{rel}}$，若低于容差则停止，否则继续下一轮扫描。</p>
+
+<h3 id="监控收敛速度">监控收敛速度</h3>
+
+<p>Jacobi 方法具有<strong>二次收敛</strong>性：接近收敛时，$\operatorname{off}$ 每轮扫描大约按平方速率下降：</p>
+
+\[\operatorname{off}(G^{(k+1)})\le C\cdot\operatorname{off}(G^{(k)})^2.\]
+
+<p>计算 $\operatorname{off}$ 可以监控这一行为，用于调试或自适应调整扫描策略。</p>
+
+<h3 id="保证数值可靠性">保证数值可靠性</h3>
+
+<p>若 $\operatorname{off}_{\text{rel}}$ 已足够小，则归一化后的列</p>
+
+\[u_i=\frac{G_{:,i}}{\|G_{:,i}\|_2}\]
+
+<p>构成标准正交向量组，且列范数 $|G_{:,i}|_2$ 即为奇异值 $\sigma_i$。此时提取的 SVD 是可靠的。若未收敛就提取，$U$ 的列可能不正交，分解失效。</p>
+
+<h2 id="实现中的具体做法">实现中的具体做法</h2>
+
+<p>典型实现（伪代码）如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repeat:
+    off_prev = off_rel(G)          // 本轮开始前的非对角范数
+    for p = 1 to n-1:
+        for q = p+1 to n:
+            计算 h_pp, h_qq, h_pq
+            if |h_pq| / sqrt(h_pp*h_qq) &gt; eps:
+                构造并施加 Jacobi 旋转，更新 G 的第 p,q 列及 V 的第 p,q 列
+    off_curr = off_rel(G)          // 本轮扫描后的非对角范数
+until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或停滞
+</code></pre></div></div>
+
+<p><strong>实现细节</strong>：</p>
+
+<ol>
+  <li><strong>不必显式计算 Gram 矩阵</strong>：只需在扫描过程中累加</li>
+</ol>
+
+\[\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}},\]
+
+<p>最后开方即可。</p>
+
+<ol>
+  <li>
+    <p><strong>可增量更新</strong>：每次旋转只改变第 $p,q$ 列，故只需更新涉及 $p,q$ 的项，无需重新计算全部。</p>
+  </li>
+  <li>
+    <p><strong>阈值跳过</strong>：若某对 $(p,q)$ 的归一化内积已小于 $\epsilon$（如 $10^{-15}$），则跳过该对，避免无效旋转。</p>
+  </li>
+  <li>
+    <p><strong>最大扫描轮数</strong>：为防止无限循环，通常设置最大轮数（如 30 或 50），超过则强制停止并给出警告。</p>
+  </li>
+</ol>
+
+<h2 id="与双边-jacobi-的区别">与双边 Jacobi 的区别</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>非对角范数的对象</td>
+      <td>Gram 矩阵 $G^{\mathsf T}G$ 的非对角元</td>
+      <td>工作矩阵 $G$ 本身的非对角元</td>
+    </tr>
+    <tr>
+      <td>含义</td>
+      <td>列向量的非正交性</td>
+      <td>矩阵偏离对角形式的程度</td>
+    </tr>
+    <tr>
+      <td>收敛目标</td>
+      <td>列两两正交</td>
+      <td>矩阵对角化</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>双边 Jacobi 中，“off-diagonal 范数”指</p>
+
+\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}|g_{pq}|^2},\]
+
+<p>即矩阵本身非对角元素的总量。而单边 Jacobi 中，它指的是 Gram 矩阵的非对角元，物理意义不同。</p>
+
+<h2 id="五总结">五、总结</h2>
+
+\[\begin{aligned}
+&amp;\text{单边 Jacobi SVD 中的 “off-diagonal 范数” = Gram 矩阵 }G^{\mathsf T}G\text{ 非对角元的范数，}\\
+&amp;\text{度量当前矩阵列向量的整体非正交性，用作迭代的收敛判据。}
+\end{aligned}\]
+
+<p>其计算目的有三：</p>
+<ol>
+  <li><strong>判断是否收敛</strong>：低于容差则停止迭代；</li>
+  <li><strong>监控二次收敛</strong>：观察每轮扫描的下降速率；</li>
+  <li><strong>保证提取的 SVD 可靠</strong>：列足够正交时，列范数才是准确的奇异值，归一化列才是准确的左奇异向量。</li>
+</ol>
+
+<p>因此，这个步骤不是算法主体（主体是逐对施加 Jacobi 旋转），而是<strong>迭代控制与质量保障</strong>环节，是任何迭代 SVD 实现都不可缺少的部分。</p>
 <div id="giscus">
     <script src="https://giscus.app/client.js"
         data-repo="portgas-d-asce/portgas-d-asce.github.io"

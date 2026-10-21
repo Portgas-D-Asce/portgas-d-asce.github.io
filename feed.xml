@@ -1,22 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-18T10:09:31+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">奇异值分解（Singular Value Decomposition，SVD）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html" rel="alternate" type="text/html" title="奇异值分解（Singular Value Decomposition，SVD）" /><published>2026-10-14T00:00:00+00:00</published><updated>2026-10-14T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi%20SVD</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"><![CDATA[<h1 id="jacobi-svd">Jacobi SVD</h1>
-
-<h2 id="一概述">一、概述</h2>
-
-<p><strong>Jacobi SVD</strong> 是一类通过<strong>迭代正交变换</strong>计算奇异值分解的数值算法。其思想源于 Jacobi 用于对称矩阵特征值分解的方法，后推广到 SVD 的计算。</p>
-
-<p>与基于双对角化的 Golub–Kahan 算法不同，Jacobi SVD 不追求有限步的精确分解，而是通过反复施加<strong>平面旋转</strong>（Jacobi 旋转），逐步消去矩阵中的非正交分量或非对角元素，使矩阵收敛到列正交形式或对角形式，从而提取奇异值和奇异向量。</p>
-
-<p>Jacobi SVD 分为两类：</p>
-<ul>
-  <li><strong>单边 Jacobi SVD</strong>：只从右侧施加旋转，使列向量两两正交；</li>
-  <li><strong>双边 Jacobi SVD</strong>：同时从左右两侧施加旋转，直接逼近对角形式。</li>
-</ul>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-21T07:40:43+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Jacobi 法求解对称矩阵特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="Jacobi 法求解对称矩阵特征值" /><published>2026-10-17T00:00:00+00:00</published><updated>2026-10-17T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi%20%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
 
 <hr />
 
-<h2 id="二jacobi-旋转">二、Jacobi 旋转</h2>
+<h1 id="一问题与基本思想">一、问题与基本思想</h1>
 
-<h3 id="21-定义">2.1 定义</h3>
+<h2 id="11-问题陈述">1.1 问题陈述</h2>
+
+<p>给定实对称矩阵 $A\in M_n(\mathbb R)$，求其全部特征值 $\lambda_1,\dots,\lambda_n$ 和对应的标准正交特征向量 $v_1,\dots,v_n$。</p>
+
+<p>由谱定理，存在正交矩阵 $Q$ 和对角矩阵 $\Lambda$，使得</p>
+
+\[A=Q\Lambda Q^{\mathsf T},\qquad \Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_n).\]
+
+<p>$Q$ 的列即为特征向量。</p>
+
+<h2 id="12-为什么对称矩阵重要">1.2 为什么对称矩阵重要</h2>
+
+<p>实对称矩阵的特征值全为实数，且可正交对角化。这使得对称特征值问题比一般矩阵简单：无需处理复特征值，只需寻找正交相似变换将 $A$ 化为对角形式。</p>
+
+<h2 id="13-jacobi-法的核心思想">1.3 Jacobi 法的核心思想</h2>
+
+\[\boxed{\text{反复选取一对非对角元，施加平面旋转使其变为零，逐步将矩阵对角化。}}\]
+
+<p>具体地：</p>
+<ol>
+  <li>选取 $p&lt;q$，构造一个 $n$ 阶正交矩阵 $J(p,q,\theta)$，使其只作用于第 $p$ 行/列和第 $q$ 行/列；</li>
+  <li>做相似变换 $A\leftarrow J^{\mathsf T}AJ$，使 $(p,q)$ 位置的元素变为零；</li>
+  <li>重复上述过程，非对角元的范数持续下降，最终收敛到对角矩阵；</li>
+  <li>累积所有旋转 $V=J_1J_2\cdots$，其列即为特征向量。</li>
+</ol>
+
+<p><strong>关键特点</strong>：Jacobi 法<strong>不需要</strong>先将矩阵三对角化，直接对稠密矩阵操作。这与 QR 迭代的流程不同。</p>
+
+<hr />
+
+<h1 id="二jacobi-旋转">二、Jacobi 旋转</h1>
+
+<h2 id="21-定义">2.1 定义</h2>
 
 <p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong><br />
 设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
@@ -31,9 +51,1680 @@
 &amp;&amp;&amp;&amp;&amp;&amp;1
 \end{pmatrix},\]
 
+<p>其中 $c=\cos\theta$，$s=\sin\theta$，$c$ 位于 $(p,p)$ 和 $(q,q)$，$s$ 位于 $(p,q)$，$-s$ 位于 $(q,p)$，其余位置为单位矩阵元素（未标出的对角元为 1，非对角元为 0）。</p>
+
+<h2 id="22-基本性质">2.2 基本性质</h2>
+
+<ol>
+  <li><strong>正交性</strong>：</li>
+</ol>
+
+\[J^{\mathsf T}J=JJ^{\mathsf T}=I.\]
+
+<ol>
+  <li><strong>行列式</strong>：</li>
+</ol>
+
+\[\det J=c^2+s^2=1.\]
+
+<ol>
+  <li><strong>作用效果</strong>：右乘 $J$ 只改变第 $p$ 列和第 $q$ 列：</li>
+</ol>
+
+\[(AJ)_{:,p}=cA_{:,p}-sA_{:,q},\qquad
+   (AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
+
+<p>左乘 $J^{\mathsf T}$ 只改变第 $p$ 行和第 $q$ 行。</p>
+
+<ol>
+  <li><strong>几何意义</strong>：在 $(p,q)$ 平面内旋转角度 $\theta$，其余坐标不变。</li>
+</ol>
+
+<h2 id="23-对称矩阵的相似变换">2.3 对称矩阵的相似变换</h2>
+
+<p>设 $A$ 对称，做相似变换</p>
+
+\[A'=J^{\mathsf T}AJ.\]
+
+<p>则 $A’$ 仍对称（因 $(J^{\mathsf T}AJ)^{\mathsf T}=J^{\mathsf T}A^{\mathsf T}J=J^{\mathsf T}AJ$）。</p>
+
+<p>$A’$ 的元素为：</p>
+<ul>
+  <li>对角线：</li>
+</ul>
+
+\[a'_{pp}=c^2a_{pp}-2csa_{pq}+s^2a_{qq},\]
+
+\[a'_{qq}=s^2a_{pp}+2csa_{pq}+c^2a_{qq}.\]
+
+<ul>
+  <li>与 $k\ne p,q$ 的交叉项：</li>
+</ul>
+
+\[a'_{pk}=ca_{pk}-sa_{qk},\qquad
+  a'_{qk}=sa_{pk}+ca_{qk},\]
+
+<p>以及由对称性 $a’<em>{kp}=a’</em>{pk}$，$a’<em>{kq}=a’</em>{qk}$。</p>
+<ul>
+  <li>目标元素：</li>
+</ul>
+
+\[a'_{pq}=cs(a_{pp}-a_{qq})+(c^2-s^2)a_{pq}.\]
+
+<ul>
+  <li>其他元素：</li>
+</ul>
+
+\[a'_{ij}=a_{ij},\qquad i,j\notin\{p,q\}.\]
+
+<p><strong>重要观察</strong>：虽然旋转只直接作用于第 $p,q$ 行/列，但第 $p,q$ 行/列上的<strong>所有</strong>元素都会改变。其他行/列的元素保持不变。</p>
+
+<hr />
+
+<h1 id="三旋转参数的构造">三、旋转参数的构造</h1>
+
+<h2 id="31-目标">3.1 目标</h2>
+
+<p>选取 $c,s$，使得</p>
+
+\[a'_{pq}=cs(a_{pp}-a_{qq})+(c^2-s^2)a_{pq}=0.\]
+
+<h2 id="32-推导">3.2 推导</h2>
+
+<p>令 $t=s/c$（即 $t=\tan\theta$），则 $c^2=1/(1+t^2)$，$s^2=t^2/(1+t^2)$，$cs=t/(1+t^2)$。代入 $a’_{pq}=0$：</p>
+
+\[\frac{t}{1+t^2}(a_{pp}-a_{qq})+\frac{1-t^2}{1+t^2}a_{pq}=0.\]
+
+<p>两边乘以 $1+t^2$：</p>
+
+\[t(a_{pp}-a_{qq})+(1-t^2)a_{pq}=0.\]
+
+<p>整理得</p>
+
+\[a_{pq}t^2+(a_{qq}-a_{pp})t-a_{pq}=0.\]
+
+<p>这是关于 $t$ 的二次方程。</p>
+
+<h2 id="33-数值稳定的解">3.3 数值稳定的解</h2>
+
+<p>令</p>
+
+\[\tau=\frac{a_{qq}-a_{pp}}{2a_{pq}}.\]
+
+<p>则方程化为</p>
+
+\[t^2+2\tau t-1=0.\]
+
+<p>其根为</p>
+
+\[t=-\tau\pm\sqrt{\tau^2+1}.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>取<strong>绝对值较小</strong>的根（保证旋转角 $</td>
+      <td>\theta</td>
+      <td>\le\pi/4$，数值稳定）：</td>
+    </tr>
+  </tbody>
+</table>
+
+\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}}.\]
+
+<p>其中</p>
+
+\[\operatorname{sgn}(\tau)=\begin{cases}1,&amp;\tau\ge0,\\-1,&amp;\tau&lt;0.\end{cases}\]
+
+<p>若 $\tau=0$（即 $a_{pp}=a_{qq}$），取 $t=1$（即 $\theta=\pi/4$）。</p>
+
+<p>然后</p>
+
+\[c=\frac{1}{\sqrt{1+t^2}},\qquad s=ct.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>验证</strong>：取绝对值较小的根，保证 $</td>
+      <td>t</td>
+      <td>\le1$，从而 $</td>
+      <td>\theta</td>
+      <td>\le\pi/4$，旋转角不会过大，数值稳定。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="34-特殊情况">3.4 特殊情况</h2>
+
+<p>若 $a_{pq}=0$，则无需旋转（跳过该对）。</p>
+
+<hr />
+
+<h1 id="四jacobi-算法">四、Jacobi 算法</h1>
+
+<h2 id="41-算法流程">4.1 算法流程</h2>
+
+<p><strong>算法 4.1.1（循环 Jacobi 法）</strong></p>
+
+<p>输入：对称矩阵 $A\in M_n(\mathbb R)$，容差 $\text{tol}$。
+输出：特征值 $\lambda_1,\dots,\lambda_n$，特征向量矩阵 $V$。</p>
+
+<ol>
+  <li>初始化：</li>
+</ol>
+
+\[A^{(0)}=A,\qquad V^{(0)}=I_n.\]
+
+<ol>
+  <li>对每一轮扫描 $k=0,1,2,\dots$：
+    <ul>
+      <li>对 $p=1,\dots,n-1$，$q=p+1,\dots,n$：
+        <ul>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>若 $</td>
+                  <td>a_{pq}</td>
+                  <td>$ 足够小（如 $</td>
+                  <td>a_{pq}</td>
+                  <td>\le\text{tol}\cdot\sqrt{</td>
+                  <td>a_{pp}a_{qq}</td>
+                  <td>}$），跳过；</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li>否则，计算 $\tau,t,c,s$，构造 $J(p,q,\theta)$；</li>
+          <li>更新：</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+\[A^{(k+1)}=J^{\mathsf T}A^{(k)}J,\qquad
+          V^{(k+1)}=V^{(k)}J.\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 计算非对角范数
+</code></pre></div></div>
+
+\[\operatorname{off}(A^{(k+1)})=\sqrt{\sum_{i\ne j}(a_{ij}^{(k+1)})^2}.\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 若 $\operatorname{off}(A^{(k+1)})\le\text{tol}$，停止。 3. 输出：$\lambda_i=a_{ii}$（最终矩阵的对角元），$V$ 的列为特征向量。
+</code></pre></div></div>
+
+<h2 id="42-更新公式高效实现">4.2 更新公式（高效实现）</h2>
+
+<p>每次旋转只更新第 $p,q$ 行/列，无需重新计算整个矩阵。具体地：</p>
+
+<p><strong>对角线</strong>：</p>
+
+\[a_{pp}\leftarrow a_{pp}-t\cdot a_{pq},\qquad
+a_{qq}\leftarrow a_{qq}+t\cdot a_{pq}.\]
+
+<p>（这里利用了 $a’<em>{pq}=0$ 和迹不变 $a’</em>{pp}+a’<em>{qq}=a</em>{pp}+a_{qq}$。）</p>
+
+<p><strong>交叉项</strong>（$k\ne p,q$）：</p>
+
+\[a_{kp}\leftarrow ca_{kp}-sa_{kq},\qquad
+a_{kq}\leftarrow sa_{kp}+ca_{kq}.\]
+
+<p>（注意：更新 $a_{kp}$ 和 $a_{kq}$ 时需用旧值，故先暂存。）</p>
+
+<p><strong>特征向量</strong>：</p>
+
+\[v_{kp}\leftarrow cv_{kp}-sv_{kq},\qquad
+v_{kq}\leftarrow sv_{kp}+cv_{kq},\qquad k=1,\dots,n.\]
+
+<p><strong>目标元素</strong>：</p>
+
+\[a_{pq}\leftarrow0,\qquad a_{qp}\leftarrow0.\]
+
+<h2 id="43-收敛判据">4.3 收敛判据</h2>
+
+<p>常用的收敛判据：</p>
+
+<ol>
+  <li><strong>非对角范数</strong>：</li>
+</ol>
+
+\[\operatorname{off}(A)=\sqrt{\sum_{i\ne j}a_{ij}^2}\le\text{tol}.\]
+
+<ol>
+  <li><strong>归一化非对角范数</strong>：</li>
+</ol>
+
+\[\sqrt{\sum_{i\ne j}\frac{a_{ij}^2}{a_{ii}a_{jj}}}\le\text{tol}.\]
+
+<p>这更适合处理各元素量级差异大的情形。</p>
+
+<ol>
+  <li><strong>最大非对角元</strong>：</li>
+</ol>
+
+\[\max_{i\ne j}|a_{ij}|\le\text{tol}.\]
+
+<h2 id="44-例题">4.4 例题</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}.\]
+
+<p><strong>第 1 步</strong>：$p=1$，$q=2$，$a_{11}=a_{22}=2$，$a_{12}=1$。</p>
+
+\[\tau=\frac{a_{22}-a_{11}}{2a_{12}}=0.\]
+
+<p>取 $t=1$，$c=1/\sqrt2$，$s=1/\sqrt2$。</p>
+
+<p>更新：</p>
+
+\[a'_{11}=c^2a_{11}-2csa_{12}+s^2a_{22}=\frac12\cdot2-2\cdot\frac12\cdot1+\frac12\cdot2=1,\]
+
+\[a'_{22}=s^2a_{11}+2csa_{12}+c^2a_{22}=1+1+1=3,\]
+
+\[a'_{12}=0.\]
+
+<p>故</p>
+
+\[A'=\begin{pmatrix}1&amp;0\\0&amp;3\end{pmatrix}.\]
+
+<p>特征值为 $1,3$。</p>
+
+<p>特征向量：</p>
+
+\[V=J=\begin{pmatrix}\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt2}\\-\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt2}\end{pmatrix}.\]
+
+<p>$V$ 的列即为对应特征值的特征向量。</p>
+
+<p><strong>验证</strong>：$A$ 的特征值为 $2\pm1=3,1$。正确。</p>
+
+<hr />
+
+<h1 id="五收敛性">五、收敛性</h1>
+
+<h2 id="51-非对角范数单调递减">5.1 非对角范数单调递减</h2>
+
+<p><strong>定理 5.1.1</strong><br />
+每次旋转后，非对角范数满足</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2.\]
+
+<p><strong>证明</strong><br />
+相似变换保持 Frobenius 范数：</p>
+
+\[\|A'\|_F^2=\|A\|_F^2.\]
+
+<p>而</p>
+
+\[\|A\|_F^2=\sum_{i}a_{ii}^2+\operatorname{off}(A)^2.\]
+
+<p>旋转后 $a’<em>{pq}=0$，且对角线平方和增加 $2a</em>{pq}^2$（可验证），故</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2.\]
+
+<p>$\square$</p>
+
+<p><strong>推论</strong>：$\operatorname{off}(A^{(k)})$ 单调递减，且</p>
+
+\[\sum_{k}\operatorname{off}(A^{(k)})^2&lt;\infty,\]
+
+<p>故 $\operatorname{off}(A^{(k)})\to0$。即算法收敛到对角矩阵。</p>
+
+<h2 id="52-二次收敛">5.2 二次收敛</h2>
+
+<p><strong>定理 5.2.1</strong><br />
+在循环 Jacobi 策略下，当 $\operatorname{off}(A)$ 足够小时，每次扫描后</p>
+
+\[\operatorname{off}(A^{(k+1)})\le C\cdot\operatorname{off}(A^{(k)})^2,\]
+
+<p>其中 $C$ 为常数。</p>
+
+<p><strong>证明思路</strong>：每次旋转精确消去一个非对角元，同时对其他非对角元的影响是二阶小量。一轮扫描消去 $n(n-1)/2$ 个元素，累积效果使非对角范数按平方速率下降。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>, §8.5。</p>
+
+<p><strong>意义</strong>：一旦接近收敛，每轮扫描有效数字约翻倍。通常不到 10 轮扫描即可达到机器精度。</p>
+
+<h2 id="53-收敛速度的直观理解">5.3 收敛速度的直观理解</h2>
+
+<ul>
+  <li>初期：非对角元较大，每次旋转消去一个，范数线性下降；</li>
+  <li>后期：非对角元已很小，旋转对其他元素的影响是二阶的，范数平方下降；</li>
+  <li>总扫描轮数：通常 $O(\log\log(1/\epsilon))$，其中 $\epsilon$ 为机器精度。</li>
+</ul>
+
+<hr />
+
+<h1 id="六计算量与存储">六、计算量与存储</h1>
+
+<h2 id="61-计算量">6.1 计算量</h2>
+
+<p>每次旋转：</p>
+<ul>
+  <li>更新第 $p,q$ 行/列：约 $4n$ 次乘法；</li>
+  <li>更新特征向量：约 $4n$ 次乘法。</li>
+</ul>
+
+<p>一轮扫描有 $n(n-1)/2$ 次旋转，故每轮约</p>
+
+\[\frac{n(n-1)}{2}\cdot8n\approx4n^3\]
+
+<p>次运算。</p>
+
+<p>总计算量：</p>
+
+\[O(n^3\log\log(1/\epsilon)).\]
+
+<p>对于 $n\le1000$，通常小于 $10n^3$。</p>
+
+<h2 id="62-存储">6.2 存储</h2>
+
+<ul>
+  <li>$A$：$n\times n$（可原地更新）；</li>
+  <li>$V$：$n\times n$（累积旋转）；</li>
+  <li>总计 $2n^2$ 存储。</li>
+</ul>
+
+<hr />
+
+<h1 id="七数值稳定性与精度优势">七、数值稳定性与精度优势</h1>
+
+<h2 id="71-稳定性">7.1 稳定性</h2>
+
+<p>每次旋转 $J$ 为正交矩阵，相似变换 $J^{\mathsf T}AJ$ 不放大误差。算法是<strong>后向稳定</strong>的：</p>
+
+\[V^{\mathsf T}(A+\delta A)V=\Lambda,\qquad
+\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F.\]
+
+<h2 id="72-高相对精度">7.2 高相对精度</h2>
+
+<p><strong>定理 7.2.1（Demmel–Veselić）</strong><br />
+设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则 Jacobi 法计算得到的特征值满足</p>
+
+\[\frac{|\hat\lambda_i-\lambda_i|}{|\lambda_i|}\le O(n\epsilon)\kappa(X).\]
+
+<p>即<strong>小特征值也能保持高相对精度</strong>。</p>
+
+<p><strong>对比 QR 迭代</strong>：三对角化过程会引入 $\kappa(A)\epsilon$ 量级的扰动，小特征值的相对精度受限。Jacobi 法不经过三对角化，全程正交变换，故小特征值的相对精度更高。</p>
+
+<p><strong>应用</strong>：量子化学、结构动力学中，小特征值的相对精度至关重要，Jacobi 法是首选。</p>
+
+<hr />
+
+<h1 id="八与其他方法的对比">八、与其他方法的对比</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>Jacobi 法</th>
+      <th>对称 QR 迭代</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>是否需要三对角化</td>
+      <td>不需要</td>
+      <td>需要</td>
+    </tr>
+    <tr>
+      <td>收敛方式</td>
+      <td>二次收敛，&lt;10 轮扫描</td>
+      <td>三对角 QR，快速收敛</td>
+    </tr>
+    <tr>
+      <td>总计算量</td>
+      <td>$O(n^3\log\log(1/\epsilon))$</td>
+      <td>$O(n^3)$</td>
+    </tr>
+    <tr>
+      <td>速度</td>
+      <td>较慢</td>
+      <td>最快（只求特征值）</td>
+    </tr>
+    <tr>
+      <td>小特征值相对精度</td>
+      <td>高</td>
+      <td>一般</td>
+    </tr>
+    <tr>
+      <td>并行性</td>
+      <td>好（旋转可并行）</td>
+      <td>较差（QR 迭代串行）</td>
+    </tr>
+    <tr>
+      <td>适用场景</td>
+      <td>高精度、并行</td>
+      <td>通用、速度优先</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：</p>
+<ul>
+  <li>通用场景、只求特征值：对称 QR 迭代（LAPACK <code class="language-plaintext highlighter-rouge">dsyev</code>）；</li>
+  <li>高相对精度、并行环境：Jacobi 法；</li>
+  <li>小规模稠密矩阵：两者均可，Jacobi 实现更简单。</li>
+</ul>
+
+<hr />
+
+<h1 id="九总结">九、总结</h1>
+
+\[\boxed{
+\begin{aligned}
+&amp;\text{Jacobi 法：反复施加平面旋转，消去非对角元，逐步对角化对称矩阵。}\\
+&amp;\text{每步：}A\leftarrow J^{\mathsf T}AJ,\quad V\leftarrow VJ.\\
+&amp;\text{收敛：非对角范数单调递减，后期二次收敛，通常 &lt;10 轮扫描。}\\
+&amp;\text{优势：高相对精度、并行友好、实现简单。}\\
+&amp;\text{劣势：绝对速度较慢。}
+\end{aligned}}\]
+
+<p><strong>核心步骤</strong>：</p>
+<ol>
+  <li>选取 $(p,q)$，计算 $\tau,t,c,s$；</li>
+  <li>构造旋转 $J(p,q,\theta)$；</li>
+  <li>更新 $A$ 的第 $p,q$ 行/列（$a_{pq}$ 置零）；</li>
+  <li>累积 $V$；</li>
+  <li>检查非对角范数，收敛则停止。</li>
+</ol>
+
+<p><strong>最终结果</strong>：$A$ 的对角元为特征值，$V$ 的列为特征向量，且</p>
+
+\[A=V\Lambda V^{\mathsf T}.\]
+
+<p>Jacobi 法是求解对称特征值问题的经典方法，其高相对精度和并行性使其在特定领域（如量子化学、结构动力学）中不可替代。虽然通用数值库默认采用 QR 迭代，但 Jacobi 法在精度敏感的场景中仍是首选。</p>
+
+<h1 id="附-a-对角线元素平方和增加推导">附 A： 对角线元素平方和增加推导</h1>
+
+<p>这个结论来自对 $2\times 2$ 子块对角化后对角线元素变化的直接计算。下面严格推导。</p>
+
+<hr />
+
+<h2 id="一设定">一、设定</h2>
+
+<p>设 $A$ 对称，选取 $p&lt;q$，做相似变换</p>
+
+\[A'=J^{\mathsf T}AJ,\]
+
+<p>其中 $J=J(p,q,\theta)$，$c=\cos\theta$，$s=\sin\theta$。由前文，更新后的对角线元素为</p>
+
+\[a'_{pp}=c^2a_{pp}-2csa_{pq}+s^2a_{qq},\]
+
+\[a'_{qq}=s^2a_{pp}+2csa_{pq}+c^2a_{qq}.\]
+
+<hr />
+
+<h2 id="二计算对角线平方和的变化">二、计算对角线平方和的变化</h2>
+
+<p>考虑对角线平方和的变化量：</p>
+
+\[\Delta=(a'_{pp})^2+(a'_{qq})^2-(a_{pp}^2+a_{qq}^2).\]
+
+<p>将 $a’<em>{pp},a’</em>{qq}$ 代入，展开。为简化，记</p>
+
+\[u=a_{pp},\qquad v=a_{qq},\qquad w=a_{pq}.\]
+
+<p>则</p>
+
+\[a'_{pp}=c^2u-2csw+s^2v,\]
+
+\[a'_{qq}=s^2u+2csw+c^2v.\]
+
+<p>先计算 $a’<em>{pp}+a’</em>{qq}$：</p>
+
+\[a'_{pp}+a'_{qq}=(c^2+s^2)(u+v)=u+v.\]
+
+<p>即迹不变。</p>
+
+<p>再计算 $a’<em>{pp}-a’</em>{qq}$：</p>
+
+\[a'_{pp}-a'_{qq}=(c^2-s^2)(u-v)-4csw.\]
+
+<p>记 $c^2-s^2=\cos2\theta$，$2cs=\sin2\theta$，则</p>
+
+\[a'_{pp}-a'_{qq}=\cos2\theta\,(u-v)-2\sin2\theta\,w.\]
+
+<p>利用恒等式</p>
+
+\[(a'_{pp})^2+(a'_{qq})^2=\frac12\left[(a'_{pp}+a'_{qq})^2+(a'_{pp}-a'_{qq})^2\right],\]
+
+<p>以及</p>
+
+\[u^2+v^2=\frac12\left[(u+v)^2+(u-v)^2\right],\]
+
+<p>得</p>
+
+\[\Delta=\frac12\left[(a'_{pp}-a'_{qq})^2-(u-v)^2\right].\]
+
+<p>（因为 $a’<em>{pp}+a’</em>{qq}=u+v$，第一项相消。）</p>
+
+<p>代入 $a’<em>{pp}-a’</em>{qq}$：</p>
+
+\[(a'_{pp}-a'_{qq})^2=\left[\cos2\theta\,(u-v)-2\sin2\theta\,w\right]^2.\]
+
+<p>展开：</p>
+
+\[=\cos^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>减去 $(u-v)^2$：</p>
+
+\[(a'_{pp}-a'_{qq})^2-(u-v)^2
+=(\cos^2 2\theta-1)(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>因 $\cos^2 2\theta-1=-\sin^2 2\theta$，</p>
+
+\[=-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2.\]
+
+<p>于是</p>
+
+\[\Delta=\frac12\left[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w+4\sin^2 2\theta\,w^2\right].\]
+
+<hr />
+
+<h2 id="三利用消元条件">三、利用消元条件</h2>
+
+<p>旋转角 $\theta$ 的选取使得 $a’_{pq}=0$。由前文，</p>
+
+\[a'_{pq}=cs(u-v)+(c^2-s^2)w=0.\]
+
+<p>即</p>
+
+\[\frac12\sin2\theta\,(u-v)+\cos2\theta\,w=0.\]
+
+<p>故</p>
+
+\[\sin2\theta\,(u-v)=-2\cos2\theta\,w.\]
+
+<p>将此代入 $\Delta$ 的表达式。先处理含 $(u-v)^2$ 和 $(u-v)w$ 的项：</p>
+
+\[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w.\]
+
+<p>由 $\sin2\theta\,(u-v)=-2\cos2\theta\,w$，得</p>
+
+\[\sin^2 2\theta\,(u-v)^2=4\cos^2 2\theta\,w^2,\]
+
+\[\sin2\theta\,(u-v)w=-2\cos2\theta\,w^2.\]
+
+<p>代入：</p>
+
+\[-\sin^2 2\theta\,(u-v)^2-4\cos2\theta\sin2\theta\,(u-v)w
+=-4\cos^2 2\theta\,w^2+8\cos^2 2\theta\,w^2
+=4\cos^2 2\theta\,w^2.\]
+
+<p>于是</p>
+
+\[\Delta=\frac12\left[4\cos^2 2\theta\,w^2+4\sin^2 2\theta\,w^2\right]
+=\frac12\cdot4w^2(\cos^2 2\theta+\sin^2 2\theta)
+=2w^2.\]
+
+<p>即</p>
+
+\[\boxed{\Delta=2a_{pq}^2.}\]
+
+<hr />
+
+<h2 id="四结论">四、结论</h2>
+
+\[(a'_{pp})^2+(a'_{qq})^2=(a_{pp})^2+(a_{qq})^2+2a_{pq}^2.\]
+
+<p><strong>直观解释</strong>：</p>
+<ul>
+  <li>相似变换保持 Frobenius 范数：$|A’|_F^2=|A|_F^2$；</li>
+  <li>非对角元 $a_{pq}$ 被消为零，其对 Frobenius 范数的贡献 $2a_{pq}^2$（因 $a_{pq}=a_{qp}$）转移到对角线上；</li>
+  <li>其他非对角元的变化对平方和的影响相互抵消，最终对角线平方和恰好增加 $2a_{pq}^2$。</li>
+</ul>
+
+<p>这保证了</p>
+
+\[\operatorname{off}(A')^2=\operatorname{off}(A)^2-2a_{pq}^2,\]
+
+<p>即非对角范数单调递减。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">对称矩阵特征值的标准算法</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/16/%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E7%9A%84%E6%A0%87%E5%87%86%E7%AE%97%E6%B3%95.html" rel="alternate" type="text/html" title="对称矩阵特征值的标准算法" /><published>2026-10-16T00:00:00+00:00</published><updated>2026-10-16T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/16/%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E7%9A%84%E6%A0%87%E5%87%86%E7%AE%97%E6%B3%95</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/16/%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E7%9A%84%E6%A0%87%E5%87%86%E7%AE%97%E6%B3%95.html"><![CDATA[<p>下面从零开始，系统介绍 <strong>Householder 三对角化</strong>与<strong>带位移的 QR 迭代</strong>，并说明二者如何组合为求解对称矩阵特征值的标准算法。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
+
+<h1 id="一背景对称特征值问题的标准流程">一、背景：对称特征值问题的标准流程</h1>
+
+<p>求解对称矩阵 $A$ 的全部特征值，标准数值流程为：</p>
+
+\[A\ \xrightarrow{\text{Householder 相似变换}}\ T\ \text{（三对角）}
+\ \xrightarrow{\text{带位移 QR 迭代}}\ \Lambda\ \text{（对角）}\]
+
+<p>两步的作用：</p>
+<ol>
+  <li><strong>三对角化</strong>：用有限步正交相似变换将稠密对称矩阵化为三对角矩阵，计算量 $O(n^3)$，只做一次；</li>
+  <li><strong>QR 迭代</strong>：对三对角矩阵迭代应用带位移的 QR 分解，使其收敛到对角形式，每步计算量仅 $O(n)$。</li>
+</ol>
+
+<p>两步均为正交相似变换，保持特征值不变。</p>
+
+<hr />
+
+<h1 id="二householder-三对角化">二、Householder 三对角化</h1>
+
+<h2 id="21-目标">2.1 目标</h2>
+
+<p><strong>问题</strong>：给定实对称矩阵 $A\in M_n(\mathbb R)$，求正交矩阵 $Q$，使得</p>
+
+\[T=Q^{\mathsf T}AQ\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>为<strong>三对角矩阵</strong>，即 $i,j$ 满足 $</td>
+      <td>i-j</td>
+      <td>&gt;1$ 时 $t_{ij}=0$。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>因 $A$ 对称，$T$ 也对称，故 $T$ 形如</p>
+
+\[T=\begin{pmatrix}
+\alpha_1&amp;\beta_1&amp;&amp;&amp;\\
+\beta_1&amp;\alpha_2&amp;\beta_2&amp;&amp;\\
+&amp;\beta_2&amp;\ddots&amp;\ddots&amp;\\
+&amp;&amp;\ddots&amp;\ddots&amp;\beta_{n-1}\\
+&amp;&amp;&amp;\beta_{n-1}&amp;\alpha_n
+\end{pmatrix}.\]
+
+<h2 id="22-为什么先三对角化">2.2 为什么先三对角化</h2>
+
+<ol>
+  <li><strong>保持特征值</strong>：正交相似变换 $Q^{\mathsf T}AQ$ 不改变特征值；</li>
+  <li><strong>保持对称性</strong>：$A$ 对称，$Q^{\mathsf T}AQ$ 仍对称；</li>
+  <li><strong>降低后续计算量</strong>：三对角矩阵的 QR 迭代每步仅 $O(n)$，而稠密矩阵每步 $O(n^3)$；</li>
+  <li><strong>有限步完成</strong>：三对角化只需 $n-2$ 步 Householder 变换，不是迭代。</li>
+</ol>
+
+<h2 id="23-householder-变换回顾">2.3 Householder 变换回顾</h2>
+
+<p><strong>定义 2.3.1（Householder 矩阵）</strong><br />
+设 $v\in\mathbb R^k$ 非零，定义</p>
+
+\[H=I-2\frac{vv^{\mathsf T}}{v^{\mathsf T}v}\in M_k(\mathbb R).\]
+
+<p>则 $H$ 对称、正交、对合（$H^2=I$），几何上为关于超平面 $v^\perp$ 的镜面反射。</p>
+
+<p><strong>消元性质</strong>：给定 $x\in\mathbb R^k$ 非零，取</p>
+
+\[\alpha=-\operatorname{sgn}(x_1)\|x\|_2,\qquad v=x-\alpha e_1,\]
+
+<p>则</p>
+
+\[Hx=\alpha e_1.\]
+
+<p>即 $H$ 将 $x$ 映到第一个坐标轴方向，消去其余分量。</p>
+
+<h2 id="24-三对角化算法">2.4 三对角化算法</h2>
+
+<h3 id="241-第-k-步的目标">2.4.1 第 $k$ 步的目标</h3>
+
+<p>设经过前 $k-1$ 步后，矩阵已形如</p>
+
+\[A^{(k-1)}=\begin{pmatrix}
+T_{k-1}&amp;0\\
+0&amp;B
+\end{pmatrix},\]
+
+<p>其中 $T_{k-1}$ 为 $(k-1)\times(k-1)$ 三对角块，$B\in M_{n-k+1}(\mathbb R)$ 为剩余稠密块（对称）。</p>
+
+<p>第 $k$ 步的目标：消去 $B$ 的第一列（即 $A^{(k-1)}$ 的第 $k$ 列）从第 $k+2$ 行起的元素，使第 $k$ 列只有第 $k$ 行和第 $k+1$ 行非零。</p>
+
+<h3 id="242-构造-householder-向量">2.4.2 构造 Householder 向量</h3>
+
+<p>取 $A^{(k-1)}$ 第 $k$ 列中从第 $k+1$ 行到第 $n$ 行的子向量</p>
+
+\[x=\begin{pmatrix}
+a_{k+1,k}^{(k-1)}\\
+a_{k+2,k}^{(k-1)}\\
+\vdots\\
+a_{n,k}^{(k-1)}
+\end{pmatrix}\in\mathbb R^{n-k}.\]
+
+<p>构造 $(n-k)\times(n-k)$ 的 Householder 矩阵 $\tilde H_k$，使得</p>
+
+\[\tilde H_kx=\alpha_k e_1,\qquad
+\alpha_k=-\operatorname{sgn}(x_1)\|x\|_2.\]
+
+<p>嵌入 $n$ 维：</p>
+
+\[H_k=\begin{pmatrix}
+I_k&amp;0\\
+0&amp;\tilde H_k
+\end{pmatrix}\in M_n(\mathbb R).\]
+
+<h3 id="243-相似变换">2.4.3 相似变换</h3>
+
+<p>更新矩阵：</p>
+
+\[A^{(k)}=H_kA^{(k-1)}H_k.\]
+
+<p>注意是<strong>相似变换</strong>（左右各乘 $H_k$），而非单侧变换。</p>
+
+<p><strong>为什么左右都要乘</strong>：</p>
+<ul>
+  <li>左乘 $H_k$ 消去第 $k$ 列下方元素；</li>
+  <li>右乘 $H_k$ 保持对称性，同时消去第 $k$ 行右侧元素（因 $A$ 对称）。</li>
+</ul>
+
+<p>由于 $H_k$ 只作用于第 $k+1$ 行到第 $n$ 行（及对应列），前 $k$ 行前 $k$ 列不受影响。</p>
+
+<h3 id="244-具体计算">2.4.4 具体计算</h3>
+
+<p>$A^{(k)}=H_kA^{(k-1)}H_k$ 可分两步计算，避免显式构造 $H_k$：</p>
+
+<ol>
+  <li><strong>左乘</strong>：计算</li>
+</ol>
+
+\[w=\beta A^{(k-1)}_{k+1:n,\,k+1:n}\,v,\qquad
+   A^{(k-1)}_{k+1:n,\,k+1:n}\leftarrow A^{(k-1)}_{k+1:n,\,k+1:n}-vw^{\mathsf T}-wv^{\mathsf T},\]
+
+<p>其中 $\beta=2/(v^{\mathsf T}v)$。这利用了 $H=I-\beta vv^{\mathsf T}$ 和对称性。</p>
+<ol>
+  <li><strong>右乘</strong>：由对称性，右乘结果与左乘互为转置，故只需保证结果对称。</li>
+</ol>
+
+<p>更常见的实现是：</p>
+
+\[p=\beta A^{(k-1)}_{k+1:n,\,k+1:n}v,\qquad
+w=p-\frac{\beta}{2}(p^{\mathsf T}v)v,\]
+
+\[A^{(k-1)}_{k+1:n,\,k+1:n}\leftarrow A^{(k-1)}_{k+1:n,\,k+1:n}-vw^{\mathsf T}-wv^{\mathsf T}.\]
+
+<p>这保证了 $H_kA^{(k-1)}H_k$ 的对称性。</p>
+
+<h3 id="245-终止">2.4.5 终止</h3>
+
+<p>对 $k=1,2,\dots,n-2$ 重复上述步骤，最终得到三对角矩阵</p>
+
+\[T=H_{n-2}\cdots H_1AH_1\cdots H_{n-2}.\]
+
+<p>令</p>
+
+\[Q=H_1H_2\cdots H_{n-2},\]
+
+<p>则</p>
+
+\[T=Q^{\mathsf T}AQ,\qquad A=QTQ^{\mathsf T}.\]
+
+<p><strong>注</strong>：第 $n-1$ 步无需进行，因为此时剩余块为 $2\times 2$，已是三对角。</p>
+
+<h2 id="25-计算量">2.5 计算量</h2>
+
+<p>第 $k$ 步作用于 $(n-k)\times(n-k)$ 子矩阵，计算量约 $4(n-k)^2$。总计</p>
+
+\[\sum_{k=1}^{n-2}4(n-k)^2\approx\frac43n^3.\]
+
+<p>若同时累积 $Q$，额外约 $\frac43n^3$。</p>
+
+<h2 id="26-数值稳定性">2.6 数值稳定性</h2>
+
+<p>每步 $H_k$ 为正交矩阵，变换是正交相似变换，<strong>后向稳定</strong>：</p>
+
+\[Q^{\mathsf T}(A+\delta A)Q=T,\qquad
+\|\delta A\|_F\le c\,n\,\epsilon\,\|A\|_F.\]
+
+<p>Householder 三对角化是求解对称特征值问题的标准第一步，LAPACK 例程 <code class="language-plaintext highlighter-rouge">dsytrd</code> 即基于此。</p>
+
+<h2 id="27-例题">2.7 例题</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}
+4&amp;1&amp;2&amp;1\\
+1&amp;3&amp;1&amp;0\\
+2&amp;1&amp;5&amp;2\\
+1&amp;0&amp;2&amp;6
+\end{pmatrix}.\]
+
+<p>第 1 步：取 $x=(1,2,1)^{\mathsf T}$（第 1 列第 2–4 行）。</p>
+
+\[\|x\|_2=\sqrt6,\qquad \alpha_1=-\sqrt6.\]
+
+<p>构造 $3\times 3$ Householder 矩阵 $\tilde H_1$，使 $\tilde H_1x=\alpha_1e_1$。嵌入得 $H_1$，计算 $A^{(1)}=H_1AH_1$。此时第 1 列第 3、4 行变为零。</p>
+
+<p>第 2 步：对 $2\times 2$ 子块做类似变换，最终得到三对角矩阵。</p>
+
+<hr />
+
+<h1 id="三带位移的-qr-迭代">三、带位移的 QR 迭代</h1>
+
+<h2 id="31-qr-迭代的基本思想">3.1 QR 迭代的基本思想</h2>
+
+<p><strong>无位移 QR 迭代</strong>：</p>
+
+\[A_k=Q_kR_k\quad(\text{QR 分解}),\qquad A_{k+1}=R_kQ_k=Q_k^{\mathsf T}A_kQ_k.\]
+
+<p>即每步对 $A_k$ 做 QR 分解，再交换因子顺序。因</p>
+
+\[A_{k+1}=Q_k^{\mathsf T}A_kQ_k,\]
+
+<p>这是正交相似变换，特征值不变。在一定条件下，$A_k$ 收敛到上三角矩阵（对角元为特征值）。</p>
+
+<p><strong>问题</strong>：无位移 QR 迭代收敛可能很慢，尤其当特征值模接近时。</p>
+
+<h2 id="32-位移策略">3.2 位移策略</h2>
+
+<p><strong>带位移 QR 迭代</strong>：选取位移 $\mu_k$，对 $A_k-\mu_kI$ 做 QR 分解：</p>
+
+\[A_k-\mu_kI=Q_kR_k,\]
+
+\[A_{k+1}=R_kQ_k+\mu_kI=Q_k^{\mathsf T}A_kQ_k.\]
+
+<p>仍为正交相似变换，特征值不变。</p>
+
+<p><strong>位移的作用</strong>：若 $\mu_k$ 接近某个特征值 $\lambda_j$，则收敛加速。直观上，位移使该特征值对应的分量迅速衰减。</p>
+
+<p><strong>位移的选取</strong>：</p>
+<ol>
+  <li><strong>Rayleigh 商位移</strong>：$\mu_k=(A_k)_{nn}$（对三对角矩阵，取右下角元素）；</li>
+  <li><strong>Wilkinson 位移</strong>：取 $A_k$ 右下角 $2\times 2$ 子块</li>
+</ol>
+
+\[\begin{pmatrix}a_{n-1,n-1}&amp;a_{n-1,n}\\a_{n,n-1}&amp;a_{nn}\end{pmatrix}\]
+
+<p>的两个特征值中<strong>更接近 $a_{nn}$</strong> 的那个作为 $\mu_k$。这是三对角 QR 迭代的标准选择，保证三次收敛。</p>
+
+<h2 id="33-三对角矩阵的-qr-迭代">3.3 三对角矩阵的 QR 迭代</h2>
+
+<h3 id="331-三对角矩阵的-qr-分解">3.3.1 三对角矩阵的 QR 分解</h3>
+
+<p>对三对角矩阵 $T\in M_n(\mathbb R)$，其 QR 分解可用 $n-1$ 个 Givens 旋转实现：</p>
+
+\[R=G_{n-1}^{\mathsf T}\cdots G_1^{\mathsf T}T,\qquad
+Q=G_1\cdots G_{n-1},\]
+
+<p>其中 $G_i$ 作用于第 $i,i+1$ 行，消去 $t_{i+1,i}$。</p>
+
+<p><strong>关键性质</strong>：三对角矩阵的 QR 分解中，$Q$ 和 $R$ 也是三对角的（$Q$ 为三对角正交矩阵，$R$ 为上三对角）。因此</p>
+
+\[T'=RQ\]
+
+<p>仍为三对角矩阵。<strong>QR 迭代保持三对角结构</strong>，每步计算量仅 $O(n)$。</p>
+
+<h3 id="332-隐式-qr-迭代francis-算法">3.3.2 隐式 QR 迭代（Francis 算法）</h3>
+
+<p>显式计算 $T-\mu I=QR$ 再计算 $RQ+\mu I$ 虽可行，但实际采用<strong>隐式</strong>方法，避免显式构造 $Q$：</p>
+
+<ol>
+  <li>计算位移 $\mu_k$（Wilkinson 位移）；</li>
+  <li>计算 $T-\mu_kI$ 的第一列 $(t_{11}-\mu_k,t_{21},0,\dots,0)^{\mathsf T}$；</li>
+  <li>构造 Givens 旋转 $G_1$，消去第二个分量；</li>
+  <li>用<strong>追赶法</strong>（chasing）依次构造 $G_2,\dots,G_{n-1}$，将产生的非零元素逐步“赶”到矩阵右下角；</li>
+  <li>最终得到 $T’=G_{n-1}^{\mathsf T}\cdots G_1^{\mathsf T}TG_1\cdots G_{n-1}$，仍为三对角。</li>
+</ol>
+
+<p><strong>隐式 Q 定理</strong>：隐式方法与显式 QR 迭代产生相同的 $T’$（在符号意义下），但计算量更小。</p>
+
+<h3 id="333-收敛与收缩">3.3.3 收敛与收缩</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>收敛判据</strong>：当次对角元 $</td>
+      <td>t_{i+1,i}</td>
+      <td>$ 足够小（如 $</td>
+      <td>t_{i+1,i}</td>
+      <td>\le\epsilon(</td>
+      <td>t_{ii}</td>
+      <td>+</td>
+      <td>t_{i+1,i+1}</td>
+      <td>)$）时，可将其视为零，矩阵分裂为两个较小的三对角块：</td>
+    </tr>
+  </tbody>
+</table>
+
+\[T=\begin{pmatrix}T_1&amp;0\\0&amp;T_2\end{pmatrix}.\]
+
+<p>分别对 $T_1,T_2$ 继续 QR 迭代。这一过程称为<strong>收缩</strong>（deflation）。</p>
+
+<p><strong>终止</strong>：当所有次对角元都足够小，矩阵近似对角，对角元即为特征值。</p>
+
+<h3 id="334-算法流程">3.3.4 算法流程</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>T = 三对角矩阵
+while 未对角化:
+    找到最小的 m，使得 T(m:n, m:n) 为未收缩块
+    if 块大小为 1:
+        记录特征值，收缩
+    elif 块大小为 2:
+        直接解 2x2 特征值问题，收缩
+    else:
+        计算 Wilkinson 位移 μ
+        隐式 QR 迭代一步（追赶法）
+        检查次对角元，若足够小则收缩
+</code></pre></div></div>
+
+<h2 id="34-收敛性">3.4 收敛性</h2>
+
+<p><strong>定理 3.4.1（带 Wilkinson 位移的 QR 迭代）</strong><br />
+设 $T$ 为对称三对角矩阵，特征值互异。带 Wilkinson 位移的隐式 QR 迭代产生的次对角元满足</p>
+
+\[|t_{i+1,i}^{(k)}|=O(|\lambda_{i+1}-\lambda_i|^k)\quad\text{（渐近）},\]
+
+<p>且当 $t_{n,n-1}^{(k)}\to0$ 时，收敛速度为<strong>三次</strong>：</p>
+
+\[|t_{n,n-1}^{(k+1)}|=O\left(|t_{n,n-1}^{(k)}|^3\right).\]
+
+<p><strong>证明思路</strong>：Wilkinson 位移是最近特征值的二阶近似，QR 迭代等价于以该位移为参数的逆幂法，故局部三次收敛。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>, §8.3。</p>
+
+<h2 id="35-计算量">3.5 计算量</h2>
+
+<ul>
+  <li>每次 QR 迭代（隐式，三对角）：$O(n)$ 次运算；</li>
+  <li>平均每个特征值需 $O(1)$ 次迭代（因三次收敛）；</li>
+  <li>总计算量：$O(n^2)$（三对角化后）。</li>
+</ul>
+
+<p>对比：若直接对稠密矩阵做 QR 迭代，每步 $O(n^3)$，总计 $O(n^4)$。三对角化将总计算量降至 $O(n^3)$（含三对角化）。</p>
+
+<h2 id="36-累积特征向量">3.6 累积特征向量</h2>
+
+<p>若需特征向量，在 QR 迭代过程中累积所有 Givens 旋转：</p>
+
+\[Q_{\text{total}}=G_1G_2\cdots.\]
+
+<p>最终</p>
+
+\[T=Q_{\text{total}}^{\mathsf T}T_0Q_{\text{total}},\]
+
+<p>特征向量为 $Q_{\text{total}}$ 的列。结合三对角化的 $Q$，原矩阵的特征向量为 $QQ_{\text{total}}$ 的列。</p>
+
+<hr />
+
+<h1 id="四完整算法对称特征值问题">四、完整算法：对称特征值问题</h1>
+
+<p><strong>算法 4.1（对称矩阵特征值分解）</strong></p>
+
+<ol>
+  <li><strong>三对角化</strong>：</li>
+</ol>
+
+\[T=Q_1^{\mathsf T}AQ_1,\qquad Q_1=H_1H_2\cdots H_{n-2}.\]
+
+<ol>
+  <li><strong>带位移 QR 迭代</strong>：</li>
+</ol>
+
+\[T_k\xrightarrow{\text{隐式 QR}}T_{k+1},\qquad T_k\to\Lambda.\]
+
+<p>累积旋转得 $Q_2$，使</p>
+
+\[\Lambda=Q_2^{\mathsf T}TQ_2.\]
+
+<ol>
+  <li><strong>组合</strong>：</li>
+</ol>
+
+\[A=(Q_1Q_2)\Lambda(Q_1Q_2)^{\mathsf T}.\]
+
+<p>特征值为 $\Lambda$ 的对角元，特征向量为 $Q_1Q_2$ 的列。</p>
+
+<p><strong>计算量</strong>：</p>
+<ul>
+  <li>三对角化：$\frac43n^3$；</li>
+  <li>QR 迭代：$O(n^2)$；</li>
+  <li>累积特征向量：额外 $O(n^3)$。</li>
+</ul>
+
+<p><strong>LAPACK 实现</strong>：<code class="language-plaintext highlighter-rouge">dsyev</code>（简单驱动）、<code class="language-plaintext highlighter-rouge">dsyevd</code>（分而治之）、<code class="language-plaintext highlighter-rouge">dsyevr</code>（相对鲁棒）均采用此流程。</p>
+
+<hr />
+
+<h1 id="五例题">五、例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;1&amp;0\\1&amp;2&amp;1\\0&amp;1&amp;2\end{pmatrix}\]
+
+<p>已为三对角矩阵（无需三对角化）。</p>
+
+<p><strong>第 1 步</strong>：Wilkinson 位移。右下角 $2\times 2$ 子块</p>
+
+\[\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}\]
+
+<p>的特征值为 $3,1$，更接近 $a_{33}=2$ 的是 $1$（距离 1）或 $3$（距离 1），取 $\mu=1$（或 $3$）。</p>
+
+<p>取 $\mu=1$，对 $A-I$ 做 QR 分解，再计算 $RQ+I$。迭代若干步后，次对角元趋于零，对角元趋于 $2+\sqrt2,2,2-\sqrt2$。</p>
+
+<p><strong>验证</strong>：$A$ 的特征值为 $2+\sqrt2\approx3.414$，$2$，$2-\sqrt2\approx0.586$。</p>
+
+<hr />
+
+<h1 id="六总结">六、总结</h1>
+
+\[\begin{aligned}
+&amp;\text{Householder 三对角化：有限步正交相似变换，将对称矩阵化为三对角，}\\
+&amp;\qquad\text{计算量 }\frac43n^3\text{，后向稳定；}\\
+&amp;\text{带位移 QR 迭代：对三对角矩阵迭代 QR 分解，Wilkinson 位移保证三次收敛，}\\
+&amp;\qquad\text{每步 }O(n)\text{，保持三对角结构。}
+\end{aligned}\]
+
+<p><strong>两步的关系</strong>：</p>
+<ol>
+  <li>三对角化是<strong>有限步</strong>的，只做一次，将稠密矩阵化为稀疏结构；</li>
+  <li>QR 迭代是<strong>迭代</strong>的，利用三对角结构使每步计算量降至 $O(n)$；</li>
+  <li>两者均为正交相似变换，保持特征值不变；</li>
+  <li>组合后总计算量 $O(n^3)$，是求解对称特征值问题的标准算法。</li>
+</ol>
+
+<p><strong>关键点</strong>：</p>
+<ul>
+  <li>Householder 变换的镜面反射消元；</li>
+  <li>相似变换 $H_kAH_k$ 保持对称性；</li>
+  <li>隐式 QR 迭代（Francis 追赶法）避免显式构造 $Q$；</li>
+  <li>Wilkinson 位移保证三次收敛；</li>
+  <li>收缩（deflation）将问题分裂为更小的子问题。</li>
+</ul>
+
+<p>该算法是 LAPACK 中 <code class="language-plaintext highlighter-rouge">dsyev</code> 系列例程的核心，也是数值线性代数中最重要、最经典的算法之一。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">幂法求解主特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/15/%E5%B9%82%E6%B3%95%E6%B1%82%E8%A7%A3%E4%B8%BB%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="幂法求解主特征值" /><published>2026-10-15T00:00:00+00:00</published><updated>2026-10-15T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/15/%E5%B9%82%E6%B3%95%E6%B1%82%E8%A7%A3%E4%B8%BB%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/15/%E5%B9%82%E6%B3%95%E6%B1%82%E8%A7%A3%E4%B8%BB%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<h1 id="特征值问题回顾">特征值问题回顾</h1>
+
+<h2 id="定义">定义</h2>
+
+<p><strong>定义 1.1（特征值与特征向量）</strong></p>
+
+<p>设 $A\in M_n(\mathbb F)$。若存在非零向量 $x\in\mathbb F^n$ 和标量 $\lambda\in\mathbb F$，使得</p>
+
+\[Ax=\lambda x,\]
+
+<p>则称 $\lambda$ 为 $A$ 的<strong>特征值</strong>，$x$ 为对应的<strong>特征向量</strong>。</p>
+
+<h2 id="特征多项式">特征多项式</h2>
+
+<p>特征值是特征多项式</p>
+
+\[p(\lambda)=\det(\lambda I-A)\]
+
+<p>的根。对 $n$ 阶矩阵，$p(\lambda)$ 是 $n$ 次多项式，故 $A$ 在复数域上恰有 $n$ 个特征值（计重数）。</p>
+
+<h2 id="为什么要迭代法">为什么要迭代法</h2>
+
+<p>直接求特征多项式根的方法（如 QR 算法）计算量为 $O(n^3)$，适用于中小规模矩阵。但对于<strong>大规模稀疏矩阵</strong>，显式构造矩阵或做 $O(n^3)$ 分解不可行。此时需要<strong>只依赖于矩阵-向量乘法</strong> $Ax$ 的迭代方法。</p>
+
+<p><strong>幂法、逆幂法、Rayleigh 商迭代</strong>都属于此类迭代方法。</p>
+
+<h2 id="基本假设">基本假设</h2>
+
+<p>设 $A$ 可对角化，其特征值为</p>
+
+\[|\lambda_1|&gt;|\lambda_2|\ge\cdots\ge|\lambda_n|,\]
+
+<p>对应的特征向量 $v_1,\dots,v_n$ 线性无关。称 $\lambda_1$ 为<strong>主特征值</strong>，$v_1$ 为<strong>主特征向量</strong>。</p>
+
+<h1 id="幂法power-method">幂法（Power Method）</h1>
+
+<h2 id="核心思想">核心思想</h2>
+
+<p>幂法利用矩阵反复作用于向量，使向量逐渐对齐到主特征向量方向。</p>
+
+<p><strong>直观</strong>：若 $x=\sum_{i=1}^n c_i v_i$，则</p>
+
+\[A^kx=\sum_{i=1}^n c_i\lambda_i^k v_i
+=\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>因 $</td>
+      <td>\lambda_i/\lambda_1</td>
+      <td>&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="算法">算法</h2>
+
+<p><strong>算法 2.2.1（幂法）</strong></p>
+
+<ol>
+  <li>选取初始向量 $x^{(0)}\ne 0$（通常随机选取或取全 1 向量）；</li>
+  <li>对 $k=0,1,2,\dots$：</li>
+</ol>
+
+\[y^{(k+1)}=Ax^{(k)},\]
+
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2}\quad\text{（归一化）},\]
+
+\[\lambda^{(k+1)}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}\quad\text{（Rayleigh 商估计）}.\]
+
+<ol>
+  <li>当 $|x^{(k+1)}-x^{(k)}|_2&lt;\text{tol}$ 或 $|Ax^{(k)}-\lambda^{(k)}x^{(k)}|_2&lt;\text{tol}$ 时停止。</li>
+</ol>
+
+<p><strong>输出</strong>：$\lambda^{(k)}\approx\lambda_1$，$x^{(k)}\approx v_1$。</p>
+
+<h2 id="收敛性">收敛性</h2>
+
+<p><strong>定理 2.3.1</strong></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>设 $A$ 可对角化，$</td>
+      <td>\lambda_1</td>
+      <td>&gt;</td>
+      <td>\lambda_2</td>
+      <td>\ge\cdots\ge</td>
+      <td>\lambda_n</td>
+      <td>$，且初始向量 $x^{(0)}$ 在主特征向量方向上的分量 $c_1\ne 0$。则幂法产生的 $x^{(k)}$ 满足</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\|x^{(k)}-(\pm v_1)\|_2=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right),\]
+
+\[|\lambda^{(k)}-\lambda_1|=O\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right).\]
+
+<p><strong>证明思路</strong><br />
+设 $x^{(0)}=\sum_{i=1}^n c_i v_i$，$c_1\ne 0$。则</p>
+
+\[A^kx^{(0)}=\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>归一化后，误差由 $\left</td>
+      <td>\dfrac{\lambda_2}{\lambda_1}\right</td>
+      <td>^k$ 控制。$\square$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>收敛速率</strong>：线性收敛，收敛因子为</p>
+
+\[\left|\frac{\lambda_2}{\lambda_1}\right|.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>当 $</td>
+      <td>\lambda_2</td>
+      <td>\approx</td>
+      <td>\lambda_1</td>
+      <td>$ 时收敛很慢。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="优缺点">优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>实现极其简单；</li>
+  <li>每步只需一次矩阵-向量乘法，计算量 $O(\text{nnz}(A))$；</li>
+  <li>适用于大规模稀疏矩阵。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>只能求主特征值（模最大者）；</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>收敛速度依赖于 $</td>
+          <td>\lambda_2/\lambda_1</td>
+          <td>$，可能很慢；</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>若 $c_1=0$（初始向量与 $v_1$ 正交），则失效（实践中因舍入误差通常会自行恢复）；</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>若 $</td>
+          <td>\lambda_1</td>
+          <td>=</td>
+          <td>\lambda_2</td>
+          <td>$（如 $-\lambda_1$），则不收敛。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<h1 id="逆幂法inverse-power-method">逆幂法（Inverse Power Method）</h1>
+
+<h2 id="核心思想-1">核心思想</h2>
+
+<p>逆幂法将幂法应用于 $(A-\mu I)^{-1}$，从而求<strong>最接近 $\mu$</strong> 的特征值。</p>
+
+<p><strong>观察</strong>：若 $Av_i=\lambda_i v_i$，则</p>
+
+\[(A-\mu I)^{-1}v_i=\frac{1}{\lambda_i-\mu}v_i.\]
+
+<p>即 $(A-\mu I)^{-1}$ 的特征值为 $\dfrac{1}{\lambda_i-\mu}$，特征向量不变。</p>
+
+<p>若 $\mu$ 接近某个特征值 $\lambda_j$，则 $\dfrac{1}{\lambda_j-\mu}$ 的模最大，故对 $(A-\mu I)^{-1}$ 做幂法会收敛到 $v_j$。</p>
+
+<h2 id="算法-1">算法</h2>
+
+<p><strong>算法 3.2.1（逆幂法）</strong></p>
+
+<ol>
+  <li>选取位移 $\mu$（接近目标特征值）和初始向量 $x^{(0)}\ne 0$；</li>
+  <li>对 $k=0,1,2,\dots$：
+    <ul>
+      <li>解线性方程组</li>
+    </ul>
+  </li>
+</ol>
+
+\[(A-\mu I)y^{(k+1)}=x^{(k)};\]
+
+<ul>
+  <li>归一化：</li>
+</ul>
+
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2};\]
+
+<ul>
+  <li>估计特征值：</li>
+</ul>
+
+\[\lambda^{(k+1)}=\mu+\frac{(x^{(k+1)})^{\mathsf T}x^{(k)}}{(x^{(k+1)})^{\mathsf T}x^{(k+1)}}\quad\text{（或 Rayleigh 商）}.\]
+
+<ol>
+  <li>收敛判据同幂法。</li>
+</ol>
+
+<p><strong>注</strong>：实际实现中，$(A-\mu I)$ 的 LU 分解只需计算一次，每步只需前代与回代，计算量 $O(n^2)$（稠密）或 $O(\text{nnz})$（稀疏）。</p>
+
+<h2 id="收敛性-1">收敛性</h2>
+
+<p><strong>定理 3.3.1</strong></p>
+
+<p>设 $\lambda_j$ 是 $A$ 的特征值，$\mu$ 接近 $\lambda_j$，且</p>
+
+\[\frac{1}{|\lambda_j-\mu|}&gt;\frac{1}{|\lambda_i-\mu|},\qquad\forall i\ne j.\]
+
+<p>则逆幂法产生的 $x^{(k)}$ 收敛到 $v_j$，收敛因子为</p>
+
+\[\max_{i\ne j}\left|\frac{\lambda_j-\mu}{\lambda_i-\mu}\right|.\]
+
+<p><strong>证明思路</strong>：对 $(A-\mu I)^{-1}$ 应用幂法收敛性定理。$\square$</p>
+
+<p><strong>关键</strong>：若 $\mu$ 非常接近 $\lambda_j$，收敛极快；若 $\mu$ 恰好等于 $\lambda_j$，则一步收敛（但 $(A-\mu I)$ 奇异，需特殊处理）。</p>
+
+<h2 id="优缺点-1">优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>可求<strong>任意指定</strong>的特征值（通过选取 $\mu$）；</li>
+  <li>若 $\mu$ 接近目标特征值，收敛极快；</li>
+  <li>适用于大规模稀疏矩阵（若线性方程组可高效求解）。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>需要解线性方程组，每步计算量大于幂法；</li>
+  <li>需要预先知道 $\mu$ 的近似值；</li>
+  <li>若 $\mu$ 恰好是特征值，$(A-\mu I)$ 奇异，需特殊处理。</li>
+</ol>
+
+<h1 id="rayleigh-商rayleigh-quotient">Rayleigh 商（Rayleigh Quotient）</h1>
+
+<h2 id="定义-1">定义</h2>
+
+<p><strong>定义 4.1（Rayleigh 商）</strong></p>
+
+<p>设 $A\in M_n(\mathbb R)$ 为对称矩阵，$x\in\mathbb R^n$，$x\ne 0$。称</p>
+
+\[R(x)=\frac{x^{\mathsf T}Ax}{x^{\mathsf T}x}\]
+
+<p>为 $A$ 在 $x$ 处的 <strong>Rayleigh 商</strong>。</p>
+
+<p>若 $|x|_2=1$，则 $R(x)=x^{\mathsf T}Ax$。</p>
+
+<p><strong>复情形</strong>：若 $A$ 为 Hermite 矩阵，$x\in\mathbb C^n$，则</p>
+
+\[R(x)=\frac{x^{\mathsf H}Ax}{x^{\mathsf H}x}.\]
+
+<h2 id="基本性质">基本性质</h2>
+
+<p><strong>定理 4.2.1</strong></p>
+
+<p>设 $A$ 对称，特征值为 $\lambda_1\le\cdots\le\lambda_n$。则对任意 $x\ne 0$，</p>
+
+\[\lambda_1\le R(x)\le\lambda_n.\]
+
+<p>且</p>
+
+\[\min_{x\ne 0}R(x)=\lambda_1,\qquad\max_{x\ne 0}R(x)=\lambda_n.\]
+
+<p><strong>证明</strong><br />
+将 $x$ 按 $A$ 的标准正交特征向量 $v_1,\dots,v_n$ 展开：$x=\sum_{i=1}^n c_i v_i$。则</p>
+
+\[R(x)=\frac{\sum_{i=1}^n\lambda_i c_i^2}{\sum_{i=1}^n c_i^2}.\]
+
+<p>这是 $\lambda_i$ 的加权平均，故介于 $\lambda_1$ 与 $\lambda_n$ 之间。取 $x=v_1$ 或 $x=v_n$ 达到端点。$\square$</p>
+
+<p><strong>定理 4.2.2（驻点性质）</strong><br />
+设 $A$ 对称。则 $x$ 是 $A$ 的特征向量当且仅当 $x$ 是 $R(x)$ 的驻点，即</p>
+
+\[\nabla R(x)=0.\]
+
+<p>此时 $R(x)$ 等于对应的特征值。</p>
+
+<p><strong>证明</strong><br />
+计算梯度：</p>
+
+\[\nabla R(x)=\frac{2(Ax-R(x)x)}{x^{\mathsf T}x}.\]
+
+<p>故 $\nabla R(x)=0\iff Ax=R(x)x$，即 $x$ 是特征向量，$R(x)$ 是对应特征值。$\square$</p>
+
+<h2 id="最优性">最优性</h2>
+
+<p><strong>定理 4.3.1（Rayleigh 商的最优性）</strong></p>
+
+<p>设 $A$ 对称，$x$ 是 $v$ 的近似，$|x|_2=1$，$|x-v|_2=\epsilon$。则</p>
+
+\[|R(x)-\lambda|=O(\epsilon^2),\]
+
+<p>其中 $\lambda$ 是对应于 $v$ 的特征值。</p>
+
+<p><strong>证明</strong><br />
+将 $x$ 按特征向量展开：$x=\sqrt{1-\epsilon^2}\,v+\epsilon w$，其中 $w\perp v$，$|w|_2=1$。则</p>
+
+\[R(x)=(1-\epsilon^2)\lambda+\epsilon^2 w^{\mathsf T}Aw.\]
+
+<p>故</p>
+
+\[|R(x)-\lambda|=\epsilon^2|w^{\mathsf T}Aw-\lambda|\le\epsilon^2(\lambda_n-\lambda_1).\]
+
+<p>$\square$</p>
+
+<p><strong>意义</strong>：Rayleigh 商对特征向量的误差是<strong>二阶</strong>的。即使 $x$ 只有一阶精度，$R(x)$ 已有二阶精度。这使 Rayleigh 商成为极好的特征值估计。</p>
+
+<h2 id="应用">应用</h2>
+
+<ol>
+  <li><strong>特征值估计</strong>：给定近似特征向量 $x$，用 $R(x)$ 估计特征值；</li>
+  <li><strong>Rayleigh 商迭代</strong>：用 Rayleigh 商作为位移，加速收敛；</li>
+  <li><strong>特征值定位</strong>：Rayleigh 商的范围给出特征值的界；</li>
+  <li><strong>有限元方法</strong>：Rayleigh 商用于估计振动频率。</li>
+</ol>
+
+<h1 id="rayleigh-商迭代rayleigh-quotient-iteration">Rayleigh 商迭代（Rayleigh Quotient Iteration）</h1>
+
+<h2 id="核心思想-2">核心思想</h2>
+
+<p>Rayleigh 商迭代是<strong>逆幂法</strong>的改进：将位移 $\mu$ 取为当前向量的 Rayleigh 商，即</p>
+
+\[\mu_k=R(x^{(k)})=\frac{(x^{(k)})^{\mathsf T}Ax^{(k)}}{(x^{(k)})^{\mathsf T}x^{(k)}}.\]
+
+<p>由于 Rayleigh 商是特征值的二阶近似，位移会越来越精确，从而逆幂法的收敛越来越快。</p>
+
+<h2 id="算法-2">算法</h2>
+
+<p><strong>算法 5.2.1（Rayleigh 商迭代）</strong></p>
+
+<ol>
+  <li>选取初始向量 $x^{(0)}$，$|x^{(0)}|_2=1$；</li>
+  <li>对 $k=0,1,2,\dots$：
+    <ul>
+      <li>计算 Rayleigh 商：</li>
+    </ul>
+  </li>
+</ol>
+
+\[\mu_k=(x^{(k)})^{\mathsf T}Ax^{(k)};\]
+
+<ul>
+  <li>解线性方程组</li>
+</ul>
+
+\[(A-\mu_kI)y^{(k+1)}=x^{(k)};\]
+
+<ul>
+  <li>归一化：</li>
+</ul>
+
+\[x^{(k+1)}=\frac{y^{(k+1)}}{\|y^{(k+1)}\|_2};\]
+
+<ul>
+  <li>计算新的 Rayleigh 商：</li>
+</ul>
+
+\[\mu_{k+1}=(x^{(k+1)})^{\mathsf T}Ax^{(k+1)}.\]
+
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>当 $</td>
+          <td>\mu_{k+1}-\mu_k</td>
+          <td>&lt;\text{tol}$ 时停止。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<p><strong>输出</strong>：$\mu_{k+1}\approx\lambda$，$x^{(k+1)}\approx v$。</p>
+
+<h2 id="收敛性-2">收敛性</h2>
+
+<p><strong>定理 5.3.1（三次收敛）</strong></p>
+
+<p>设 $A$ 对称，$x^{(k)}$ 充分接近某特征向量 $v_j$，对应特征值 $\lambda_j$。则 Rayleigh 商迭代产生的 $\mu_k$ 和 $x^{(k)}$ 满足</p>
+
+\[|\mu_{k+1}-\lambda_j|=O(|\mu_k-\lambda_j|^3),\]
+
+\[\|x^{(k+1)}-(\pm v_j)\|_2=O(\|x^{(k)}-(\pm v_j)\|_2^3).\]
+
+<p><strong>证明思路</strong><br />
+Rayleigh 商本身是二阶近似：$|\mu_k-\lambda_j|=O(\epsilon_k^2)$，其中 $\epsilon_k=|x^{(k)}-v_j|$。逆幂法以 $\mu_k$ 为位移，收敛因子为</p>
+
+\[\left|\frac{\mu_k-\lambda_j}{\lambda_i-\mu_k}\right|=O(\epsilon_k^2).\]
+
+<p>故</p>
+
+\[\epsilon_{k+1}=O(\epsilon_k\cdot\epsilon_k^2)=O(\epsilon_k^3).\]
+
+<p>即三次收敛。$\square$</p>
+
+<p><strong>意义</strong>：Rayleigh 商迭代是<strong>收敛最快的特征值迭代方法之一</strong>。一旦接近特征值，每次迭代有效数字约增加三倍。</p>
+
+<h2 id="优缺点-2">优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li><strong>三次收敛</strong>：极快的局部收敛速度；</li>
+  <li>可求任意特征值（取决于初始向量）；</li>
+  <li>适用于对称矩阵（非对称矩阵收敛性较复杂）。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>每步需解线性方程组 $(A-\mu_kI)y=x^{(k)}$，且 $\mu_k$ 每步变化，<strong>无法预先分解</strong>，每步计算量为 $O(n^3)$（稠密）；</li>
+  <li>需要好的初始向量，否则可能不收敛或收敛到其他特征值；</li>
+  <li>若 $\mu_k$ 恰好等于特征值，$(A-\mu_kI)$ 奇异，需特殊处理；</li>
+  <li>对非对称矩阵，收敛性理论较复杂。</li>
+</ol>
+
+<h2 id="与其他方法的关系">与其他方法的关系</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>位移 $\mu$</th>
+      <th>收敛速度</th>
+      <th>每步计算量</th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>幂法</td>
+      <td>无</td>
+      <td>线性，因子 $</td>
+      <td>\lambda_2/\lambda_1</td>
+      <td>$</td>
+      <td>$O(\text{nnz})$</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>逆幂法</td>
+      <td>固定 $\mu$</td>
+      <td>线性，因子 $\max</td>
+      <td>\lambda_j-\mu</td>
+      <td>/</td>
+      <td>\lambda_i-\mu</td>
+      <td>$</td>
+      <td>一次分解 + $O(n^2)$</td>
+    </tr>
+    <tr>
+      <td>Rayleigh 商迭代</td>
+      <td>$\mu_k=R(x^{(k)})$</td>
+      <td>三次</td>
+      <td>每步 $O(n^3)$</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>关系</strong>：</p>
+<ul>
+  <li>逆幂法是幂法应用于 $(A-\mu I)^{-1}$；</li>
+  <li>Rayleigh 商迭代是逆幂法取 $\mu=\mu_k=R(x^{(k)})$；</li>
+  <li>若 Rayleigh 商迭代中固定 $\mu$（不更新），则退化为逆幂法。</li>
+</ul>
+
+<h1 id="例题">例题</h1>
+
+<h2 id="幂法">幂法</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;0\\0&amp;1\end{pmatrix},\qquad
+x^{(0)}=\begin{pmatrix}1\\1\end{pmatrix}.\]
+
+<p>则</p>
+
+\[x^{(1)}=\frac{Ax^{(0)}}{\|Ax^{(0)}\|}=\frac{(2,1)^{\mathsf T}}{\sqrt5},\]
+
+\[x^{(2)}=\frac{Ax^{(1)}}{\|Ax^{(1)}\|}=\frac{(4,1)^{\mathsf T}}{\sqrt{17}}.\]
+
+<p>方向趋于 $(1,0)^{\mathsf T}=v_1$，$\lambda_1=2$。</p>
+
+<h2 id="逆幂法">逆幂法</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;0\\0&amp;1\end{pmatrix},\qquad
+\mu=0.9.\]
+
+<p>则</p>
+
+\[(A-\mu I)^{-1}=\begin{pmatrix}\frac{1}{1.1}&amp;0\\0&amp;\frac{1}{0.1}\end{pmatrix}.\]
+
+<p>对 $(A-\mu I)^{-1}$ 做幂法，收敛到 $v_2=(0,1)^{\mathsf T}$，$\lambda_2=1$。</p>
+
+<h2 id="rayleigh-商">Rayleigh 商</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;0\\0&amp;1\end{pmatrix},\qquad
+x=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
+
+<p>则</p>
+
+\[R(x)=x^{\mathsf T}Ax=\frac12(2+1)=\frac32.\]
+
+<p>介于 $\lambda_1=1$ 与 $\lambda_2=2$ 之间。</p>
+
+<h2 id="rayleigh-商迭代">Rayleigh 商迭代</h2>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}2&amp;0\\0&amp;1\end{pmatrix},\qquad
+x^{(0)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.\]
+
+<p>则</p>
+
+\[\mu_0=R(x^{(0)})=\frac32.\]
+
+<p>解</p>
+
+\[(A-\mu_0I)y^{(1)}=x^{(0)}:\]
+
+\[\begin{pmatrix}0.5&amp;0\\0&amp;-0.5\end{pmatrix}y^{(1)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}
+\implies y^{(1)}=\sqrt2\begin{pmatrix}2\\-2\end{pmatrix}.\]
+
+<p>归一化：</p>
+
+\[x^{(1)}=\frac{1}{\sqrt2}\begin{pmatrix}1\\-1\end{pmatrix}.\]
+
+\[\mu_1=R(x^{(1)})=\frac12(2+1)=\frac32.\]
+
+<p>此时 $x^{(1)}$ 已是特征向量（对应 $\lambda=1$ 或 $2$ 的叠加），继续迭代将收敛到某个特征值。若初始向量更接近 $v_1$，则收敛到 $\lambda_1=2$。</p>
+
+<hr />
+
+<h1 id="总结">总结</h1>
+
+\[\begin{aligned}
+&amp;\text{幂法：反复 }x\leftarrow Ax/\|Ax\|,\text{ 求主特征值，线性收敛；}\\
+&amp;\text{逆幂法：对 }(A-\mu I)^{-1}\text{ 做幂法，求最接近 }\mu\text{ 的特征值；}\\
+&amp;\text{Rayleigh 商：}R(x)=\frac{x^{\mathsf T}Ax}{x^{\mathsf T}x},\text{ 特征值的二阶估计；}\\
+&amp;\text{Rayleigh 商迭代：逆幂法取 }\mu=R(x^{(k)}),\text{ 三次收敛。}
+\end{aligned}\]
+
+<p><strong>核心关系</strong>：</p>
+
+\[\text{幂法}\xrightarrow{\text{位移 }\mu}\text{逆幂法}\xrightarrow{\mu=R(x)}\text{Rayleigh 商迭代}.\]
+
+<p><strong>选择原则</strong>：</p>
+<ol>
+  <li><strong>只求主特征值</strong>：幂法；</li>
+  <li><strong>求指定特征值</strong>：逆幂法（需 $\mu$ 近似）；</li>
+  <li><strong>高精度特征值估计</strong>：Rayleigh 商；</li>
+  <li><strong>快速收敛（中小规模）</strong>：Rayleigh 商迭代。</li>
+</ol>
+
+<p><strong>共同点</strong>：都只依赖矩阵-向量乘法（逆幂法和 Rayleigh 商迭代还需解线性方程组），适用于大规模稀疏矩阵的特征值计算。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Jacobi SVD</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html" rel="alternate" type="text/html" title="Jacobi SVD" /><published>2026-10-14T00:00:00+00:00</published><updated>2026-10-14T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi%20SVD</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/14/Jacobi-SVD.html"><![CDATA[<h1 id="概述">概述</h1>
+
+<p><strong>Jacobi SVD</strong> 是一类通过<strong>迭代正交变换</strong>计算奇异值分解的数值算法。其思想源于 Jacobi 用于对称矩阵特征值分解的方法，后推广到 SVD 的计算。</p>
+
+<p>与基于双对角化的 Golub–Kahan 算法不同，Jacobi SVD 不追求有限步的精确分解，而是通过反复施加<strong>平面旋转</strong>（Jacobi 旋转），逐步消去矩阵中的非正交分量或非对角元素，使矩阵收敛到列正交形式或对角形式，从而提取奇异值和奇异向量。</p>
+
+<p>Jacobi SVD 分为两类：</p>
+<ul>
+  <li><strong>单边 Jacobi SVD</strong>：只从右侧施加旋转，使列向量两两正交；</li>
+  <li><strong>双边 Jacobi SVD</strong>：同时从左右两侧施加旋转，直接逼近对角形式。</li>
+</ul>
+
+<h1 id="jacobi-旋转">Jacobi 旋转</h1>
+
+<h2 id="定义">定义</h2>
+
+<p><strong>定义 2.1（Jacobi 旋转 / Givens 旋转）</strong></p>
+
+<p>设 $p&lt;q$，$\theta\in\mathbb R$。定义 $n$ 阶矩阵 $J(p,q,\theta)$ 为</p>
+
+\[J(p,q,\theta)=\begin{pmatrix}
+1&amp;&amp;&amp;&amp;&amp;&amp;\\
+&amp;\ddots&amp;&amp;&amp;&amp;&amp;\\
+&amp;&amp;c&amp;&amp;&amp;s&amp;&amp;\\
+&amp;&amp;&amp;\ddots&amp;&amp;&amp;\\
+&amp;&amp;&amp;-s&amp;&amp;c&amp;&amp;\\
+&amp;&amp;&amp;&amp;&amp;\ddots&amp;\\
+&amp;&amp;&amp;&amp;&amp;&amp;1
+\end{pmatrix},\]
+
 <p>其中 $c=\cos\theta$，$s=\sin\theta$，$c$ 位于 $(p,p)$ 和 $(q,q)$，$s$ 位于 $(p,q)$，$-s$ 位于 $(q,p)$，其余位置为单位矩阵元素。称 $J(p,q,\theta)$ 为 <strong>Jacobi 旋转</strong>。</p>
 
-<h3 id="22-基本性质">2.2 基本性质</h3>
+<h2 id="基本性质">基本性质</h2>
 
 <ol>
   <li><strong>正交性</strong>：</li>
@@ -52,7 +1743,7 @@
 </ol>
 
 \[(AJ)_{:,p}=cA_{:,p}-sA_{:,q},\qquad
-   (AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
+(AJ)_{:,q}=sA_{:,p}+cA_{:,q}.\]
 
 <p>左乘 $J^{\mathsf T}(p,q,\theta)$ 只改变第 $p$ 行和第 $q$ 行。</p>
 
@@ -61,11 +1752,11 @@
 </ol>
 
 \[\begin{pmatrix}c&amp;s\\-s&amp;c\end{pmatrix}\begin{pmatrix}x_p\\x_q\end{pmatrix}
-   =\begin{pmatrix}r\\0\end{pmatrix},\]
+=\begin{pmatrix}r\\0\end{pmatrix},\]
 
 <p>其中 $r=\sqrt{x_p^2+x_q^2}$。即通过旋转将一个分量消为零。</p>
 
-<h3 id="23-旋转参数的构造">2.3 旋转参数的构造</h3>
+<h2 id="旋转参数的构造">旋转参数的构造</h2>
 
 <p>给定 $x=(x_p,x_q)^{\mathsf T}$，要消去 $x_q$，取</p>
 
@@ -78,11 +1769,9 @@
 
 <p>若 $x_p=x_q=0$，取 $c=1$，$s=0$。</p>
 
-<hr />
+<h1 id="单边-jacobi-svd">单边 Jacobi SVD</h1>
 
-<h2 id="三单边-jacobi-svd">三、单边 Jacobi SVD</h2>
-
-<h3 id="31-核心思想">3.1 核心思想</h3>
+<h2 id="核心思想">核心思想</h2>
 
 <p>单边 Jacobi SVD 只从<strong>右侧</strong>对矩阵施加 Jacobi 旋转，即反复更新列向量，使它们两两正交。当所有列都足够正交时，矩阵的列范数即为奇异值，归一化后的列即为左奇异向量。</p>
 
@@ -100,7 +1789,7 @@
 
 <p>其中 $U$ 的列是 $G$ 各列归一化后的单位向量，$\Sigma$ 的对角元是 $G$ 各列的 2-范数。</p>
 
-<h3 id="32-旋转参数的构造">3.2 旋转参数的构造</h3>
+<h2 id="旋转参数的构造-1">旋转参数的构造</h2>
 
 <p>给定两列 $x=A_{:,p}$ 和 $y=A_{:,q}$，目标是找一个 $2\times 2$ 正交矩阵 $R$，使得</p>
 
@@ -153,7 +1842,7 @@
 
 <p>解此二次方程并取绝对值较小的根（保证数值稳定），即得上述 $t$ 的公式。</p>
 
-<h3 id="33-算法流程">3.3 算法流程</h3>
+<h2 id="算法流程">算法流程</h2>
 
 <p>以 $m\times n$ 矩阵（$m\ge n$）为例，输出 $A=U\Sigma V^{\mathsf T}$：</p>
 
@@ -182,7 +1871,7 @@ for i = 1 to n:
 
 <p>或等价的正交性度量。</p>
 
-<h3 id="34-收敛性">3.4 收敛性</h3>
+<h2 id="收敛性">收敛性</h2>
 
 <p><strong>定理 3.4.1（二次收敛）</strong><br />
 在循环 Jacobi 策略下，非对角部分的范数以二次速率趋于零。即存在常数 $C$，使得</p>
@@ -201,7 +1890,7 @@ for i = 1 to n:
 
 <p><strong>证明思路</strong>：每次旋转精确消去一个非对角元，同时对其他非对角元的影响是二阶小量。详细分析见 Golub &amp; Van Loan, <em>Matrix Computations</em>。</p>
 
-<h3 id="35-高相对精度">3.5 高相对精度</h3>
+<h2 id="高相对精度">高相对精度</h2>
 
 <p><strong>定理 3.5.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则单边 Jacobi SVD 计算得到的奇异值满足</p>
@@ -212,7 +1901,7 @@ for i = 1 to n:
 
 <p><strong>意义</strong>：小奇异值也能保持高相对精度。这是 Jacobi 方法相对于 Golub–Kahan 的核心优势。Golub–Kahan 的双对角化会引入 $\kappa(A)\epsilon$ 量级的扰动，小奇异值的相对精度受限。</p>
 
-<h3 id="36-预处理与加速">3.6 预处理与加速</h3>
+<h2 id="预处理与加速">预处理与加速</h2>
 
 <p>原始单边 Jacobi 可能需要较多扫描轮次。实践中常引入 <strong>QR 预处理</strong>：</p>
 
@@ -223,6 +1912,7 @@ for i = 1 to n:
 \[A\Pi=QR,\]
 
 <p>其中 $Q$ 正交，$R$ 上三角，$\Pi$ 为置换矩阵；</p>
+
 <ol>
   <li>对 $R$ 应用单边 Jacobi SVD：</li>
 </ol>
@@ -237,11 +1927,9 @@ for i = 1 to n:
 
 <p>由于 $R$ 是上三角矩阵，列之间的正交化更容易，收敛通常只需少数几轮扫描。该策略在 LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 等例程中被采用。</p>
 
-<hr />
+<h1 id="双边-jacobi-svd">双边 Jacobi SVD</h1>
 
-<h2 id="四双边-jacobi-svd">四、双边 Jacobi SVD</h2>
-
-<h3 id="41-核心思想">4.1 核心思想</h3>
+<h2 id="核心思想-1">核心思想</h2>
 
 <p>双边 Jacobi SVD 同时对矩阵的<strong>行和列</strong>施加 Jacobi 旋转，试图直接消去非对角元素，将矩阵变为对角矩阵。</p>
 
@@ -251,7 +1939,7 @@ for i = 1 to n:
 
 <p>在 $(p,q)$ 和 $(q,p)$ 位置上的元素变为零。</p>
 
-<h3 id="42-旋转参数的构造">4.2 旋转参数的构造</h3>
+<h2 id="旋转参数的构造-2">旋转参数的构造</h2>
 
 <p>给定 $2\times 2$ 子矩阵</p>
 
@@ -272,7 +1960,7 @@ for i = 1 to n:
 
 <p>具体地，可通过计算该 $2\times 2$ 矩阵的 SVD 得到 $K,J$，然后嵌入 $n$ 阶矩阵。</p>
 
-<h3 id="43-算法流程">4.3 算法流程</h3>
+<h2 id="算法流程-1">算法流程</h2>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G = A (方阵，或经 QR 预处理后的上三角矩阵)
 U = I_n
@@ -292,17 +1980,15 @@ until off 足够小
 返回 U, Σ = diag(G), V
 </code></pre></div></div>
 
-<h3 id="44-收敛性">4.4 收敛性</h3>
+<h2 id="收敛性-1">收敛性</h2>
 
 <p>与单边方法类似，双边 Jacobi 也以二次速率收敛。每次旋转精确消去两个非对角元（$(p,q)$ 和 $(q,p)$），同时对其他元素的影响是二阶小量。</p>
 
-<h3 id="45-高相对精度">4.5 高相对精度</h3>
+<h2 id="高相对精度-1">高相对精度</h2>
 
 <p>双边方法同样具有高相对精度，对小奇异值表现良好。原因与单边方法相同：全程使用正交变换，不放大条件数。</p>
 
-<hr />
-
-<h2 id="五单边与双边-jacobi-svd-的对比">五、单边与双边 Jacobi SVD 的对比</h2>
+<h1 id="单边与双边-jacobi-svd-的对比">单边与双边 Jacobi SVD 的对比</h1>
 
 <table>
   <thead>
@@ -363,9 +2049,7 @@ until off 足够小
   <li>两者都远优于基于双对角化的传统方法在相对精度上的表现。</li>
 </ul>
 
-<hr />
-
-<h2 id="六与其他-svd-算法的比较">六、与其他 SVD 算法的比较</h2>
+<h1 id="与其他-svd-算法的比较">与其他 SVD 算法的比较</h1>
 
 <table>
   <thead>
@@ -423,9 +2107,7 @@ until off 足够小
   <li>病态矩阵的谱分析。</li>
 </ul>
 
-<hr />
-
-<h2 id="七应用场景">七、应用场景</h2>
+<h1 id="应用场景">应用场景</h1>
 
 <ol>
   <li><strong>高精度需求</strong>：量子化学、数值线性代数中的谱分析；</li>
@@ -435,11 +2117,9 @@ until off 足够小
   <li><strong>教学与算法研究</strong>：Jacobi 旋转的几何直观使其成为理解 SVD 的优良工具。</li>
 </ol>
 
-<hr />
+<h1 id="总结">总结</h1>
 
-<h2 id="八总结">八、总结</h2>
-
-\[\boxed{\text{Jacobi SVD：通过迭代 Jacobi 旋转，逐步正交化列或对角化矩阵，计算 SVD。}}\]
+\[\text{Jacobi SVD：通过迭代 Jacobi 旋转，逐步正交化列或对角化矩阵，计算 SVD。}\]
 
 <p><strong>核心思想</strong>：</p>
 <ul>
@@ -462,7 +2142,173 @@ until off 足够小
 
 <p><strong>典型实现</strong>：LAPACK 的 <code class="language-plaintext highlighter-rouge">DGESVJ</code> 采用单边 Jacobi 结合 QR 预处理，是高精度 SVD 的标准工具之一。</p>
 
-<p>Jacobi SVD 与 Golub–Kahan 算法互为补充：前者以高相对精度和并行性见长，后者以计算效率和通用性著称。实际选择取决于问题对精度、规模和并行资源的具体要求。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">奇异值分解（Singular Value Decomposition，SVD）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html" rel="alternate" type="text/html" title="奇异值分解（Singular Value Decomposition，SVD）" /><published>2026-10-13T00:00:00+00:00</published><updated>2026-10-13T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3%EF%BC%88Singular%20Value%20Decomposition%EF%BC%8CSVD%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html"><![CDATA[<h1 id="引言">引言</h1>
+<p>Jacobi SVD 与 Golub–Kahan 算法互为补充：前者以高相对精度和并行性见长，后者以计算效率和通用性著称。实际选择取决于问题对精度、规模和并行资源的具体要求。</p>
+
+<h1 id="附-a-off-diagonal-范数">附 A： off-diagonal 范数</h1>
+
+<h2 id="单边-jacobi-svd-中的含义">单边 Jacobi SVD 中的含义</h2>
+
+<h3 id="单边-jacobi-的工作对象">单边 Jacobi 的工作对象</h3>
+
+<p>单边 Jacobi SVD 不直接对角化矩阵 $A$，而是反复右乘 Jacobi 旋转，使 $A$ 的<strong>列向量两两正交</strong>。设当前工作矩阵为</p>
+
+\[G\in\mathbb R^{m\times n},\qquad G_{:,1},\dots,G_{:,n}\text{ 为 }G\text{ 的列}.\]
+
+<p>理想收敛状态是</p>
+
+\[G_{:,p}^{\mathsf T}G_{:,q}=0,\qquad p\ne q.\]
+
+<h3 id="gram-矩阵">Gram 矩阵</h3>
+
+<p>列向量的正交性完全由 <strong>Gram 矩阵</strong> 刻画：</p>
+
+\[H=G^{\mathsf T}G\in M_n(\mathbb R),\qquad
+h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
+
+<ul>
+  <li>对角线元素 $h_{pp}=|G_{:,p}|_2^2$；</li>
+  <li>非对角线元素 $h_{pq}$（$p\ne q$）度量第 $p$ 列与第 $q$ 列的内积，即<strong>非正交程度</strong>。</li>
+</ul>
+
+<h3 id="off-diagonal-范数">off-diagonal 范数</h3>
+
+<p><strong>定义（off-diagonal 范数）</strong></p>
+
+<p>对 Gram 矩阵 $H=G^{\mathsf T}G$，称</p>
+
+\[\operatorname{off}(G)
+=\sqrt{\sum_{p\ne q}|h_{pq}|^2}
+=\sqrt{\sum_{p\ne q}\bigl(G_{:,p}^{\mathsf T}G_{:,q}\bigr)^2}\]
+
+<p>为 $G$ 的<strong>非对角范数</strong>（off-diagonal norm）。</p>
+
+<p>它衡量所有列对之间内积的总量，即<strong>整体非正交性</strong>。当 $\operatorname{off}(G)=0$ 时，$G$ 的列两两正交。</p>
+
+<h3 id="归一化版本">归一化版本</h3>
+
+<p>由于各列范数不同，绝对内积的大小不能直接比较，通常使用<strong>归一化非对角范数</strong>：</p>
+
+\[\operatorname{off}_{\text{rel}}(G)
+=\sqrt{\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}}}
+=\sqrt{\sum_{p\ne q}\left(\frac{G_{:,p}^{\mathsf T}G_{:,q}}{\|G_{:,p}\|_2\|G_{:,q}\|_2}\right)^2}.\]
+
+<p>这正是所有列对<strong>夹角余弦</strong>的平方和，取值在 $[0,n(n-1)]$ 之间，0 表示完全正交。归一化版本更适合作为收敛判据，因为它不受列尺度影响。</p>
+
+<h2 id="为什么需要计算它">为什么需要计算它</h2>
+
+<h3 id="作为收敛判据">作为收敛判据</h3>
+
+<p>单边 Jacobi SVD 是迭代算法，必须有一个<strong>停止准则</strong>。常见判据为</p>
+
+\[\operatorname{off}_{\text{rel}}(G)\le\text{tol},\]
+
+<p>其中 $\text{tol}$ 为预设容差（如 $10^{-14}$ 或与机器精度相关）。</p>
+
+<p>每轮扫描（对所有列对 $(p,q)$ 施加一次旋转）后计算一次 $\operatorname{off}_{\text{rel}}$，若低于容差则停止，否则继续下一轮扫描。</p>
+
+<h3 id="监控收敛速度">监控收敛速度</h3>
+
+<p>Jacobi 方法具有<strong>二次收敛</strong>性：接近收敛时，$\operatorname{off}$ 每轮扫描大约按平方速率下降：</p>
+
+\[\operatorname{off}(G^{(k+1)})\le C\cdot\operatorname{off}(G^{(k)})^2.\]
+
+<p>计算 $\operatorname{off}$ 可以监控这一行为，用于调试或自适应调整扫描策略。</p>
+
+<h3 id="保证数值可靠性">保证数值可靠性</h3>
+
+<p>若 $\operatorname{off}_{\text{rel}}$ 已足够小，则归一化后的列</p>
+
+\[u_i=\frac{G_{:,i}}{\|G_{:,i}\|_2}\]
+
+<p>构成标准正交向量组，且列范数 $|G_{:,i}|_2$ 即为奇异值 $\sigma_i$。此时提取的 SVD 是可靠的。若未收敛就提取，$U$ 的列可能不正交，分解失效。</p>
+
+<h2 id="实现中的具体做法">实现中的具体做法</h2>
+
+<p>典型实现（伪代码）如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repeat:
+    off_prev = off_rel(G)          // 本轮开始前的非对角范数
+    for p = 1 to n-1:
+        for q = p+1 to n:
+            计算 h_pp, h_qq, h_pq
+            if |h_pq| / sqrt(h_pp*h_qq) &gt; eps:
+                构造并施加 Jacobi 旋转，更新 G 的第 p,q 列及 V 的第 p,q 列
+    off_curr = off_rel(G)          // 本轮扫描后的非对角范数
+until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或停滞
+</code></pre></div></div>
+
+<p><strong>实现细节</strong>：</p>
+
+<ol>
+  <li><strong>不必显式计算 Gram 矩阵</strong>：只需在扫描过程中累加</li>
+</ol>
+
+\[\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}},\]
+
+<p>最后开方即可。</p>
+
+<ol>
+  <li>
+    <p><strong>可增量更新</strong>：每次旋转只改变第 $p,q$ 列，故只需更新涉及 $p,q$ 的项，无需重新计算全部。</p>
+  </li>
+  <li>
+    <p><strong>阈值跳过</strong>：若某对 $(p,q)$ 的归一化内积已小于 $\epsilon$（如 $10^{-15}$），则跳过该对，避免无效旋转。</p>
+  </li>
+  <li>
+    <p><strong>最大扫描轮数</strong>：为防止无限循环，通常设置最大轮数（如 30 或 50），超过则强制停止并给出警告。</p>
+  </li>
+</ol>
+
+<h2 id="与双边-jacobi-的区别">与双边 Jacobi 的区别</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>单边 Jacobi</th>
+      <th>双边 Jacobi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>非对角范数的对象</td>
+      <td>Gram 矩阵 $G^{\mathsf T}G$ 的非对角元</td>
+      <td>工作矩阵 $G$ 本身的非对角元</td>
+    </tr>
+    <tr>
+      <td>含义</td>
+      <td>列向量的非正交性</td>
+      <td>矩阵偏离对角形式的程度</td>
+    </tr>
+    <tr>
+      <td>收敛目标</td>
+      <td>列两两正交</td>
+      <td>矩阵对角化</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>双边 Jacobi 中，“off-diagonal 范数”指</p>
+
+\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}|g_{pq}|^2},\]
+
+<p>即矩阵本身非对角元素的总量。而单边 Jacobi 中，它指的是 Gram 矩阵的非对角元，物理意义不同。</p>
+
+<h2 id="五总结">五、总结</h2>
+
+\[\begin{aligned}
+&amp;\text{单边 Jacobi SVD 中的 “off-diagonal 范数” = Gram 矩阵 }G^{\mathsf T}G\text{ 非对角元的范数，}\\
+&amp;\text{度量当前矩阵列向量的整体非正交性，用作迭代的收敛判据。}
+\end{aligned}\]
+
+<p>其计算目的有三：</p>
+<ol>
+  <li><strong>判断是否收敛</strong>：低于容差则停止迭代；</li>
+  <li><strong>监控二次收敛</strong>：观察每轮扫描的下降速率；</li>
+  <li><strong>保证提取的 SVD 可靠</strong>：列足够正交时，列范数才是准确的奇异值，归一化列才是准确的左奇异向量。</li>
+</ol>
+
+<p>因此，这个步骤不是算法主体（主体是逐对施加 Jacobi 旋转），而是<strong>迭代控制与质量保障</strong>环节，是任何迭代 SVD 实现都不可缺少的部分。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">奇异值分解（Singular Value Decomposition，SVD）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html" rel="alternate" type="text/html" title="奇异值分解（Singular Value Decomposition，SVD）" /><published>2026-10-13T00:00:00+00:00</published><updated>2026-10-13T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3%EF%BC%88Singular%20Value%20Decomposition%EF%BC%8CSVD%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/13/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3-Singular-Value-Decomposition-SVD.html"><![CDATA[<h1 id="引言">引言</h1>
 
 <p>奇异值分解（Singular Value Decomposition，简称 SVD）是线性代数中最重要、最通用的矩阵分解之一。它适用于<strong>任意</strong> $m\times n$ 矩阵，无论方阵与否、是否满秩、是否可对角化。SVD 在数值线性代数、统计学、信号处理、机器学习等领域都有核心应用。</p>
 
@@ -3340,1765 +5186,4 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
   <li>适用于稠密矩阵。</li>
 </ol>
 
-<p>Householder 变换是数值线性代数中最基本、最重要的工具之一，其镜面反射的几何直观与代数简洁性使其成为 QR 分解、特征值计算和最小二乘问题的首选方法。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">施密特正交化</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html" rel="alternate" type="text/html" title="施密特正交化" /><published>2026-10-08T00:00:00+00:00</published><updated>2026-10-08T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E6%96%BD%E5%AF%86%E7%89%B9%E6%AD%A3%E4%BA%A4%E5%8C%96.html"><![CDATA[<h1 id="动机与基本问题">动机与基本问题</h1>
-
-<p>在线性代数中，经常需要将一组线性无关的向量转化为一组<strong>标准正交向量</strong>，即两两正交且每个向量长度为 $1$ 的向量组。标准正交基具有许多优良性质，例如计算投影、求解最小二乘问题、构造 QR 分解等。</p>
-
-<p><strong>问题陈述</strong><br />
-设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），$V$ 为 $\mathbb F$ 上的内积空间，内积记为 $\langle \cdot,\cdot\rangle$，诱导范数为 $|x|=\sqrt{\langle x,x\rangle}$。给定 $n$ 个线性无关的向量
-\(v_1,v_2,\dots,v_n\in V,\)</p>
-
-<p>求一组标准正交向量
-\(q_1,q_2,\dots,q_n\in V,\)</p>
-
-<p>使得对每个 $k=1,\dots,n$，
-\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
-
-<p>即 $q_1,\dots,q_k$ 张成与原向量组前 $k$ 个向量相同的子空间。</p>
-
-<h1 id="内积空间中的基本概念">内积空间中的基本概念</h1>
-
-<p><strong>定义 2.1（正交与标准正交）</strong></p>
-<ul>
-  <li>若 $\langle x,y\rangle=0$，则称 $x$ 与 $y$ <strong>正交</strong>，记作 $x\perp y$。</li>
-  <li>
-    <p>若向量组 $q_1,\dots,q_n$ 满足
-\(\langle q_i,q_j\rangle=\delta_{ij}=
-\begin{cases}
-1,&amp; i=j,\\
-0,&amp; i\ne j,
-\end{cases}\)</p>
-
-    <p>则称其为<strong>标准正交向量组</strong>。</p>
-  </li>
-</ul>
-
-<p><strong>定义 2.2（投影）</strong><br />
-设 $q$ 为单位向量（$|q|=1$），则向量 $v$ 在 $q$ 方向上的投影为
-\(\operatorname{proj}_q(v)=\langle v,q\rangle q.\)</p>
-
-<p>若 $q_1,\dots,q_k$ 为标准正交向量组，则 $v$ 在子空间 $\operatorname{span}(q_1,\dots,q_k)$ 上的正交投影为
-\(\operatorname{proj}(v)=\sum_{i=1}^k \langle v,q_i\rangle q_i.\)</p>
-
-<p>残差 $v-\operatorname{proj}(v)$ 与每个 $q_i$ 正交。</p>
-
-<h1 id="经典-gramschmidt-过程">经典 Gram–Schmidt 过程</h1>
-
-<h2 id="算法描述">算法描述</h2>
-
-<p><strong>经典 Gram–Schmidt 过程（CGS）</strong> 逐步构造标准正交向量组 $q_1,\dots,q_n$。</p>
-
-<p><strong>第 1 步</strong><br />
-令
-\(q_1=\frac{v_1}{\|v_1\|}.\)</p>
-
-<p>显然 $|q_1|=1$，且 $\operatorname{span}(q_1)=\operatorname{span}(v_1)$。</p>
-
-<p><strong>第 $k$ 步（$k=2,\dots,n$）</strong><br />
-假设已构造出标准正交向量 $q_1,\dots,q_{k-1}$，且
-\(\operatorname{span}(q_1,\dots,q_{k-1})=\operatorname{span}(v_1,\dots,v_{k-1}).\)</p>
-
-<p>令
-\(\tilde q_k = v_k - \sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i.\)</p>
-
-<p>由于 $v_k$ 与 $v_1,\dots,v_{k-1}$ 线性无关，$\tilde q_k\ne 0$。令
-\(q_k=\frac{\tilde q_k}{\|\tilde q_k\|}.\)</p>
-
-<p>则 $q_k$ 与 $q_1,\dots,q_{k-1}$ 正交，且 $|q_k|=1$。同时
-\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
-
-<h2 id="正确性证明">正确性证明</h2>
-
-<p><strong>命题 3.2.1</strong><br />
-经典 Gram–Schmidt 过程产生的向量组 $q_1,\dots,q_n$ 是标准正交的，且对每个 $k$，
-\(\operatorname{span}(q_1,\dots,q_k)=\operatorname{span}(v_1,\dots,v_k).\)</p>
-
-<p><strong>证明</strong><br />
-对 $k$ 归纳。$k=1$ 显然。</p>
-
-<p>假设对 $k-1$ 成立。对任意 $i&lt;k$，
-\(\langle \tilde q_k,q_i\rangle
-=\langle v_k,q_i\rangle-\sum_{j=1}^{k-1}\langle v_k,q_j\rangle\langle q_j,q_i\rangle.\)</p>
-
-<p>由归纳假设 $\langle q_j,q_i\rangle=\delta_{ij}$，故
-\(\langle \tilde q_k,q_i\rangle
-=\langle v_k,q_i\rangle-\langle v_k,q_i\rangle=0.\)</p>
-
-<p>因此 $\tilde q_k\perp q_i$（$i&lt;k$）。于是 $q_k=\tilde q_k/|\tilde q_k|$ 与所有 $q_i$ 正交且范数为 $1$。</p>
-
-<p>关于张成空间：由构造，
-\(v_k=\tilde q_k+\sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i,\)</p>
-
-<p>且 $\tilde q_k$ 是 $q_k$ 的倍数。因此 $v_k\in\operatorname{span}(q_1,\dots,q_k)$。反之，由 $\tilde q_k$ 的表达式，$q_k$ 是 $v_k$ 与 $q_1,\dots,q_{k-1}$ 的线性组合，而 $q_1,\dots,q_{k-1}$ 张成 $\operatorname{span}(v_1,\dots,v_{k-1})$，故 $q_k\in\operatorname{span}(v_1,\dots,v_k)$。因此两个子空间相等。$\square$</p>
-
-<h2 id="唯一性">唯一性</h2>
-
-<p>若要求每个 $q_k$ 与 $v_k$ 的内积为正（即 $\langle v_k,q_k\rangle&gt;0$），则标准正交基是唯一的。否则，每个 $q_k$ 可相差一个模为 $1$ 的标量因子。</p>
-
-<h1 id="与-qr-分解的关系">与 QR 分解的关系</h1>
-
-<p>设 $A=[v_1\ v_2\ \cdots\ v_n]\in M_{m\times n}(\mathbb F)$，其列向量线性无关。令
-\(Q=[q_1\ q_2\ \cdots\ q_n],\qquad
-R=\begin{pmatrix}
-r_{11}&amp;r_{12}&amp;\cdots&amp;r_{1n}\\
-0&amp;r_{22}&amp;\cdots&amp;r_{2n}\\
-\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
-0&amp;0&amp;\cdots&amp;r_{nn}
-\end{pmatrix},\)</p>
-
-<p>其中
-\(r_{ij}=\langle v_j,q_i\rangle\quad (i&lt;j),\qquad
-r_{jj}=\|\tilde q_j\|.\)</p>
-
-<p>则由 Gram–Schmidt 过程，
-\(v_j=\sum_{i=1}^{j-1}\langle v_j,q_i\rangle q_i + \tilde q_j
-=\sum_{i=1}^{j-1}r_{ij}q_i + r_{jj}q_j
-=\sum_{i=1}^{j}r_{ij}q_i.\)</p>
-
-<p>因此
-\(A=QR,\)</p>
-
-<p>其中 $Q$ 的列向量标准正交（$Q^{\mathsf H}Q=I$），$R$ 为上三角矩阵，且 $r_{jj}&gt;0$。</p>
-
-<p>这就给出了 <strong>QR 分解</strong> 的一种构造方法。然而，经典 Gram–Schmidt 在数值上不稳定，实际计算中常采用修正 Gram–Schmidt 或 Householder 变换。</p>
-
-<h1 id="修正-gramschmidt-过程">修正 Gram–Schmidt 过程</h1>
-
-<h2 id="数值问题">数值问题</h2>
-
-<p>经典 Gram–Schmidt 在浮点运算中，当向量接近线性相关时，由于舍入误差，计算出的 $q_k$ 可能不再与之前的 $q_i$ 精确正交，正交性损失严重。</p>
-
-<p><strong>修正 Gram–Schmidt（MGS）</strong> 通过改变计算顺序来改善正交性。</p>
-
-<h2 id="算法">算法</h2>
-
-<p>设 $v_1,\dots,v_n$ 线性无关。令 $a_i=v_i$ 作为工作向量。</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for i = 1 to n:
-    r_{ii} = ||a_i||
-    q_i = a_i / r_{ii}
-    for j = i+1 to n:
-        r_{ij} = &lt;q_i, a_j&gt;
-        a_j = a_j - r_{ij} q_i
-</code></pre></div></div>
-
-<p>最终得到标准正交向量 $q_1,\dots,q_n$ 和上三角矩阵 $R=(r_{ij})$。</p>
-
-<p><strong>区别</strong>：经典 GS 是对每个 $v_k$ 一次性减去所有投影；MGS 是每计算出一个 $q_i$，立即从所有后续向量 $a_j$ 中减去其在 $q_i$ 上的分量。</p>
-
-<h2 id="数值稳定性">数值稳定性</h2>
-
-<ul>
-  <li><strong>经典 GS</strong>：正交性误差约为 $\kappa(A)\epsilon$，其中 $\kappa(A)$ 是条件数，$\epsilon$ 是机器精度。</li>
-  <li><strong>修正 GS</strong>：正交性误差约为 $\kappa(A)\epsilon$，但常数更小，且在某些情况下显著优于 CGS。</li>
-  <li><strong>Householder 变换</strong>：正交性误差约为 $\epsilon$，数值最稳定，但计算量略大。</li>
-</ul>
-
-<p>因此，在高精度要求下，QR 分解通常采用 Householder 变换或 Givens 旋转，而非 Gram–Schmidt。</p>
-
-<h1 id="例题">例题</h1>
-
-<p>设
-\(v_1=\begin{pmatrix}1\\1\\0\end{pmatrix},\quad
-v_2=\begin{pmatrix}1\\0\\1\end{pmatrix},\quad
-v_3=\begin{pmatrix}0\\1\\1\end{pmatrix}.\)</p>
-
-<p>使用经典 Gram–Schmidt 正交化。</p>
-
-<p><strong>第 1 步</strong>：
-\(\|v_1\|=\sqrt{2},\qquad
-q_1=\frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\\0\end{pmatrix}.\)</p>
-
-<p><strong>第 2 步</strong>：
-\(\langle v_2,q_1\rangle
-=\frac{1}{\sqrt{2}}(1\cdot1+0\cdot1+1\cdot0)=\frac{1}{\sqrt{2}}.\)</p>
-
-\[\tilde q_2=v_2-\frac{1}{\sqrt{2}}q_1
-=\begin{pmatrix}1\\0\\1\end{pmatrix}
--\frac{1}{\sqrt{2}}\cdot\frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\\0\end{pmatrix}
-=\begin{pmatrix}1\\0\\1\end{pmatrix}
--\begin{pmatrix}\frac12\\\frac12\\0\end{pmatrix}
-=\begin{pmatrix}\frac12\\-\frac12\\1\end{pmatrix}.\]
-
-\[\|\tilde q_2\|=\sqrt{\frac14+\frac14+1}=\sqrt{\frac32}=\frac{\sqrt6}{2}.\]
-
-\[q_2=\frac{1}{\sqrt{6}/2}\begin{pmatrix}\frac12\\-\frac12\\1\end{pmatrix}
-=\frac{1}{\sqrt6}\begin{pmatrix}1\\-1\\2\end{pmatrix}.\]
-
-<p><strong>第 3 步</strong>：
-\(\langle v_3,q_1\rangle
-=\frac{1}{\sqrt{2}}(0\cdot1+1\cdot1+1\cdot0)=\frac{1}{\sqrt{2}},\)</p>
-
-\[\langle v_3,q_2\rangle
-=\frac{1}{\sqrt6}(0\cdot1+1\cdot(-1)+1\cdot2)=\frac{1}{\sqrt6}.\]
-
-\[\tilde q_3=v_3-\frac{1}{\sqrt{2}}q_1-\frac{1}{\sqrt6}q_2
-=\begin{pmatrix}0\\1\\1\end{pmatrix}
--\frac{1}{2}\begin{pmatrix}1\\1\\0\end{pmatrix}
--\frac{1}{6}\begin{pmatrix}1\\-1\\2\end{pmatrix}
-=\begin{pmatrix}0\\1\\1\end{pmatrix}
--\begin{pmatrix}\frac12\\\frac12\\0\end{pmatrix}
--\begin{pmatrix}\frac16\\-\frac16\\\frac13\end{pmatrix}
-=\begin{pmatrix}-\frac23\\\frac23\\\frac23\end{pmatrix}.\]
-
-\[\|\tilde q_3\|=\sqrt{\frac49+\frac49+\frac49}=\sqrt{\frac43}=\frac{2}{\sqrt3}.\]
-
-\[q_3=\frac{\sqrt3}{2}\begin{pmatrix}-\frac23\\\frac23\\\frac23\end{pmatrix}
-=\frac{1}{\sqrt3}\begin{pmatrix}-1\\1\\1\end{pmatrix}.\]
-
-<p>最终标准正交向量组为
-\(q_1=\frac{1}{\sqrt2}\begin{pmatrix}1\\1\\0\end{pmatrix},\quad
-q_2=\frac{1}{\sqrt6}\begin{pmatrix}1\\-1\\2\end{pmatrix},\quad
-q_3=\frac{1}{\sqrt3}\begin{pmatrix}-1\\1\\1\end{pmatrix}.\)</p>
-
-<h1 id="应用">应用</h1>
-
-<ol>
-  <li><strong>QR 分解</strong>：Gram–Schmidt 是构造 QR 分解的直接方法之一。</li>
-  <li><strong>最小二乘问题</strong>：求解 $\min|Ax-b|_2$ 时，若 $A=QR$，则解为 $Rx=Q^{\mathsf H}b$。</li>
-  <li><strong>特征值计算</strong>：QR 算法通过反复 QR 分解迭代求特征值。</li>
-  <li><strong>信号处理</strong>：正交化用于自适应滤波、波束形成等。</li>
-  <li><strong>数值线性代数</strong>：构造标准正交基，用于子空间迭代、Krylov 方法等。</li>
-</ol>
-
-<h1 id="与-householder-变换givens-旋转的比较">与 Householder 变换、Givens 旋转的比较</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>数值稳定性</th>
-      <th>计算量</th>
-      <th>适用场景</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>经典 Gram–Schmidt</td>
-      <td>差</td>
-      <td>$2mn^2$</td>
-      <td>教学、小规模</td>
-    </tr>
-    <tr>
-      <td>修正 Gram–Schmidt</td>
-      <td>较好</td>
-      <td>$2mn^2$</td>
-      <td>中等规模、并行</td>
-    </tr>
-    <tr>
-      <td>Householder 变换</td>
-      <td>极好</td>
-      <td>$2mn^2-\frac23n^3$</td>
-      <td>通用、QR 分解标准</td>
-    </tr>
-    <tr>
-      <td>Givens 旋转</td>
-      <td>好</td>
-      <td>约 $3mn^2$</td>
-      <td>稀疏矩阵、并行</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>在数值计算库（LAPACK、MATLAB、NumPy）中，QR 分解通常采用 Householder 变换，因其稳定且高效。</p>
-
-<h1 id="总结">总结</h1>
-
-\[\text{Gram–Schmidt 正交化：将线性无关向量组转化为标准正交向量组。}\]
-
-<p><strong>核心公式</strong>：
-\(\tilde q_k = v_k - \sum_{i=1}^{k-1}\langle v_k,q_i\rangle q_i,\qquad
-q_k = \frac{\tilde q_k}{\|\tilde q_k\|}.\)</p>
-
-<p><strong>与 QR 分解的关系</strong>：
-\(A=QR,\quad Q\text{ 列标准正交},\quad R\text{ 上三角}.\)</p>
-
-<p><strong>数值实现</strong>：经典 Gram–Schmidt 不稳定，修正 Gram–Schmidt 较好，Householder 变换最稳定。</p>
-
-<p>Gram–Schmidt 正交化是线性代数中构造标准正交基的基本工具，也是理解 QR 分解、最小二乘法和许多数值算法的基石。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">高斯约当消元法</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E9%AB%98%E6%96%AF%E7%BA%A6%E5%BD%93%E6%B6%88%E5%85%83%E6%B3%95.html" rel="alternate" type="text/html" title="高斯约当消元法" /><published>2026-10-08T00:00:00+00:00</published><updated>2026-10-08T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E9%AB%98%E6%96%AF%E7%BA%A6%E5%BD%93%E6%B6%88%E5%85%83%E6%B3%95</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/08/%E9%AB%98%E6%96%AF%E7%BA%A6%E5%BD%93%E6%B6%88%E5%85%83%E6%B3%95.html"><![CDATA[<h1 id="问题与基本思想">问题与基本思想</h1>
-
-<h2 id="线性方程组">线性方程组</h2>
-
-<p>设 $\mathbb F$ 为数域（通常为 $\mathbb R$ 或 $\mathbb C$），给定线性方程组
-\(\begin{cases}
-a_{11}x_1+a_{12}x_2+\cdots+a_{1n}x_n=b_1,\\
-a_{21}x_1+a_{22}x_2+\cdots+a_{2n}x_n=b_2,\\
-\vdots\\
-a_{m1}x_1+a_{m2}x_2+\cdots+a_{mn}x_n=b_m.
-\end{cases}\)
-矩阵形式为
-\(Ax=b,\)</p>
-
-<p>其中 $A=(a_{ij})\in M_{m\times n}(\mathbb F)$，$x\in\mathbb F^n$，$b\in\mathbb F^m$。</p>
-
-<p><strong>增广矩阵</strong>定义为
-\((A\mid b)=
-\left(\begin{array}{cccc|c}
-a_{11}&amp;a_{12}&amp;\cdots&amp;a_{1n}&amp;b_1\\
-a_{21}&amp;a_{22}&amp;\cdots&amp;a_{2n}&amp;b_2\\
-\vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\vdots\\
-a_{m1}&amp;a_{m2}&amp;\cdots&amp;a_{mn}&amp;b_m
-\end{array}\right).\)</p>
-
-<h2 id="基本思想">基本思想</h2>
-
-<p>高斯消元法通过一系列<strong>初等行变换</strong>，将增广矩阵化为<strong>行阶梯形</strong>或<strong>行最简形</strong>，从而把原方程组化为容易求解的等价方程组。</p>
-
-<h1 id="初等行变换">初等行变换</h1>
-
-<h2 id="三种初等行变换">三种初等行变换</h2>
-
-<p>对矩阵的行施行以下三种操作，称为<strong>初等行变换</strong>：</p>
-
-<ol>
-  <li><strong>交换</strong>：交换第 $i$ 行与第 $j$ 行，记作 $r_i\leftrightarrow r_j$；</li>
-  <li><strong>倍乘</strong>：用非零常数 $c\ne 0$ 乘第 $i$ 行，记作 $r_i\leftarrow c r_i$；</li>
-  <li><strong>倍加</strong>：将第 $j$ 行的 $c$ 倍加到第 $i$ 行，记作 $r_i\leftarrow r_i+c r_j$。</li>
-</ol>
-
-<h2 id="初等矩阵">初等矩阵</h2>
-
-<p>每种初等行变换都等价于左乘一个相应的<strong>初等矩阵</strong> $E$。初等矩阵均可逆，且其逆仍为同类型的初等矩阵。</p>
-
-<h2 id="行等价保持解集不变">行等价保持解集不变</h2>
-
-<p><strong>定理 2.3.1</strong><br />
-若对增广矩阵 $(A\mid b)$ 施行有限次初等行变换得到 $(A’\mid b’)$，则方程组 $Ax=b$ 与 $A’x=b’$ 同解。</p>
-
-<p><strong>证明</strong><br />
-每次初等行变换对应左乘一个可逆矩阵 $E$。设经过变换后
-\((A'\mid b')=E(A\mid b)=(EA\mid Eb).\)</p>
-
-<p>若 $Ax=b$，则 $EAx=Eb$，即 $A’x=b’$。反之，因 $E$ 可逆，由 $A’x=b’$ 左乘 $E^{-1}$ 得 $Ax=b$。故两方程组同解。$\square$</p>
-
-<h1 id="行阶梯形与行最简形">行阶梯形与行最简形</h1>
-
-<h2 id="行阶梯形">行阶梯形</h2>
-
-<p><strong>定义 3.1.1</strong><br />
-矩阵称为<strong>行阶梯形</strong>（row echelon form），若满足：</p>
-
-<ol>
-  <li>全零行位于非零行下方；</li>
-  <li>每个非零行的第一个非零元素（称为<strong>主元</strong>）所在列，严格位于上一行主元所在列的右侧；</li>
-  <li>主元下方元素全为零。</li>
-</ol>
-
-<h2 id="行最简形">行最简形</h2>
-
-<p><strong>定义 3.2.1</strong><br />
-矩阵称为<strong>行最简形</strong>（reduced row echelon form），若满足行阶梯形的条件，且：</p>
-
-<ol>
-  <li>每个主元等于 $1$；</li>
-  <li>主元所在列的其他元素全为零。</li>
-</ol>
-
-<h1 id="高斯消元法">高斯消元法</h1>
-
-<h2 id="算法前向消元">算法：前向消元</h2>
-
-<p>设增广矩阵为 $(A\mid b)$，令 $k=1$。</p>
-
-<p><strong>第 $k$ 步</strong>：</p>
-
-<ol>
-  <li><strong>选主元</strong>：在第 $k$ 列中，从第 $k$ 行到第 $m$ 行寻找第一个非零元素。若找到，设其位于第 $p$ 行，交换第 $k$ 行与第 $p$ 行。</li>
-  <li>
-    <p><strong>消元</strong>：对 $i=k+1,\dots,m$，令
-\(l_{ik}=\frac{a_{ik}}{a_{kk}},\)</p>
-
-    <p>施行行变换
-\(r_i\leftarrow r_i-l_{ik}r_k.\)</p>
-
-    <p>这样第 $k$ 列第 $k$ 行以下的元素全变为零。</p>
-  </li>
-  <li>若第 $k$ 列从第 $k$ 行到第 $m$ 行全为零，则跳过该列，$k$ 不变，继续下一列。</li>
-  <li>令 $k\leftarrow k+1$，重复直到 $k&gt;m$ 或 $k&gt;n$。</li>
-</ol>
-
-<p>最终得到行阶梯形矩阵 $(U\mid c)$。</p>
-
-<h2 id="回代">回代</h2>
-
-<p>设行阶梯形对应的方程组为 $Ux=c$，其中 $U$ 为上三角（或阶梯形）。从最后一个非零行开始，逐次回代：
-\(x_i=\frac{1}{u_{ii}}\left(c_i-\sum_{j=i+1}^{n}u_{ij}x_j\right),\qquad i=r,r-1,\dots,1,\)</p>
-
-<p>其中 $r=\operatorname{rank}(A)$。若某些列无主元，则对应的未知量为自由变量。</p>
-
-<h2 id="伪代码">伪代码</h2>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for k = 1 to min(m,n):
-    寻找第 k 列中从第 k 行到第 m 行的非零元素
-    if 不存在:
-        继续下一列
-    else:
-        交换到第 k 行
-        for i = k+1 to m:
-            l = A[i][k] / A[k][k]
-            for j = k to n:
-                A[i][j] -= l * A[k][j]
-            b[i] -= l * b[k]
-# 回代
-for i = r down to 1:
-    x[i] = (b[i] - sum_{j=i+1}^n A[i][j] * x[j]) / A[i][i]
-</code></pre></div></div>
-
-<h1 id="高斯-若尔当消元法">高斯-若尔当消元法</h1>
-
-<p>高斯-若尔当消元法在前向消元后继续消去主元上方的元素，并将主元化为 $1$，直接得到行最简形，无需回代。</p>
-
-<p><strong>算法</strong>：</p>
-
-<ol>
-  <li>前向消元得到行阶梯形；</li>
-  <li>从最后一个主元开始，向上消元，使主元所在列的其他元素全为零；</li>
-  <li>将每个主元除以自身，使其为 $1$。</li>
-</ol>
-
-<p>最终得到 $(I\mid x)$（若 $A$ 可逆），直接读出解。</p>
-
-<h1 id="解的存在性与唯一性">解的存在性与唯一性</h1>
-
-<p><strong>定理 6.1（Rouché–Capelli）</strong><br />
-设 $A\in M_{m\times n}(\mathbb F)$，$b\in\mathbb F^m$。则：</p>
-
-<ol>
-  <li>
-    <p>方程组 $Ax=b$ 有解当且仅当
-\(\operatorname{rank}(A)=\operatorname{rank}(A\mid b).\)</p>
-  </li>
-  <li>若 $\operatorname{rank}(A)=\operatorname{rank}(A\mid b)=r$，则：
-    <ul>
-      <li>当 $r=n$ 时，有唯一解；</li>
-      <li>当 $r&lt;n$ 时，有无穷多解，自由变量个数为 $n-r$。</li>
-    </ul>
-  </li>
-  <li>若 $\operatorname{rank}(A)&lt;\operatorname{rank}(A\mid b)$，则无解。</li>
-</ol>
-
-<p><strong>证明</strong><br />
-将增广矩阵化为行最简形。系数矩阵的秩等于主元个数。若增广矩阵出现形如 $(0\ \cdots\ 0\mid c)$ 且 $c\ne 0$ 的行，则对应方程 $0=c$，矛盾，故无解。否则有解。主元对应的未知量由自由变量唯一确定，自由变量个数为 $n-r$。$\square$</p>
-
-<h1 id="与-lu-分解的关系">与 LU 分解的关系</h1>
-
-<p>高斯消元法的前向消元过程，若<strong>不进行行交换</strong>，等价于对 $A$ 进行 Doolittle 分解：
-\(A=LU,\)</p>
-
-<p>其中 $L$ 为单位下三角矩阵，记录消元因子 $l_{ik}$；$U$ 为上三角矩阵，即消元后的结果。</p>
-
-<p>若进行行交换，则对应带部分主元的 PLU 分解：
-\(PA=LU.\)</p>
-
-<p>因此，高斯消元法解 $Ax=b$ 与 LU 分解法解 $Ax=b$ 本质相同：
-\(Ax=b\iff LUx=b\iff
-\begin{cases}
-Ly=Pb,\\
-Ux=y.
-\end{cases}\)</p>
-
-<h1 id="计算复杂度">计算复杂度</h1>
-
-<p>设 $A$ 为 $n\times n$ 方阵。</p>
-
-<ul>
-  <li>
-    <p>前向消元：约
-\(\sum_{k=1}^{n-1}(n-k)^2\approx\frac{1}{3}n^3\)</p>
-
-    <p>次乘法，加上除法与加法，总量约 $\frac{2}{3}n^3$ 次浮点运算。</p>
-  </li>
-  <li>回代：约 $\frac{1}{2}n^2$ 次运算。</li>
-  <li>总复杂度：
-\(\frac{2}{3}n^3+O(n^2).\)</li>
-</ul>
-
-<p>若同时求解多个右端项 $b^{(1)},\dots,b^{(m)}$，消元只需一次，总复杂度为
-\(\frac{2}{3}n^3+2mn^2+O(n^2).\)</p>
-
-<h1 id="数值稳定性与主元选择">数值稳定性与主元选择</h1>
-
-<p>在浮点运算中，若主元 $a_{kk}$ 的绝对值很小，消元因子 $l_{ik}=a_{ik}/a_{kk}$ 会很大，导致舍入误差放大。为此需采用<strong>主元选择</strong>。</p>
-
-<h2 id="部分主元法">部分主元法</h2>
-
-<p>在第 $k$ 步，选第 $k$ 列中从第 $k$ 行到第 $m$ 行绝对值最大的元素作为主元，交换到第 $k$ 行。即
-\(|a_{pk}|=\max_{k\le i\le m}|a_{ik}|.\)</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>部分主元法保证 $</td>
-      <td>l_{ik}</td>
-      <td>\le 1$，显著提高稳定性。</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="完全主元法">完全主元法</h2>
-
-<p>在第 $k$ 步，在整个剩余子矩阵中选绝对值最大的元素作为主元，同时交换行与列。完全主元法稳定性更好，但实现更复杂。</p>
-
-<h2 id="增长因子">增长因子</h2>
-
-<p>定义增长因子
-\(\rho=\frac{\max_{i,j}|u_{ij}|}{\max_{i,j}|a_{ij}|}.\)</p>
-
-<p>部分主元法最坏情况 $\rho\le 2^{n-1}$，实践中通常很小。完全主元法有更优的上界。</p>
-
-<h1 id="应用">应用</h1>
-
-<h2 id="求逆矩阵">求逆矩阵</h2>
-
-<p>对 $(A\mid I)$ 施行高斯-若尔当消元，若 $A$ 可逆，则得到 $(I\mid A^{-1})$。</p>
-
-<h2 id="计算行列式">计算行列式</h2>
-
-<p>消元过程中，若交换行 $s$ 次，则
-\(\det A=(-1)^s\prod_{i=1}^{n}u_{ii},\)</p>
-
-<p>其中 $u_{ii}$ 为行阶梯形的主元。</p>
-
-<h2 id="求矩阵的秩">求矩阵的秩</h2>
-
-<p>行阶梯形中非零行的个数即为矩阵的秩。</p>
-
-<h2 id="解线性方程组">解线性方程组</h2>
-
-<p>直接应用高斯消元法或高斯-若尔当消元法。</p>
-
-<h1 id="数值例子">数值例子</h1>
-
-<p>解方程组
-\(\begin{cases}
-2x_1+x_2+x_3=1,\\
-4x_1+3x_2+3x_3=1,\\
-8x_1+7x_2+9x_3=1.
-\end{cases}\)</p>
-
-<p>增广矩阵：
-\(\left(\begin{array}{ccc|c}
-2&amp;1&amp;1&amp;1\\
-4&amp;3&amp;3&amp;1\\
-8&amp;7&amp;9&amp;1
-\end{array}\right).\)</p>
-
-<p><strong>第 1 步</strong>：$r_2\leftarrow r_2-2r_1$，$r_3\leftarrow r_3-4r_1$：
-\(\left(\begin{array}{ccc|c}
-2&amp;1&amp;1&amp;1\\
-0&amp;1&amp;1&amp;-1\\
-0&amp;3&amp;5&amp;-3
-\end{array}\right).\)</p>
-
-<p><strong>第 2 步</strong>：$r_3\leftarrow r_3-3r_2$：
-\(\left(\begin{array}{ccc|c}
-2&amp;1&amp;1&amp;1\\
-0&amp;1&amp;1&amp;-1\\
-0&amp;0&amp;2&amp;0
-\end{array}\right).\)</p>
-
-<p><strong>回代</strong>：
-\(x_3=0,\qquad x_2=-1,\qquad x_1=1.\)</p>
-
-<p>故
-\(x=\begin{pmatrix}1\\-1\\0\end{pmatrix}.\)</p>
-
-<p>验证：
-\(Ax=\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}
-\begin{pmatrix}1\\-1\\0\end{pmatrix}
-=\begin{pmatrix}1\\1\\1\end{pmatrix}=b.\)</p>
-
-<h1 id="优缺点">优缺点</h1>
-
-<p><strong>优点</strong></p>
-<ol>
-  <li>算法直观，易于实现；</li>
-  <li>可同时处理多个右端项；</li>
-  <li>计算量 $O(n^3)$，适用于中小规模稠密矩阵；</li>
-  <li>是 LU 分解、求逆、求秩、行列式等的基础。</li>
-</ol>
-
-<p><strong>缺点</strong></p>
-<ol>
-  <li>无主元时数值不稳定；</li>
-  <li>对稀疏矩阵可能引入大量填充；</li>
-  <li>大规模问题时计算量较高。</li>
-</ol>
-
-<h1 id="总结">总结</h1>
-
-\[\boxed{\text{高斯消元法 = 初等行变换 + 前向消元 + 回代}}\]
-
-<p>其核心步骤为：</p>
-
-<ol>
-  <li>构造增广矩阵 $(A\mid b)$；</li>
-  <li>通过初等行变换化为行阶梯形；</li>
-  <li>回代求解。</li>
-</ol>
-
-<p>与 LU 分解的关系：
-\(\text{不换行的高斯消元}\iff \text{Doolittle 分解 }A=LU,\)</p>
-
-\[\text{换行的高斯消元}\iff \text{PLU 分解 }PA=LU.\]
-
-<p>实际数值计算中，为保证稳定性，通常采用<strong>部分主元高斯消元法</strong>，即每一步选取当前列绝对值最大的元素作为主元。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">LU 分解</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU-%E5%88%86%E8%A7%A3.html" rel="alternate" type="text/html" title="LU 分解" /><published>2026-10-07T00:00:00+00:00</published><updated>2026-10-07T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU%20%E5%88%86%E8%A7%A3</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/07/LU-%E5%88%86%E8%A7%A3.html"><![CDATA[<p>约定：$\mathbb F$ 为数域（主要取 $\mathbb R$ 或 $\mathbb C$），$A\in M_n(\mathbb F)$。记 $D_k$ 为 $A$ 的 $k$ 阶顺序主子式，规定 $D_0=1$。</p>
-
-<h1 id="lu-分解">LU 分解</h1>
-
-<h2 id="一般-lu-分解">一般 LU 分解</h2>
-<h3 id="定义">定义</h3>
-
-<p><strong>定义 1.1.1（LU 分解）</strong><br />
-设 $A\in M_n(\mathbb F)$。若存在下三角矩阵 $L\in M_n(\mathbb F)$ 与上三角矩阵 $U\in M_n(\mathbb F)$，使得
-\(A=LU,\)
-则称 $A$ 具有 <strong>LU 分解</strong>。此时对 $L$ 与 $U$ 的对角线元素均未作归一化规定。</p>
-
-<p><strong>注</strong><br />
-若不特别说明，“LU 分解”在多数教材中默认指 Doolittle 分解（$L$ 单位下三角）。本节先讨论最一般的情形。</p>
-
-<h3 id="存在性">存在性</h3>
-
-<p><strong>定理 1.2.1（LU 分解的存在性）</strong><br />
-设 $A\in M_n(\mathbb F)$，$D_k$ 为其 $k$ 阶顺序主子式。若
-\(D_k\ne 0,\qquad k=1,2,\dots,n,\)
-则 $A$ 存在 LU 分解。</p>
-
-<p><strong>证明</strong><br />
-由 Doolittle 分解的存在性定理（定理 2.2.1），在条件 $D_k\ne 0$ 下，$A$ 存在唯一的 Doolittle 分解
-\(A=L_0U_0,\)
-其中 $L_0$ 为单位下三角矩阵，$U_0$ 为上三角矩阵。此即一个 LU 分解。$\square$</p>
-
-<p><strong>注</strong><br />
-条件 $D_k\ne 0$ 是充分条件，但不是必要条件。某些满足 $D_k=0$ 的矩阵仍可能存在 LU 分解（例如某些奇异矩阵），但此时分解一般不唯一。</p>
-
-<h3 id="不唯一性">不唯一性</h3>
-
-<p><strong>命题 1.3.1（LU 分解的不唯一性）</strong><br />
-设 $A$ 非奇异且存在 LU 分解 $A=LU$，其中 $L,U$ 均可逆。则 $A$ 的 LU 分解不唯一。</p>
-
-<p><strong>证明</strong><br />
-设 $D\in M_n(\mathbb F)$ 为任意可逆对角矩阵。令
-\(L'=LD,\qquad U'=D^{-1}U.\)
-则 $L’$ 仍为下三角矩阵，$U’$ 仍为上三角矩阵，且
-\(L'U'=LD\,D^{-1}U=LU=A.\)
-由于 $D$ 有无穷多种取法（只需对角线元素非零），故 $A$ 有无穷多个 LU 分解。$\square$</p>
-
-<p><strong>例 1.3.2</strong><br />
-取
-\(A=\begin{pmatrix}2&amp;1\\4&amp;3\end{pmatrix}.\)
-一个 LU 分解为
-\(L_1=\begin{pmatrix}1&amp;0\\2&amp;1\end{pmatrix},\qquad
-U_1=\begin{pmatrix}2&amp;1\\0&amp;1\end{pmatrix}.\)
-取 $D=\operatorname{diag}(2,3)$，则
-\(L_2=L_1D=\begin{pmatrix}2&amp;0\\4&amp;3\end{pmatrix},\qquad
-U_2=D^{-1}U_1=\begin{pmatrix}1&amp;\frac12\\0&amp;\frac13\end{pmatrix}.\)
-验证：
-\(L_2U_2=
-\begin{pmatrix}2&amp;0\\4&amp;3\end{pmatrix}
-\begin{pmatrix}1&amp;\frac12\\0&amp;\frac13\end{pmatrix}
-=
-\begin{pmatrix}2&amp;1\\4&amp;3\end{pmatrix}=A.\)
-故同一矩阵 $A$ 至少有两个不同的 LU 分解。</p>
-
-<h3 id="归一化的必要性">归一化的必要性</h3>
-
-<p>由命题 1.3.1 知，一般 LU 分解因对角尺度可任意拆分而不唯一。为得到唯一分解，必须对 $L$ 或 $U$ 的对角线施加归一化条件。由此产生三种标准规范形式：</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>归一化条件</th>
-      <th>名称</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>$L$ 单位下三角</td>
-      <td>Doolittle 分解</td>
-    </tr>
-    <tr>
-      <td>$U$ 单位上三角</td>
-      <td>Crout 分解</td>
-    </tr>
-    <tr>
-      <td>$L,U$ 均单位三角，对角尺度单独提取</td>
-      <td>LDU 分解</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>三者的关系为：
-\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
-
-<h3 id="注记">注记</h3>
-
-<ol>
-  <li>一般 LU 分解在数值计算中不单独使用，因不唯一导致算法无法确定输出。</li>
-  <li>若 $A$ 奇异，LU 分解可能存在也可能不存在，需具体分析。</li>
-  <li>若 $A$ 的某个顺序主子式为零，则不换行的 LU 分解可能失败，需引入行交换（PLU）。</li>
-</ol>
-
-<h2 id="doolittle-分解">Doolittle 分解</h2>
-
-<h3 id="定义-1">定义</h3>
-
-<p><strong>定义 2.1.1（Doolittle 分解）</strong><br />
-设 $A\in M_n(\mathbb F)$。若存在单位下三角矩阵 $L$（即 $l_{ii}=1$，$i&lt;j$ 时 $l_{ij}=0$）与上三角矩阵 $U$，使得
-\(A=LU,\)
-则称其为 $A$ 的 <strong>Doolittle 分解</strong>。</p>
-
-<h3 id="存在唯一性">存在唯一性</h3>
-
-<p><strong>定理 2.2.1（Doolittle 分解的存在唯一性）</strong><br />
-设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
-
-<ol>
-  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
-  <li>$A$ 存在唯一的 Doolittle 分解 $A=LU$，其中 $L$ 单位下三角，$U$ 上三角，且 $u_{kk}\ne 0$；</li>
-  <li>不换行的高斯消元可对 $A$ 一直进行到底。</li>
-</ol>
-
-<p><strong>证明</strong></p>
-
-<p>$(2)\Rightarrow(1)$：设 $A=LU$。对每个 $k$，令 $A_k,L_k,U_k$ 分别为 $A,L,U$ 的前 $k$ 阶顺序主子矩阵。由分块矩阵乘法，
-\(A_k=L_kU_k.\)
-因 $L_k$ 为单位下三角矩阵，$\det L_k=1$；因 $U_k$ 为上三角矩阵，
-\(\det U_k=\prod_{i=1}^k u_{ii}.\)
-故
-\(D_k=\det A_k=\det L_k\det U_k=\prod_{i=1}^k u_{ii}.\)
-由 $u_{ii}\ne 0$ 得 $D_k\ne 0$。</p>
-
-<p>$(1)\Rightarrow(3)$：对 $A$ 做不换行的高斯消元。可以证明第 $k$ 步消元前的主元为
-\(p_k=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)
-因 $D_k\ne 0$ 且 $D_{k-1}\ne 0$，故 $p_k\ne 0$，消元可一直进行到底。</p>
-
-<p>$(3)\Rightarrow(2)$：不换行的高斯消元过程等价于左乘一系列单位下三角初等矩阵 $E_1,\dots,E_m$，使得
-\(E_m\cdots E_1A=U,\)
-其中 $U$ 为上三角矩阵。于是
-\(A=(E_m\cdots E_1)^{-1}U=L U,\)
-其中
-\(L=E_1^{-1}\cdots E_m^{-1}\)
-为单位下三角矩阵。</p>
-
-<p><strong>唯一性</strong>：若 $A=L_1U_1=L_2U_2$，其中 $L_1,L_2$ 单位下三角，$U_1,U_2$ 上三角，则
-\(L_2^{-1}L_1=U_2U_1^{-1}.\)
-左边为单位下三角矩阵，右边为上三角矩阵。两者相等，故只能为对角矩阵。又因左边对角线全为 $1$，该对角矩阵为 $I$。于是
-\(L_1=L_2,\qquad U_1=U_2.\)
-唯一性得证。$\square$</p>
-
-<h3 id="doolittle-算法">Doolittle 算法</h3>
-
-<p><strong>算法 2.3.1（按行计算）</strong><br />
-对 $k=1,2,\dots,n$：</p>
-
-<ol>
-  <li>计算 $U$ 的第 $k$ 行：
-\(u_{kj}=a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj},\qquad j=k,k+1,\dots,n.\)</li>
-  <li>计算 $L$ 的第 $k$ 列：
-\(l_{ik}=\frac{1}{u_{kk}}\Bigl(a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}\Bigr),\qquad i=k+1,k+2,\dots,n.\)</li>
-</ol>
-
-<p><strong>计算量</strong>：约 $\dfrac{2}{3}n^3$ 次浮点乘除。</p>
-
-<p><strong>存储</strong>：$L$ 与 $U$ 可原地存放在 $A$ 的存储空间中。$L$ 的对角线（全为 $1$）无需存储。</p>
-
-<h3 id="解线性方程组">解线性方程组</h3>
-
-<p><strong>算法 2.4.1（Doolittle 法解 $Ax=b$）</strong></p>
-
-<ol>
-  <li>分解 $A=LU$；</li>
-  <li><strong>前代</strong>：解 $Ly=b$，
-\(y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n;\)</li>
-  <li><strong>回代</strong>：解 $Ux=y$，
-\(x_i=\frac{1}{u_{ii}}\Bigl(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\Bigr),\qquad i=n,n-1,\dots,1.\)</li>
-</ol>
-
-<p><strong>优势</strong>：当有多个右端项 $b^{(1)},\dots,b^{(m)}$ 时，只需分解一次，后续每次求解仅需 $O(n^2)$ 次运算。</p>
-
-<h3 id="行列式与逆矩阵">行列式与逆矩阵</h3>
-
-<p><strong>行列式</strong>
-\(\det A=\det L\det U=1\cdot\prod_{i=1}^{n}u_{ii}=\prod_{i=1}^{n}u_{ii}.\)</p>
-
-<p><strong>逆矩阵</strong>：解 $AX=I$，对 $I$ 的每一列应用算法 2.4.1。</p>
-
-<h3 id="例题">例题</h3>
-
-<p><strong>例 2.6.1</strong><br />
-设
-\(A=\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}.\)</p>
-
-<p><strong>第 1 步</strong>（$k=1$）：
-\(u_{11}=2,\quad u_{12}=1,\quad u_{13}=1;\)
-\(l_{21}=\frac{4}{2}=2,\quad l_{31}=\frac{8}{2}=4.\)</p>
-
-<p><strong>第 2 步</strong>（$k=2$）：
-\(u_{22}=3-2\cdot 1=1,\quad u_{23}=3-2\cdot 1=1;\)
-\(l_{32}=\frac{7-4\cdot 1}{1}=3.\)</p>
-
-<p><strong>第 3 步</strong>（$k=3$）：
-\(u_{33}=9-4\cdot 1-3\cdot 1=2.\)</p>
-
-<p>于是
-\(L=\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix},\qquad
-U=\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}.\)</p>
-
-<p>验证：
-\(LU=
-\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
-\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}
-=
-\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}=A.\)</p>
-
-<p>且 $\det A=2\cdot 1\cdot 2=4$。</p>
-
-<h3 id="注记-1">注记</h3>
-
-<ol>
-  <li><strong>无行交换</strong>：Doolittle 分解不允许行交换，因此仅对满足 $D_k\ne 0$ 的矩阵存在。</li>
-  <li><strong>数值不稳定</strong>：即使 $D_k\ne 0$，若某主元绝对值极小，浮点消元会产生严重误差。典型例子为
-\(A=\begin{pmatrix}10^{-20}&amp;1\\1&amp;1\end{pmatrix},\)
-精确 LU 分解存在，但 $u_{11}=10^{-20}$ 导致 $l_{21}=10^{20}$，误差放大。</li>
-  <li><strong>应用最广</strong>：在数值库中，若不加说明，“LU 分解”通常指带部分主元的 Doolittle 分解（即 PLU）。</li>
-</ol>
-
-<h2 id="crout-分解">Crout 分解</h2>
-
-<h3 id="定义-2">定义</h3>
-
-<p><strong>定义 3.1.1（Crout 分解）</strong><br />
-设 $A\in M_n(\mathbb F)$。若存在下三角矩阵 $L$ 与单位上三角矩阵 $U$（即 $u_{ii}=1$，$i&gt;j$ 时 $u_{ij}=0$），使得
-\(A=LU,\)
-则称其为 $A$ 的 <strong>Crout 分解</strong>。</p>
-
-<h3 id="存在唯一性-1">存在唯一性</h3>
-
-<p><strong>定理 3.2.1（Crout 分解的存在唯一性）</strong><br />
-设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
-
-<ol>
-  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
-  <li>$A$ 存在唯一的 Crout 分解 $A=LU$，其中 $L$ 下三角且 $l_{kk}\ne 0$，$U$ 单位上三角。</li>
-</ol>
-
-<p><strong>证明</strong><br />
-由定理 2.2.1，在 $D_k\ne 0$ 条件下，$A$ 存在唯一 Doolittle 分解
-\(A=L_0U_0,\)
-其中 $L_0$ 单位下三角，$U_0$ 上三角，且 $u_{kk}\ne 0$。令
-\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}).\)
-则 $D$ 可逆。定义
-\(L=L_0D,\qquad U=D^{-1}U_0.\)
-显然 $L$ 为下三角矩阵，其对角线元素为 $u_{kk}\ne 0$；$U$ 为单位上三角矩阵。且
-\(LU=L_0D\,D^{-1}U_0=L_0U_0=A.\)</p>
-
-<p><strong>唯一性</strong>：若 $A=L_1U_1=L_2U_2$，其中 $U_1,U_2$ 单位上三角，则
-\(L_2^{-1}L_1=U_2U_1^{-1}.\)
-左边为下三角矩阵，右边为单位上三角矩阵。两者相等，只能是对角矩阵。又因右边对角线为 $1$，故该对角矩阵为 $I$。于是
-\(L_1=L_2,\qquad U_1=U_2.\)
-$\square$</p>
-
-<h3 id="crout-算法">Crout 算法</h3>
-
-<p><strong>算法 3.3.1（按列计算）</strong><br />
-对 $k=1,2,\dots,n$：</p>
-
-<ol>
-  <li>计算 $L$ 的第 $k$ 列（$i=k,k+1,\dots,n$）：
-\(l_{ik}=a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}.\)</li>
-  <li>计算 $U$ 的第 $k$ 行（$j=k+1,\dots,n$）：
-\(u_{kj}=\frac{1}{l_{kk}}\Bigl(a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj}\Bigr).\)
-并规定 $u_{kk}=1$。</li>
-</ol>
-
-<p><strong>计算量</strong>：约 $\dfrac{2}{3}n^3$ 次浮点乘除，与 Doolittle 相同。</p>
-
-<h3 id="与-doolittle-的关系">与 Doolittle 的关系</h3>
-
-<p>设 $A$ 的 Doolittle 分解为
-\(A=L_DU_D,\)
-令
-\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}).\)
-则
-\(L_{\text{Crout}}=L_DD,\qquad
-U_{\text{Crout}}=D^{-1}U_D.\)</p>
-
-<p>等价地，若对 $A^{\mathsf T}$ 作 Doolittle 分解
-\(A^{\mathsf T}=L_D'U_D',\)
-则
-\(A=U_D'^{\mathsf T}L_D'^{\mathsf T},\)
-其中 $U_D’^{\mathsf T}$ 为下三角，$L_D’^{\mathsf T}$ 为单位上三角。因此 <strong>Crout 分解与 Doolittle 分解互为转置</strong>。</p>
-
-<h3 id="解线性方程组-1">解线性方程组</h3>
-
-<p><strong>算法 3.5.1（Crout 法解 $Ax=b$）</strong></p>
-
-<ol>
-  <li>分解 $A=LU$，其中 $U$ 单位上三角；</li>
-  <li><strong>前代</strong>：解 $Ly=b$，
-\(y_i=\frac{1}{l_{ii}}\Bigl(b_i-\sum_{j=1}^{i-1}l_{ij}y_j\Bigr),\qquad i=1,\dots,n;\)</li>
-  <li><strong>回代</strong>：解 $Ux=y$，
-\(x_i=y_i-\sum_{j=i+1}^{n}u_{ij}x_j,\qquad i=n,\dots,1.\)
-因 $u_{ii}=1$，回代时无需除法。</li>
-</ol>
-
-<h3 id="行列式">行列式</h3>
-
-<p>\(\det A=\det L\det U=\prod_{i=1}^{n}l_{ii}\cdot 1=\prod_{i=1}^{n}l_{ii}.\)
-即 <strong>Crout 分解中 $L$ 的对角线元素之积等于 $\det A$</strong>。</p>
-
-<h3 id="例题-1">例题</h3>
-
-<p>承例 2.6.1 的 $A$。Doolittle 分解中
-\(L_D=\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix},\qquad
-U_D=\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix},\qquad
-D=\operatorname{diag}(2,1,2).\)</p>
-
-<p>于是 Crout 分解：
-\(L_C=L_DD=
-\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
-\begin{pmatrix}2&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix}
-=
-\begin{pmatrix}2&amp;0&amp;0\\4&amp;1&amp;0\\8&amp;3&amp;2\end{pmatrix},\)
-\(U_C=D^{-1}U_D=
-\begin{pmatrix}\frac12&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;\frac12\end{pmatrix}
-\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}
-=
-\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)</p>
-
-<p>验证：
-\(L_CU_C=
-\begin{pmatrix}2&amp;0&amp;0\\4&amp;1&amp;0\\8&amp;3&amp;2\end{pmatrix}
-\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}
-=
-\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\8&amp;7&amp;9\end{pmatrix}=A.\)
-且 $\det A=2\cdot 1\cdot 2=4$，而 $L_C$ 对角线乘积 $2\cdot 1\cdot 2=4$，一致。</p>
-
-<h3 id="注记-2">注记</h3>
-
-<ol>
-  <li>与 Doolittle 互为转置：在需要处理 $A^{\mathsf T}$ 的场合可灵活选用。</li>
-  <li>数值稳定性与 Doolittle 相同；无主元时可能不稳定。</li>
-  <li>适合需要直接得到 $\det A$ 或 $L$ 对角线主元的场合。</li>
-</ol>
-
-<h2 id="ldu-分解">LDU 分解</h2>
-
-<h3 id="定义-3">定义</h3>
-
-<p><strong>定义 4.1.1（LDU 分解）</strong><br />
-设 $A\in M_n(\mathbb F)$。若存在单位下三角矩阵 $L$、对角矩阵 $D$、单位上三角矩阵 $U$，使得
-\(A=LDU,\)
-则称其为 $A$ 的 <strong>LDU 分解</strong>。</p>
-
-<h3 id="存在唯一性-2">存在唯一性</h3>
-
-<p><strong>定理 4.2.1（LDU 分解的存在唯一性）</strong><br />
-设 $A\in M_n(\mathbb F)$。则下列命题等价：</p>
-
-<ol>
-  <li>$D_k\ne 0$，$k=1,2,\dots,n$；</li>
-  <li>$A$ 存在唯一的 LDU 分解 $A=LDU$。</li>
-</ol>
-
-<p><strong>证明</strong><br />
-由定理 2.2.1，在 $D_k\ne 0$ 条件下，$A$ 存在唯一 Doolittle 分解
-\(A=L_0U_0,\)
-其中 $L_0$ 单位下三角，$U_0$ 上三角，且 $u_{kk}\ne 0$。令
-\(D=\operatorname{diag}(u_{11},u_{22},\dots,u_{nn}),\qquad
-U=D^{-1}U_0.\)
-则 $D$ 可逆，$U$ 为单位上三角矩阵，且
-\(L_0DU=L_0D\,D^{-1}U_0=L_0U_0=A.\)</p>
-
-<p><strong>唯一性</strong>：若 $A=L_1D_1U_1=L_2D_2U_2$，其中 $L_i$ 单位下三角，$U_i$ 单位上三角，$D_i$ 对角，则
-\(L_2^{-1}L_1=D_2U_2U_1^{-1}D_1^{-1}.\)
-左边为单位下三角矩阵，右边为上三角矩阵。两者相等，故为对角矩阵。又因左边对角线为 $1$，该对角矩阵为 $I$。于是
-\(L_1=L_2,\qquad D_1U_1=D_2U_2.\)
-再比较对角线得 $D_1=D_2$，进而 $U_1=U_2$。$\square$</p>
-
-<h3 id="与-doolittlecrout-的关系">与 Doolittle、Crout 的关系</h3>
-
-<p>设 LDU 分解为
-\(A=LDU.\)
-则：</p>
-
-<ul>
-  <li><strong>Doolittle 分解</strong>：$A=L(DU)$，其中 $L$ 单位下三角，$DU$ 上三角；</li>
-  <li><strong>Crout 分解</strong>：$A=(LD)U$，其中 $LD$ 下三角，$U$ 单位上三角。</li>
-</ul>
-
-<p>因此 <strong>LDU 分解是 Doolittle 与 Crout 的公共细化</strong>：
-\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
-
-<h3 id="行列式-1">行列式</h3>
-
-\[\det A=\det L\det D\det U=1\cdot\prod_{i=1}^{n}d_{ii}\cdot 1=\prod_{i=1}^{n}d_{ii}.\]
-
-<h3 id="例题-2">例题</h3>
-
-<p>承例 2.6.1 的 $A$。由 Doolittle 分解 $A=L_DU_D$，取
-\(D=\operatorname{diag}(2,1,2),\qquad
-U=D^{-1}U_D=\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)
-则
-\(A=L_DDU=
-\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\4&amp;3&amp;1\end{pmatrix}
-\begin{pmatrix}2&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix}
-\begin{pmatrix}1&amp;\frac12&amp;\frac12\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}.\)
-验证成立，且 $\det A=2\cdot 1\cdot 2=4$。</p>
-
-<h3 id="注记-3">注记</h3>
-
-<ol>
-  <li>LDU 分解把对角尺度单独分离，便于理论分析。</li>
-  <li>若 $A$ 对称且 $D_k\ne 0$，则 $U=L^{\mathsf T}$，即
-\(A=LDL^{\mathsf T}.\)
-若 $A$ 对称正定，则 $D$ 的对角线元素全为正，进一步令 $L_C=LD^{1/2}$，得 Cholesky 分解
-\(A=L_CL_C^{\mathsf T}.\)</li>
-  <li>LDU 分解在数值计算中较少单独使用，主要作为理论工具。</li>
-</ol>
-
-<h2 id="三种规范形式的统一关系">三种规范形式的统一关系</h2>
-
-<h3 id="关系图">关系图</h3>
-
-<p>\(\text{一般 LU 分解 }A=LU\)
-\(\downarrow\text{ 对 }L\text{ 归一化}\)
-\(\text{Doolittle }A=L_DU_D\)
-\(\downarrow\text{ 提取对角尺度 }D=\operatorname{diag}(U_D)\)
-\(\text{LDU }A=L_DDU'\)
-\(\downarrow\text{ 对 }U\text{ 归一化}\)
-\(\text{Crout }A=L_CU_C\)</p>
-
-<h3 id="转换公式">转换公式</h3>
-
-<p>设 Doolittle 分解为 $A=L_DU_D$，令 $D=\operatorname{diag}(U_D)$，则：</p>
-
-<p>\(L_{\text{Crout}}=L_DD,\qquad U_{\text{Crout}}=D^{-1}U_D;\)
-\(L_{\text{LDU}}=L_D,\qquad D_{\text{LDU}}=D,\qquad U_{\text{LDU}}=D^{-1}U_D.\)</p>
-
-<h3 id="对比表">对比表</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>分解</th>
-      <th>形式</th>
-      <th>$L$ 对角线</th>
-      <th>$U$ 对角线</th>
-      <th>唯一性条件</th>
-      <th>行列式</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>一般 LU</td>
-      <td>$A=LU$</td>
-      <td>任意</td>
-      <td>任意</td>
-      <td>不唯一</td>
-      <td>—</td>
-    </tr>
-    <tr>
-      <td>Doolittle</td>
-      <td>$A=LU$</td>
-      <td>全为 $1$</td>
-      <td>$u_{ii}\ne 0$</td>
-      <td>$D_k\ne 0$</td>
-      <td>$\prod u_{ii}$</td>
-    </tr>
-    <tr>
-      <td>Crout</td>
-      <td>$A=LU$</td>
-      <td>$l_{ii}\ne 0$</td>
-      <td>全为 $1$</td>
-      <td>$D_k\ne 0$</td>
-      <td>$\prod l_{ii}$</td>
-    </tr>
-    <tr>
-      <td>LDU</td>
-      <td>$A=LDU$</td>
-      <td>全为 $1$</td>
-      <td>全为 $1$</td>
-      <td>$D_k\ne 0$</td>
-      <td>$\prod d_{ii}$</td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="带主元的-lu-分解扩展">带主元的 LU 分解（扩展）</h1>
-
-<p>当 $D_k=0$ 或主元过小时，无主元 LU 分解失效或不稳定，需引入置换矩阵。</p>
-
-<h2 id="plu-分解部分主元">PLU 分解（部分主元）</h2>
-
-<p><strong>定义 6.1.1</strong><br />
-若存在置换矩阵 $P$、单位下三角矩阵 $L$、上三角矩阵 $U$，使得
-\(PA=LU,\)
-则称其为 $A$ 的 <strong>PLU 分解</strong>。</p>
-
-<p><strong>定理 6.1.2（存在性）</strong><br />
-对任意非奇异矩阵 $A\in M_n(\mathbb F)$，PLU 分解总存在。</p>
-
-<p><strong>算法 6.1.3</strong><br />
-对 $k=1,\dots,n-1$：</p>
-
-<ol>
-  <li>选主元：求 $p\in{k,\dots,n}$ 使
-\(|a_{pk}|=\max_{k\le i\le n}|a_{ik}|.\)</li>
-  <li>交换第 $k$ 行与第 $p$ 行，同时更新 $P$ 及已算出的 $L$ 的前 $k-1$ 列。</li>
-  <li>消元：
-\(l_{ik}=\frac{a_{ik}}{a_{kk}},\quad i=k+1,\dots,n;\)
-\(a_{ij}\leftarrow a_{ij}-l_{ik}a_{kj},\quad i,j&gt;k.\)</li>
-</ol>
-
-<p><strong>解 $Ax=b$</strong></p>
-<ol>
-  <li>分解 $PA=LU$；</li>
-  <li>计算 $\tilde b=Pb$；</li>
-  <li>前代解 $Ly=\tilde b$；</li>
-  <li>回代解 $Ux=y$。</li>
-</ol>
-
-<p><strong>行列式</strong>
-\(\det A=\det(P)\prod_{i=1}^{n}u_{ii},\qquad \det(P)=\pm1.\)</p>
-
-<p><strong>稳定性</strong>：增长因子 $\rho$ 最坏 $2^{n-1}$，实践中通常很小。误差估计为
-\(\|\hat x-x\|\le c\,n^3\rho\,\epsilon\,\|A\|\,\|A^{-1}\|\,\|x\|.\)</p>
-
-<h2 id="palu-分解完全主元">PALU 分解（完全主元）</h2>
-
-<p><strong>定义 6.2.1</strong><br />
-若存在置换矩阵 $P,Q$、单位下三角矩阵 $L$、上三角矩阵 $U$，使得
-\(PAQ=LU,\)
-则称其为 $A$ 的 <strong>PALU 分解</strong>。</p>
-
-<p><strong>算法 6.2.2</strong><br />
-对 $k=1,\dots,n-1$：</p>
-
-<ol>
-  <li>在剩余子矩阵中找绝对值最大元素：
-\(|a_{pq}|=\max_{k\le i,j\le n}|a_{ij}|.\)</li>
-  <li>交换第 $k$ 行与第 $p$ 行；交换第 $k$ 列与第 $q$ 列；更新 $P,Q$。</li>
-  <li>消元，同 PLU。</li>
-</ol>
-
-<p><strong>增长因子上界</strong>
-\(\rho\le n\cdot 2\cdot 3^{1/2}\cdots n^{1/(n-1)}\approx cn^{1+\ln n},\)
-远优于部分主元法的 $2^{n-1}$。</p>
-
-<p><strong>与 PLU 对比</strong></p>
-
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>PLU</th>
-      <th>PALU</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>形式</td>
-      <td>$PA=LU$</td>
-      <td>$PAQ=LU$</td>
-    </tr>
-    <tr>
-      <td>主元选择</td>
-      <td>每列选最大</td>
-      <td>整个子矩阵选最大</td>
-    </tr>
-    <tr>
-      <td>稳定性</td>
-      <td>好</td>
-      <td>更好</td>
-    </tr>
-    <tr>
-      <td>实现复杂度</td>
-      <td>简单</td>
-      <td>复杂</td>
-    </tr>
-    <tr>
-      <td>实际使用</td>
-      <td>主流</td>
-      <td>特殊场合</td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="特殊矩阵的-lu-型分解扩展">特殊矩阵的 LU 型分解（扩展）</h1>
-
-<h2 id="cholesky-分解">Cholesky 分解</h2>
-
-<p><strong>定义 7.1.1</strong><br />
-设 $A\in M_n(\mathbb R)$ 对称正定。若存在下三角矩阵 $L$，其对角线元素全为正，使得
-\(A=LL^{\mathsf T},\)
-则称其为 $A$ 的 <strong>Cholesky 分解</strong>。</p>
-
-<p><strong>定理 7.1.2（存在唯一性）</strong><br />
-设 $A\in M_n(\mathbb R)$ 对称。则 $A$ 正定当且仅当存在唯一的下三角矩阵 $L$，对角线为正，使得 $A=LL^{\mathsf T}$。</p>
-
-<p><strong>算法 7.1.3</strong><br />
-对 $j=1,\dots,n$：
-\(l_{jj}=\sqrt{a_{jj}-\sum_{k=1}^{j-1}l_{jk}^2},\)
-\(l_{ij}=\frac{1}{l_{jj}}\Bigl(a_{ij}-\sum_{k=1}^{j-1}l_{ik}l_{jk}\Bigr),\qquad i=j+1,\dots,n.\)</p>
-
-<p><strong>计算量</strong>：约 $\dfrac{1}{3}n^3$，为 LU 的一半。</p>
-
-<p><strong>行列式</strong>
-\(\det A=\Bigl(\prod_{i=1}^{n}l_{ii}\Bigr)^2.\)</p>
-
-<p><strong>数值稳定性</strong>：无需选主元即稳定。误差估计
-\(\|\hat L\hat L^{\mathsf T}-A\|\le c\,n\,\epsilon\,\|A\|.\)</p>
-
-<h2 id="ldlᵀ-分解">LDLᵀ 分解</h2>
-
-<p><strong>定义 7.2.1</strong><br />
-设 $A\in M_n(\mathbb R)$ 对称。若存在单位下三角矩阵 $L$ 与对角矩阵 $D$，使得
-\(A=LDL^{\mathsf T},\)
-则称其为 $A$ 的 <strong>LDLᵀ 分解</strong>。</p>
-
-<p><strong>定理 7.2.2（存在唯一性）</strong><br />
-设 $A$ 对称且 $D_k\ne 0$（$k=1,\dots,n$）。则 $A$ 存在唯一的 LDLᵀ 分解。若 $A$ 正定，则 $D$ 的对角线元素全为正。</p>
-
-<p><strong>与 Cholesky 的关系</strong>
-\(L_{\text{Cholesky}}=L_{\text{LDL}^{\mathsf T}}D^{1/2}.\)</p>
-
-<p><strong>优点</strong></p>
-<ol>
-  <li>无开方运算；</li>
-  <li>适用于对称不定矩阵（只要 $D_k\ne 0$）；</li>
-  <li>保留对称性，只需存储 $L$ 和 $D$。</li>
-</ol>
-
-<h1 id="总表">总表</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>名称</th>
-      <th>形式</th>
-      <th>适用矩阵</th>
-      <th>唯一性条件</th>
-      <th>计算量</th>
-      <th>数值稳定性</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>一般 LU</td>
-      <td>$A=LU$</td>
-      <td>$D_k\ne 0$</td>
-      <td>不唯一</td>
-      <td>$\frac23n^3$</td>
-      <td>差</td>
-    </tr>
-    <tr>
-      <td>Doolittle</td>
-      <td>$A=LU$，$L$ 单位下三角</td>
-      <td>$D_k\ne 0$</td>
-      <td>唯一</td>
-      <td>$\frac23n^3$</td>
-      <td>差</td>
-    </tr>
-    <tr>
-      <td>Crout</td>
-      <td>$A=LU$，$U$ 单位上三角</td>
-      <td>$D_k\ne 0$</td>
-      <td>唯一</td>
-      <td>$\frac23n^3$</td>
-      <td>差</td>
-    </tr>
-    <tr>
-      <td>LDU</td>
-      <td>$A=LDU$</td>
-      <td>$D_k\ne 0$</td>
-      <td>唯一</td>
-      <td>$\frac23n^3$</td>
-      <td>差</td>
-    </tr>
-    <tr>
-      <td>PLU</td>
-      <td>$PA=LU$</td>
-      <td>任意非奇异</td>
-      <td>唯一</td>
-      <td>$\frac23n^3+O(n^2)$</td>
-      <td>好</td>
-    </tr>
-    <tr>
-      <td>PALU</td>
-      <td>$PAQ=LU$</td>
-      <td>任意非奇异</td>
-      <td>唯一</td>
-      <td>$\frac23n^3+O(n^2)$</td>
-      <td>更好</td>
-    </tr>
-    <tr>
-      <td>Cholesky</td>
-      <td>$A=LL^{\mathsf T}$</td>
-      <td>对称正定</td>
-      <td>唯一</td>
-      <td>$\frac13n^3$</td>
-      <td>极好</td>
-    </tr>
-    <tr>
-      <td>LDLᵀ</td>
-      <td>$A=LDL^{\mathsf T}$</td>
-      <td>对称，$D_k\ne 0$</td>
-      <td>唯一</td>
-      <td>$\frac13n^3$</td>
-      <td>好</td>
-    </tr>
-  </tbody>
-</table>
-
-<h1 id="结论">结论</h1>
-
-<p>$LU$ 分解的核心是 $A=LU$，通过归一化对角线，得到 $Doolittle$、$Crout$、$LDU$ 三种规范形式。</p>
-
-<p>三者关系：
-\(\text{Doolittle}\xleftarrow{\text{合并 }D}\text{LDU}\xrightarrow{\text{合并 }D}\text{Crout}.\)</p>
-
-<p>对称正定情形：
-\(\text{LDU}\longrightarrow\text{LDL}^{\mathsf T}\longrightarrow\text{Cholesky}.\)</p>
-
-<p>数值稳定化：
-\(\text{Doolittle}\xrightarrow{\text{加行交换}}\text{PLU}\xrightarrow{\text{加列交换}}\text{PALU}.\)</p>
-
-<p>选择原则：</p>
-<ol>
-  <li><strong>一般方阵、需稳定</strong>：PLU；</li>
-  <li><strong>病态方阵、要求更高稳定</strong>：PALU；</li>
-  <li><strong>对称正定</strong>：Cholesky；</li>
-  <li><strong>对称不定但 $D_k\ne 0$</strong>：LDLᵀ；</li>
-  <li><strong>理论分析、需分离对角尺度</strong>：LDU；</li>
-  <li><strong>教学或特殊实现</strong>：Doolittle 或 Crout。</li>
-</ol>
-
-<h1 id="附-a上三角矩阵分解">附 A：上三角矩阵分解</h1>
-
-<p><strong>命题</strong><br />
-设 $U\in M_n(\mathbb F)$ 为上三角矩阵。则 $U$ 可分解为
-\(U=DU',\)
-其中 $D$ 为对角矩阵，$U’$ 为单位上三角矩阵（即 $u’<em>{ii}=1$，$i&gt;j$ 时 $u’</em>{ij}=0$），当且仅当对每个 $i=1,\dots,n$，若 $u_{ii}=0$，则 $U$ 的第 $i$ 行全为零。</p>
-
-<p>特别地，若 $U$ 可逆（即所有 $u_{ii}\ne 0$），则这样的分解存在且唯一：
-\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\qquad
-U'=D^{-1}U.\)</p>
-
-<h2 id="证明">证明</h2>
-
-<h3 id="必要性">必要性</h3>
-
-<p>设 $U=DU’$，其中 $D=\operatorname{diag}(d_1,\dots,d_n)$，$U’$ 为单位上三角。比较对角线：
-\(u_{ii}=d_i\cdot 1=d_i,\qquad i=1,\dots,n.\)
-故 $d_i=u_{ii}$。</p>
-
-<p>考虑 $U$ 的第 $i$ 行元素。由于 $D$ 为对角矩阵，
-\(u_{ij}=\sum_{k=1}^n d_{ik}u'_{kj}=d_i u'_{ij},\qquad j=1,\dots,n.\)
-若 $u_{ii}=0$，则 $d_i=0$，于是
-\(u_{ij}=0\cdot u'_{ij}=0,\qquad j=1,\dots,n.\)
-即第 $i$ 行全为零。必要性得证。</p>
-
-<h3 id="充分性">充分性</h3>
-
-<p>假设对每个 $i$，若 $u_{ii}=0$，则第 $i$ 行全为零。定义
-\(d_i=u_{ii},\qquad i=1,\dots,n,\)
-并令 $D=\operatorname{diag}(d_1,\dots,d_n)$。</p>
-
-<ul>
-  <li>若 $d_i\ne 0$，令 $U’$ 的第 $i$ 行为 $\frac{1}{d_i}$ 乘以 $U$ 的第 $i$ 行，即
-\(u'_{ij}=\frac{u_{ij}}{u_{ii}},\qquad j=1,\dots,n.\)
-此时 $u’_{ii}=1$，且因 $U$ 上三角，$U’$ 也为上三角。</li>
-  <li>若 $d_i=0$，则 $U$ 的第 $i$ 行全为零。此时令 $U’$ 的第 $i$ 行为单位上三角矩阵的标准第 $i$ 行（即 $u’<em>{ii}=1$，$u’</em>{ij}=0$ 对 $j&gt;i$），这样 $d_i u’<em>{ij}=0$，仍满足 $u</em>{ij}=d_i u’_{ij}$。</li>
-</ul>
-
-<p>于是按行构造出 $U’$，它为单位上三角矩阵，且 $DU’=U$。充分性得证。</p>
-
-<h2 id="推论">推论</h2>
-
-<ol>
-  <li>
-    <p><strong>可逆上三角矩阵</strong><br />
-若 $U$ 可逆，则所有 $u_{ii}\ne 0$。此时分解存在且唯一：
-\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\qquad
-U'=D^{-1}U.\)
-这就是上三角矩阵的 <strong>Doolittle 型归一化</strong>。</p>
-  </li>
-  <li>
-    <p><strong>不可逆上三角矩阵</strong><br />
-若某些 $u_{ii}=0$，则分解可能不存在。例如
-\(U=\begin{pmatrix}0&amp;1\\0&amp;0\end{pmatrix}.\)
-对角线元素为 $0,0$。若存在 $U=DU’$，则 $D=\operatorname{diag}(0,0)$，从而 $DU’=0$，与 $U\ne 0$ 矛盾。故不能分解。</p>
-  </li>
-  <li>
-    <p><strong>零行情形</strong><br />
-若 $U$ 的零对角元所在行确实全为零，则分解仍存在，但不唯一，因为 $U’$ 对应行可任意选择（只需保持单位上三角）。</p>
-  </li>
-</ol>
-
-<h2 id="注记-4">注记</h2>
-
-<ol>
-  <li>
-    <p>若将“单位上三角矩阵”改为一般的上三角矩阵，则任何上三角矩阵 $U$ 都可平凡地分解为
-\(U=I\cdot U,\)
-其中 $I$ 为对角矩阵，$U$ 为上三角矩阵。但这没有意义。要求 $U’$ 为单位上三角，等价于将 $U$ 的对角尺度完全提取到对角矩阵 $D$ 中。</p>
-  </li>
-  <li>
-    <p>对下三角矩阵有完全对称的结论：$L$ 可分解为 $L=L’D$，其中 $D$ 对角，$L’$ 为单位下三角，当且仅当每个零对角元所在列全为零（或行？需转置）。可逆时唯一。</p>
-  </li>
-  <li>
-    <p>在 LU 分解中，若 $A=L_0U_0$ 为 Doolittle 分解，则 $U_0$ 可写为
-\(U_0=D U',\)
-其中 $D=\operatorname{diag}(U_0)$，$U’$ 为单位上三角。于是
-\(A=L_0D U',\)
-这正是 LDU 分解。</p>
-  </li>
-</ol>
-
-<h2 id="结论-1">结论</h2>
-<p>上三角矩阵不一定能分解为对角矩阵与单位上三角矩阵的乘积。<br />
-<strong>充要条件</strong>是：每个零对角元所在的行全为零。<br />
-若上三角矩阵可逆，则一定可以唯一分解为
-\(U=DU',\qquad D=\operatorname{diag}(u_{11},\dots,u_{nn}),\quad U'=D^{-1}U\text{ 单位上三角}.\)</p>
-
-<p><strong>定义（顺序主子式）</strong><br />
-设 $A=(a_{ij})\in M_n(\mathbb F)$，其中 $\mathbb F$ 为数域。对 $k=1,2,\dots,n$，称
-\(A_k=(a_{ij})_{1\le i,j\le k}\)
-为 $A$ 的 <strong>$k$ 阶顺序主子矩阵</strong>，其行列式
-\(D_k=\det A_k\)
-为 $A$ 的 <strong>$k$ 阶顺序主子式</strong>。规定 $D_0=1$。</p>
-
-<p>所谓“所有顺序主子式非零”，即
-\(D_k\ne 0,\qquad k=1,2,\dots,n.\)</p>
-
-<h1 id="附-b顺序主子式">附 B：顺序主子式</h1>
-
-<h2 id="主要定理">主要定理</h2>
-
-<p><strong>定理</strong><br />
-设 $A\in M_n(\mathbb F)$。下列命题等价：</p>
-
-<ol>
-  <li>$A$ 的所有顺序主子式非零，即 $D_k\ne 0$，$k=1,\dots,n$；</li>
-  <li>$A$ 存在唯一的 LU 分解
-\(A=LU,\)
-其中 $L$ 为单位下三角矩阵，$U$ 为上三角矩阵；</li>
-  <li>对 $A$ 进行<strong>不换行</strong>的高斯消元时，每一步的主元均非零；</li>
-  <li>每个顺序主子矩阵 $A_k$ 都可逆，$k=1,\dots,n$。</li>
-</ol>
-
-<h2 id="证明概要">证明概要</h2>
-
-<h3 id="1-rightarrow-3">(1) $\Rightarrow$ (3)</h3>
-
-<p>设第 $k$ 步消元前的主元为 $p_k$。可以证明
-\(p_k=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)
-因为 $D_k\ne 0$ 且 $D_{k-1}\ne 0$，故
-\(p_k\ne 0.\)
-因此高斯消元可以一直进行下去，不需要交换行。</p>
-
-<h3 id="3-rightarrow-2">(3) $\Rightarrow$ (2)</h3>
-
-<p>不换行的高斯消元过程等价于将 $A$ 左乘一系列单位下三角初等矩阵。最终得到上三角矩阵 $U$，而这些初等矩阵的逆乘积构成单位下三角矩阵 $L$，于是
-\(A=LU.\)
-唯一性证明如下：若
-\(A=L_1U_1=L_2U_2,\)
-则
-\(L_2^{-1}L_1=U_2U_1^{-1}.\)
-左边是单位下三角矩阵，右边是上三角矩阵。两者相等，只能是对角矩阵。又因左边对角线全为 $1$，故该对角矩阵为 $I$。于是
-\(L_1=L_2,\qquad U_1=U_2.\)</p>
-
-<h3 id="2-rightarrow-1">(2) $\Rightarrow$ (1)</h3>
-
-<p>若 $A=LU$，则对每个 $k$，
-\(A_k=L_kU_k,\)
-其中 $L_k,U_k$ 分别是 $L,U$ 的前 $k$ 阶顺序主子矩阵。由于 $L$ 为单位下三角，$\det L_k=1$；由于 $U$ 为上三角，
-\(\det U_k=\prod_{i=1}^k u_{ii}.\)
-因此
-\(D_k=\det A_k=\det L_k\det U_k=\prod_{i=1}^k u_{ii}.\)
-若 LU 分解唯一且 $U$ 非奇异，则 $u_{ii}\ne 0$，从而 $D_k\ne 0$。</p>
-
-<h2 id="直接推论">直接推论</h2>
-
-<ol>
-  <li>
-    <p><strong>矩阵非奇异</strong><br />
-因为
-\(\det A=D_n\ne 0,\)
-所以 $A$ 可逆。</p>
-  </li>
-  <li>
-    <p><strong>行列式与主元的关系</strong><br />
-\(\det A=D_n=\prod_{k=1}^n u_{kk},\)
-且
-\(u_{kk}=\frac{D_k}{D_{k-1}},\qquad D_0=1.\)</p>
-  </li>
-  <li>
-    <p><strong>LDU 分解</strong><br />
-令
-\(D=\operatorname{diag}(u_{11},\dots,u_{nn}),\)
-则
-\(A=LDU',\)
-其中 $U’=D^{-1}U$ 为单位上三角矩阵。</p>
-  </li>
-  <li>
-    <p><strong>与正定性的关系</strong><br />
-若 $A$ 为实对称矩阵，则
-\(A\text{ 正定}\iff D_k&gt;0,\quad k=1,\dots,n.\)
-这是 Sylvester 判据。<br />
-但仅“顺序主子式非零”不能推出正定，因为 $D_k$ 可能为负。</p>
-  </li>
-</ol>
-
-<h2 id="与非奇异的区别">与“非奇异”的区别</h2>
-
-<ul>
-  <li>$A$ 非奇异只要求
-\(D_n=\det A\ne 0.\)</li>
-  <li>所有顺序主子式非零要求更强：
-\(D_1\ne 0,\ D_2\ne 0,\ \dots,\ D_n\ne 0.\)</li>
-</ul>
-
-<p>因此：
-\(\text{所有顺序主子式非零}\ \Longrightarrow\ A\text{ 非奇异},\)
-但反之不成立。</p>
-
-<p><strong>例</strong><br />
-\(A=\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}.\)
-有
-\(D_1=0,\qquad D_2=\det A=-1\ne 0.\)
-所以 $A$ 非奇异，但 $D_1=0$，不满足所有顺序主子式非零。此时不换行的 LU 分解失败，因为第一步主元为 $0$。但通过交换两行，可做 PLU 分解：
-\(\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}
-=
-\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}
-\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}
-\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}.\)</p>
-
-<h2 id="与-plu-分解的关系">与 PLU 分解的关系</h2>
-
-<ul>
-  <li>若所有顺序主子式非零，则无主元 LU 分解存在且唯一：
-\(A=LU.\)</li>
-  <li>若某个顺序主子式为零，则无主元 LU 分解可能不存在，或即使存在也不唯一。此时需要引入行交换，即 PLU 分解：
-\(PA=LU.\)</li>
-</ul>
-
-<p>因此，“所有顺序主子式非零”恰好是 <strong>LU 分解无需行交换</strong> 的充要条件。</p>
-
-<h2 id="注记-5">注记</h2>
-
-<ol>
-  <li>
-    <p>“顺序主子式”与“主子式”不同。<br />
-主子式可以选取任意 $k$ 个行和对应的 $k$ 个列。<br />
-所有顺序主子式非零不意味着所有主子式非零。<br />
-例如
-\(A=\begin{pmatrix}1&amp;2\\3&amp;0\end{pmatrix},\)
-$D_1=1\ne 0$，$D_2=-6\ne 0$，但 $a_{22}=0$ 是一个 $1$ 阶主子式。</p>
-  </li>
-  <li>
-    <p>数值计算中，顺序主子式非零只保证精确算术下消元可行。若某些主元绝对值很小，浮点计算仍可能不稳定，因此实际算法通常采用部分主元法（PLU）。</p>
-  </li>
-  <li>
-    <p>该结论对任意数域 $\mathbb F$ 上的方阵均成立。</p>
-  </li>
-</ol>
-
-<h1 id="附-c解线性方程组doolittle-法为例">附 C：解线性方程组（Doolittle 法为例）</h1>
-
-<h2 id="三角方程组的求解">三角方程组的求解</h2>
-
-<p><strong>前代法解 $Ly=b$</strong><br />
-因 $L$ 为单位下三角矩阵，方程组写为
-\(\begin{cases}
-y_1=b_1,\\
-l_{21}y_1+y_2=b_2,\\
-\vdots\\
-l_{n1}y_1+l_{n2}y_2+\cdots+y_n=b_n.
-\end{cases}\)
-逐次可得
-\(y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n.\)</p>
-
-<p><strong>回代法解 $Ux=y$</strong><br />
-因 $U$ 为上三角矩阵且 $u_{ii}\ne 0$，方程组写为
-\(\begin{cases}
-u_{11}x_1+u_{12}x_2+\cdots+u_{1n}x_n=y_1,\\
-u_{22}x_2+\cdots+u_{2n}x_n=y_2,\\
-\vdots\\
-u_{nn}x_n=y_n.
-\end{cases}\)
-从最后一行开始，
-\(x_n=\frac{y_n}{u_{nn}},\)
-\(x_i=\frac{1}{u_{ii}}\left(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\right),\qquad i=n-1,n-2,\dots,1.\)</p>
-
-<h2 id="doolittle-法解-axb-的完整步骤">Doolittle 法解 $Ax=b$ 的完整步骤</h2>
-
-<h3 id="算法流程">算法流程</h3>
-
-<p><strong>步骤 1：Doolittle 分解 $A=LU$</strong></p>
-
-<p>对 $k=1,2,\dots,n$：</p>
-
-<ol>
-  <li>计算 $U$ 的第 $k$ 行：
-\(u_{kj}=a_{kj}-\sum_{m=1}^{k-1}l_{km}u_{mj},\qquad j=k,k+1,\dots,n.\)</li>
-  <li>计算 $L$ 的第 $k$ 列：
-\(l_{ik}=\frac{1}{u_{kk}}\left(a_{ik}-\sum_{m=1}^{k-1}l_{im}u_{mk}\right),\qquad i=k+1,k+2,\dots,n.\)
-并规定 $l_{kk}=1$。</li>
-</ol>
-
-<p><strong>步骤 2：前代解 $Ly=b$</strong></p>
-
-\[y_i=b_i-\sum_{j=1}^{i-1}l_{ij}y_j,\qquad i=1,2,\dots,n.\]
-
-<p><strong>步骤 3：回代解 $Ux=y$</strong></p>
-
-\[x_i=\frac{1}{u_{ii}}\left(y_i-\sum_{j=i+1}^{n}u_{ij}x_j\right),\qquad i=n,n-1,\dots,1.\]
-
-<h3 id="正确性证明">正确性证明</h3>
-
-<p>因 $A=LU$，原方程 $Ax=b$ 等价于
-\(LUx=b.\)
-令
-\(y=Ux.\)
-则 $Ly=b$。由于 $L$ 为单位下三角矩阵，$\det L=1\ne 0$，故 $Ly=b$ 有唯一解 $y$，可由前代法求出。再由 $Ux=y$，因 $U$ 上三角且 $u_{ii}\ne 0$，$\det U=\prod_{i=1}^n u_{ii}\ne 0$，故有唯一解 $x$，可由回代法求出。于是 $x$ 即为 $Ax=b$ 的唯一解。$\square$</p>
-
-<h3 id="计算量">计算量</h3>
-
-<ul>
-  <li>Doolittle 分解：约 $\dfrac{2}{3}n^3$ 次浮点乘除；</li>
-  <li>前代：约 $n^2$ 次；</li>
-  <li>回代：约 $n^2$ 次。</li>
-</ul>
-
-<p>总计约
-\(\frac{2}{3}n^3+O(n^2)\)
-次浮点运算。当有多个右端项 $b^{(1)},\dots,b^{(m)}$ 时，分解只需进行一次，总计算量为
-\(\frac{2}{3}n^3+2mn^2+O(n^2).\)</p>
-
-<h2 id="数值例子">数值例子</h2>
-
-<p>设
-\(A=\begin{pmatrix}
-2&amp;1&amp;1\\
-4&amp;3&amp;3\\
-8&amp;7&amp;9
-\end{pmatrix},\qquad
-b=\begin{pmatrix}
-1\\
-1\\
-1
-\end{pmatrix}.\)</p>
-
-<h3 id="doolittle-分解-1">Doolittle 分解</h3>
-
-<p>由前文结果，
-\(L=\begin{pmatrix}
-1&amp;0&amp;0\\
-2&amp;1&amp;0\\
-4&amp;3&amp;1
-\end{pmatrix},\qquad
-U=\begin{pmatrix}
-2&amp;1&amp;1\\
-0&amp;1&amp;1\\
-0&amp;0&amp;2
-\end{pmatrix}.\)
-验证 $LU=A$。</p>
-
-<h3 id="前代解-lyb">前代解 $Ly=b$</h3>
-
-<p>\(y_1=1,\)
-\(y_2=b_2-l_{21}y_1=1-2\cdot 1=-1,\)
-\(y_3=b_3-l_{31}y_1-l_{32}y_2=1-4\cdot 1-3\cdot(-1)=1-4+3=0.\)
-故
-\(y=\begin{pmatrix}1\\-1\\0\end{pmatrix}.\)</p>
-
-<h3 id="回代解-uxy">回代解 $Ux=y$</h3>
-
-<p>\(x_3=\frac{y_3}{u_{33}}=\frac{0}{2}=0,\)
-\(x_2=\frac{1}{u_{22}}(y_2-u_{23}x_3)=\frac{1}{1}(-1-1\cdot 0)=-1,\)
-\(x_1=\frac{1}{u_{11}}(y_1-u_{12}x_2-u_{13}x_3)
-=\frac{1}{2}(1-1\cdot(-1)-1\cdot 0)
-=\frac{1}{2}(1+1)=1.\)
-于是
-\(x=\begin{pmatrix}1\\-1\\0\end{pmatrix}.\)</p>
-
-<p><strong>验证</strong>：
-\(Ax=\begin{pmatrix}
-2&amp;1&amp;1\\
-4&amp;3&amp;3\\
-8&amp;7&amp;9
-\end{pmatrix}
-\begin{pmatrix}
-1\\-1\\0
-\end{pmatrix}
-=
-\begin{pmatrix}
-2-1\\
-4-3\\
-8-7
-\end{pmatrix}
-=
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix}=b.\)
-正确。</p>
-
-<h2 id="数值稳定性与主元选择">数值稳定性与主元选择</h2>
-
-<p>Doolittle 法在精确算术下是可行的，但在浮点计算中，若某个主元 $u_{kk}$ 的绝对值极小，会导致 $l_{ik}=a_{ik}/u_{kk}$ 非常大，从而放大舍入误差，使结果不可靠。</p>
-
-<p><strong>例</strong><br />
-\(A=\begin{pmatrix}
-10^{-20}&amp;1\\
-1&amp;1
-\end{pmatrix},\qquad
-b=\begin{pmatrix}1\\2\end{pmatrix}.\)
-精确解为 $x\approx(1,1)^T$。但若按 Doolittle 分解，
-\(u_{11}=10^{-20},\qquad l_{21}=10^{20},\)
-在浮点运算中会产生严重误差。</p>
-
-<p><strong>解决方案</strong><br />
-实际计算中采用 <strong>带部分主元的 PLU 分解</strong>：
-\(PA=LU,\)
-其中 $P$ 为置换矩阵。算法在每一步选择当前列中绝对值最大的元素作为主元，并交换行。这样可以保证所有 $|l_{ij}|\le 1$，显著提高数值稳定性。</p>
-
-<p>因此，实际数值软件（如 LAPACK、MATLAB、NumPy）中，“LU 分解”通常默认指带部分主元的 PLU 分解，而非纯粹的 Doolittle 分解。</p>
-
-<hr />
-
-<h2 id="优缺点">优缺点</h2>
-
-<p><strong>优点</strong></p>
-<ol>
-  <li>分解一次后，可重复用于多个右端项 $b$，节省计算量。</li>
-  <li>算法结构清晰，易于实现。</li>
-  <li>可原地存储 $L$ 和 $U$ 于 $A$ 的存储空间中。</li>
-</ol>
-
-<p><strong>缺点</strong></p>
-<ol>
-  <li>要求所有顺序主子式非零；否则分解不存在或需行交换。</li>
-  <li>无主元时数值不稳定。</li>
-  <li>对稀疏矩阵可能产生填充（fill-in），破坏稀疏性。</li>
-</ol>
-
-<h2 id="总结">总结</h2>
-
-<p>Doolittle 法解线性方程组 $Ax=b$ 的核心步骤为：</p>
-
-\[A=LU
-\;\Longrightarrow\;
-Ly=b
-\;\xrightarrow{\text{前代}}\;
-y
-\;\Longrightarrow\;
-Ux=y
-\;\xrightarrow{\text{回代}}\;
-x.\]
-
-<p>适用条件：$A$ 的所有顺序主子式非零。<br />
-计算量：约 $\dfrac{2}{3}n^3+O(n^2)$。<br />
-数值实现中，为保证稳定性，通常采用带部分主元的 PLU 分解。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>Householder 变换是数值线性代数中最基本、最重要的工具之一，其镜面反射的几何直观与代数简洁性使其成为 QR 分解、特征值计算和最小二乘问题的首选方法。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
