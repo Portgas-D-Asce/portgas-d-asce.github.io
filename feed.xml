@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-21T08:30:48+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Jacobi 法求解对称矩阵特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="Jacobi 法求解对称矩阵特征值" /><published>2026-10-17T00:00:00+00:00</published><updated>2026-10-17T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi%20%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-21T08:37:30+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">Jacobi 法求解对称矩阵特征值</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html" rel="alternate" type="text/html" title="Jacobi 法求解对称矩阵特征值" /><published>2026-10-17T00:00:00+00:00</published><updated>2026-10-17T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi%20%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/17/Jacobi-%E6%B3%95%E6%B1%82%E8%A7%A3%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC.html"><![CDATA[<p>下面从零开始，系统介绍 Jacobi 旋转法求对称矩阵特征值。约定：$A\in M_n(\mathbb R)$ 为实对称矩阵。</p>
 
 <hr />
 
@@ -1160,15 +1160,7 @@ while 未对角化:
 \[A^kx=\sum_{i=1}^n c_i\lambda_i^k v_i
 =\lambda_1^k\left(c_1v_1+\sum_{i=2}^n c_i\left(\frac{\lambda_i}{\lambda_1}\right)^k v_i\right).\]
 
-<table>
-  <tbody>
-    <tr>
-      <td>因 $</td>
-      <td>\lambda_i/\lambda_1</td>
-      <td>&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</td>
-    </tr>
-  </tbody>
-</table>
+<p>因 $\lambda_i/\lambda_1&lt;1$（$i\ge2$），当 $k\to\infty$ 时，第二项趋于零，故 $A^kx$ 的方向趋于 $v_1$。</p>
 
 <h2 id="算法">算法</h2>
 
