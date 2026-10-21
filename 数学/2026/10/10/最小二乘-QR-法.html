@@ -320,71 +320,22 @@
 
 <h2 id="计算量">计算量</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>步骤</th>
-      <th>计算量</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>QR 分解</td>
-      <td>$2mn^2-\frac23n^3$</td>
-    </tr>
-    <tr>
-      <td>计算 $Q_1^{\mathsf T}b$</td>
-      <td>$2mn$</td>
-    </tr>
-    <tr>
-      <td>回代</td>
-      <td>$n^2$</td>
-    </tr>
-    <tr>
-      <td>总计</td>
-      <td>$2mn^2-\frac23n^3+O(mn)$</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  步骤 \vert  计算量 \vert 
+\vert —\vert —\vert 
+\vert  QR 分解 \vert  $2mn^2-\frac23n^3$ \vert 
+\vert  计算 $Q_1^{\mathsf T}b$ \vert  $2mn$ \vert 
+\vert  回代 \vert  $n^2$ \vert 
+\vert  总计 \vert  $2mn^2-\frac23n^3+O(mn)$ \vert</p>
 
 <h2 id="与正规方程对比">与正规方程对比</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>正规方程</th>
-      <th>QR 分解</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>方程</td>
-      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
-      <td>$R_1x=Q_1^{\mathsf T}b$</td>
-    </tr>
-    <tr>
-      <td>条件数</td>
-      <td>$\kappa(A)^2$</td>
-      <td>$\kappa(A)$</td>
-    </tr>
-    <tr>
-      <td>计算量</td>
-      <td>$mn^2+\frac13n^3$</td>
-      <td>$2mn^2-\frac23n^3$</td>
-    </tr>
-    <tr>
-      <td>数值稳定性</td>
-      <td>差</td>
-      <td>好</td>
-    </tr>
-    <tr>
-      <td>适用场景</td>
-      <td>小规模、良态问题</td>
-      <td>通用、病态问题</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  项目 \vert  正规方程 \vert  QR 分解 \vert 
+\vert —\vert —\vert —\vert 
+\vert  方程 \vert  $A^{\mathsf T}Ax=A^{\mathsf T}b$ \vert  $R_1x=Q_1^{\mathsf T}b$ \vert 
+\vert  条件数 \vert  $\kappa(A)^2$ \vert  $\kappa(A)$ \vert 
+\vert  计算量 \vert  $mn^2+\frac13n^3$ \vert  $2mn^2-\frac23n^3$ \vert 
+\vert  数值稳定性 \vert  差 \vert  好 \vert 
+\vert  适用场景 \vert  小规模、良态问题 \vert  通用、病态问题 \vert</p>
 
 <h2 id="数值稳定性">数值稳定性</h2>
 
@@ -506,37 +457,12 @@ A^{\mathsf T}b=\begin{pmatrix}3\\4\end{pmatrix}.\]
 
 <p><strong>与正规方程对比</strong>：</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>正规方程</th>
-      <th>QR 分解</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>条件数</td>
-      <td>$\kappa(A)^2$</td>
-      <td>$\kappa(A)$</td>
-    </tr>
-    <tr>
-      <td>稳定性</td>
-      <td>差</td>
-      <td>好</td>
-    </tr>
-    <tr>
-      <td>计算量</td>
-      <td>较小</td>
-      <td>较大</td>
-    </tr>
-    <tr>
-      <td>适用场景</td>
-      <td>良态问题</td>
-      <td>通用</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  项目 \vert  正规方程 \vert  QR 分解 \vert 
+\vert —\vert —\vert —\vert 
+\vert  条件数 \vert  $\kappa(A)^2$ \vert  $\kappa(A)$ \vert 
+\vert  稳定性 \vert  差 \vert  好 \vert 
+\vert  计算量 \vert  较小 \vert  较大 \vert 
+\vert  适用场景 \vert  良态问题 \vert  通用 \vert</p>
 
 <p><strong>结论</strong>：QR 法是最小二乘问题的标准方法，兼顾稳定性与效率。当 $A$ 病态时，QR 法明显优于正规方程。若精度要求极高或 $A$ 接近奇异，可采用 SVD。</p>
 <div id="giscus">

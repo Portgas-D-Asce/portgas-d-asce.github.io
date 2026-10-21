@@ -986,42 +986,13 @@ Concept  → 用类型萃取和 requires 表达式做命名约束
 
 <h2 id="普通谓词-vs-concept">普通谓词 vs Concept</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th> </th>
-      <th>普通谓词</th>
-      <th>Concept</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>输入</td>
-      <td>值</td>
-      <td>类型</td>
-    </tr>
-    <tr>
-      <td>返回</td>
-      <td><code class="language-plaintext highlighter-rouge">bool</code></td>
-      <td>编译期 <code class="language-plaintext highlighter-rouge">bool</code></td>
-    </tr>
-    <tr>
-      <td>求值时机</td>
-      <td>运行时</td>
-      <td>编译期</td>
-    </tr>
-    <tr>
-      <td>用途</td>
-      <td>条件判断</td>
-      <td>约束模板参数</td>
-    </tr>
-    <tr>
-      <td>例子</td>
-      <td><code class="language-plaintext highlighter-rouge">is_even(4)</code></td>
-      <td><code class="language-plaintext highlighter-rouge">scalar&lt;double&gt;</code></td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  \vert  普通谓词 \vert  Concept \vert 
+\vert —\vert —\vert —\vert 
+\vert  输入 \vert  值 \vert  类型 \vert 
+\vert  返回 \vert  <code class="language-plaintext highlighter-rouge">bool</code> \vert  编译期 <code class="language-plaintext highlighter-rouge">bool</code> \vert 
+\vert  求值时机 \vert  运行时 \vert  编译期 \vert 
+\vert  用途 \vert  条件判断 \vert  约束模板参数 \vert 
+\vert  例子 \vert  <code class="language-plaintext highlighter-rouge">is_even(4)</code> \vert  <code class="language-plaintext highlighter-rouge">scalar&lt;double&gt;</code> \vert</p>
 
 <p>普通谓词：</p>
 

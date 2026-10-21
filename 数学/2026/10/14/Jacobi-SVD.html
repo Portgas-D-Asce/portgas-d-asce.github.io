@@ -198,7 +198,7 @@
 
 \[\tau=\frac{a_{qq}-a_{pp}}{2a_{pq}},\]
 
-\[t=\frac{\operatorname{sgn}(\tau)}{|\tau|+\sqrt{1+\tau^2}},\]
+\[t=\frac{\operatorname{sgn}(\tau)}{\vert \tau\vert +\sqrt{1+\tau^2}},\]
 
 \[c=\frac{1}{\sqrt{1+t^2}},\qquad s=ct.\]
 
@@ -236,8 +236,8 @@ V = I_n
 repeat:
     for p = 1 to n-1:
         for q = p+1 to n:
-            计算 a_pp = ||G(:,p)||², a_qq = ||G(:,q)||², a_pq = G(:,p)^T G(:,q)
-            if |a_pq| 足够小:
+            计算 a_pp = \vert \vert G(:,p)\vert \vert ², a_qq = \vert \vert G(:,q)\vert \vert ², a_pq = G(:,p)^T G(:,q)
+            if \vert a_pq\vert  足够小:
                 跳过
             else:
                 由 τ, t, c, s 构造旋转
@@ -245,14 +245,14 @@ repeat:
                 V(:, [p,q]) = V(:, [p,q]) * [[c, s], [-s, c]]
 until G 的列足够正交
 for i = 1 to n:
-    σ_i = ||G(:,i)||₂
+    σ_i = \vert \vert G(:,i)\vert \vert ₂
     u_i = G(:,i) / σ_i
 返回 U = [u_1,...,u_n], Σ = diag(σ_i), V
 </code></pre></div></div>
 
 <p><strong>收敛判据</strong>：</p>
 
-\[\max_{p\ne q}\frac{|a_{pq}|}{\sqrt{a_{pp}a_{qq}}}\le\text{tol},\]
+\[\max_{p\ne q}\frac{\vert a_{pq}\vert }{\sqrt{a_{pp}a_{qq}}}\le\text{tol},\]
 
 <p>或等价的正交性度量。</p>
 
@@ -280,7 +280,7 @@ for i = 1 to n:
 <p><strong>定理 3.5.1（Demmel–Veselić）</strong><br />
 设 $A=DX$，其中 $D$ 为对角矩阵，$X$ 条件数良好。则单边 Jacobi SVD 计算得到的奇异值满足</p>
 
-\[\frac{|\hat\sigma_i-\sigma_i|}{\sigma_i}\le O(n\epsilon)\kappa(X),\]
+\[\frac{\vert \hat\sigma_i-\sigma_i\vert }{\sigma_i}\le O(n\epsilon)\kappa(X),\]
 
 <p>其中 $\epsilon$ 为机器精度。</p>
 
@@ -360,7 +360,7 @@ repeat:
             G = K^T * G * J
             U = U * K
             V = V * J
-            off += |G(p,q)|² + |G(q,p)|²
+            off += \vert G(p,q)\vert ² + \vert G(q,p)\vert ²
 until off 足够小
 返回 U, Σ = diag(G), V
 </code></pre></div></div>
@@ -375,57 +375,16 @@ until off 足够小
 
 <h1 id="单边与双边-jacobi-svd-的对比">单边与双边 Jacobi SVD 的对比</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>单边 Jacobi</th>
-      <th>双边 Jacobi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>作用对象</td>
-      <td>仅右乘旋转，更新列</td>
-      <td>左右同时施加旋转</td>
-    </tr>
-    <tr>
-      <td>更新成本</td>
-      <td>较低（仅列更新）</td>
-      <td>较高（行列均更新）</td>
-    </tr>
-    <tr>
-      <td>累积矩阵</td>
-      <td>仅 $V$</td>
-      <td>$U$ 和 $V$ 均需累积</td>
-    </tr>
-    <tr>
-      <td>相对精度</td>
-      <td>高</td>
-      <td>也高，但更新成本更大</td>
-    </tr>
-    <tr>
-      <td>并行性</td>
-      <td>列对级并行</td>
-      <td>行列耦合，并行较复杂</td>
-    </tr>
-    <tr>
-      <td>收敛速度</td>
-      <td>二次收敛</td>
-      <td>二次收敛</td>
-    </tr>
-    <tr>
-      <td>典型实现</td>
-      <td>LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code></td>
-      <td>部分小规模实现</td>
-    </tr>
-    <tr>
-      <td>适用场景</td>
-      <td>高精度需求、并行计算</td>
-      <td>小规模稠密矩阵</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  项目 \vert  单边 Jacobi \vert  双边 Jacobi \vert 
+\vert —\vert —\vert —\vert 
+\vert  作用对象 \vert  仅右乘旋转，更新列 \vert  左右同时施加旋转 \vert 
+\vert  更新成本 \vert  较低（仅列更新） \vert  较高（行列均更新） \vert 
+\vert  累积矩阵 \vert  仅 $V$ \vert  $U$ 和 $V$ 均需累积 \vert 
+\vert  相对精度 \vert  高 \vert  也高，但更新成本更大 \vert 
+\vert  并行性 \vert  列对级并行 \vert  行列耦合，并行较复杂 \vert 
+\vert  收敛速度 \vert  二次收敛 \vert  二次收敛 \vert 
+\vert  典型实现 \vert  LAPACK <code class="language-plaintext highlighter-rouge">DGESVJ</code> \vert  部分小规模实现 \vert 
+\vert  适用场景 \vert  高精度需求、并行计算 \vert  小规模稠密矩阵 \vert</p>
 
 <p><strong>结论</strong>：</p>
 <ul>
@@ -436,52 +395,12 @@ until off 足够小
 
 <h1 id="与其他-svd-算法的比较">与其他 SVD 算法的比较</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>数值稳定性</th>
-      <th>相对精度</th>
-      <th>计算量</th>
-      <th>并行性</th>
-      <th>适用场景</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Golub–Kahan</td>
-      <td>后向稳定</td>
-      <td>一般</td>
-      <td>$4mn^2-\frac43n^3$</td>
-      <td>中等</td>
-      <td>通用、大规模</td>
-    </tr>
-    <tr>
-      <td>单边 Jacobi</td>
-      <td>后向稳定 + 高相对精度</td>
-      <td>高</td>
-      <td>较高</td>
-      <td>好</td>
-      <td>高精度、并行</td>
-    </tr>
-    <tr>
-      <td>双边 Jacobi</td>
-      <td>后向稳定 + 高相对精度</td>
-      <td>高</td>
-      <td>高</td>
-      <td>较差</td>
-      <td>小规模</td>
-    </tr>
-    <tr>
-      <td>$A^{\mathsf T}A$ 特征值分解</td>
-      <td>差（条件数平方）</td>
-      <td>差</td>
-      <td>低</td>
-      <td>好</td>
-      <td>教学、良态小矩阵</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  方法 \vert  数值稳定性 \vert  相对精度 \vert  计算量 \vert  并行性 \vert  适用场景 \vert 
+\vert —\vert —\vert —\vert —\vert —\vert —\vert 
+\vert  Golub–Kahan \vert  后向稳定 \vert  一般 \vert  $4mn^2-\frac43n^3$ \vert  中等 \vert  通用、大规模 \vert 
+\vert  单边 Jacobi \vert  后向稳定 + 高相对精度 \vert  高 \vert  较高 \vert  好 \vert  高精度、并行 \vert 
+\vert  双边 Jacobi \vert  后向稳定 + 高相对精度 \vert  高 \vert  高 \vert  较差 \vert  小规模 \vert 
+\vert  $A^{\mathsf T}A$ 特征值分解 \vert  差（条件数平方） \vert  差 \vert  低 \vert  好 \vert  教学、良态小矩阵 \vert</p>
 
 <p><strong>Golub–Kahan</strong> 是 LAPACK 中 <code class="language-plaintext highlighter-rouge">dgesvd</code> 的标准实现，计算量最小，适用于大规模矩阵。但其双对角化过程会引入 $\kappa(A)$ 量级的扰动，小奇异值的相对精度不如 Jacobi 方法。</p>
 
@@ -562,7 +481,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
 <p>对 Gram 矩阵 $H=G^{\mathsf T}G$，称</p>
 
 \[\operatorname{off}(G)
-=\sqrt{\sum_{p\ne q}|h_{pq}|^2}
+=\sqrt{\sum_{p\ne q}\vert h_{pq}\vert ^2}
 =\sqrt{\sum_{p\ne q}\bigl(G_{:,p}^{\mathsf T}G_{:,q}\bigr)^2}\]
 
 <p>为 $G$ 的<strong>非对角范数</strong>（off-diagonal norm）。</p>
@@ -574,7 +493,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
 <p>由于各列范数不同，绝对内积的大小不能直接比较，通常使用<strong>归一化非对角范数</strong>：</p>
 
 \[\operatorname{off}_{\text{rel}}(G)
-=\sqrt{\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}}}
+=\sqrt{\sum_{p\ne q}\frac{\vert h_{pq}\vert ^2}{h_{pp}h_{qq}}}
 =\sqrt{\sum_{p\ne q}\left(\frac{G_{:,p}^{\mathsf T}G_{:,q}}{\|G_{:,p}\|_2\|G_{:,q}\|_2}\right)^2}.\]
 
 <p>这正是所有列对<strong>夹角余弦</strong>的平方和，取值在 $[0,n(n-1)]$ 之间，0 表示完全正交。归一化版本更适合作为收敛判据，因为它不受列尺度影响。</p>
@@ -616,7 +535,7 @@ h_{pq}=G_{:,p}^{\mathsf T}G_{:,q}.\]
     for p = 1 to n-1:
         for q = p+1 to n:
             计算 h_pp, h_qq, h_pq
-            if |h_pq| / sqrt(h_pp*h_qq) &gt; eps:
+            if \vert h_pq\vert  / sqrt(h_pp*h_qq) &gt; eps:
                 构造并施加 Jacobi 旋转，更新 G 的第 p,q 列及 V 的第 p,q 列
     off_curr = off_rel(G)          // 本轮扫描后的非对角范数
 until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或停滞
@@ -628,7 +547,7 @@ until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或
   <li><strong>不必显式计算 Gram 矩阵</strong>：只需在扫描过程中累加</li>
 </ol>
 
-\[\sum_{p\ne q}\frac{|h_{pq}|^2}{h_{pp}h_{qq}},\]
+\[\sum_{p\ne q}\frac{\vert h_{pq}\vert ^2}{h_{pp}h_{qq}},\]
 
 <p>最后开方即可。</p>
 
@@ -646,36 +565,15 @@ until off_curr &lt;= tol or off_curr &gt;= off_prev * (1 - small)   // 收敛或
 
 <h2 id="与双边-jacobi-的区别">与双边 Jacobi 的区别</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>单边 Jacobi</th>
-      <th>双边 Jacobi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>非对角范数的对象</td>
-      <td>Gram 矩阵 $G^{\mathsf T}G$ 的非对角元</td>
-      <td>工作矩阵 $G$ 本身的非对角元</td>
-    </tr>
-    <tr>
-      <td>含义</td>
-      <td>列向量的非正交性</td>
-      <td>矩阵偏离对角形式的程度</td>
-    </tr>
-    <tr>
-      <td>收敛目标</td>
-      <td>列两两正交</td>
-      <td>矩阵对角化</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  项目 \vert  单边 Jacobi \vert  双边 Jacobi \vert 
+\vert —\vert —\vert —\vert 
+\vert  非对角范数的对象 \vert  Gram 矩阵 $G^{\mathsf T}G$ 的非对角元 \vert  工作矩阵 $G$ 本身的非对角元 \vert 
+\vert  含义 \vert  列向量的非正交性 \vert  矩阵偏离对角形式的程度 \vert 
+\vert  收敛目标 \vert  列两两正交 \vert  矩阵对角化 \vert</p>
 
 <p>双边 Jacobi 中，“off-diagonal 范数”指</p>
 
-\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}|g_{pq}|^2},\]
+\[\operatorname{off}(G)=\sqrt{\sum_{p\ne q}\vert g_{pq}\vert ^2},\]
 
 <p>即矩阵本身非对角元素的总量。而单边 Jacobi 中，它指的是 Gram 矩阵的非对角元，物理意义不同。</p>
 

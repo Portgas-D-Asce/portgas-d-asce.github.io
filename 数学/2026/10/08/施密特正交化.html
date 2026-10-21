@@ -212,7 +212,7 @@ r_{jj}=\|\tilde q_j\|.\)</p>
 <p>设 $v_1,\dots,v_n$ 线性无关。令 $a_i=v_i$ 作为工作向量。</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for i = 1 to n:
-    r_{ii} = ||a_i||
+    r_{ii} = \vert \vert a_i\vert \vert 
     q_i = a_i / r_{ii}
     for j = i+1 to n:
         r_{ij} = &lt;q_i, a_j&gt;
@@ -300,42 +300,12 @@ q_3=\frac{1}{\sqrt3}\begin{pmatrix}-1\\1\\1\end{pmatrix}.\)</p>
 
 <h1 id="与-householder-变换givens-旋转的比较">与 Householder 变换、Givens 旋转的比较</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>数值稳定性</th>
-      <th>计算量</th>
-      <th>适用场景</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>经典 Gram–Schmidt</td>
-      <td>差</td>
-      <td>$2mn^2$</td>
-      <td>教学、小规模</td>
-    </tr>
-    <tr>
-      <td>修正 Gram–Schmidt</td>
-      <td>较好</td>
-      <td>$2mn^2$</td>
-      <td>中等规模、并行</td>
-    </tr>
-    <tr>
-      <td>Householder 变换</td>
-      <td>极好</td>
-      <td>$2mn^2-\frac23n^3$</td>
-      <td>通用、QR 分解标准</td>
-    </tr>
-    <tr>
-      <td>Givens 旋转</td>
-      <td>好</td>
-      <td>约 $3mn^2$</td>
-      <td>稀疏矩阵、并行</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  方法 \vert  数值稳定性 \vert  计算量 \vert  适用场景 \vert 
+\vert —\vert —\vert —\vert —\vert 
+\vert  经典 Gram–Schmidt \vert  差 \vert  $2mn^2$ \vert  教学、小规模 \vert 
+\vert  修正 Gram–Schmidt \vert  较好 \vert  $2mn^2$ \vert  中等规模、并行 \vert 
+\vert  Householder 变换 \vert  极好 \vert  $2mn^2-\frac23n^3$ \vert  通用、QR 分解标准 \vert 
+\vert  Givens 旋转 \vert  好 \vert  约 $3mn^2$ \vert  稀疏矩阵、并行 \vert</p>
 
 <p>在数值计算库（LAPACK、MATLAB、NumPy）中，QR 分解通常采用 Householder 变换，因其稳定且高效。</p>
 

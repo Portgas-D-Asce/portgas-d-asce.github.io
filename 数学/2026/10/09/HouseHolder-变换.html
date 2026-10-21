@@ -209,7 +209,7 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 \[\operatorname{sgn}(x_1)=
 \begin{cases}
-\dfrac{x_1}{|x_1|},&amp; x_1\ne 0,\\
+\dfrac{x_1}{\vert x_1\vert },&amp; x_1\ne 0,\\
 1,&amp; x_1=0.
 \end{cases}\]
 
@@ -229,25 +229,25 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 首先计算 $v^{\mathsf H}v$：</p>
 
 \[v^{\mathsf H}v=(x-\alpha e_1)^{\mathsf H}(x-\alpha e_1)
-=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+|\alpha|^2.\]
+=\|x\|_2^2-\bar\alpha x_1-\alpha\bar x_1+\vert \alpha\vert ^2.\]
 
 <p>由 $\alpha=-\operatorname{sgn}(x_1)|x|_2$，有</p>
 
-\[|\alpha|^2=\|x\|_2^2,\qquad
-\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2|x_1|,\]
+\[\vert \alpha\vert ^2=\|x\|_2^2,\qquad
+\bar\alpha x_1=-\overline{\operatorname{sgn}(x_1)}\|x\|_2\cdot x_1=-\|x\|_2\vert x_1\vert ,\]
 
-\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2|x_1|.\]
+\[\alpha\bar x_1=-\operatorname{sgn}(x_1)\|x\|_2\cdot\bar x_1=-\|x\|_2\vert x_1\vert .\]
 
 <p>故</p>
 
-\[v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2|x_1|
-=2\|x\|_2(\|x\|_2-|x_1|).\]
+\[v^{\mathsf H}v=2\|x\|_2^2-2\|x\|_2\vert x_1\vert 
+=2\|x\|_2(\|x\|_2-\vert x_1\vert ).\]
 
 <p>又</p>
 
 \[v^{\mathsf H}x=(x-\alpha e_1)^{\mathsf H}x=\|x\|_2^2-\bar\alpha x_1
-=\|x\|_2^2-\|x\|_2|x_1|
-=\|x\|_2(\|x\|_2-|x_1|).\]
+=\|x\|_2^2-\|x\|_2\vert x_1\vert 
+=\|x\|_2(\|x\|_2-\vert x_1\vert ).\]
 
 <p>因此</p>
 
@@ -385,42 +385,12 @@ Householder 矩阵是酉矩阵（实正交矩阵），且是<strong>自伴</stro
 
 <h1 id="与其他变换的比较">与其他变换的比较</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>数值稳定性</th>
-      <th>计算量</th>
-      <th>适用场景</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>经典 Gram–Schmidt</td>
-      <td>差</td>
-      <td>$2mn^2$</td>
-      <td>教学、小规模</td>
-    </tr>
-    <tr>
-      <td>修正 Gram–Schmidt</td>
-      <td>较好</td>
-      <td>$2mn^2$</td>
-      <td>中等规模、并行</td>
-    </tr>
-    <tr>
-      <td>Householder 变换</td>
-      <td>极好</td>
-      <td>$2mn^2-\frac23n^3$</td>
-      <td>通用、QR 分解标准</td>
-    </tr>
-    <tr>
-      <td>Givens 旋转</td>
-      <td>好</td>
-      <td>约 $3mn^2$</td>
-      <td>稀疏矩阵、并行</td>
-    </tr>
-  </tbody>
-</table>
+<p>\vert  方法 \vert  数值稳定性 \vert  计算量 \vert  适用场景 \vert 
+\vert —\vert —\vert —\vert —\vert 
+\vert  经典 Gram–Schmidt \vert  差 \vert  $2mn^2$ \vert  教学、小规模 \vert 
+\vert  修正 Gram–Schmidt \vert  较好 \vert  $2mn^2$ \vert  中等规模、并行 \vert 
+\vert  Householder 变换 \vert  极好 \vert  $2mn^2-\frac23n^3$ \vert  通用、QR 分解标准 \vert 
+\vert  Givens 旋转 \vert  好 \vert  约 $3mn^2$ \vert  稀疏矩阵、并行 \vert</p>
 
 <p><strong>特点对比</strong>：</p>
 

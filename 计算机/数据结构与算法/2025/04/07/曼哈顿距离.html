@@ -85,10 +85,10 @@
 
 <p>平面上两个点之间的曼哈顿距离定义如下：
 \(\begin{aligned}
-d_{ij} &amp;= |x_i - x_j| + |y_i - y_j|\\
+d_{ij} &amp;= \vert x_i - x_j\vert  + \vert y_i - y_j\vert \\
 &amp;= max(x_i - x_j, x_j - x_i) + max(y_i - y_j, y_j - y_i) \\
 &amp;= max(x_i - x_j + y_i - y_j, x_i - x_j + y_j - y_i, x_j - x_i + y_i - y_j, x_j - x_i + y_j - y_i)\\
-&amp;= max(|(x_i + y_i) - (x_j + y_j)|, |(x_i - y_i) - (x_j - y_j)|)
+&amp;= max(\vert (x_i + y_i) - (x_j + y_j)\vert , \vert (x_i - y_i) - (x_j - y_j)\vert )
 \end{aligned}\)</p>
 
 \[d_1 = x + y \\
