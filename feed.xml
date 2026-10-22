@@ -1,4 +1,179 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-22T06:50:14+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">共轭梯度法（Conjugate Gradient, CG）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html" rel="alternate" type="text/html" title="共轭梯度法（Conjugate Gradient, CG）" /><published>2026-10-19T00:00:00+00:00</published><updated>2026-10-19T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95%EF%BC%88Conjugate%20Gradient,%20CG%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html"><![CDATA[<h1 id="共轭梯度法conjugate-gradient-method">共轭梯度法（Conjugate Gradient Method）</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://xdevil.top/feed.xml" rel="self" type="application/atom+xml" /><link href="https://xdevil.top/" rel="alternate" type="text/html" /><updated>2026-10-22T07:18:52+00:00</updated><id>https://xdevil.top/feed.xml</id><title type="html">Devil’s blog</title><subtitle>Technology summarization for personal usage.</subtitle><author><name>Devil</name><email>Devil@gmail.com</email></author><entry><title type="html">广义最小残差法（Generalized Minimal Residual, GMRES）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html" rel="alternate" type="text/html" title="广义最小残差法（Generalized Minimal Residual, GMRES）" /><published>2026-10-20T00:00:00+00:00</published><updated>2026-10-20T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95%EF%BC%88Generalized%20Minimal%20Residual,%20GMRES%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html"><![CDATA[<h1 id="gmres-方法详解">GMRES 方法详解</h1>
+
+<p><strong>GMRES（Generalized Minimal RESidual，广义最小残差法）</strong> 是求解大型非对称线性方程组 \(Ax=b\) 最主流的 Krylov 子空间迭代方法之一。它的核心思想非常明确：在第 \(m\) 步迭代时，于仿射空间 \(x_0 + \mathcal{K}_m(A, r_0)\) 中寻找使<strong>残差 2-范数最小</strong>的近似解。</p>
+
+<p>与共轭梯度法（CG）要求矩阵对称正定不同，GMRES 对系数矩阵 \(A\) 没有对称性要求，只要求其非奇异，因此适用范围远广于 CG。</p>
+
+<h2 id="一核心思想在-krylov-子空间中最小化残差">一、核心思想：在 Krylov 子空间中最小化残差</h2>
+
+<h3 id="11-krylov-子空间">1.1 Krylov 子空间</h3>
+
+<p>给定初始猜测 \(x_0\)，初始残差 \(r_0 = b - Ax_0\)。第 \(m\) 步的 Krylov 子空间定义为</p>
+
+\[\mathcal{K}_m(A, r_0) = \operatorname{span}\{r_0, Ar_0, A^2r_0, \dots, A^{m-1}r_0\}.\]
+
+<p>GMRES 寻找的近似解具有形式</p>
+
+\[x_m = x_0 + V_m y_m,\]
+
+<p>其中 \(V_m = [v_1, \dots, v_m]\) 是 \(\mathcal{K}_m\) 的一组标准正交基，\(y_m \in \mathbb{R}^m\) 待定。</p>
+
+<h3 id="12-最小残差条件">1.2 最小残差条件</h3>
+
+<p>GMRES 要求 \(x_m\) 满足</p>
+
+\[\|b - Ax_m\|_2 = \min_{x \in x_0 + \mathcal{K}_m} \|b - Ax\|_2.\]
+
+<p>即 \(x_m\) 是 Krylov 子空间内使残差范数最小的解。</p>
+
+<h2 id="二arnoldi-过程构造标准正交基">二、Arnoldi 过程：构造标准正交基</h2>
+
+<h3 id="21-arnoldi-关系">2.1 Arnoldi 关系</h3>
+
+<p>为了在 \(\mathcal{K}_m\) 中稳定地计算，GMRES 使用 <strong>Arnoldi 过程</strong>生成标准正交基 \(V_m\)。设 \(v_1 = r_0 / \|r_0\|_2\)，Arnoldi 迭代产生</p>
+
+\[AV_m = V_{m+1} \bar{H}_m,\]
+
+<p>其中 \(\bar{H}_m \in \mathbb{R}^{(m+1)\times m}\) 是上 Hessenberg 矩阵，\(V_{m+1} = [V_m, v_{m+1}]\) 的列向量标准正交。</p>
+
+<h3 id="22-递推公式">2.2 递推公式</h3>
+
+<p>对 \(j=1,\dots,m\)：</p>
+
+\[w = Av_j,\]
+
+\[h_{ij} = v_i^{\mathsf T} w, \quad i=1,\dots,j,\]
+
+\[w = w - \sum_{i=1}^{j} h_{ij} v_i,\]
+
+\[h_{j+1,j} = \|w\|_2, \qquad v_{j+1} = w / h_{j+1,j}.\]
+
+<p><strong>数值稳定性注意</strong>：经典 Gram–Schmidt 不稳定，实际实现使用<strong>修正 Gram–Schmidt（MGS）</strong> 或带重正交化的版本。MGS-GMRES 被证明是后向稳定的，且不会发生“幸运中断”以外的崩溃。</p>
+
+<h2 id="三最小二乘问题的转化">三、最小二乘问题的转化</h2>
+
+<h3 id="31-关键等式">3.1 关键等式</h3>
+
+<p>由 \(x_m = x_0 + V_m y_m\) 和 \(AV_m = V_{m+1}\bar{H}_m\)：</p>
+
+\[b - Ax_m = b - A(x_0 + V_m y_m) = r_0 - AV_m y_m.\]
+
+<p>因 \(r_0 = \beta v_1\)（\(\beta = \|r_0\|_2\)），且 \(V_{m+1}\) 的列标准正交，</p>
+
+\[\|b - Ax_m\|_2 = \|\beta e_1 - \bar{H}_m y_m\|_2,\]
+
+<p>其中 \(e_1 = (1,0,\dots,0)^{\mathsf T} \in \mathbb{R}^{m+1}\)。</p>
+
+<h3 id="32-小规模最小二乘">3.2 小规模最小二乘</h3>
+
+<p>原 \(n\) 维问题转化为 \((m+1)\times m\) 的小规模最小二乘问题：</p>
+
+\[y_m = \arg\min_{y \in \mathbb{R}^m} \|\beta e_1 - \bar{H}_m y\|_2.\]
+
+<p>由于 \(\bar{H}_m\) 是上 Hessenberg 矩阵，可用 <strong>Givens 旋转</strong>逐步将其化为上三角形式，同时递推得到残差范数，无需显式求解最小二乘。</p>
+
+<h2 id="四算法流程">四、算法流程</h2>
+
+<p><strong>算法（MGS-GMRES）</strong></p>
+
+<ol>
+  <li>给定 \(x_0\)，计算 \(r_0 = b - Ax_0\)，\(\beta = \|r_0\|_2\)，\(v_1 = r_0/\beta\)。</li>
+  <li>对 \(j=1,2,\dots,m\)：
+    <ul>
+      <li>\(w = Av_j\)；</li>
+      <li>对 \(i=1,\dots,j\)：\(h_{ij} = v_i^{\mathsf T} w\)，\(w = w - h_{ij} v_i\)；</li>
+      <li>\(h_{j+1,j} = \|w\|_2\)；</li>
+      <li>若 \(h_{j+1,j} = 0\)，停止（Krylov 子空间已精确包含解）；</li>
+      <li>\(v_{j+1} = w / h_{j+1,j}\)；</li>
+      <li>对 Hessenberg 矩阵应用 Givens 旋转，更新残差估计。</li>
+    </ul>
+  </li>
+  <li>若残差满足容差，求解上三角系统得到 \(y_m\)，计算 \(x_m = x_0 + V_m y_m\)，停止。</li>
+  <li>否则令 \(m \leftarrow m+1\)，继续。</li>
+</ol>
+
+<h2 id="五收敛性与终止性质">五、收敛性与终止性质</h2>
+
+<h3 id="51-有限终止">5.1 有限终止</h3>
+
+<p>在精确算术下，GMRES 至多 \(n\) 步得到精确解（因 Krylov 子空间维数不超过 \(n\)）。且残差范数<strong>单调不增</strong>：</p>
+
+\[\|r_{m+1}\|_2 \le \|r_m\|_2.\]
+
+<p>这是 GMRES 相对于其他 Krylov 方法（如 FOM）的核心优势：每一步都保证残差不增加。</p>
+
+<h3 id="52-收敛速度与谱的关系">5.2 收敛速度与谱的关系</h3>
+
+<p>若 \(A\) 可对角化 \(A = V\Lambda V^{-1}\)，则</p>
+
+\[\frac{\|r_m\|_2}{\|r_0\|_2} \le \kappa(V) \min_{p \in \mathcal{P}_m, p(0)=1} \max_{\lambda \in \Lambda(A)} |p(\lambda)|,\]
+
+<p>其中 \(\mathcal{P}_m\) 为次数不超过 \(m\) 的多项式集合。收敛速度取决于特征值的分布和特征向量的条件数。若特征值聚集在远离原点的区域，GMRES 收敛快。</p>
+
+<h3 id="53-与-fom-的对比">5.3 与 FOM 的对比</h3>
+
+<p><strong>FOM（Full Orthogonalization Method）</strong> 使用 Galerkin 条件 \(r_m \perp \mathcal{K}_m\)，而非最小残差。FOM 可能发生崩溃（当 Hessenberg 矩阵奇异时），且残差不一定单调下降。GMRES 的最小残差性质使其更鲁棒。</p>
+
+<h2 id="六重启策略gmresm">六、重启策略：GMRES(m)</h2>
+
+<h3 id="61-问题长递推">6.1 问题：长递推</h3>
+
+<p>GMRES 的 Arnoldi 过程需要存储所有基向量 \(v_1,\dots,v_m\)，存储量 \(O(mn)\)；正交化计算量 \(O(m^2n)\)，随 \(m\) 线性增长。对于大规模问题，\(m\) 不能太大。</p>
+
+<h3 id="62-重启-gmresm">6.2 重启 GMRES(m)</h3>
+
+<p>每 \(m\) 步重启一次：以当前 \(x_m\) 作为新的 \(x_0\)，清空 Krylov 子空间，重新开始。存储量降为 \(O(mn)\)，每步计算量降为 \(O(mn)\)。</p>
+
+<p><strong>代价</strong>：重启破坏了全局最小残差性质，收敛可能变慢甚至停滞。实际中 \(m\) 常取 10–40。</p>
+
+<h2 id="七预处理">七、预处理</h2>
+
+<p>预处理是 GMRES 实用化的关键。求解预处理系统</p>
+
+\[M^{-1}Ax = M^{-1}b\]
+
+<p>（左预处理）或等价形式（右预处理），使预处理后矩阵的特征值聚集，加速收敛。</p>
+
+<p><strong>常用预处理器</strong>：不完全 LU 分解（ILU）、稀疏近似逆（SPAI）、代数多重网格（AMG）、多项式预处理等。左预处理改变残差范数的度量，右预处理保持原残差，监控收敛时需注意区别。</p>
+
+<h2 id="八优缺点总结">八、优缺点总结</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>GMRES</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>适用矩阵</strong></td>
+      <td>任意非奇异方阵（非对称亦可）</td>
+    </tr>
+    <tr>
+      <td><strong>核心性质</strong></td>
+      <td>每步残差 2-范数全局最小</td>
+    </tr>
+    <tr>
+      <td><strong>存储</strong></td>
+      <td>\(O(mn)\)（重启后）</td>
+    </tr>
+    <tr>
+      <td><strong>每步计算</strong></td>
+      <td>一次矩阵-向量乘法 + \(O(mn)\) 正交化</td>
+    </tr>
+    <tr>
+      <td><strong>收敛</strong></td>
+      <td>依赖谱分布；重启可能停滞</td>
+    </tr>
+    <tr>
+      <td><strong>与 CG 的关系</strong></td>
+      <td>CG 是 GMRES 在对称正定情形下的短递推特例</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：GMRES 是求解非对称线性系统最通用的 Krylov 方法，其最小残差性质保证了稳健的收敛行为。实际使用中必须结合<strong>重启</strong>（控制存储和计算量）与<strong>预处理</strong>（加速收敛），方能应对大规模科学与工程计算中的挑战。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">共轭梯度法（Conjugate Gradient, CG）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html" rel="alternate" type="text/html" title="共轭梯度法（Conjugate Gradient, CG）" /><published>2026-10-19T00:00:00+00:00</published><updated>2026-10-19T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95%EF%BC%88Conjugate%20Gradient,%20CG%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html"><![CDATA[<h1 id="共轭梯度法conjugate-gradient-method">共轭梯度法（Conjugate Gradient Method）</h1>
 
 <p>约定：\(A\in M_n(\mathbb R)\) 对称正定，\(b\in\mathbb R^n\)，求解</p>
 
@@ -5062,465 +5237,4 @@ b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
 \[x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b,\qquad
 P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}.\]
 
-<p><strong>数值稳定性</strong>：条件数 $\kappa(A)^2$，是正规方程法的主要缺陷。对病态问题，应采用 QR 分解或 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">最小二乘（QR 法）</title><link href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html" rel="alternate" type="text/html" title="最小二乘（QR 法）" /><published>2026-10-10T00:00:00+00:00</published><updated>2026-10-10T00:00:00+00:00</updated><id>https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%88QR%20%E6%B3%95%EF%BC%89</id><content type="html" xml:base="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/10/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98-QR-%E6%B3%95.html"><![CDATA[<h1 id="最小二乘问题">最小二乘问题</h1>
-
-<h2 id="问题陈述">问题陈述</h2>
-
-<p>设 $A\in\mathbb R^{m\times n}$，$m\ge n$，$\operatorname{rank}A=n$（列满秩），$b\in\mathbb R^m$。<strong>最小二乘问题</strong>为</p>
-
-\[\min_{x\in\mathbb R^n}\|Ax-b\|_2.\]
-
-<p>即求 $x\in\mathbb R^n$，使残差 $r=Ax-b$ 的欧几里得范数最小。</p>
-
-<h2 id="几何意义">几何意义</h2>
-
-<p>当 $m&gt;n$ 时，方程组 $Ax=b$ 通常无解，因 $b$ 一般不在 $\operatorname{Col}(A)$ 中。最小二乘问题寻找 $x$，使 $Ax$ 尽可能接近 $b$。</p>
-
-<p>$Ax$ 遍历子空间</p>
-
-\[\mathcal S=\operatorname{Col}(A)\subseteq\mathbb R^m.\]
-
-<p>问题等价于：在 $\mathcal S$ 中找一点 $p$，使 $|p-b|_2$ 最小。由正交投影定理，最优 $p$ 是 $b$ 在 $\mathcal S$ 上的正交投影。</p>
-
-<h1 id="qr-分解回顾">QR 分解回顾</h1>
-
-<h2 id="经济型-qr-分解">经济型 QR 分解</h2>
-
-<p>设 $A\in\mathbb R^{m\times n}$ 列满秩。其<strong>经济型 QR 分解</strong>为</p>
-
-\[A=Q_1R_1,\]
-
-<p>其中</p>
-
-\[Q_1\in\mathbb R^{m\times n},\qquad Q_1^{\mathsf T}Q_1=I_n,\]
-
-\[R_1\in\mathbb R^{n\times n}\text{ 上三角，且 }r_{ii}\ne 0.\]
-
-<h2 id="全型-qr-分解">全型 QR 分解</h2>
-
-<p><strong>全型 QR 分解</strong>为</p>
-
-\[A=QR,\]
-
-<p>其中</p>
-
-\[Q\in M_m(\mathbb R)\text{ 正交},\qquad R=\begin{pmatrix}R_1\\0\end{pmatrix}\in\mathbb R^{m\times n}.\]
-
-<p>两者关系：</p>
-
-\[Q=[Q_1\ Q_2],\qquad A=Q_1R_1.\]
-
-<h2 id="关键性质">关键性质</h2>
-
-<ol>
-  <li><strong>标准正交列</strong>：$Q_1^{\mathsf T}Q_1=I_n$；</li>
-  <li><strong>保范数</strong>：对任意 $y\in\mathbb R^n$，</li>
-</ol>
-
-\[\|Q_1y\|_2=\|y\|_2;\]
-
-<ol>
-  <li><strong>正交分解</strong>：对任意 $b\in\mathbb R^m$，</li>
-</ol>
-
-\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
-
-<p>其中</p>
-
-\[Q_1Q_1^{\mathsf T}b\in\operatorname{Col}(Q_1)=\operatorname{Col}(A),\]
-
-\[(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp=\operatorname{Col}(A)^\perp,\]
-
-<p>且两项正交。</p>
-
-<h1 id="qr-法求解最小二乘的原理">QR 法求解最小二乘的原理</h1>
-
-<h2 id="残差的等价变形">残差的等价变形</h2>
-
-<p>将 $A=Q_1R_1$ 代入残差：</p>
-
-\[\|Ax-b\|_2=\|Q_1R_1x-b\|_2.\]
-
-<p>利用正交分解</p>
-
-\[b=Q_1Q_1^{\mathsf T}b+(I-Q_1Q_1^{\mathsf T})b,\]
-
-<p>得</p>
-
-\[Q_1R_1x-b=Q_1R_1x-Q_1Q_1^{\mathsf T}b-(I-Q_1Q_1^{\mathsf T})b.\]
-
-<p>令</p>
-
-\[u=Q_1(R_1x-Q_1^{\mathsf T}b)\in\operatorname{Col}(Q_1),\]
-
-\[v=-(I-Q_1Q_1^{\mathsf T})b\in\operatorname{Col}(Q_1)^\perp.\]
-
-<p>由 $u\perp v$ 及勾股定理，</p>
-
-\[\|Q_1R_1x-b\|_2^2=\|u\|_2^2+\|v\|_2^2.\]
-
-<p>由 $Q_1$ 保范数，</p>
-
-\[\|u\|_2^2=\|Q_1(R_1x-Q_1^{\mathsf T}b)\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
-
-<p>故</p>
-
-\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
-
-<h2 id="最小化">最小化</h2>
-
-<p>第二项</p>
-
-\[\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\]
-
-<p>与 $x$ 无关，为常数。因此</p>
-
-\[\min_{x\in\mathbb R^n}\|Ax-b\|_2^2
-=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2+\min_{x\in\mathbb R^n}\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
-
-<p>等价于最小化</p>
-
-\[\|R_1x-Q_1^{\mathsf T}b\|_2^2.\]
-
-<p>因 $R_1$ 为可逆上三角矩阵，方程</p>
-
-\[R_1x=Q_1^{\mathsf T}b\]
-
-<p>有唯一解，且此时第一项为零，达到最小值。</p>
-
-<h2 id="最优解">最优解</h2>
-
-\[x=R_1^{-1}Q_1^{\mathsf T}b.\]
-
-<p>最小残差为</p>
-
-\[\min_x\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
-
-<p>即 $b$ 在 $\operatorname{Col}(A)^\perp$ 上的分量。</p>
-
-<h2 id="几何解释">几何解释</h2>
-
-<p>最小二乘问题等价于求 $b$ 在 $\mathcal S=\operatorname{Col}(A)=\operatorname{Col}(Q_1)$ 上的正交投影。</p>
-
-<p>QR 分解将 $b$ 分解为</p>
-
-\[b=\underbrace{Q_1Q_1^{\mathsf T}b}_{\in\mathcal S}+\underbrace{(I-Q_1Q_1^{\mathsf T})b}_{\in\mathcal S^\perp}.\]
-
-<p>最小二乘解 $x^*$ 使</p>
-
-\[Ax^*=Q_1R_1x^*=Q_1Q_1^{\mathsf T}b,\]
-
-<p>即 $Ax^*$ 恰好是 $b$ 在 $\mathcal S$ 上的投影。残差</p>
-
-\[b-Ax^*=(I-Q_1Q_1^{\mathsf T})b\]
-
-<p>垂直于 $\mathcal S$。</p>
-
-<h1 id="正确性证明">正确性证明</h1>
-
-<p><strong>定理 4.1</strong><br />
-设 $A\in\mathbb R^{m\times n}$ 列满秩，$b\in\mathbb R^m$，$A=Q_1R_1$ 为经济型 QR 分解。则</p>
-
-\[x^*=R_1^{-1}Q_1^{\mathsf T}b\]
-
-<p>是最小二乘问题</p>
-
-\[\min_{x\in\mathbb R^n}\|Ax-b\|_2\]
-
-<p>的唯一解。</p>
-
-<p><strong>证明</strong></p>
-
-<p><strong>(1) 最优性</strong></p>
-
-<p>对任意 $x\in\mathbb R^n$，由 §3.1，</p>
-
-\[\|Ax-b\|_2^2=\|R_1x-Q_1^{\mathsf T}b\|_2^2+\|(I-Q_1Q_1^{\mathsf T})b\|_2^2.\]
-
-<p>第二项非负且与 $x$ 无关。第一项</p>
-
-\[\|R_1x-Q_1^{\mathsf T}b\|_2^2\ge 0,\]
-
-<p>等号成立当且仅当</p>
-
-\[R_1x=Q_1^{\mathsf T}b.\]
-
-<p>因 $R_1$ 可逆，该方程有唯一解 $x^*=R_1^{-1}Q_1^{\mathsf T}b$。故</p>
-
-\[\|Ax^*-b\|_2^2=\|(I-Q_1Q_1^{\mathsf T})b\|_2^2\le\|Ax-b\|_2^2,\qquad\forall x\in\mathbb R^n.\]
-
-<p><strong>(2) 唯一性</strong></p>
-
-<p>若 $x$ 也是最优解，则</p>
-
-\[\|R_1x-Q_1^{\mathsf T}b\|_2^2=0,\]
-
-<p>即 $R_1x=Q_1^{\mathsf T}b$。因 $R_1$ 可逆，$x=x^*$。</p>
-
-<p><strong>(3) 与正规方程一致</strong></p>
-
-<p>由 $A=Q_1R_1$，</p>
-
-\[A^{\mathsf T}A=R_1^{\mathsf T}Q_1^{\mathsf T}Q_1R_1=R_1^{\mathsf T}R_1,\]
-
-\[A^{\mathsf T}b=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
-
-<p>正规方程为</p>
-
-\[R_1^{\mathsf T}R_1x=R_1^{\mathsf T}Q_1^{\mathsf T}b.\]
-
-<p>因 $R_1^{\mathsf T}$ 可逆，等价于</p>
-
-\[R_1x=Q_1^{\mathsf T}b.\]
-
-<p>故 $x^*$ 满足正规方程，与最小二乘的经典结论一致。$\square$</p>
-
-<h1 id="算法步骤">算法步骤</h1>
-
-<p><strong>算法 5.1（QR 法解最小二乘）</strong></p>
-
-<ol>
-  <li>计算 $A$ 的经济型 QR 分解：</li>
-</ol>
-
-\[A=Q_1R_1,\qquad Q_1\in\mathbb R^{m\times n},\quad R_1\in\mathbb R^{n\times n}\text{ 上三角}.\]
-
-<ol>
-  <li>计算</li>
-</ol>
-
-\[c=Q_1^{\mathsf T}b\in\mathbb R^n.\]
-
-<ol>
-  <li>回代求解上三角方程组</li>
-</ol>
-
-\[R_1x=c.\]
-
-<p>即</p>
-
-\[x_i=\frac{1}{r_{ii}}\left(c_i-\sum_{j=i+1}^{n}r_{ij}x_j\right),\qquad i=n,n-1,\dots,1.\]
-
-<h1 id="计算量与数值稳定性">计算量与数值稳定性</h1>
-
-<h2 id="计算量">计算量</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>步骤</th>
-      <th>计算量</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>QR 分解</td>
-      <td>$2mn^2-\frac23n^3$</td>
-    </tr>
-    <tr>
-      <td>计算 $Q_1^{\mathsf T}b$</td>
-      <td>$2mn$</td>
-    </tr>
-    <tr>
-      <td>回代</td>
-      <td>$n^2$</td>
-    </tr>
-    <tr>
-      <td>总计</td>
-      <td>$2mn^2-\frac23n^3+O(mn)$</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="与正规方程对比">与正规方程对比</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>正规方程</th>
-      <th>QR 分解</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>方程</td>
-      <td>$A^{\mathsf T}Ax=A^{\mathsf T}b$</td>
-      <td>$R_1x=Q_1^{\mathsf T}b$</td>
-    </tr>
-    <tr>
-      <td>条件数</td>
-      <td>$\kappa(A)^2$</td>
-      <td>$\kappa(A)$</td>
-    </tr>
-    <tr>
-      <td>计算量</td>
-      <td>$mn^2+\frac13n^3$</td>
-      <td>$2mn^2-\frac23n^3$</td>
-    </tr>
-    <tr>
-      <td>数值稳定性</td>
-      <td>差</td>
-      <td>好</td>
-    </tr>
-    <tr>
-      <td>适用场景</td>
-      <td>小规模、良态问题</td>
-      <td>通用、病态问题</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="数值稳定性">数值稳定性</h2>
-
-<p><strong>定理 6.3.1</strong><br />
-设 $\hat x$ 为 QR 法得到的浮点最小二乘解，$x$ 为精确解。则</p>
-
-\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)\,\epsilon+O(\epsilon^2),\]
-
-<p>其中 $\kappa(A)=|A|_2|A^+|_2$ 为条件数，$\epsilon$ 为机器精度。</p>
-
-<p><strong>对比正规方程</strong>：</p>
-
-\[\frac{\|\hat x-x\|_2}{\|x\|_2}\le c\,\kappa(A)^2\,\epsilon+O(\epsilon^2).\]
-
-<p>QR 法的误差与 $\kappa(A)$ 成正比，而正规方程与 $\kappa(A)^2$ 成正比。QR 法数值稳定性显著优于正规方程。</p>
-
-<p><strong>原因</strong>：正规方程中 $A^{\mathsf T}A$ 的条件数为 $\kappa(A)^2$，放大误差；QR 法中 $Q_1$ 为正交矩阵，不放大误差，$R_1$ 的条件数等于 $\kappa(A)$。</p>
-
-<h1 id="例题">例题</h1>
-
-<p>设</p>
-
-\[A=\begin{pmatrix}1&amp;1\\1&amp;0\\0&amp;1\end{pmatrix},\qquad
-b=\begin{pmatrix}1\\2\\3\end{pmatrix}.\]
-
-<h2 id="qr-分解">QR 分解</h2>
-
-<p>由前文例题，经济型 QR 分解为</p>
-
-\[Q_1=\begin{pmatrix}
--\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt6}\\
--\frac{1}{\sqrt2}&amp;\frac{1}{\sqrt6}\\
-0&amp;\frac{2}{\sqrt6}
-\end{pmatrix},\qquad
-R_1=\begin{pmatrix}
--\sqrt2&amp;-\frac{1}{\sqrt2}\\
-0&amp;-\sqrt{\frac32}
-\end{pmatrix}.\]
-
-<h2 id="计算-cq_1mathsf-tb">计算 $c=Q_1^{\mathsf T}b$</h2>
-
-\[Q_1^{\mathsf T}b=
-\begin{pmatrix}
--\frac{1}{\sqrt2}&amp;-\frac{1}{\sqrt2}&amp;0\\
--\frac{1}{\sqrt6}&amp;\frac{1}{\sqrt6}&amp;\frac{2}{\sqrt6}
-\end{pmatrix}
-\begin{pmatrix}1\\2\\3\end{pmatrix}
-=
-\begin{pmatrix}
--\frac{3}{\sqrt2}\\
-\frac{7}{\sqrt6}
-\end{pmatrix}.\]
-
-<h2 id="回代求解-r_1xc">回代求解 $R_1x=c$</h2>
-
-\[-\sqrt{\frac32}\,x_2=\frac{7}{\sqrt6}
-\implies x_2=-\frac73,\]
-
-\[-\sqrt2\,x_1-\frac{1}{\sqrt2}x_2=-\frac{3}{\sqrt2}
-\implies x_1=\frac83.\]
-
-<p>故</p>
-
-\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix}.\]
-
-<h2 id="验证">验证</h2>
-
-<p>计算正规方程：</p>
-
-\[A^{\mathsf T}A=\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix},\qquad
-A^{\mathsf T}b=\begin{pmatrix}3\\4\end{pmatrix}.\]
-
-<p>解得</p>
-
-\[x=\begin{pmatrix}\frac83\\-\frac73\end{pmatrix},\]
-
-<p>与 QR 法一致。</p>
-
-<p>最小残差：</p>
-
-\[\|Ax-b\|_2=\|(I-Q_1Q_1^{\mathsf T})b\|_2.\]
-
-<p>计算得</p>
-
-\[(I-Q_1Q_1^{\mathsf T})b=
-\begin{pmatrix}-\frac43\\\frac43\\\frac43\end{pmatrix},\]
-
-\[\|Ax-b\|_2=\sqrt{\frac{16}{3}}=\frac{4}{\sqrt3}.\]
-
-<h2 id="八优缺点">八、优缺点</h2>
-
-<p><strong>优点</strong></p>
-<ol>
-  <li>数值稳定（条件数 $\kappa(A)$ 而非 $\kappa(A)^2$）；</li>
-  <li>计算量适中（约 $2mn^2-\frac23n^3$）；</li>
-  <li>可复用 QR 分解处理多个右端项；</li>
-  <li>几何意义清晰（正交投影）。</li>
-</ol>
-
-<p><strong>缺点</strong></p>
-<ol>
-  <li>计算量略大于正规方程；</li>
-  <li>需要存储 $Q_1$（或 Householder 向量）；</li>
-  <li>对稀疏矩阵可能引入填充。</li>
-</ol>
-
-<h1 id="总结">总结</h1>
-
-\[\text{QR 法解最小二乘：}A=Q_1R_1\implies x=R_1^{-1}Q_1^{\mathsf T}b.\]
-
-<p><strong>核心原理</strong>：</p>
-
-<ol>
-  <li>最小二乘问题等价于求 $b$ 在 $\operatorname{Col}(A)$ 上的正交投影；</li>
-  <li>QR 分解将 $A$ 化为 $Q_1R_1$，其中 $Q_1$ 具有标准正交列；</li>
-  <li>将残差分解为 $\operatorname{Col}(Q_1)$ 和 $\operatorname{Col}(Q_1)^\perp$ 两部分，利用正交性和勾股定理分离出与 $x$ 无关的常数项；</li>
-  <li>最小化等价于解上三角方程组 $R_1x=Q_1^{\mathsf T}b$。</li>
-</ol>
-
-<p><strong>与正规方程对比</strong>：</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>正规方程</th>
-      <th>QR 分解</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>条件数</td>
-      <td>$\kappa(A)^2$</td>
-      <td>$\kappa(A)$</td>
-    </tr>
-    <tr>
-      <td>稳定性</td>
-      <td>差</td>
-      <td>好</td>
-    </tr>
-    <tr>
-      <td>计算量</td>
-      <td>较小</td>
-      <td>较大</td>
-    </tr>
-    <tr>
-      <td>适用场景</td>
-      <td>良态问题</td>
-      <td>通用</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>结论</strong>：QR 法是最小二乘问题的标准方法，兼顾稳定性与效率。当 $A$ 病态时，QR 法明显优于正规方程。若精度要求极高或 $A$ 接近奇异，可采用 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p><strong>数值稳定性</strong>：条件数 $\kappa(A)^2$，是正规方程法的主要缺陷。对病态问题，应采用 QR 分解或 SVD。</p>]]></content><author><name>Devil</name></author><category term="数学" /><category term="线性代数" /><summary type="html"><![CDATA[xxxxxx]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://xdevil.top/assets/image/88.jpeg" /><media:content medium="image" url="https://xdevil.top/assets/image/88.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

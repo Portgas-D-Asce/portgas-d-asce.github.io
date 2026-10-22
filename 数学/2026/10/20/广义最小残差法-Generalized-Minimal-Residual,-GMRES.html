@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>广义最小残差法（Generalized Minimal Residual, GMRES） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="广义最小残差法（Generalized Minimal Residual, GMRES）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-20T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="广义最小残差法（Generalized Minimal Residual, GMRES）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-20T00:00:00+00:00","datePublished":"2026-10-20T00:00:00+00:00","description":"xxxxxx","headline":"广义最小残差法（Generalized Minimal Residual, GMRES）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/20/%E5%B9%BF%E4%B9%89%E6%9C%80%E5%B0%8F%E6%AE%8B%E5%B7%AE%E6%B3%95-Generalized-Minimal-Residual,-GMRES.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 广义最小残差法（Generalized Minimal Residual, GMRES） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="gmres-方法详解">GMRES 方法详解</h1>
+
+<p><strong>GMRES（Generalized Minimal RESidual，广义最小残差法）</strong> 是求解大型非对称线性方程组 \(Ax=b\) 最主流的 Krylov 子空间迭代方法之一。它的核心思想非常明确：在第 \(m\) 步迭代时，于仿射空间 \(x_0 + \mathcal{K}_m(A, r_0)\) 中寻找使<strong>残差 2-范数最小</strong>的近似解。</p>
+
+<p>与共轭梯度法（CG）要求矩阵对称正定不同，GMRES 对系数矩阵 \(A\) 没有对称性要求，只要求其非奇异，因此适用范围远广于 CG。</p>
+
+<h2 id="一核心思想在-krylov-子空间中最小化残差">一、核心思想：在 Krylov 子空间中最小化残差</h2>
+
+<h3 id="11-krylov-子空间">1.1 Krylov 子空间</h3>
+
+<p>给定初始猜测 \(x_0\)，初始残差 \(r_0 = b - Ax_0\)。第 \(m\) 步的 Krylov 子空间定义为</p>
+
+\[\mathcal{K}_m(A, r_0) = \operatorname{span}\{r_0, Ar_0, A^2r_0, \dots, A^{m-1}r_0\}.\]
+
+<p>GMRES 寻找的近似解具有形式</p>
+
+\[x_m = x_0 + V_m y_m,\]
+
+<p>其中 \(V_m = [v_1, \dots, v_m]\) 是 \(\mathcal{K}_m\) 的一组标准正交基，\(y_m \in \mathbb{R}^m\) 待定。</p>
+
+<h3 id="12-最小残差条件">1.2 最小残差条件</h3>
+
+<p>GMRES 要求 \(x_m\) 满足</p>
+
+\[\|b - Ax_m\|_2 = \min_{x \in x_0 + \mathcal{K}_m} \|b - Ax\|_2.\]
+
+<p>即 \(x_m\) 是 Krylov 子空间内使残差范数最小的解。</p>
+
+<h2 id="二arnoldi-过程构造标准正交基">二、Arnoldi 过程：构造标准正交基</h2>
+
+<h3 id="21-arnoldi-关系">2.1 Arnoldi 关系</h3>
+
+<p>为了在 \(\mathcal{K}_m\) 中稳定地计算，GMRES 使用 <strong>Arnoldi 过程</strong>生成标准正交基 \(V_m\)。设 \(v_1 = r_0 / \|r_0\|_2\)，Arnoldi 迭代产生</p>
+
+\[AV_m = V_{m+1} \bar{H}_m,\]
+
+<p>其中 \(\bar{H}_m \in \mathbb{R}^{(m+1)\times m}\) 是上 Hessenberg 矩阵，\(V_{m+1} = [V_m, v_{m+1}]\) 的列向量标准正交。</p>
+
+<h3 id="22-递推公式">2.2 递推公式</h3>
+
+<p>对 \(j=1,\dots,m\)：</p>
+
+\[w = Av_j,\]
+
+\[h_{ij} = v_i^{\mathsf T} w, \quad i=1,\dots,j,\]
+
+\[w = w - \sum_{i=1}^{j} h_{ij} v_i,\]
+
+\[h_{j+1,j} = \|w\|_2, \qquad v_{j+1} = w / h_{j+1,j}.\]
+
+<p><strong>数值稳定性注意</strong>：经典 Gram–Schmidt 不稳定，实际实现使用<strong>修正 Gram–Schmidt（MGS）</strong> 或带重正交化的版本。MGS-GMRES 被证明是后向稳定的，且不会发生“幸运中断”以外的崩溃。</p>
+
+<h2 id="三最小二乘问题的转化">三、最小二乘问题的转化</h2>
+
+<h3 id="31-关键等式">3.1 关键等式</h3>
+
+<p>由 \(x_m = x_0 + V_m y_m\) 和 \(AV_m = V_{m+1}\bar{H}_m\)：</p>
+
+\[b - Ax_m = b - A(x_0 + V_m y_m) = r_0 - AV_m y_m.\]
+
+<p>因 \(r_0 = \beta v_1\)（\(\beta = \|r_0\|_2\)），且 \(V_{m+1}\) 的列标准正交，</p>
+
+\[\|b - Ax_m\|_2 = \|\beta e_1 - \bar{H}_m y_m\|_2,\]
+
+<p>其中 \(e_1 = (1,0,\dots,0)^{\mathsf T} \in \mathbb{R}^{m+1}\)。</p>
+
+<h3 id="32-小规模最小二乘">3.2 小规模最小二乘</h3>
+
+<p>原 \(n\) 维问题转化为 \((m+1)\times m\) 的小规模最小二乘问题：</p>
+
+\[y_m = \arg\min_{y \in \mathbb{R}^m} \|\beta e_1 - \bar{H}_m y\|_2.\]
+
+<p>由于 \(\bar{H}_m\) 是上 Hessenberg 矩阵，可用 <strong>Givens 旋转</strong>逐步将其化为上三角形式，同时递推得到残差范数，无需显式求解最小二乘。</p>
+
+<h2 id="四算法流程">四、算法流程</h2>
+
+<p><strong>算法（MGS-GMRES）</strong></p>
+
+<ol>
+  <li>给定 \(x_0\)，计算 \(r_0 = b - Ax_0\)，\(\beta = \|r_0\|_2\)，\(v_1 = r_0/\beta\)。</li>
+  <li>对 \(j=1,2,\dots,m\)：
+    <ul>
+      <li>\(w = Av_j\)；</li>
+      <li>对 \(i=1,\dots,j\)：\(h_{ij} = v_i^{\mathsf T} w\)，\(w = w - h_{ij} v_i\)；</li>
+      <li>\(h_{j+1,j} = \|w\|_2\)；</li>
+      <li>若 \(h_{j+1,j} = 0\)，停止（Krylov 子空间已精确包含解）；</li>
+      <li>\(v_{j+1} = w / h_{j+1,j}\)；</li>
+      <li>对 Hessenberg 矩阵应用 Givens 旋转，更新残差估计。</li>
+    </ul>
+  </li>
+  <li>若残差满足容差，求解上三角系统得到 \(y_m\)，计算 \(x_m = x_0 + V_m y_m\)，停止。</li>
+  <li>否则令 \(m \leftarrow m+1\)，继续。</li>
+</ol>
+
+<h2 id="五收敛性与终止性质">五、收敛性与终止性质</h2>
+
+<h3 id="51-有限终止">5.1 有限终止</h3>
+
+<p>在精确算术下，GMRES 至多 \(n\) 步得到精确解（因 Krylov 子空间维数不超过 \(n\)）。且残差范数<strong>单调不增</strong>：</p>
+
+\[\|r_{m+1}\|_2 \le \|r_m\|_2.\]
+
+<p>这是 GMRES 相对于其他 Krylov 方法（如 FOM）的核心优势：每一步都保证残差不增加。</p>
+
+<h3 id="52-收敛速度与谱的关系">5.2 收敛速度与谱的关系</h3>
+
+<p>若 \(A\) 可对角化 \(A = V\Lambda V^{-1}\)，则</p>
+
+\[\frac{\|r_m\|_2}{\|r_0\|_2} \le \kappa(V) \min_{p \in \mathcal{P}_m, p(0)=1} \max_{\lambda \in \Lambda(A)} |p(\lambda)|,\]
+
+<p>其中 \(\mathcal{P}_m\) 为次数不超过 \(m\) 的多项式集合。收敛速度取决于特征值的分布和特征向量的条件数。若特征值聚集在远离原点的区域，GMRES 收敛快。</p>
+
+<h3 id="53-与-fom-的对比">5.3 与 FOM 的对比</h3>
+
+<p><strong>FOM（Full Orthogonalization Method）</strong> 使用 Galerkin 条件 \(r_m \perp \mathcal{K}_m\)，而非最小残差。FOM 可能发生崩溃（当 Hessenberg 矩阵奇异时），且残差不一定单调下降。GMRES 的最小残差性质使其更鲁棒。</p>
+
+<h2 id="六重启策略gmresm">六、重启策略：GMRES(m)</h2>
+
+<h3 id="61-问题长递推">6.1 问题：长递推</h3>
+
+<p>GMRES 的 Arnoldi 过程需要存储所有基向量 \(v_1,\dots,v_m\)，存储量 \(O(mn)\)；正交化计算量 \(O(m^2n)\)，随 \(m\) 线性增长。对于大规模问题，\(m\) 不能太大。</p>
+
+<h3 id="62-重启-gmresm">6.2 重启 GMRES(m)</h3>
+
+<p>每 \(m\) 步重启一次：以当前 \(x_m\) 作为新的 \(x_0\)，清空 Krylov 子空间，重新开始。存储量降为 \(O(mn)\)，每步计算量降为 \(O(mn)\)。</p>
+
+<p><strong>代价</strong>：重启破坏了全局最小残差性质，收敛可能变慢甚至停滞。实际中 \(m\) 常取 10–40。</p>
+
+<h2 id="七预处理">七、预处理</h2>
+
+<p>预处理是 GMRES 实用化的关键。求解预处理系统</p>
+
+\[M^{-1}Ax = M^{-1}b\]
+
+<p>（左预处理）或等价形式（右预处理），使预处理后矩阵的特征值聚集，加速收敛。</p>
+
+<p><strong>常用预处理器</strong>：不完全 LU 分解（ILU）、稀疏近似逆（SPAI）、代数多重网格（AMG）、多项式预处理等。左预处理改变残差范数的度量，右预处理保持原残差，监控收敛时需注意区别。</p>
+
+<h2 id="八优缺点总结">八、优缺点总结</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>GMRES</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>适用矩阵</strong></td>
+      <td>任意非奇异方阵（非对称亦可）</td>
+    </tr>
+    <tr>
+      <td><strong>核心性质</strong></td>
+      <td>每步残差 2-范数全局最小</td>
+    </tr>
+    <tr>
+      <td><strong>存储</strong></td>
+      <td>\(O(mn)\)（重启后）</td>
+    </tr>
+    <tr>
+      <td><strong>每步计算</strong></td>
+      <td>一次矩阵-向量乘法 + \(O(mn)\) 正交化</td>
+    </tr>
+    <tr>
+      <td><strong>收敛</strong></td>
+      <td>依赖谱分布；重启可能停滞</td>
+    </tr>
+    <tr>
+      <td><strong>与 CG 的关系</strong></td>
+      <td>CG 是 GMRES 在对称正定情形下的短递推特例</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>结论</strong>：GMRES 是求解非对称线性系统最通用的 Krylov 方法，其最小残差性质保证了稳健的收敛行为。实际使用中必须结合<strong>重启</strong>（控制存储和计算量）与<strong>预处理</strong>（加速收敛），方能应对大规模科学与工程计算中的挑战。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-y: visible;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
