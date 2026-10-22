@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>迭代法求解线性方程组 | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="迭代法求解线性方程组" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/18/%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%B1%82%E8%A7%A3%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/18/%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%B1%82%E8%A7%A3%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-18T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="迭代法求解线性方程组" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-18T00:00:00+00:00","datePublished":"2026-10-18T00:00:00+00:00","description":"xxxxxx","headline":"迭代法求解线性方程组","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/18/%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%B1%82%E8%A7%A3%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/18/%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%B1%82%E8%A7%A3%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 迭代法求解线性方程组 </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="从零开始jacobigaussseidelsor-迭代法">从零开始：Jacobi、Gauss–Seidel、SOR 迭代法</h1>
+
+<p>约定：\(\mathbb F\) 为 \(\mathbb R\) 或 \(\mathbb C\)，\(A\in M_n(\mathbb F)\) 非奇异，\(b\in\mathbb F^n\)，求解线性方程组</p>
+
+\[Ax=b.\]
+
+<hr />
+
+<h1 id="一迭代法的基本框架">一、迭代法的基本框架</h1>
+
+<h2 id="11-为什么需要迭代法">1.1 为什么需要迭代法</h2>
+
+<p>直接法（高斯消元、LU 分解）计算量为 \(O(n^3)\)，适用于中小规模稠密矩阵。但对<strong>大规模稀疏矩阵</strong>（如有限差分、有限元离散得到的矩阵），直接法会引入大量填充，计算量和存储量不可接受。此时采用<strong>迭代法</strong>：从一个初始猜测出发，逐步逼近精确解，每步只需矩阵-向量乘法或稀疏矩阵的逐行运算，计算量为 \(O(\text{nnz}(A))\)。</p>
+
+<h2 id="12-迭代法的一般形式">1.2 迭代法的一般形式</h2>
+
+<p>将 \(A\) 分裂为</p>
+
+\[A=M-N,\]
+
+<p>其中 \(M\) 可逆且易于求解。则</p>
+
+\[Ax=b\iff (M-N)x=b\iff Mx=Nx+b.\]
+
+<p>构造迭代：</p>
+
+\[\boxed{Mx^{(k+1)}=Nx^{(k)}+b,\qquad k=0,1,2,\dots}\]
+
+<p>即</p>
+
+\[x^{(k+1)}=M^{-1}Nx^{(k)}+M^{-1}b.\]
+
+<p>令</p>
+
+\[G=M^{-1}N\quad\text{（迭代矩阵）},\qquad
+c=M^{-1}b,\]
+
+<p>则</p>
+
+\[x^{(k+1)}=Gx^{(k)}+c.\]
+
+<p><strong>收敛性</strong>：迭代收敛当且仅当谱半径</p>
+
+\[\rho(G)&lt;1.\]
+
+<p>收敛速度由 \(\rho(G)\) 决定：\(\rho(G)\) 越小，收敛越快。</p>
+
+<h2 id="13-三种经典分裂">1.3 三种经典分裂</h2>
+
+<p>将 \(A\) 分解为</p>
+
+\[A=D-L-U,\]
+
+<p>其中：</p>
+<ul>
+  <li>\(D=\operatorname{diag}(a_{11},\dots,a_{nn})\)：对角部分；</li>
+  <li>\(-L\)：严格下三角部分，即 \(L\) 的对角线为零，\(L_{ij}=-a_{ij}\)（\(i&gt;j\)）；</li>
+  <li>\(-U\)：严格上三角部分，即 \(U\) 的对角线为零，\(U_{ij}=-a_{ij}\)（\(i&lt;j\)）。</li>
+</ul>
+
+<p>即</p>
+
+\[A=\begin{pmatrix}
+a_{11}&amp;&amp;&amp;\\
+&amp;a_{22}&amp;&amp;\\
+&amp;&amp;\ddots&amp;\\
+&amp;&amp;&amp;a_{nn}
+\end{pmatrix}
+-
+\begin{pmatrix}
+0&amp;&amp;&amp;\\
+-a_{21}&amp;0&amp;&amp;\\
+\vdots&amp;\ddots&amp;\ddots&amp;\\
+-a_{n1}&amp;\cdots&amp;-a_{n,n-1}&amp;0
+\end{pmatrix}
+-
+\begin{pmatrix}
+0&amp;-a_{12}&amp;\cdots&amp;-a_{1n}\\
+&amp;0&amp;\ddots&amp;\vdots\\
+&amp;&amp;\ddots&amp;-a_{n-1,n}\\
+&amp;&amp;&amp;0
+\end{pmatrix}.\]
+
+<p>三种经典迭代法对应不同的分裂方式：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>\(M\)</th>
+      <th>\(N\)</th>
+      <th>迭代矩阵 \(G\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Jacobi</td>
+      <td>\(D\)</td>
+      <td>\(L+U\)</td>
+      <td>\(D^{-1}(L+U)\)</td>
+    </tr>
+    <tr>
+      <td>Gauss–Seidel</td>
+      <td>\(D-L\)</td>
+      <td>\(U\)</td>
+      <td>\((D-L)^{-1}U\)</td>
+    </tr>
+    <tr>
+      <td>SOR</td>
+      <td>\(\dfrac{1}{\omega}D-L\)</td>
+      <td>\(\dfrac{1-\omega}{\omega}D+U\)</td>
+      <td>\((D-\omega L)^{-1}((1-\omega)D+\omega U)\)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="二jacobi-迭代法">二、Jacobi 迭代法</h1>
+
+<h2 id="21-分量形式">2.1 分量形式</h2>
+
+<p>将 \(Ax=b\) 的第 \(i\) 个方程写为</p>
+
+\[a_{ii}x_i+\sum_{j\ne i}a_{ij}x_j=b_i.\]
+
+<p>若 \(a_{ii}\ne0\)，解出 \(x_i\)：</p>
+
+\[x_i=\frac{1}{a_{ii}}\left(b_i-\sum_{j\ne i}a_{ij}x_j\right).\]
+
+<p>Jacobi 迭代：用旧值 \(x^{(k)}\) 计算新值 \(x^{(k+1)}\)：</p>
+
+\[\boxed{
+x_i^{(k+1)}=\frac{1}{a_{ii}}\left(b_i-\sum_{j\ne i}a_{ij}x_j^{(k)}\right),\qquad i=1,\dots,n.
+}\]
+
+<p><strong>特点</strong>：所有分量的更新<strong>同时</strong>进行，只依赖上一轮的值。这使 Jacobi 法天然适合并行计算。</p>
+
+<h2 id="22-矩阵形式">2.2 矩阵形式</h2>
+
+<p>由 \(A=D-L-U\)，Jacobi 迭代为</p>
+
+\[Dx^{(k+1)}=(L+U)x^{(k)}+b,\]
+
+<p>即</p>
+
+\[x^{(k+1)}=D^{-1}(L+U)x^{(k)}+D^{-1}b.\]
+
+<p>迭代矩阵：</p>
+
+\[G_J=D^{-1}(L+U)=I-D^{-1}A.\]
+
+<p>分量形式：</p>
+
+\[(G_J)_{ij}=\begin{cases}
+-\dfrac{a_{ij}}{a_{ii}},&amp; i\ne j,\\
+0,&amp; i=j.
+\end{cases}\]
+
+<h2 id="23-收敛性">2.3 收敛性</h2>
+
+<p><strong>定理 2.3.1（充分条件：严格对角占优）</strong><br />
+若 \(A\) 严格对角占优，即</p>
+
+\[|a_{ii}|&gt;\sum_{j\ne i}|a_{ij}|,\qquad i=1,\dots,n,\]
+
+<p>则 Jacobi 迭代对任意初始向量收敛。</p>
+
+<p><strong>证明</strong><br />
+严格对角占优蕴含 \(a_{ii}\ne0\)。设 \(G_J=D^{-1}(L+U)\)。对 \(G_J\) 的任意特征值 \(\lambda\) 和特征向量 \(x\ne0\)，</p>
+
+\[G_Jx=\lambda x\iff (L+U)x=\lambda Dx.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>取 \(i\) 使 $$</td>
+      <td>x_i</td>
+      <td>=|x|_\infty$$。则</td>
+    </tr>
+  </tbody>
+</table>
+
+\[|\lambda||a_{ii}||x_i|=\left|\sum_{j\ne i}a_{ij}x_j\right|\le\sum_{j\ne i}|a_{ij}||x_i|.\]
+
+<p>故</p>
+
+\[|\lambda|\le\frac{\sum_{j\ne i}|a_{ij}|}{|a_{ii}|}&lt;1.\]
+
+<p>因此 \(\rho(G_J)&lt;1\)，迭代收敛。\(\square\)</p>
+
+<p><strong>定理 2.3.2（充要条件）</strong><br />
+Jacobi 迭代收敛当且仅当 \(\rho(D^{-1}(L+U))&lt;1\)。</p>
+
+<p><strong>定理 2.3.3（对称正定情形）</strong><br />
+若 \(A\) 对称正定，则 Jacobi 迭代收敛当且仅当 \(2D-A\) 也对称正定。</p>
+
+<p><strong>注</strong>：Jacobi 法对对称正定矩阵<strong>不一定</strong>收敛。例如</p>
+
+\[A=\begin{pmatrix}1&amp;2\\2&amp;1\end{pmatrix}\]
+
+<p>对称但不正定，\(G_J=\begin{pmatrix}0&amp;-2\\-2&amp;0\end{pmatrix}\)，\(\rho(G_J)=2&gt;1\)，不收敛。</p>
+
+<h2 id="24-优缺点">2.4 优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>实现简单，每步只需矩阵-向量乘法；</li>
+  <li>天然并行：所有分量同时更新；</li>
+  <li>存储量小，只需 \(A\) 和两个向量。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>收敛速度较慢（谱半径通常接近 1）；</li>
+  <li>对对称正定矩阵不一定收敛；</li>
+  <li>需要 \(a_{ii}\ne0\)。</li>
+</ol>
+
+<hr />
+
+<h1 id="三gaussseidel-迭代法">三、Gauss–Seidel 迭代法</h1>
+
+<h2 id="31-分量形式">3.1 分量形式</h2>
+
+<p>Gauss–Seidel 迭代在计算 \(x_i^{(k+1)}\) 时，使用<strong>已更新的</strong> \(x_1^{(k+1)},\dots,x_{i-1}^{(k+1)}\)：</p>
+
+\[\boxed{
+x_i^{(k+1)}=\frac{1}{a_{ii}}\left(b_i-\sum_{j=1}^{i-1}a_{ij}x_j^{(k+1)}-\sum_{j=i+1}^{n}a_{ij}x_j^{(k)}\right),\qquad i=1,\dots,n.
+}\]
+
+<p><strong>特点</strong>：利用最新信息，通常比 Jacobi 收敛更快，但<strong>不能并行</strong>（需按顺序更新）。</p>
+
+<h2 id="32-矩阵形式">3.2 矩阵形式</h2>
+
+<p>由 \(A=D-L-U\)，Gauss–Seidel 迭代为</p>
+
+\[(D-L)x^{(k+1)}=Ux^{(k)}+b,\]
+
+<p>即</p>
+
+\[x^{(k+1)}=(D-L)^{-1}Ux^{(k)}+(D-L)^{-1}b.\]
+
+<p>迭代矩阵：</p>
+
+\[G_{GS}=(D-L)^{-1}U.\]
+
+<h2 id="33-收敛性">3.3 收敛性</h2>
+
+<p><strong>定理 3.3.1（严格对角占优）</strong><br />
+若 \(A\) 严格对角占优，则 Gauss–Seidel 迭代收敛。</p>
+
+<p><strong>定理 3.3.2（对称正定）</strong><br />
+若 \(A\) 对称正定，则 Gauss–Seidel 迭代对任意初始向量收敛。</p>
+
+<p><strong>证明</strong><br />
+设 \(A\) 对称正定。需证 \(\rho(G_{GS})&lt;1\)。设 \(G_{GS}x=\lambda x\)，\(x\ne0\)，即</p>
+
+\[Ux=\lambda(D-L)x.\]
+
+<p>两边左乘 \(x^{\mathsf H}\)：</p>
+
+\[x^{\mathsf H}Ux=\lambda x^{\mathsf H}(D-L)x.\]
+
+<p>因 \(A=D-L-U\) 对称，\(U=L^{\mathsf H}\)。又 \(D-L\) 的对角线为 \(D\)，严格下三角为 \(-L\)。计算可得</p>
+
+\[x^{\mathsf H}(D-L)x=x^{\mathsf H}Dx-x^{\mathsf H}Lx,\]
+
+<p>且</p>
+
+\[x^{\mathsf H}Ax=x^{\mathsf H}(D-L-U)x=x^{\mathsf H}(D-L)x-x^{\mathsf H}Ux.\]
+
+<p>由 \(A\) 正定，\(x^{\mathsf H}Ax&gt;0\)，故</p>
+
+\[x^{\mathsf H}(D-L)x-x^{\mathsf H}Ux&gt;0.\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>又 \(x^{\mathsf H}Ux=\overline{x^{\mathsf H}Lx}\)，可证 $$</td>
+      <td>\lambda</td>
+      <td>&lt;1\(。详细证明见 Golub &amp; Van Loan, §10.1。\)\square$$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>定理 3.3.3（与 Jacobi 的关系）</strong><br />
+若 \(A\) 对称正定，则</p>
+
+\[\rho(G_{GS})=\rho(G_J)^2.\]
+
+<p>即 Gauss–Seidel 的渐近收敛速度是 Jacobi 的两倍。</p>
+
+<p><strong>注</strong>：此关系仅对对称正定矩阵成立。对一般矩阵，Gauss–Seidel 和 Jacobi 的收敛性无必然联系：存在 Jacobi 收敛而 Gauss–Seidel 发散的例子，也存在反之的例子。</p>
+
+<h2 id="34-优缺点">3.4 优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>通常比 Jacobi 收敛快（对称正定时快一倍）；</li>
+  <li>对对称正定矩阵必定收敛；</li>
+  <li>存储量与 Jacobi 相同。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>不能并行（需按顺序更新）；</li>
+  <li>对一般矩阵收敛性无保证；</li>
+  <li>需要 \(a_{ii}\ne0\)。</li>
+</ol>
+
+<hr />
+
+<h1 id="四sor-迭代法逐次超松弛">四、SOR 迭代法（逐次超松弛）</h1>
+
+<h2 id="41-动机">4.1 动机</h2>
+
+<p>Gauss–Seidel 可写为</p>
+
+\[x_i^{(k+1)}=x_i^{(k)}+\delta_i,\]
+
+<p>其中 \(\delta_i\) 是 Gauss–Seidel 的修正量。SOR 引入<strong>松弛因子</strong> \(\omega\)，放大或缩小修正量：</p>
+
+\[x_i^{(k+1)}=x_i^{(k)}+\omega\delta_i.\]
+
+<ul>
+  <li>\(\omega=1\)：退化为 Gauss–Seidel；</li>
+  <li>\(\omega&gt;1\)：<strong>超松弛</strong>，加速收敛；</li>
+  <li>\(0&lt;\omega&lt;1\)：<strong>低松弛</strong>，用于改善收敛性。</li>
+</ul>
+
+<h2 id="42-分量形式">4.2 分量形式</h2>
+
+\[\boxed{
+x_i^{(k+1)}=(1-\omega)x_i^{(k)}+\frac{\omega}{a_{ii}}\left(b_i-\sum_{j=1}^{i-1}a_{ij}x_j^{(k+1)}-\sum_{j=i+1}^{n}a_{ij}x_j^{(k)}\right),\qquad i=1,\dots,n.
+}\]
+
+<p><strong>特点</strong>：结合了 Gauss–Seidel 的顺序更新和松弛因子的加速。</p>
+
+<h2 id="43-矩阵形式">4.3 矩阵形式</h2>
+
+<p>由 \(A=D-L-U\)，SOR 迭代为</p>
+
+\[(D-\omega L)x^{(k+1)}=((1-\omega)D+\omega U)x^{(k)}+\omega b,\]
+
+<p>即</p>
+
+\[x^{(k+1)}=(D-\omega L)^{-1}((1-\omega)D+\omega U)x^{(k)}+\omega(D-\omega L)^{-1}b.\]
+
+<p>迭代矩阵：</p>
+
+\[G_{\text{SOR}}=(D-\omega L)^{-1}((1-\omega)D+\omega U).\]
+
+<h2 id="44-收敛性">4.4 收敛性</h2>
+
+<p><strong>定理 4.4.1（必要条件）</strong><br />
+SOR 迭代收敛的必要条件是</p>
+
+\[0&lt;\omega&lt;2.\]
+
+<p><strong>证明</strong><br />
+迭代矩阵的行列式：</p>
+
+\[\det G_{\text{SOR}}=\det(D-\omega L)^{-1}\det((1-\omega)D+\omega U).\]
+
+<p>因 \(D-\omega L\) 和 \((1-\omega)D+\omega U\) 均为三角矩阵，行列式等于对角线乘积：</p>
+
+\[\det G_{\text{SOR}}=\frac{\prod_{i=1}^n(1-\omega)a_{ii}}{\prod_{i=1}^n a_{ii}}=(1-\omega)^n.\]
+
+<p>若迭代收敛，则 \(\rho(G_{\text{SOR}})&lt;1\)，故所有特征值模小于 1，从而</p>
+
+\[|\det G_{\text{SOR}}|=\prod|\lambda_i|&lt;1.\]
+
+<p>即</p>
+
+\[|1-\omega|^n&lt;1\iff|1-\omega|&lt;1\iff0&lt;\omega&lt;2.\]
+
+\[\square\]
+
+<p><strong>定理 4.4.2（对称正定情形）</strong><br />
+若 \(A\) 对称正定，则 SOR 迭代收敛当且仅当 \(0&lt;\omega&lt;2\)。</p>
+
+<p><strong>定理 4.4.3（最优松弛因子）</strong><br />
+若 \(A\) 对称正定且 \(G_J\) 的特征值为实数，设</p>
+
+\[\mu=\rho(G_J),\]
+
+<p>则最优松弛因子为</p>
+
+\[\omega_{\text{opt}}=\frac{2}{1+\sqrt{1-\mu^2}},\]
+
+<p>此时</p>
+
+\[\rho(G_{\text{SOR}})=\omega_{\text{opt}}-1=\frac{1-\sqrt{1-\mu^2}}{1+\sqrt{1-\mu^2}}.\]
+
+<p><strong>意义</strong>：当 \(\mu\) 接近 1 时，\(\omega_{\text{opt}}\) 接近 2，SOR 的收敛速度远快于 Gauss–Seidel。例如 \(\mu=0.99\) 时，\(\rho(G_{GS})=\mu^2\approx0.98\)，而 \(\rho(G_{\text{SOR}})\approx0.80\)，迭代次数大幅减少。</p>
+
+<h2 id="45-最优松弛因子的估计">4.5 最优松弛因子的估计</h2>
+
+<p>实际中 \(\mu=\rho(G_J)\) 通常未知。常用方法：</p>
+<ol>
+  <li>对特殊矩阵（如 Poisson 方程离散化），\(\mu\) 有解析表达式；</li>
+  <li>通过数值试验估计；</li>
+  <li>自适应调整 \(\omega\)。</li>
+</ol>
+
+<p><strong>例</strong>：对二维 Poisson 方程（\(n\times n\) 网格），</p>
+
+\[\mu=\cos\frac{\pi}{n+1},\qquad
+\omega_{\text{opt}}=\frac{2}{1+\sin\frac{\pi}{n+1}}.\]
+
+<p>当 \(n\) 很大时，\(\omega_{\text{opt}}\approx2-\dfrac{2\pi}{n}\)，SOR 的迭代次数为 \(O(n)\)，而 Gauss–Seidel 为 \(O(n^2)\)。</p>
+
+<h2 id="46-优缺点">4.6 优缺点</h2>
+
+<p><strong>优点</strong></p>
+<ol>
+  <li>通过选取 \(\omega\) 可显著加速收敛；</li>
+  <li>对对称正定矩阵，\(0&lt;\omega&lt;2\) 保证收敛；</li>
+  <li>实现简单，只需在 Gauss–Seidel 基础上加松弛因子。</li>
+</ol>
+
+<p><strong>缺点</strong></p>
+<ol>
+  <li>最优 \(\omega\) 通常未知，需估计；</li>
+  <li>不能并行（同 Gauss–Seidel）；</li>
+  <li>对非对称正定矩阵，收敛性无保证。</li>
+</ol>
+
+<hr />
+
+<h1 id="五收敛性总结与对比">五、收敛性总结与对比</h1>
+
+<h2 id="51-收敛性条件对比">5.1 收敛性条件对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>条件</th>
+      <th>Jacobi</th>
+      <th>Gauss–Seidel</th>
+      <th>SOR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>严格对角占优</td>
+      <td>收敛</td>
+      <td>收敛</td>
+      <td>收敛（\(0&lt;\omega\le1\)）</td>
+    </tr>
+    <tr>
+      <td>对称正定</td>
+      <td>不一定</td>
+      <td>收敛</td>
+      <td>收敛（\(0&lt;\omega&lt;2\)）</td>
+    </tr>
+    <tr>
+      <td>一般矩阵</td>
+      <td>\(\rho(G_J)&lt;1\)</td>
+      <td>\(\rho(G_{GS})&lt;1\)</td>
+      <td>\(\rho(G_{\text{SOR}})&lt;1\)，需 \(0&lt;\omega&lt;2\)</td>
+    </tr>
+    <tr>
+      <td>充要条件</td>
+      <td>\(\rho(D^{-1}(L+U))&lt;1\)</td>
+      <td>\(\rho((D-L)^{-1}U)&lt;1\)</td>
+      <td>\(\rho(G_{\text{SOR}})&lt;1\)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="52-收敛速度对比对称正定情形">5.2 收敛速度对比（对称正定情形）</h2>
+
+<p>设 \(\mu=\rho(G_J)\)。则：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>谱半径</th>
+      <th>迭代次数（近似）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Jacobi</td>
+      <td>\(\mu\)</td>
+      <td>\(O\left(\dfrac{\log\epsilon}{\log\mu}\right)\)</td>
+    </tr>
+    <tr>
+      <td>Gauss–Seidel</td>
+      <td>\(\mu^2\)</td>
+      <td>\(O\left(\dfrac{\log\epsilon}{2\log\mu}\right)\)</td>
+    </tr>
+    <tr>
+      <td>SOR（最优 \(\omega\)）</td>
+      <td>\(\omega_{\text{opt}}-1\approx1-\dfrac{2}{\sqrt{\kappa}}\)</td>
+      <td>\(O\left(\dfrac{\sqrt{\kappa}\log\epsilon}{2}\right)\)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>其中 \(\kappa=\kappa(A)\) 为条件数。SOR 的迭代次数为 \(O(\sqrt{\kappa})\)，远优于 Jacobi 和 Gauss–Seidel 的 \(O(\kappa)\)。</p>
+
+<h2 id="53-并行性对比">5.3 并行性对比</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>并行性</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Jacobi</td>
+      <td>好</td>
+      <td>所有分量同时更新</td>
+    </tr>
+    <tr>
+      <td>Gauss–Seidel</td>
+      <td>差</td>
+      <td>需按顺序更新</td>
+    </tr>
+    <tr>
+      <td>SOR</td>
+      <td>差</td>
+      <td>同 Gauss–Seidel</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>注</strong>：存在并行版本的 Gauss–Seidel 和 SOR（如红黑排序、多色排序），适用于特定结构的矩阵。</p>
+
+<hr />
+
+<h1 id="六例题">六、例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}4&amp;-1&amp;0\\-1&amp;4&amp;-1\\0&amp;-1&amp;4\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\1\\1\end{pmatrix}.\]
+
+<p>\(A\) 对称正定且严格对角占优。</p>
+
+<h2 id="61-jacobi-迭代">6.1 Jacobi 迭代</h2>
+
+\[x_1^{(k+1)}=\frac{1}{4}(1+x_2^{(k)}),\]
+
+\[x_2^{(k+1)}=\frac{1}{4}(1+x_1^{(k)}+x_3^{(k)}),\]
+
+\[x_3^{(k+1)}=\frac{1}{4}(1+x_2^{(k)}).\]
+
+<p>迭代矩阵</p>
+
+\[G_J=\begin{pmatrix}0&amp;\frac14&amp;0\\\frac14&amp;0&amp;\frac14\\0&amp;\frac14&amp;0\end{pmatrix}.\]
+
+<p>特征值为 \(0,\pm\frac{\sqrt2}{4}\)，\(\rho(G_J)=\frac{\sqrt2}{4}\approx0.354\)。收敛。</p>
+
+<h2 id="62-gaussseidel-迭代">6.2 Gauss–Seidel 迭代</h2>
+
+\[x_1^{(k+1)}=\frac{1}{4}(1+x_2^{(k)}),\]
+
+\[x_2^{(k+1)}=\frac{1}{4}(1+x_1^{(k+1)}+x_3^{(k)}),\]
+
+\[x_3^{(k+1)}=\frac{1}{4}(1+x_2^{(k+1)}).\]
+
+<p>迭代矩阵</p>
+
+\[G_{GS}=(D-L)^{-1}U.\]
+
+<p>计算得 \(\rho(G_{GS})=\rho(G_J)^2=\frac18=0.125\)。收敛速度是 Jacobi 的两倍。</p>
+
+<h2 id="63-sor-迭代">6.3 SOR 迭代</h2>
+
+<p>取 \(\omega=1.2\)（示例）：</p>
+
+\[x_i^{(k+1)}=(1-\omega)x_i^{(k)}+\frac{\omega}{4}(\cdots).\]
+
+<p>最优松弛因子：</p>
+
+\[\mu=\rho(G_J)=\frac{\sqrt2}{4}\approx0.354,\]
+
+\[\omega_{\text{opt}}=\frac{2}{1+\sqrt{1-\mu^2}}=\frac{2}{1+\sqrt{1-\frac18}}=\frac{2}{1+\frac{\sqrt7}{2\sqrt2}}\approx1.13.\]
+
+<p>此时 \(\rho(G_{\text{SOR}})=\omega_{\text{opt}}-1\approx0.13\)，与 Gauss–Seidel 接近（因 \(\mu\) 较小，SOR 优势不明显）。</p>
+
+<p><strong>注</strong>：SOR 的优势在 \(\mu\) 接近 1 时最显著。本例 \(\mu\) 较小，三种方法均收敛较快。</p>
+
+<hr />
+
+<h1 id="七总结">七、总结</h1>
+
+\[\boxed{
+\begin{aligned}
+&amp;\text{Jacobi：}Dx^{(k+1)}=(L+U)x^{(k)}+b,\quad\text{并行，收敛慢；}\\
+&amp;\text{Gauss–Seidel：}(D-L)x^{(k+1)}=Ux^{(k)}+b,\quad\text{串行，比 Jacobi 快；}\\
+&amp;\text{SOR：}(D-\omega L)x^{(k+1)}=((1-\omega)D+\omega U)x^{(k)}+\omega b,\quad\text{松弛加速。}
+\end{aligned}}\]
+
+<p><strong>核心关系</strong>：</p>
+
+\[\text{Jacobi}\xrightarrow{\text{利用最新值}}\text{Gauss–Seidel}\xrightarrow{\text{引入松弛因子}}\text{SOR}.\]
+
+<p><strong>选择原则</strong>：</p>
+<ol>
+  <li><strong>并行环境</strong>：Jacobi；</li>
+  <li><strong>对称正定、串行</strong>：Gauss–Seidel 或 SOR；</li>
+  <li><strong>需要快速收敛、能估计 \(\omega\)</strong>：SOR（最优 \(\omega\)）；</li>
+  <li><strong>大规模稀疏矩阵</strong>：三者均可，但现代实践中更常用 Krylov 子空间方法（如共轭梯度法、GMRES），它们在收敛速度和鲁棒性上通常优于经典迭代法。</li>
+</ol>
+
+<p><strong>经典迭代法的地位</strong>：Jacobi、Gauss–Seidel、SOR 是理解迭代法的基础，也是多重网格方法、区域分解方法的组成部分。虽然现代大规模计算中 Krylov 方法更常用，但这三种方法在特定场景（如作为预处理器、光滑算子）中仍有重要应用。</p>
+
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-y: visible;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
