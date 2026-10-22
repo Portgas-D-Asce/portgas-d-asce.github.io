@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="xxxxxx">
+        <link rel="stylesheet" href="/assets/fonts/iconfont.css"/>
+        <link rel="shortcut icon" type="image/svg+xml" href="/assets/image/favicon.ico" />
+        <!-- Begin Jekyll SEO tag v2.9.1 -->
+<title>共轭梯度法（Conjugate Gradient, CG） | Devil’s blog</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="共轭梯度法（Conjugate Gradient, CG）" />
+<meta name="author" content="Devil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="xxxxxx" />
+<meta name="twitter:description" property="og:description" content="xxxxxx" />
+<link rel="canonical" href="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html" />
+<meta property="og:url" content="https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html" />
+<meta property="og:site_name" content="Devil’s blog" />
+<meta property="og:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-10-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://xdevil.top/assets/image/88.jpeg" />
+<meta name="twitter:title" content="共轭梯度法（Conjugate Gradient, CG）" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Devil"},"dateModified":"2026-10-19T00:00:00+00:00","datePublished":"2026-10-19T00:00:00+00:00","description":"xxxxxx","headline":"共轭梯度法（Conjugate Gradient, CG）","image":"https://xdevil.top/assets/image/88.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html"},"url":"https://xdevil.top/%E6%95%B0%E5%AD%A6/2026/10/19/%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95-Conjugate-Gradient,-CG.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    </head>
+    <body>
+        <style>
+            html, body { width: 100%; height: 100%; padding: 0; margin: 0;}
+            img { width: 100%; }
+            a { text-decoration: none; cursor: pointer; color: black; }
+            a:hover { color: #2d9ebd; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease }
+            .wh100 { width: 100vw; height: 100vh; }
+            .fontsz36 { font-size: 36px !important; }
+            .fontsz28 { font-size: 28px !important; }
+            .fontsz24 { font-size: 24px !important; }
+            .fontsz20 { font-size: 20px !important; }
+            .fontsz16 { font-size: 16px !important; }
+            .color-white { color: white; }
+            .font-bold { font-weight: bold; }
+
+            p, li {
+                line-height: 1.6;
+            }
+
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+    
+        <div id="header">
+    <div class="fontsz36 font-bold"> 共轭梯度法（Conjugate Gradient, CG） </div>
+</div>
+
+<div id="article">
+<div id="copyright">
+    <div><b>版权声明：</b> 码字不易，尊重版权，转载请注明出处！</div>
+    <div><b>免责声明：</b> 本文部分信息搜集自互联网，如若侵犯了您的相关权益，请告知，本站将立刻处理。</div>
+</div>
+
+
+<style>
+#copyright {
+    border-left: 5px solid #87CEFA;
+    background-color: #f7f7fc;
+    padding: 15px 18px 3px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+#copyright div {
+    margin-bottom: 12px;
+}
+</style><h1 id="共轭梯度法conjugate-gradient-method">共轭梯度法（Conjugate Gradient Method）</h1>
+
+<p>约定：\(A\in M_n(\mathbb R)\) 对称正定，\(b\in\mathbb R^n\)，求解</p>
+
+\[Ax=b.\]
+
+<p>等价地，求二次泛函</p>
+
+\[\phi(x)=\frac12x^{\mathsf T}Ax-b^{\mathsf T}x\]
+
+<p>的极小点（因 \(A\) 正定，\(\phi\) 严格凸，极小点唯一，且 \(\nabla\phi(x)=Ax-b\)）。</p>
+
+<hr />
+
+<h1 id="一动机从最速下降到共轭方向">一、动机：从最速下降到共轭方向</h1>
+
+<h2 id="11-最速下降法及其缺陷">1.1 最速下降法及其缺陷</h2>
+
+<p>最速下降法沿负梯度方向 \(-\nabla\phi(x^{(k)})=b-Ax^{(k)}=r^{(k)}\) 搜索：</p>
+
+\[x^{(k+1)}=x^{(k)}+\alpha_k r^{(k)},\qquad
+\alpha_k=\frac{(r^{(k)})^{\mathsf T}r^{(k)}}{(r^{(k)})^{\mathsf T}Ar^{(k)}}.\]
+
+<p>缺点是<strong>相邻搜索方向正交</strong>（\((r^{(k+1)})^{\mathsf T}r^{(k)}=0\)），导致在狭长等高线区域呈锯齿形前进，收敛极慢。对条件数 \(\kappa(A)\) 的矩阵，收敛因子约为 \(\left(\frac{\kappa-1}{\kappa+1}\right)\)，当 \(\kappa\) 大时几乎停滞。</p>
+
+<p><strong>问题</strong>：能否选择一组<strong>互不干扰</strong>的搜索方向，使每一步都在新方向上达到最优，且不破坏之前方向的最优性？</p>
+
+<h2 id="12-a-共轭方向">1.2 \(A\)-共轭方向</h2>
+
+<p><strong>定义 1.2.1（\(A\)-共轭）</strong><br />
+设 \(A\) 对称正定。非零向量 \(p_1,\dots,p_k\in\mathbb R^n\) 称为 <strong>\(A\)-共轭</strong>（或 \(A\)-正交），若</p>
+
+\[p_i^{\mathsf T}Ap_j=0,\qquad i\ne j.\]
+
+<p><strong>性质</strong>：</p>
+<ol>
+  <li>\(A\)-共轭向量组线性无关；</li>
+  <li>若 \(p_1,\dots,p_n\) 构成 \(\mathbb R^n\) 的 \(A\)-共轭基，则对任意初始 \(x^{(0)}\)，沿这些方向依次精确搜索，<strong>至多 \(n\) 步</strong>即得精确解（在精确算术下）。</li>
+</ol>
+
+<p><strong>证明（性质 2）</strong><br />
+设 \(x^*=x^{(0)}+\sum_{j=1}^n\alpha_jp_j\)。由 \(A\)-共轭性，</p>
+
+\[p_i^{\mathsf T}A(x^*-x^{(0)})=\alpha_ip_i^{\mathsf T}Ap_i.\]
+
+<p>又 \(Ax^*=b\)，故</p>
+
+\[\alpha_i=\frac{p_i^{\mathsf T}(b-Ax^{(0)})}{p_i^{\mathsf T}Ap_i}=\frac{p_i^{\mathsf T}r^{(0)}}{p_i^{\mathsf T}Ap_i}.\]
+
+<p>每一步精确搜索恰好确定 \(\alpha_i\)，且不干扰其他方向。\(\square\)</p>
+
+<p><strong>核心思想</strong>：共轭梯度法在每一步<strong>自动构造</strong>新的 \(A\)-共轭方向，无需预先给定。</p>
+
+<hr />
+
+<h1 id="二共轭梯度法的推导">二、共轭梯度法的推导</h1>
+
+<h2 id="21-基本设定">2.1 基本设定</h2>
+
+<p>设已有 \(A\)-共轭方向 \(p^{(0)},\dots,p^{(k-1)}\)，当前近似解 \(x^{(k)}\)，残差</p>
+
+\[r^{(k)}=b-Ax^{(k)}.\]
+
+<p>第 \(k\) 步沿新方向 \(p^{(k)}\) 搜索：</p>
+
+\[x^{(k+1)}=x^{(k)}+\alpha_kp^{(k)}.\]
+
+<p>要求 \(p^{(k)}\) 与之前所有方向 \(A\)-共轭：</p>
+
+\[(p^{(k)})^{\mathsf T}Ap^{(j)}=0,\qquad j&lt;k.\]
+
+<h2 id="22-步长的确定">2.2 步长的确定</h2>
+
+<p>沿 \(p^{(k)}\) 精确搜索，即最小化 \(\phi(x^{(k)}+\alpha p^{(k)})\)：</p>
+
+\[\frac{d}{d\alpha}\phi(x^{(k)}+\alpha p^{(k)})=0.\]
+
+<p>计算得</p>
+
+\[\alpha_k=\frac{(p^{(k)})^{\mathsf T}r^{(k)}}{(p^{(k)})^{\mathsf T}Ap^{(k)}}.\]
+
+<h2 id="23-新方向的构造">2.3 新方向的构造</h2>
+
+<p>取 \(p^{(k)}\) 为残差 \(r^{(k)}\) 与之前方向的线性组合：</p>
+
+\[p^{(k)}=r^{(k)}+\sum_{j=0}^{k-1}\beta_{kj}p^{(j)}.\]
+
+<p>由 \(A\)-共轭条件 \((p^{(k)})^{\mathsf T}Ap^{(j)}=0\)：</p>
+
+\[\beta_{kj}=-\frac{(r^{(k)})^{\mathsf T}Ap^{(j)}}{(p^{(j)})^{\mathsf T}Ap^{(j)}}.\]
+
+<p><strong>关键简化</strong>：利用残差的正交性和 \(A\)-共轭性，可以证明只有 \(\beta_{k,k-1}\) 非零，且</p>
+
+\[\beta_k=\beta_{k,k-1}=\frac{(r^{(k)})^{\mathsf T}r^{(k)}}{(r^{(k-1)})^{\mathsf T}r^{(k-1)}}.\]
+
+<p>于是</p>
+
+\[p^{(k)}=r^{(k)}+\beta_kp^{(k-1)}.\]
+
+<h2 id="24-残差的递推">2.4 残差的递推</h2>
+
+<p>由 \(x^{(k+1)}=x^{(k)}+\alpha_kp^{(k)}\)，</p>
+
+\[r^{(k+1)}=b-Ax^{(k+1)}=r^{(k)}-\alpha_kAp^{(k)}.\]
+
+<h2 id="25-步长的另一表达式">2.5 步长的另一表达式</h2>
+
+<p>由 \(r^{(k+1)}\perp r^{(k)}\)（可证），且 \(p^{(k)}=r^{(k)}+\beta_kp^{(k-1)}\)，有</p>
+
+\[(p^{(k)})^{\mathsf T}r^{(k)}=(r^{(k)})^{\mathsf T}r^{(k)}.\]
+
+<p>故</p>
+
+\[\alpha_k=\frac{(r^{(k)})^{\mathsf T}r^{(k)}}{(p^{(k)})^{\mathsf T}Ap^{(k)}}.\]
+
+<hr />
+
+<h1 id="三共轭梯度法算法">三、共轭梯度法算法</h1>
+
+<p><strong>算法 3.1（共轭梯度法）</strong></p>
+
+<p>输入：\(A\) 对称正定，\(b\)，初始 \(x^{(0)}\)，容差 \(\text{tol}\)。</p>
+
+<ol>
+  <li>计算初始残差：</li>
+</ol>
+
+\[r^{(0)}=b-Ax^{(0)},\qquad p^{(0)}=r^{(0)}.\]
+
+<ol>
+  <li>对 \(k=0,1,2,\dots\)：
+    <ul>
+      <li>计算步长：</li>
+    </ul>
+  </li>
+</ol>
+
+\[\alpha_k=\frac{(r^{(k)})^{\mathsf T}r^{(k)}}{(p^{(k)})^{\mathsf T}Ap^{(k)}};\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 更新解和残差：
+</code></pre></div></div>
+
+\[x^{(k+1)}=x^{(k)}+\alpha_kp^{(k)},\qquad
+      r^{(k+1)}=r^{(k)}-\alpha_kAp^{(k)};\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 若 $$\|r^{(k+1)}\|_2\le\text{tol}$$，停止；
+- 计算方向更新系数：
+</code></pre></div></div>
+
+\[\beta_k=\frac{(r^{(k+1)})^{\mathsf T}r^{(k+1)}}{(r^{(k)})^{\mathsf T}r^{(k)}};\]
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- 更新方向：
+</code></pre></div></div>
+
+\[p^{(k+1)}=r^{(k+1)}+\beta_kp^{(k)}.\]
+
+<ol>
+  <li>输出 \(x^{(k+1)}\)。</li>
+</ol>
+
+<p><strong>每步计算量</strong>：一次矩阵-向量乘法 \(Ap^{(k)}\)，两次内积，若干向量加法。总计 \(O(\text{nnz}(A))\)。</p>
+
+<p><strong>存储</strong>：\(x,r,p,Ap\) 共 4 个向量，\(O(n)\)。</p>
+
+<hr />
+
+<h1 id="四收敛性理论">四、收敛性理论</h1>
+
+<h2 id="41-精确算术下的有限终止性">4.1 精确算术下的有限终止性</h2>
+
+<p><strong>定理 4.1.1</strong><br />
+在精确算术下，共轭梯度法至多 \(n\) 步得到精确解，即存在 \(m\le n\) 使 \(r^{(m)}=0\)。</p>
+
+<p><strong>证明</strong><br />
+由构造，\(r^{(0)},\dots,r^{(k)}\) 非零时两两正交，且</p>
+
+\[\operatorname{span}(r^{(0)},\dots,r^{(k)})=\operatorname{span}(p^{(0)},\dots,p^{(k)})=K_{k+1}(A,r^{(0)}),\]
+
+<p>其中 \(K_{k+1}\) 为 Krylov 子空间。\(\mathbb R^n\) 中最多有 \(n\) 个非零正交向量，故至多 \(n\) 步 \(r^{(k)}=0\)。\(\square\)</p>
+
+<p><strong>注</strong>：实际浮点计算中，正交性会逐渐损失，通常远多于 \(n\) 步才收敛，需采用重正交化或重启策略。</p>
+
+<h2 id="42-误差估计">4.2 误差估计</h2>
+
+<p><strong>定理 4.2.1（能量范数误差估计）</strong><br />
+设 \(x^*\) 为精确解，\(\|e\|_A=\sqrt{e^{\mathsf T}Ae}\) 为 \(A\)-范数（能量范数）。则</p>
+
+\[\|x^{(k)}-x^*\|_A\le2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k\|x^{(0)}-x^*\|_A,\]
+
+<p>其中 \(\kappa=\kappa_2(A)=\lambda_{\max}/\lambda_{\min}\) 为条件数。</p>
+
+<p><strong>证明思路</strong><br />
+共轭梯度法的误差满足</p>
+
+\[\|x^{(k)}-x^*\|_A=\min_{q\in\Pi_k,q(0)=1}\|q(A)(x^{(0)}-x^*)\|_A,\]
+
+<p>其中 \(\Pi_k\) 为次数不超过 \(k\) 的多项式集合。取 Chebyshev 多项式作为 \(q\)，即得上述界。\(\square\)</p>
+
+<p><strong>意义</strong>：</p>
+<ol>
+  <li>收敛速度由 \(\sqrt{\kappa}\) 控制，而非最速下降的 \(\kappa\)。这是共轭梯度法的核心优势；</li>
+  <li>当 \(\kappa=10^4\) 时，\(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\approx0.98\)，而最速下降的因子约为 \(0.9998\)，共轭梯度法显著更快；</li>
+  <li>若 \(A\) 的特征值只有 \(m\) 个不同值，则至多 \(m\) 步精确收敛。</li>
+</ol>
+
+<h2 id="43-超线性收敛">4.3 超线性收敛</h2>
+
+<p>实际中，共轭梯度法常表现出<strong>超线性收敛</strong>：当残差足够小时，收敛速度突然加快。这是因为小特征值对应的分量被迅速消除后，有效条件数减小。</p>
+
+<hr />
+
+<h1 id="五预处理共轭梯度法pcg">五、预处理共轭梯度法（PCG）</h1>
+
+<h2 id="51-动机">5.1 动机</h2>
+
+<p>收敛速度依赖 \(\kappa(A)\)。若 \(\kappa(A)\) 很大，共轭梯度法仍可能很慢。<strong>预处理</strong>通过乘以可逆矩阵 \(M^{-1}\)（\(M\) 为 \(A\) 的近似且易于求解）来降低条件数：</p>
+
+\[M^{-1}Ax=M^{-1}b.\]
+
+<p>但 \(M^{-1}A\) 一般不对称。改用对称正定的 \(M\)，求解等价系统</p>
+
+\[M^{-1/2}AM^{-1/2}y=M^{-1/2}b,\qquad y=M^{1/2}x.\]
+
+<p>该系统矩阵对称正定，条件数为 \(\kappa(M^{-1/2}AM^{-1/2})\)。</p>
+
+<h2 id="52-算法">5.2 算法</h2>
+
+<p><strong>算法 5.2.1（预处理共轭梯度法）</strong></p>
+
+<ol>
+  <li>\(r^{(0)}=b-Ax^{(0)}\)，解 \(Mz^{(0)}=r^{(0)}\)，\(p^{(0)}=z^{(0)}\)；</li>
+  <li>对 \(k=0,1,\dots\)：</li>
+</ol>
+
+\[\alpha_k=\frac{(r^{(k)})^{\mathsf T}z^{(k)}}{(p^{(k)})^{\mathsf T}Ap^{(k)}},\]
+
+\[x^{(k+1)}=x^{(k)}+\alpha_kp^{(k)},\qquad
+   r^{(k+1)}=r^{(k)}-\alpha_kAp^{(k)},\]
+
+<p>解 \(Mz^{(k+1)}=r^{(k+1)}\)，</p>
+
+\[\beta_k=\frac{(r^{(k+1)})^{\mathsf T}z^{(k+1)}}{(r^{(k)})^{\mathsf T}z^{(k)}},\]
+
+\[p^{(k+1)}=z^{(k+1)}+\beta_kp^{(k)}.\]
+
+<p><strong>常用预处理器</strong>：</p>
+<ol>
+  <li><strong>Jacobi</strong>：\(M=\operatorname{diag}(A)\)；</li>
+  <li><strong>不完全 Cholesky 分解</strong>：\(M=\tilde L\tilde L^{\mathsf T}\)；</li>
+  <li><strong>SSOR</strong>：\(M=(D-\omega L)D^{-1}(D-\omega U)/\omega\)；</li>
+  <li><strong>多重网格</strong>：\(M\) 为多重网格 V-cycle 算子。</li>
+</ol>
+
+<hr />
+
+<h1 id="六数值稳定性与实现要点">六、数值稳定性与实现要点</h1>
+
+<h2 id="61-正交性损失">6.1 正交性损失</h2>
+
+<p>精确算术下，残差两两正交。浮点计算中，正交性逐渐损失，导致收敛延迟。解决方法：</p>
+<ol>
+  <li><strong>完全重正交化</strong>：每步将 \(r^{(k+1)}\) 对之前所有残差正交化，代价 \(O(kn)\)；</li>
+  <li><strong>选择性重正交化</strong>：当正交性损失超过阈值时重正交化；</li>
+  <li><strong>重启</strong>：每 \(m\) 步（如 \(m=n\)）重置 \(p^{(k)}=r^{(k)}\)。</li>
+</ol>
+
+<h2 id="62-停止准则">6.2 停止准则</h2>
+
+<p>常用：</p>
+
+\[\|r^{(k)}\|_2\le\text{tol}\cdot\|b\|_2,\]
+
+<p>或</p>
+
+\[\|r^{(k)}\|_2\le\text{tol}\cdot\|A\|_2\|x^{(k)}\|_2.\]
+
+<p>后者更稳健，避免 \(x^{(k)}\) 很大时的误判。</p>
+
+<h2 id="63-对-a-的要求">6.3 对 \(A\) 的要求</h2>
+
+<p>共轭梯度法要求 \(A\) <strong>对称正定</strong>。若 \(A\) 对称但不定，可采用 MINRES；若 \(A\) 非对称，可采用 GMRES、BiCGSTAB 等 Krylov 方法。</p>
+
+<hr />
+
+<h1 id="七例题">七、例题</h1>
+
+<p>设</p>
+
+\[A=\begin{pmatrix}4&amp;1\\1&amp;3\end{pmatrix},\qquad
+b=\begin{pmatrix}1\\2\end{pmatrix},\qquad
+x^{(0)}=\begin{pmatrix}0\\0\end{pmatrix}.\]
+
+<p><strong>第 0 步</strong>：</p>
+
+\[r^{(0)}=b=\begin{pmatrix}1\\2\end{pmatrix},\qquad
+p^{(0)}=r^{(0)}=\begin{pmatrix}1\\2\end{pmatrix}.\]
+
+\[Ap^{(0)}=\begin{pmatrix}4&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}6\\7\end{pmatrix}.\]
+
+\[\alpha_0=\frac{(r^{(0)})^{\mathsf T}r^{(0)}}{(p^{(0)})^{\mathsf T}Ap^{(0)}}=\frac{1+4}{6+14}=\frac{5}{20}=\frac14.\]
+
+\[x^{(1)}=x^{(0)}+\frac14p^{(0)}=\begin{pmatrix}\frac14\\\frac12\end{pmatrix}.\]
+
+\[r^{(1)}=r^{(0)}-\frac14Ap^{(0)}=\begin{pmatrix}1\\2\end{pmatrix}-\begin{pmatrix}\frac32\\\frac74\end{pmatrix}=\begin{pmatrix}-\frac12\\\frac14\end{pmatrix}.\]
+
+\[\beta_0=\frac{(r^{(1)})^{\mathsf T}r^{(1)}}{(r^{(0)})^{\mathsf T}r^{(0)}}=\frac{\frac14+\frac1{16}}{5}=\frac{\frac5{16}}{5}=\frac1{16}.\]
+
+\[p^{(1)}=r^{(1)}+\frac1{16}p^{(0)}=\begin{pmatrix}-\frac12\\\frac14\end{pmatrix}+\begin{pmatrix}\frac1{16}\\\frac18\end{pmatrix}=\begin{pmatrix}-\frac7{16}\\\frac38\end{pmatrix}.\]
+
+<p><strong>第 1 步</strong>：</p>
+
+\[Ap^{(1)}=\begin{pmatrix}4&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}-\frac7{16}\\\frac38\end{pmatrix}
+=\begin{pmatrix}-\frac74+\frac38\\-\frac7{16}+\frac98\end{pmatrix}
+=\begin{pmatrix}-\frac{11}8\\\frac{11}{16}\end{pmatrix}.\]
+
+\[\alpha_1=\frac{(r^{(1)})^{\mathsf T}r^{(1)}}{(p^{(1)})^{\mathsf T}Ap^{(1)}}
+=\frac{\frac5{16}}{(-\frac7{16})(-\frac{11}8)+(\frac38)(\frac{11}{16})}
+=\frac{\frac5{16}}{\frac{77}{128}+\frac{33}{128}}
+=\frac{\frac5{16}}{\frac{110}{128}}
+=\frac{5}{16}\cdot\frac{128}{110}=\frac{4}{11}.\]
+
+\[x^{(2)}=x^{(1)}+\frac4{11}p^{(1)}
+=\begin{pmatrix}\frac14\\\frac12\end{pmatrix}+\frac4{11}\begin{pmatrix}-\frac7{16}\\\frac38\end{pmatrix}
+=\begin{pmatrix}\frac14-\frac7{44}\\\frac12+\frac3{22}\end{pmatrix}
+=\begin{pmatrix}\frac{11-7}{44}\\\frac{11+3}{22}\end{pmatrix}
+=\begin{pmatrix}\frac1{11}\\\frac7{11}\end{pmatrix}.\]
+
+<p>验证：</p>
+
+\[Ax^{(2)}=\begin{pmatrix}4&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}\frac1{11}\\\frac7{11}\end{pmatrix}
+=\begin{pmatrix}\frac4{11}+\frac7{11}\\\frac1{11}+\frac{21}{11}\end{pmatrix}
+=\begin{pmatrix}1\\2\end{pmatrix}=b.\]
+
+<p><strong>两步收敛</strong>（\(n=2\)），符合理论。</p>
+
+<hr />
+
+<h1 id="八与其他方法对比">八、与其他方法对比</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>适用矩阵</th>
+      <th>收敛速度</th>
+      <th>每步计算量</th>
+      <th>存储</th>
+      <th>并行性</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>最速下降</td>
+      <td>对称正定</td>
+      <td>因子 \(\frac{\kappa-1}{\kappa+1}\)</td>
+      <td>\(O(\text{nnz})\)</td>
+      <td>\(O(n)\)</td>
+      <td>好</td>
+    </tr>
+    <tr>
+      <td>共轭梯度</td>
+      <td>对称正定</td>
+      <td>因子 \(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\)</td>
+      <td>\(O(\text{nnz})\)</td>
+      <td>\(O(n)\)</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>预处理共轭梯度</td>
+      <td>对称正定</td>
+      <td>依赖预处理器</td>
+      <td>\(O(\text{nnz})+\) 预处理求解</td>
+      <td>\(O(n)\)</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>GMRES</td>
+      <td>一般</td>
+      <td>依赖谱分布</td>
+      <td>\(O(\text{nnz})+O(kn)\)</td>
+      <td>\(O(kn)\)</td>
+      <td>中等</td>
+    </tr>
+    <tr>
+      <td>SOR</td>
+      <td>对称正定等</td>
+      <td>因子 \(\omega_{\text{opt}}-1\)</td>
+      <td>\(O(\text{nnz})\)</td>
+      <td>\(O(n)\)</td>
+      <td>差</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>共轭梯度法的优势</strong>：</p>
+<ol>
+  <li>短递推：每步只需存储少量向量，存储 \(O(n)\)；</li>
+  <li>无参数：不需要估计松弛因子等；</li>
+  <li>收敛速度由 \(\sqrt{\kappa}\) 控制，远优于最速下降和经典迭代法；</li>
+  <li>与 Krylov 子空间方法统一，可推广到 GMRES、MINRES 等。</li>
+</ol>
+
+<p><strong>局限</strong>：</p>
+<ol>
+  <li>仅适用于对称正定矩阵；</li>
+  <li>浮点计算中正交性损失，需重正交化或重启；</li>
+  <li>对病态问题，需预处理。</li>
+</ol>
+
+<hr />
+
+<h1 id="九应用">九、应用</h1>
+
+<ol>
+  <li><strong>大规模稀疏线性方程组</strong>：有限差分、有限元离散得到的对称正定系统；</li>
+  <li><strong>优化</strong>：二次规划、牛顿法中的线性子问题；</li>
+  <li><strong>图像处理</strong>：去噪、修复中的线性系统；</li>
+  <li><strong>计算流体力学</strong>：压力 Poisson 方程；</li>
+  <li><strong>机器学习</strong>：核方法、高斯过程中的线性系统；</li>
+  <li><strong>作为子问题求解器</strong>：内点法、增广 Lagrangian 方法。</li>
+</ol>
+
+<hr />
+
+<h1 id="十总结">十、总结</h1>
+
+\[\boxed{
+\begin{aligned}
+&amp;\text{共轭梯度法：在 Krylov 子空间中构造 }A\text{-共轭方向，逐步最小化二次泛函。}\\
+&amp;\text{核心递推：}\\
+&amp;\quad \alpha_k=\frac{(r^{(k)})^{\mathsf T}r^{(k)}}{(p^{(k)})^{\mathsf T}Ap^{(k)}},\quad
+x^{(k+1)}=x^{(k)}+\alpha_kp^{(k)},\\
+&amp;\quad r^{(k+1)}=r^{(k)}-\alpha_kAp^{(k)},\quad
+\beta_k=\frac{(r^{(k+1)})^{\mathsf T}r^{(k+1)}}{(r^{(k)})^{\mathsf T}r^{(k)}},\\
+&amp;\quad p^{(k+1)}=r^{(k+1)}+\beta_kp^{(k)}.
+\end{aligned}}\]
+
+<p><strong>核心性质</strong>：</p>
+<ol>
+  <li>精确算术下至多 \(n\) 步收敛；</li>
+  <li>误差界 \(\|x^{(k)}-x^*\|_A\le2\left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^k\|x^{(0)}-x^*\|_A\)；</li>
+  <li>每步只需一次矩阵-向量乘法，存储 \(O(n)\)；</li>
+  <li>要求 \(A\) 对称正定。</li>
+</ol>
+
+<p><strong>关键思想</strong>：</p>
+<ul>
+  <li>共轭方向避免最速下降的锯齿现象；</li>
+  <li>短递推（三项递推）使存储和计算量最小；</li>
+  <li>Krylov 子空间中的最优多项式逼近。</li>
+</ul>
+
+<p><strong>预处理</strong>：通过 \(M^{-1}\) 降低条件数，是实际应用中的必备技术。</p>
+
+<p>共轭梯度法是 20 世纪数值线性代数最重要的算法之一（Hestenes 和 Stiefel，1952），其思想深刻影响了 Krylov 子空间方法的发展，至今仍是求解大规模对称正定线性系统的首选方法。</p>
+
+<hr />
+
+<p><strong>\(\nabla\phi(x)=Ax-b\) 是二次泛函 \(\phi(x)\) 的梯度表达式。</strong></p>
+
+<p>在共轭梯度法（以及最速下降法等）中，我们常把求解线性方程组 \(Ax=b\) 的问题转化为<strong>极小化一个二次泛函</strong>的问题。这个泛函就是</p>
+
+\[\phi(x)=\frac12x^{\mathsf T}Ax-b^{\mathsf T}x,\]
+
+<p>其中 \(A\) 是对称正定矩阵。\(\nabla\phi(x)\) 表示 \(\phi\) 对向量 \(x\) 的<strong>梯度</strong>（即各偏导数组成的向量）。下面严格计算它。</p>
+
+<hr />
+
+<h2 id="一梯度的定义">一、梯度的定义</h2>
+
+<p>设 \(\phi:\mathbb R^n\to\mathbb R\) 是标量函数。其梯度定义为</p>
+
+<p>\(\nabla\phi(x)=\begin{pmatrix}
+\dfrac{\partial\phi}{\partial x_1}\\)6pt]
+\vdots<br />
+\(6pt]
+\dfrac{\partial\phi}{\partial x_n}
+\end{pmatrix}\in\mathbb R^n.\)</p>
+
+<p>对任意方向 \(d\in\mathbb R^n\)，方向导数满足</p>
+
+\[\frac{d}{dt}\phi(x+td)\Big|_{t=0}=\nabla\phi(x)^{\mathsf T}d.\]
+
+<hr />
+
+<h2 id="二逐项计算">二、逐项计算</h2>
+
+<h3 id="21-第一项-frac12xmathsf-tax">2.1 第一项 \(\frac12x^{\mathsf T}Ax\)</h3>
+
+<p>设 \(A=(a_{ij})\) 对称。则</p>
+
+\[\frac12x^{\mathsf T}Ax=\frac12\sum_{i=1}^n\sum_{j=1}^n a_{ij}x_ix_j.\]
+
+<p>对 \(x_k\) 求偏导：</p>
+
+\[\frac{\partial}{\partial x_k}\left(\frac12x^{\mathsf T}Ax\right)
+=\frac12\left(\sum_{j=1}^n a_{kj}x_j+\sum_{i=1}^n a_{ik}x_i\right)
+=\frac12\left((Ax)_k+(A^{\mathsf T}x)_k\right).\]
+
+<p>因 \(A\) 对称（\(A^{\mathsf T}=A\)），</p>
+
+\[\frac{\partial}{\partial x_k}\left(\frac12x^{\mathsf T}Ax\right)=(Ax)_k.\]
+
+<p>写成向量形式：</p>
+
+\[\nabla\left(\frac12x^{\mathsf T}Ax\right)=Ax.\]
+
+<h3 id="22-第二项-bmathsf-tx">2.2 第二项 \(b^{\mathsf T}x\)</h3>
+
+\[b^{\mathsf T}x=\sum_{i=1}^n b_ix_i.\]
+
+<p>对 \(x_k\) 求偏导：</p>
+
+\[\frac{\partial}{\partial x_k}(b^{\mathsf T}x)=b_k.\]
+
+<p>写成向量形式：</p>
+
+\[\nabla(b^{\mathsf T}x)=b.\]
+
+<h3 id="23-合并">2.3 合并</h3>
+
+\[\nabla\phi(x)=\nabla\left(\frac12x^{\mathsf T}Ax\right)-\nabla(b^{\mathsf T}x)=Ax-b.\]
+
+<p>即</p>
+
+\[\boxed{\nabla\phi(x)=Ax-b.}\]
+
+<hr />
+
+<h2 id="三与线性方程组的关系">三、与线性方程组的关系</h2>
+
+<p>\(\phi\) 的<strong>驻点</strong>满足</p>
+
+\[\nabla\phi(x)=0\iff Ax-b=0\iff Ax=b.\]
+
+<p>即 \(\phi\) 的驻点就是线性方程组 \(Ax=b\) 的解。</p>
+
+<p>又因 \(A\) 对称正定，\(\phi\) 的 Hessian 矩阵为</p>
+
+\[\nabla^2\phi(x)=A,\]
+
+<p>正定，故 \(\phi\) 是<strong>严格凸函数</strong>，驻点即为<strong>全局唯一极小点</strong>。</p>
+
+<p>因此：</p>
+
+\[\boxed{\text{求解 }Ax=b\iff\text{极小化 }\phi(x)=\frac12x^{\mathsf T}Ax-b^{\mathsf T}x.}\]
+
+<hr />
+
+<h2 id="四几何意义">四、几何意义</h2>
+
+<ul>
+  <li>\(Ax-b\) 是 \(\phi\) 在 \(x\) 处的<strong>梯度方向</strong>，指向 \(\phi\) 增长最快的方向；</li>
+  <li>负梯度</li>
+</ul>
+
+\[-\nabla\phi(x)=b-Ax=r(x)\]
+
+<p>就是<strong>残差</strong>，指向 \(\phi\) 下降最快的方向；</p>
+<ul>
+  <li>最速下降法正是沿 \(r(x)\) 方向搜索，共轭梯度法则在 Krylov 子空间中构造更优的搜索方向。</li>
+</ul>
+
+<hr />
+
+<h2 id="五与其他记号的对应">五、与其他记号的对应</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>记号</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(\phi(x)=\frac12x^{\mathsf T}Ax-b^{\mathsf T}x\)</td>
+      <td>二次泛函（能量函数）</td>
+    </tr>
+    <tr>
+      <td>\(\nabla\phi(x)=Ax-b\)</td>
+      <td>梯度</td>
+    </tr>
+    <tr>
+      <td>\(r(x)=b-Ax=-\nabla\phi(x)\)</td>
+      <td>残差（负梯度）</td>
+    </tr>
+    <tr>
+      <td>\(\nabla\phi(x)=0\)</td>
+      <td>正规方程 \(Ax=b\)</td>
+    </tr>
+    <tr>
+      <td>\(\nabla^2\phi(x)=A\)</td>
+      <td>Hessian 矩阵（正定）</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="六总结">六、总结</h2>
+
+\[\boxed{
+\begin{aligned}
+&amp;\phi(x)=\frac12x^{\mathsf T}Ax-b^{\mathsf T}x,\\
+&amp;\nabla\phi(x)=Ax-b,\\
+&amp;\nabla\phi(x)=0\iff Ax=b,\\
+&amp;\nabla^2\phi(x)=A\text{ 正定}\implies\phi\text{ 严格凸，极小点唯一。}
+\end{aligned}}\]
+
+<p>因此，<strong>\(\nabla\phi(x)=Ax-b\) 是二次泛函的梯度公式</strong>，它将线性方程组求解与凸优化极小化问题等价起来。这一等价性是共轭梯度法、最速下降法等迭代方法的理论基础：这些方法本质上都是在极小化 \(\phi(x)\)，而 \(\nabla\phi(x)=Ax-b\) 正是驱动迭代的“下降方向”来源。</p>
+<div id="giscus">
+    <script src="https://giscus.app/client.js"
+        data-repo="portgas-d-asce/portgas-d-asce.github.io"
+        data-repo-id="R_kgDOOM_gVw"
+        data-category-id="DIC_kwDOOM_gV84Coe-m"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+<style>
+#giscus {
+    padding: 50px 0;
+}
+</style></div><div id="footer">
+    <a class="iconfont icon-github" href="https://github.com/Portgas-D-Asce"></a>
+    <div class="fontsz24"></div>
+    <div class="fontsz24"> Copyright &copy; Devil </div>
+</div>
+
+<style>
+#footer {
+    z-index: 998;
+    height: 100px;
+    padding: 42px 0px 5px 0px;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);">
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+        delimiters: [
+                {left: "$$", right: "$$", display: true},    // 块级公式
+                {left: "$", right: "$", display: false},     // 行内公式
+                {left: "\\(", right: "\\)", display: false}, // 行内公式
+                {left: "\\[", right: "\\]", display: true}   // 块级公式
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<style>
+#header {
+    height: 35.8vh;
+    padding-top: 26vh;
+    background-size: 100vw;
+    background: url(/assets/image/article.jpg) no-repeat right top;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hljs {
+    line-height: 1.8em;
+    font-family: Consolas, Monaco, monospace;
+    tab-size: 4;
+    background-color: rgb(250, 250, 250);
+    font-size: 13px;
+}
+
+/* 手机设备 (通常 < 768px) */
+@media (max-width: 767px) {
+    #article {
+        margin: 0 auto;
+        width: 94vw;
+    }
+}
+
+/* 平板设备 (通常 768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+/* 电脑设备 (通常 > 1024px) */
+@media (min-width: 1025px) {
+    #article {
+        margin: 0 auto;
+        width: 61.8vw;
+    }
+}
+
+#article {
+    counter-reset: h1
+}
+
+h1 {
+    counter-reset: h2
+}
+
+h2 {
+    counter-reset: h3
+}
+
+h3 {
+    counter-reset: h4
+}
+
+h4 {
+    counter-reset: h5
+}
+
+h5 {
+    counter-reset: h6
+}
+
+/** put counter result into headings */
+#article h1:before {
+    counter-increment: h1;
+    content: counter(h1) " "
+}
+
+#article h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) " "
+}
+
+#article h3:before,
+h3:before /** override the default style for focused headings */ {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) " "
+}
+
+#article h4:before,
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " "
+}
+
+#article h5:before,
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+
+#article h6:before,
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+/** override the default style for focused headings */
+#article>h3:before,
+#article>h4:before,
+#article>h5:before,
+#article>h6:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    position: inherit;
+    left:initial;
+    float: none;
+    top:initial;
+    font-size: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    vertical-align: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+#article .katex-display {
+    overflow-y: visible;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+</style>
+<div id="music">
+    <meting-js server="tencent" type="playlist" id="7679023489" order="random" volume="0.2"></meting-js>
+</div>
+
+<!--<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css' />
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>-->
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" />
+<script src="/assets/css/APlayer.min.js"></script>
+
+<script>
+    var meting_api = 'https://meting.xdevil.top/api?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script>
+<!--老版本包不能用了，要用新包
+<script src="https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js"></script>
+-->
+<script src="/assets/css/Meting.min.js"></script>
+
+<style>
+#music {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    z-index: 999;
+    width: 100%;
+}
+</style><script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            const music = document.getElementById('music');
+            if(music.style.display !== 'block') {
+                music.style.display = 'block';
+            } else {
+                music.style.display = 'none';
+            }
+        } else if (event.key === 'a') {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else if (event.key === 'v') {
+            window.scrollTo({top: document.body.scrollHeight , behavior: 'smooth'});
+        } else if(event.key=== 'h') {
+            window.location.href = "/";
+        } else if(event.key === 'c') {
+            window.location.href = "/categories.html";
+        } else if(event.key === 't') {
+            window.location.href = "/tags.html";
+        } else if(event.key === 'p') {
+            window.history.back();  // 后退
+        } else if(event.key === 'n') {
+            window.history.forward();
+        }
+    });
+</script>
+</body>
+</html>
